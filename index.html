@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terapeutas Famosos</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --ink: #1a1410;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--ink);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── SELECCIÓN ── */
+  #selection-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(107,76,42,0.08) 0%, transparent 50%),
+      #1a1410;
+    position: relative;
+  }
+
+  #selection-screen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(201,168,76,0.03) 60px),
+      repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(201,168,76,0.03) 60px);
+    pointer-events: none;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeDown 0.8s ease;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .header-ornament {
+    color: var(--gold);
+    font-size: 1.2rem;
+    letter-spacing: 0.5rem;
+    opacity: 0.7;
+    margin-bottom: 0.5rem;
+  }
+
+  .header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--cream);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    line-height: 1.1;
+    text-shadow: 0 2px 20px rgba(201,168,76,0.3);
+  }
+
+  .header h1 span {
+    color: var(--gold);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1em;
+  }
+
+  .header-sub {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: rgba(245,240,232,0.5);
+    font-size: 1.1rem;
+    margin-top: 1rem;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    color: var(--gold);
+    opacity: 0.5;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    max-width: 80px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold));
+  }
+  .divider::after { background: linear-gradient(to left, transparent, var(--gold)); }
+
+  .therapists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1000px;
+    width: 100%;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .therapist-card {
+    background: linear-gradient(160deg, #2a2018 0%, #1e1812 100%);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 2px;
+    padding: 2.5rem 2rem;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .therapist-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .therapist-card:hover {
+    border-color: rgba(201,168,76,0.5);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(201,168,76,0.08);
+  }
+
+  .therapist-card:hover::before { opacity: 1; }
+
+  .card-symbol { font-size: 3rem; margin-bottom: 1rem; }
+
+  .card-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    color: var(--gold-light);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+  }
+
+  .card-years {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: rgba(245,240,232,0.35);
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-school {
+    color: var(--gold);
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    opacity: 0.8;
+  }
+
+  .card-desc {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: rgba(245,240,232,0.6);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-btn {
+    padding: 0.6rem 1.8rem;
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-radius: 1px;
+  }
+
+  .card-btn:hover {
+    background: rgba(201,168,76,0.1);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* ── CHAT ── */
+  #chat-screen {
+    display: none;
+    height: 100vh;
+    flex-direction: column;
+    background: #1a1410;
+  }
+
+  .chat-header {
+    background: linear-gradient(90deg, #221a10 0%, #2a2018 50%, #221a10 100%);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    padding: 0.8rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+
+  .back-btn {
+    background: none;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-radius: 1px;
+    white-space: nowrap;
+  }
+  .back-btn:hover { background: rgba(201,168,76,0.1); }
+
+  .chat-header-info { flex: 1; min-width: 0; }
+
+  .chat-therapist-name {
+    font-family: 'Cinzel', serif;
+    color: var(--gold-light);
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .chat-therapist-school {
+    color: rgba(245,240,232,0.4);
+    font-size: 0.75rem;
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+  }
+
+  .chat-symbol-header { font-size: 1.8rem; flex-shrink: 0; }
+
+  .messages-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .messages-container {
+    padding: 1.5rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+    min-height: 100%;
+    justify-content: flex-end;
+  }
+
+  /* Sugerencias */
+  .suggestions-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+  }
+
+  .suggestions-label {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: rgba(245,240,232,0.3);
+    font-size: 0.8rem;
+    text-align: center;
+    margin-bottom: 0.2rem;
+  }
+
+  .suggestion-btn {
+    background: rgba(201,168,76,0.04);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 2px;
+    color: rgba(245,240,232,0.5);
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.3s;
+    line-height: 1.4;
+  }
+
+  .suggestion-btn:hover {
+    background: rgba(201,168,76,0.1);
+    border-color: rgba(201,168,76,0.3);
+    color: rgba(245,240,232,0.8);
+  }
+
+  .message {
+    max-width: 82%;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message.therapist { align-self: flex-start; }
+  .message.user { align-self: flex-end; }
+
+  .message-bubble {
+    padding: 1rem 1.3rem;
+    border-radius: 2px;
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .message.therapist .message-bubble {
+    background: linear-gradient(135deg, #2a2018 0%, #241d14 100%);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-left: 2px solid var(--gold);
+    color: var(--cream);
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+  }
+
+  .message.user .message-bubble {
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.25);
+    color: rgba(245,240,232,0.85);
+  }
+
+  .message-sender {
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.4rem;
+    color: rgba(201,168,76,0.6);
+  }
+
+  .message.user .message-sender { text-align: right; }
+
+  .typing-indicator { align-self: flex-start; display: none; }
+  .typing-indicator.visible { display: block; }
+
+  .typing-bubble {
+    background: linear-gradient(135deg, #2a2018 0%, #241d14 100%);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-left: 2px solid var(--gold);
+    padding: 0.8rem 1.2rem;
+    border-radius: 2px;
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+  }
+
+  .typing-dot {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: typingPulse 1.2s infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typingPulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+  }
+
+  .input-area-wrapper {
+    background: linear-gradient(0deg, #1e1812 0%, #221a10 100%);
+    border-top: 1px solid rgba(201,168,76,0.15);
+    padding: 0.8rem 1rem;
+    flex-shrink: 0;
+  }
+
+  .input-area {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-end;
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  #message-input {
+    flex: 1;
+    background: rgba(245,240,232,0.04);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 2px;
+    padding: 0.75rem 1rem;
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    resize: none;
+    min-height: 44px;
+    max-height: 120px;
+    outline: none;
+    transition: border-color 0.3s;
+    line-height: 1.5;
+  }
+
+  #message-input:focus { border-color: rgba(201,168,76,0.5); }
+  #message-input::placeholder { color: rgba(245,240,232,0.25); font-style: italic; }
+
+  #send-btn {
+    background: linear-gradient(135deg, #c9a84c, #a8862e);
+    border: none;
+    color: var(--ink);
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    padding: 0 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-radius: 1px;
+    height: 44px;
+    white-space: nowrap;
+  }
+
+  #send-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #e8c97a, #c9a84c);
+    box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+  }
+
+  #send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .error-bubble {
+    background: rgba(180,60,60,0.08);
+    border: 1px solid rgba(180,60,60,0.2);
+    border-left: 2px solid rgba(180,60,60,0.4);
+    padding: 0.8rem 1.2rem;
+    border-radius: 2px;
+    color: rgba(245,200,200,0.65);
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    align-self: flex-start;
+    max-width: 82%;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .messages-wrapper::-webkit-scrollbar { width: 3px; }
+  .messages-wrapper::-webkit-scrollbar-track { background: transparent; }
+  .messages-wrapper::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 2px; }
+
+  @media (max-width: 480px) {
+    .therapists-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+    .therapist-card { padding: 1.8rem 1.5rem; }
+    .card-name { font-size: 1.1rem; }
+    .message { max-width: 92%; }
+  }
+
+  /* ── AVISO DE BIENVENIDA ── */
+  #welcome-screen {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,10,8,0.97);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    animation: fadeIn 0.6s ease;
+  }
+
+  .welcome-box {
+    background: linear-gradient(160deg, #2a2018 0%, #1e1812 100%);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-top: 2px solid var(--gold);
+    border-radius: 2px;
+    max-width: 560px;
+    width: 100%;
+    padding: 2.5rem 2rem;
+    text-align: center;
+  }
+
+  .welcome-symbol {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .welcome-title {
+    font-family: 'Cinzel', serif;
+    color: var(--gold-light);
+    font-size: 1.3rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+  }
+
+  .welcome-text {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: rgba(245,240,232,0.65);
+    font-size: 0.98rem;
+    line-height: 1.75;
+    margin-bottom: 1.8rem;
+  }
+
+  .welcome-text strong {
+    color: rgba(245,240,232,0.85);
+    font-style: normal;
+  }
+
+  .crisis-section {
+    background: rgba(201,168,76,0.05);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 2px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.8rem;
+    text-align: left;
+  }
+
+  .crisis-title {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .crisis-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .crisis-list li {
+    font-family: 'Cormorant Garamond', serif;
+    color: rgba(245,240,232,0.6);
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .crisis-list li span:first-child {
+    color: rgba(245,240,232,0.4);
+    font-size: 0.82rem;
+  }
+
+  .crisis-list a {
+    color: var(--gold-light);
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .welcome-btn {
+    background: linear-gradient(135deg, #c9a84c, #a8862e);
+    border: none;
+    color: var(--ink);
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.9rem 2.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-radius: 1px;
+    width: 100%;
+  }
+
+  .welcome-btn:hover {
+    background: linear-gradient(135deg, #e8c97a, #c9a84c);
+    box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ AVISO DE BIENVENIDA ══════════════════ -->
+<div id="welcome-screen">
+  <div class="welcome-box">
+    <div class="welcome-symbol">🤍</div>
+    <div class="welcome-title">Un espacio para ti</div>
+    <div class="welcome-text">
+      Este es un lugar de <strong>apoyo emocional y reflexión</strong>, creado con cuidado para acompañarte.<br><br>
+      No reemplaza la atención de un profesional de salud mental. Si estás pasando por un momento muy difícil, 
+      recuerda que hay personas reales que pueden ayudarte ahora mismo.
+    </div>
+    <div class="crisis-section">
+      <div class="crisis-title">📞 Líneas de crisis — ayuda gratuita</div>
+      <ul class="crisis-list">
+        <li><span>🇨🇱 Chile</span> <a href="tel:600360777">600 360 7777</a></li>
+        <li><span>🇦🇷 Argentina</span> <a href="tel:135">135</a></li>
+        <li><span>🇲🇽 México</span> <a href="tel:8008290024">800 290 0024</a></li>
+        <li><span>🇪🇸 España</span> <a href="tel:024">024</a></li>
+        <li><span>🇨🇴 Colombia</span> <a href="tel:106">106</a></li>
+        <li><span>🇺🇾 Uruguay</span> <a href="tel:0800884">0800 8884</a></li>
+        <li><span>🇵🇪 Perú</span> <a href="tel:113">113</a></li>
+      </ul>
+      <div style="margin-top:0.8rem; font-family:'IM Fell English',serif; font-style:italic; color:rgba(245,240,232,0.35); font-size:0.82rem; text-align:center; line-height:1.6;">
+        ¿Tu país no aparece? Busca en Google:<br>
+        <span style="color:rgba(201,168,76,0.6); font-style:normal;">"línea de crisis salud mental + tu país"</span>
+      </div>
+    </div>
+    <button class="welcome-btn" onclick="closeWelcome()">Entrar al espacio ✦</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════ SELECCIÓN ══════════════════ -->
+<div id="selection-screen">
+  <div class="header">
+    <div class="header-ornament">✦ ✦ ✦</div>
+    <h1>Terapeutas<br><span>Famosos</span></h1>
+    <div class="header-sub">Elige a tu guía y comienza tu sesión</div>
+    <div class="divider">✦</div>
+  </div>
+
+  <div class="therapists-grid">
+
+    <div class="therapist-card" onclick="startSession('jung')">
+      <div class="card-symbol">🌙</div>
+      <div class="card-name">Carl Gustav Jung</div>
+      <div class="card-years">1875 – 1961</div>
+      <div class="card-school">Psicología Analítica</div>
+      <div class="card-desc">"Quien mira hacia afuera, sueña. Quien mira hacia adentro, despierta."</div>
+      <button class="card-btn">Iniciar sesión</button>
+    </div>
+
+    <div class="therapist-card" onclick="startSession('frankl')">
+      <div class="card-symbol">🕯️</div>
+      <div class="card-name">Viktor Frankl</div>
+      <div class="card-years">1905 – 1997</div>
+      <div class="card-school">Logoterapia</div>
+      <div class="card-desc">"Al hombre se le puede arrebatar todo, salvo la última de las libertades: elegir su actitud ante cualquier circunstancia."</div>
+      <button class="card-btn">Iniciar sesión</button>
+    </div>
+
+    <div class="therapist-card" onclick="startSession('bach')">
+      <div class="card-symbol">🌿</div>
+      <div class="card-name">Dr. Edward Bach</div>
+      <div class="card-years">1886 – 1936</div>
+      <div class="card-school">Medicina Floral</div>
+      <div class="card-desc">"La enfermedad del cuerpo es resultado de la desarmonía entre el alma y la mente."</div>
+      <button class="card-btn">Iniciar sesión</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════ CHAT ══════════════════ -->
+<div id="chat-screen">
+  <div class="chat-header">
+    <button class="back-btn" onclick="goBack()">← Volver</button>
+    <div class="chat-header-info">
+      <div class="chat-therapist-name" id="chat-name"></div>
+      <div class="chat-therapist-school" id="chat-school"></div>
+    </div>
+    <div class="chat-symbol-header" id="chat-symbol"></div>
+  </div>
+
+  <div class="messages-wrapper">
+    <div class="messages-container" id="messages">
+      <div class="typing-indicator" id="typing">
+        <div class="message-sender" id="typing-sender"></div>
+        <div class="typing-bubble">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-area-wrapper">
+    <div class="input-area">
+      <textarea id="message-input" placeholder="Escribe aquí tu pensamiento..."
+        rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button id="send-btn" onclick="sendMessage()">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+function closeWelcome() {
+  const screen = document.getElementById('welcome-screen');
+  screen.style.opacity = '0';
+  screen.style.transition = 'opacity 0.5s ease';
+  setTimeout(() => screen.style.display = 'none', 500);
+}
+
+const THERAPISTS = {
+  jung: {
+    name: "Carl Gustav Jung",
+    school: "Psicología Analítica",
+    symbol: "🌙",
+    greeting: "Qué bueno que estás aquí. A veces el alma nos lleva a lugares que la mente no entiende todavía... y eso está bien. Antes de comenzar, me gustaría conocerte un poco. ¿Cómo te llamas?",
+    suggestions: [
+      "No sé bien qué me pasa, pero algo no está bien",
+      "Estoy pasando por un momento muy difícil",
+      "Me siento perdido/a y sin rumbo",
+      "Tengo miedos o angustias que no puedo explicar"
+    ],
+    systemPrompt: `Eres Carl Gustav Jung, psicólogo suizo fundador de la Psicología Analítica. Estás conduciendo una PRIMERA SESIÓN terapéutica. Hablas en primera persona.
+
+FILOSOFÍA: No ofreces esperanza vacía sino PRESENCIA REAL. Eres contención, amor y luz. La persona que llega quizás nunca ha pedido ayuda. Trata cada palabra suya como algo sagrado. TÚ conduces la sesión con preguntas graduales, nunca pides que lo cuenten todo de golpe.
+
+ESTRUCTURA — síguela con naturalidad:
+1. Saludo cálido → pregunta el nombre
+2. Con el nombre, genera vínculo: úsalo con calidez
+3. Pregunta edad y de dónde es (genuina curiosidad, no formulario)
+4. Pregunta qué área siente más pesada: trabajo, estudios, relaciones, familia, algo interior
+5. Cuando cuente algo: PRIMERO valida y acoge, DESPUÉS profundiza con una pregunta
+6. Conecta lo que dice con su mundo interior: sueños, símbolos, la sombra, el inconsciente
+
+LENGUAJE: Claro y cálido. Si usas un término técnico, explícalo de inmediato. Ejemplo: "Lo que llamo la sombra — esa parte nuestra que preferimos no mirar — a veces es justo donde está la respuesta." Respuestas de 3 a 5 oraciones. Una sola pregunta al final.
+
+TONO: Misterioso pero cálido. Poético pero comprensible. Responde SIEMPRE en español.`
+  },
+  frankl: {
+    name: "Viktor Frankl",
+    school: "Logoterapia",
+    symbol: "🕯️",
+    greeting: "Gracias por estar aquí. Sé que a veces llegar a un lugar como este cuesta mucho. Quiero que sepas que aquí puedes hablar con total libertad. Para comenzar... ¿cómo te llamas?",
+    suggestions: [
+      "No sé bien qué me pasa, pero algo no está bien",
+      "Siento que nada tiene sentido en mi vida",
+      "Estoy pasando por algo muy difícil y no veo salida",
+      "Me cuesta encontrar fuerzas para seguir"
+    ],
+    systemPrompt: `Eres Viktor Frankl, psiquiatra austríaco, sobreviviente del Holocausto y fundador de la Logoterapia. Estás conduciendo una PRIMERA SESIÓN terapéutica. Hablas en primera persona.
+
+FILOSOFÍA: No ofreces esperanza vacía ni frases motivacionales — la esperanza sin sustancia es el opio que mantiene a la gente en el dolor. Ofreces PRESENCIA REAL y VERDAD AMOROSA. No minimizas el dolor: lo ves, lo nombras, lo acompañas. Ves al ser humano frente a ti como un ser capaz, nunca como una víctima.
+
+ESTRUCTURA — síguela con naturalidad:
+1. Saludo que genera seguridad → pregunta el nombre
+2. Usa el nombre. Crea vínculo real.
+3. Pregunta la edad y qué hace en su vida (trabajo, estudios) con genuina curiosidad
+4. Pregunta qué área siente más afectada: relaciones, trabajo, familia, salud, algo existencial
+5. Cuando cuente algo difícil: PRIMERO acoge sin juzgar, DESPUÉS haz una pregunta que vaya más adentro
+6. Guía hacia el sentido: no "¿por qué me pasa esto?" sino "¿qué puedo hacer YO con lo que me está pasando?"
+
+LENGUAJE: Directo, cálido, humano. Si usas términos técnicos, explícalos: "Lo que llamo el vacío existencial — esa sensación de que nada importa realmente — es más común de lo que crees, y tiene salida." Respuestas de 3 a 5 oraciones. Una sola pregunta al final.
+
+TONO: Sereno, firme, profundamente humano. Como alguien que ha visto lo peor del mundo y aun así cree en ti. Responde SIEMPRE en español.`
+  },
+  bach: {
+    name: "Dr. Edward Bach",
+    school: "Medicina Floral",
+    symbol: "🌿",
+    greeting: "Qué alegría que hayas llegado hasta aquí. A veces el cuerpo y el alma nos hablan de maneras que no entendemos bien... y está bien no entenderlo todavía. Estoy aquí contigo. ¿Cómo te llamas?",
+    suggestions: [
+      "No sé bien qué me pasa, pero algo no está bien",
+      "Me siento muy agotado/a por dentro",
+      "Tengo mucha angustia o miedo y no sé por qué",
+      "Estoy triste y sin energía hace tiempo"
+    ],
+    systemPrompt: `Eres el Dr. Edward Bach, médico y naturista británico, creador de los 38 Remedios Florales de Bach. Estás conduciendo una PRIMERA SESIÓN. Hablas en primera persona.
+
+FILOSOFÍA: Crees que toda enfermedad del cuerpo comienza en una desarmonía del alma y la mente. No ofreces esperanza vacía sino PRESENCIA, TERNURA y ESCUCHA PROFUNDA. Recibe a cada persona como recibirías a alguien que llega empapado bajo la lluvia: con calor, sin preguntas apresuradas. Nunca juzgas. Nunca apuras.
+
+ESTRUCTURA — síguela con suavidad:
+1. Saludo muy cálido → pregunta el nombre
+2. Usa el nombre con ternura. Crea un espacio seguro.
+3. Pregunta la edad con curiosidad genuina
+4. Pregunta cómo se siente su cuerpo: hay tensión, cansancio, peso en el pecho, nudo en la garganta
+5. Pregunta qué área de su vida siente más pesada: familia, relaciones, trabajo, soledad, algo que perdió
+6. Cuando cuente algo: PRIMERO acoge con calidez total, DESPUÉS haz una pregunta suave que vaya más adentro
+7. Cuando tengas suficiente información emocional, sugiere 2 o 3 Remedios Florales específicos
+
+REMEDIOS FLORALES — explícalos SIEMPRE así: Nombre del floral: para qué estado emocional sirve, cómo se siente quien lo necesita, qué cambio trae. Ejemplo: "Mimulus — es para el miedo a cosas concretas: miedo a quedarse solo, a no poder, a ser rechazado. Quien lo necesita siente esa angustia callada que no cuenta a nadie. Mimulus ayuda a recuperar el valor tranquilo, ese que no grita pero que te mueve."
+
+LENGUAJE: Dulce, pausado, cercano. Sin tecnicismos sin explicar. Todo en palabras del corazón. Respuestas de 3 a 5 oraciones. Una sola pregunta al final.
+
+TONO: Gentil, amoroso, lleno de calma. Como sentarse bajo un árbol en un día de sol. Responde SIEMPRE en español.`
+  }
+};
+
+// La API key se configura desde Vercel como variable de entorno
+const API_KEY = typeof window.ANTHROPIC_API_KEY !== 'undefined'
+  ? window.ANTHROPIC_API_KEY
+  : '';
+
+let currentTherapist = null;
+let conversationHistory = [];
+let isLoading = false;
+
+function startSession(key) {
+  currentTherapist = THERAPISTS[key];
+  conversationHistory = [];
+
+  document.getElementById('chat-name').textContent = currentTherapist.name;
+  document.getElementById('chat-school').textContent = currentTherapist.school;
+  document.getElementById('chat-symbol').textContent = currentTherapist.symbol;
+  document.getElementById('typing-sender').textContent = currentTherapist.name;
+
+  const msgs = document.getElementById('messages');
+  msgs.innerHTML = `
+    <div class="typing-indicator" id="typing">
+      <div class="message-sender" id="typing-sender">${currentTherapist.name}</div>
+      <div class="typing-bubble">
+        <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+      </div>
+    </div>`;
+
+  document.getElementById('selection-screen').style.display = 'none';
+  document.getElementById('chat-screen').style.display = 'flex';
+
+  setTimeout(() => {
+    showTyping();
+    setTimeout(() => {
+      hideTyping();
+      addMessage('therapist', currentTherapist.greeting);
+      conversationHistory.push({ role: 'assistant', content: currentTherapist.greeting });
+      showSuggestions();
+    }, 1800);
+  }, 300);
+}
+
+function showSuggestions() {
+  const msgs = document.getElementById('messages');
+  const typing = document.getElementById('typing');
+  const wrap = document.createElement('div');
+  wrap.className = 'suggestions-wrap';
+  wrap.id = 'suggestions';
+  wrap.innerHTML = `
+    <div class="suggestions-label">¿No sabes por dónde empezar?</div>
+    ${currentTherapist.suggestions.map(s =>
+      `<button class="suggestion-btn" onclick="useSuggestion('${s.replace(/'/g,"&#39;")}')">${s}</button>`
+    ).join('')}`;
+  msgs.insertBefore(wrap, typing);
+  scrollToBottom();
+}
+
+function useSuggestion(text) {
+  const sugg = document.getElementById('suggestions');
+  if (sugg) sugg.remove();
+  document.getElementById('message-input').value = text;
+  sendMessage();
+}
+
+function goBack() {
+  document.getElementById('chat-screen').style.display = 'none';
+  document.getElementById('selection-screen').style.display = 'flex';
+  currentTherapist = null;
+  conversationHistory = [];
+}
+
+function addMessage(role, text, isError = false) {
+  const msgs = document.getElementById('messages');
+  const typing = document.getElementById('typing');
+  const div = document.createElement('div');
+
+  if (isError) {
+    div.className = 'error-bubble';
+    div.textContent = text;
+  } else {
+    div.className = `message ${role}`;
+    div.innerHTML = `
+      <div class="message-sender">${role === 'therapist' ? currentTherapist.name : 'Tú'}</div>
+      <div class="message-bubble">${text.replace(/\n/g,'<br>')}</div>`;
+  }
+
+  msgs.insertBefore(div, typing);
+  scrollToBottom();
+}
+
+function showTyping() {
+  document.getElementById('typing').classList.add('visible');
+  scrollToBottom();
+}
+function hideTyping() {
+  document.getElementById('typing').classList.remove('visible');
+}
+function scrollToBottom() {
+  const w = document.querySelector('.messages-wrapper');
+  w.scrollTop = w.scrollHeight;
+}
+
+async function sendMessage() {
+  const input = document.getElementById('message-input');
+  const text = input.value.trim();
+  if (!text || isLoading) return;
+
+  const sugg = document.getElementById('suggestions');
+  if (sugg) sugg.remove();
+
+  isLoading = true;
+  document.getElementById('send-btn').disabled = true;
+  input.value = '';
+  input.style.height = 'auto';
+
+  addMessage('user', text);
+  conversationHistory.push({ role: 'user', content: text });
+  showTyping();
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: currentTherapist.systemPrompt,
+        messages: conversationHistory
+      })
+    });
+
+    if (!res.ok) throw new Error(`${res.status}`);
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Lo siento, no pude responder.';
+
+    // Demora realista: simula que el terapeuta está pensando antes de responder
+    const words = reply.split(' ').length;
+    const readDelay = Math.min(Math.max(words * 40, 1200), 3500);
+    await new Promise(r => setTimeout(r, readDelay));
+    hideTyping();
+    addMessage('therapist', reply);
+    conversationHistory.push({ role: 'assistant', content: reply });
+
+  } catch (err) {
+    hideTyping();
+    addMessage('therapist', 'Hubo un problema de conexión. Por favor intenta de nuevo.', true);
+  }
+
+  isLoading = false;
+  document.getElementById('send-btn').disabled = false;
+  input.focus();
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+</script>
+</body>
+</html>
