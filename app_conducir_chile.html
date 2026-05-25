@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador Examen de Conducir Chile</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f7; color: #1d1d1f; }
+#app { max-width: 720px; margin: 0 auto; padding: 1rem 1rem 3rem; }
+.nav { display: flex; gap: 6px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.nav-btn { padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; border: 1px solid #d1d1d6; background: #fff; color: #555; cursor: pointer; transition: all .15s; }
+.nav-btn:hover { background: #f0f0f5; }
+.nav-btn.active { background: #185FA5; color: #fff; border-color: #185FA5; }
+.screen { display: none; }
+.screen.visible { display: block; }
+.home-hero { text-align: center; padding: 1.5rem 0 1rem; }
+.home-hero h1 { font-size: 26px; font-weight: 600; margin-bottom: 6px; }
+.badge-cl { display: inline-block; background: #E6F1FB; color: #0C447C; font-size: 12px; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; font-weight: 500; }
+.info-row { display: flex; gap: 10px; margin: 1rem 0; }
+.info-chip { flex: 1; background: #f0f0f5; border-radius: 10px; padding: 10px; text-align: center; }
+.info-chip .num { font-size: 22px; font-weight: 600; }
+.info-chip .lbl { font-size: 11px; color: #666; margin-top: 2px; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 1rem; }
+.home-card { background: #fff; border: 1px solid #e5e5ea; border-radius: 14px; padding: 1.1rem; cursor: pointer; transition: all .15s; text-align: center; }
+.home-card:hover { border-color: #185FA5; background: #E6F1FB; }
+.home-card .icon { font-size: 24px; margin-bottom: 8px; }
+.home-card h3 { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+.home-card p { font-size: 12px; color: #666; }
+.stats-banner { background: #f0f0f5; border-radius: 14px; padding: 1rem; margin: 1rem 0; }
+.stats-banner-title { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; font-weight: 500; }
+.stats-banner-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.stat-mini { text-align: center; }
+.stat-mini .n { font-size: 20px; font-weight: 600; color: #185FA5; }
+.stat-mini .l { font-size: 11px; color: #666; }
+.exam-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 8px; }
+.exam-progress { font-size: 13px; color: #666; }
+.exam-timer { font-size: 14px; font-weight: 600; background: #f0f0f5; padding: 5px 12px; border-radius: 20px; }
+.timer-warn { color: #A32D2D; background: #FCEBEB; }
+.progress-bar-wrap { height: 4px; background: #e5e5ea; border-radius: 2px; margin-bottom: 1.1rem; }
+.progress-bar { height: 4px; background: #185FA5; border-radius: 2px; transition: width .3s; }
+.question-card { background: #fff; border: 1px solid #e5e5ea; border-radius: 14px; padding: 1.1rem; margin-bottom: 1rem; }
+.tema-badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; margin-bottom: 5px; font-weight: 500; }
+.question-text { font-size: 16px; font-weight: 500; line-height: 1.5; }
+.options-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+.option-btn { width: 100%; text-align: left; padding: 11px 14px; border-radius: 10px; border: 1px solid #d1d1d6; background: #fff; font-size: 14px; cursor: pointer; transition: all .15s; line-height: 1.4; }
+.option-btn:hover:not(:disabled) { background: #E6F1FB; border-color: #378ADD; }
+.option-btn.correct { background: #EAF3DE; border-color: #3B6D11; color: #27500A; }
+.option-btn.wrong { background: #FCEBEB; border-color: #A32D2D; color: #791F1F; }
+.option-btn:disabled { cursor: default; }
+.explanation { background: #f0f0f5; padding: 11px 13px; font-size: 13px; color: #444; margin-bottom: 1rem; line-height: 1.6; border-left: 3px solid #185FA5; border-radius: 0 8px 8px 0; }
+.exam-nav { display: flex; justify-content: space-between; gap: 10px; }
+.btn-primary { padding: 10px 22px; border-radius: 10px; background: #185FA5; color: #fff; border: none; font-size: 14px; font-weight: 500; cursor: pointer; }
+.btn-primary:hover { background: #0C447C; }
+.btn-secondary { padding: 10px 22px; border-radius: 10px; background: #fff; color: #333; border: 1px solid #d1d1d6; font-size: 14px; cursor: pointer; }
+.result-screen { padding: 1.25rem 0; }
+.score-circle { width: 110px; height: 110px; border-radius: 50%; margin: 0 auto 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.score-pass { background: #EAF3DE; color: #27500A; }
+.score-fail { background: #FCEBEB; color: #791F1F; }
+.result-title { font-size: 20px; font-weight: 600; text-align: center; margin-bottom: 4px; }
+.result-sub { font-size: 14px; color: #666; text-align: center; margin-bottom: 1.1rem; }
+.stats-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.stat-chip { background: #f0f0f5; border-radius: 10px; padding: 8px 16px; text-align: center; }
+.stat-chip .n { font-size: 18px; font-weight: 600; }
+.stat-chip .l { font-size: 11px; color: #666; }
+.result-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.errores-section { margin-top: 1rem; }
+.errores-title { font-size: 14px; font-weight: 500; margin-bottom: .9rem; }
+.tema-row { background: #fff; border: 1px solid #e5e5ea; border-radius: 12px; padding: .8rem .9rem; margin-bottom: 7px; }
+.tema-row-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.tema-row-name { font-size: 13px; font-weight: 500; }
+.tema-pct-bar-wrap { height: 5px; background: #f0f0f5; border-radius: 3px; margin-top: 5px; }
+.tema-pct-bar { height: 5px; border-radius: 3px; transition: width .4s; }
+.bar-good { background: #639922; } .bar-mid { background: #BA7517; } .bar-bad { background: #E24B4A; }
+.tema-pct-label { font-size: 11px; color: #888; margin-top: 3px; }
+.tema-errors-list { margin-top: 8px; display: none; border-top: 1px solid #e5e5ea; padding-top: 8px; }
+.tema-errors-list.open { display: block; }
+.error-item { font-size: 12px; color: #444; margin-bottom: 7px; padding: 7px 9px; background: #f9f9fb; border-radius: 8px; line-height: 1.5; }
+.error-q { font-weight: 500; color: #1d1d1f; margin-bottom: 2px; font-size: 13px; }
+.error-correct { color: #27500A; font-size: 11px; }
+.practica-screen h2 { font-size: 18px; font-weight: 600; margin-bottom: 5px; }
+.practica-screen p { font-size: 13px; color: #666; margin-bottom: 1rem; }
+.tema-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 8px; }
+.tema-card { background: #fff; border: 1px solid #e5e5ea; border-radius: 14px; padding: .9rem; cursor: pointer; transition: all .15s; text-align: center; }
+.tema-card:hover { border-color: #185FA5; background: #E6F1FB; }
+.tema-card .t-icon { font-size: 22px; margin-bottom: 6px; }
+.tema-card h4 { font-size: 12px; font-weight: 500; margin-bottom: 2px; }
+.tema-card p { font-size: 11px; color: #666; }
+.tema-card .mini-bar { height: 3px; border-radius: 2px; margin-top: 6px; background: #e5e5ea; }
+.practica-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+.back-btn { padding: 5px 10px; border-radius: 8px; border: 1px solid #d1d1d6; background: #fff; font-size: 12px; cursor: pointer; color: #555; }
+.practica-tema-label { font-size: 12px; font-weight: 500; color: #0C447C; background: #E6F1FB; padding: 3px 10px; border-radius: 20px; }
+.practica-result { text-align: center; padding: 1.25rem 0; }
+.senales-search { width: 100%; padding: 9px 12px; border-radius: 10px; border: 1px solid #d1d1d6; font-size: 14px; margin-bottom: .9rem; }
+.senales-filters { display: flex; gap: 6px; margin-bottom: .9rem; flex-wrap: wrap; }
+.filter-chip { padding: 5px 12px; border-radius: 20px; font-size: 12px; border: 1px solid #d1d1d6; background: #fff; color: #555; cursor: pointer; }
+.filter-chip.active { background: #185FA5; color: #fff; border-color: #185FA5; }
+.senales-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+.senal-card { background: #fff; border: 1px solid #e5e5ea; border-radius: 12px; padding: .8rem .6rem; text-align: center; cursor: pointer; transition: all .15s; }
+.senal-card:hover { border-color: #185FA5; }
+.senal-icon { font-size: 28px; margin-bottom: 5px; line-height: 1; }
+.senal-name { font-size: 11px; font-weight: 500; margin-bottom: 2px; }
+.senal-cat { font-size: 10px; color: #888; }
+.senal-detail { background: #f9f9fb; border-radius: 8px; padding: 7px 9px; font-size: 12px; color: #444; margin-top: 5px; line-height: 1.5; display: none; text-align: left; }
+.teoria-sections { display: flex; flex-direction: column; gap: 7px; }
+.teoria-card { background: #fff; border: 1px solid #e5e5ea; border-radius: 12px; overflow: hidden; }
+.teoria-header { padding: .8rem 1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+.teoria-header h3 { font-size: 14px; font-weight: 500; }
+.teoria-body { padding: 0 1rem .8rem; font-size: 13px; color: #444; line-height: 1.7; display: none; }
+.teoria-body.open { display: block; }
+.teoria-body ul { padding-left: 1.1rem; margin-top: 5px; }
+.teoria-body li { margin-bottom: 3px; }
+.teoria-body strong { font-weight: 600; }
+.chevron { transition: transform .2s; color: #888; }
+.chevron.open { transform: rotate(180deg); }
+.hist-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; margin-bottom: 1.1rem; }
+.hist-card { background: #fff; border: 1px solid #e5e5ea; border-radius: 12px; padding: .8rem; text-align: center; }
+.hist-card .n { font-size: 22px; font-weight: 600; color: #185FA5; }
+.hist-card .l { font-size: 11px; color: #666; margin-top: 2px; }
+.session-item { background: #fff; border: 1px solid #e5e5ea; border-radius: 12px; padding: .7rem .9rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+.si-left { font-size: 12px; color: #666; }
+.si-left strong { color: #1d1d1f; font-weight: 500; }
+.si-wpm { font-size: 17px; font-weight: 600; color: #185FA5; }
+.si-comp { font-size: 11px; color: #888; }
+.empty-state { text-align: center; padding: 2.5rem 1rem; color: #888; }
+.empty-state .big { font-size: 36px; margin-bottom: .7rem; }
+.simulacro-badge { display: inline-block; background: #3a1a0a; color: #f0a500; font-size: 11px; padding: 3px 9px; border-radius: 20px; margin-left: 6px; font-weight: 500; }
+</style>
+</head>
+<body>
+<div id="app">
+  <nav class="nav">
+    <button class="nav-btn active" onclick="showScreen('home')">🏠 Inicio</button>
+    <button class="nav-btn" onclick="startExam(false)">📝 Examen</button>
+    <button class="nav-btn" onclick="startExam(true)">🎯 Simulacro Real</button>
+    <button class="nav-btn" onclick="showScreen('practica')">💪 Práctica</button>
+    <button class="nav-btn" onclick="showScreen('historial')">📊 Progreso</button>
+    <button class="nav-btn" onclick="showScreen('senales')">🚸 Señales</button>
+    <button class="nav-btn" onclick="showScreen('teoria')">📚 Teoría</button>
+  </nav>
+
+  <!-- HOME -->
+  <div id="screen-home" class="screen visible">
+    <div class="home-hero">
+      <div class="badge-cl">🇨🇱 Ley de Tránsito Chile</div>
+      <h1>Prepárate para el CONASET</h1>
+      <p style="font-size:14px;color:#666">85 preguntas · práctica por tema · progreso guardado</p>
+    </div>
+    <div class="info-row">
+      <div class="info-chip"><div class="num">85</div><div class="lbl">Preguntas</div></div>
+      <div class="info-chip"><div class="num">40</div><div class="lbl">Por examen</div></div>
+      <div class="info-chip"><div class="num">80%</div><div class="lbl">Para aprobar</div></div>
+    </div>
+    <div id="home-stats-banner" class="stats-banner" style="display:none">
+      <div class="stats-banner-title">Tu progreso</div>
+      <div class="stats-banner-row">
+        <div class="stat-mini"><div class="n" id="hs-examenes">0</div><div class="l">Exámenes</div></div>
+        <div class="stat-mini"><div class="n" id="hs-mejor">—</div><div class="l">Mejor nota</div></div>
+        <div class="stat-mini"><div class="n" id="hs-promedio">—</div><div class="l">Promedio</div></div>
+        <div class="stat-mini"><div class="n" id="hs-aprobados">0</div><div class="l">Aprobados</div></div>
+      </div>
+    </div>
+    <div id="home-empty-banner" class="stats-banner" style="text-align:center;font-size:13px;color:#666">
+      Aún no has hecho ningún examen. ¡Empieza ahora!
+    </div>
+    <div class="cards-grid">
+      <div class="home-card" onclick="startExam(false)">
+        <div class="icon">📝</div>
+        <h3>Examen simulado</h3>
+        <p>40 preguntas con explicaciones</p>
+      </div>
+      <div class="home-card" onclick="startExam(true)">
+        <div class="icon">🎯</div>
+        <h3>Simulacro real <span class="simulacro-badge">NUEVO</span></h3>
+        <p>Sin ayudas, como el CONASET real</p>
+      </div>
+      <div class="home-card" onclick="showScreen('practica')">
+        <div class="icon">💪</div>
+        <h3>Práctica por tema</h3>
+        <p>Entrena donde más lo necesitas</p>
+      </div>
+      <div class="home-card" onclick="showScreen('historial')">
+        <div class="icon">📊</div>
+        <h3>Mi progreso</h3>
+        <p>Historial y estadísticas</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXAMEN -->
+  <div id="screen-examen" class="screen">
+    <div id="exam-view">
+      <div class="exam-header">
+        <span class="exam-progress" id="exam-progress">Pregunta 1 de 40</span>
+        <span class="exam-timer" id="exam-timer">⏱ 30:00</span>
+      </div>
+      <div class="progress-bar-wrap"><div class="progress-bar" id="exam-bar" style="width:2.5%"></div></div>
+      <div class="question-card">
+        <div id="q-num"></div>
+        <div class="question-text" id="q-text"></div>
+      </div>
+      <ul class="options-list" id="options-list"></ul>
+      <div class="explanation" id="explanation" style="display:none"></div>
+      <div class="exam-nav">
+        <button class="btn-secondary" onclick="finishEarly()">Terminar</button>
+        <button class="btn-primary" id="btn-next" onclick="nextQuestion()" style="display:none">Siguiente →</button>
+      </div>
+    </div>
+    <div id="result-view" style="display:none">
+      <div class="result-screen">
+        <div class="score-circle" id="score-circle"></div>
+        <div class="result-title" id="result-title"></div>
+        <div class="result-sub" id="result-sub"></div>
+        <div class="stats-row">
+          <div class="stat-chip"><div class="n" id="r-correct">0</div><div class="l">Correctas</div></div>
+          <div class="stat-chip"><div class="n" id="r-wrong">0</div><div class="l">Incorrectas</div></div>
+          <div class="stat-chip"><div class="n" id="r-pct">0%</div><div class="l">Resultado</div></div>
+        </div>
+        <div class="result-btns">
+          <button class="btn-primary" onclick="startExam(false)">Nuevo examen</button>
+          <button class="btn-secondary" onclick="showScreen('historial')">Ver progreso</button>
+        </div>
+        <div class="errores-section" id="errores-section"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRÁCTICA -->
+  <div id="screen-practica" class="screen">
+    <div id="practica-menu" class="practica-screen">
+      <h2>Práctica por tema</h2>
+      <p>Elige el tema donde quieres mejorar</p>
+      <div class="tema-cards" id="tema-cards"></div>
+    </div>
+    <div id="practica-exam" style="display:none">
+      <div class="practica-header">
+        <button class="back-btn" onclick="backToPractica()">← Temas</button>
+        <span class="practica-tema-label" id="practica-tema-label"></span>
+      </div>
+      <div class="exam-header">
+        <span class="exam-progress" id="p-progress">Pregunta 1</span>
+        <span id="p-score-live" style="font-size:12px;color:#666"></span>
+      </div>
+      <div class="progress-bar-wrap"><div class="progress-bar" id="p-bar" style="width:0%"></div></div>
+      <div class="question-card">
+        <div id="p-num" style="font-size:11px;color:#888;margin-bottom:5px"></div>
+        <div class="question-text" id="p-text"></div>
+      </div>
+      <ul class="options-list" id="p-options"></ul>
+      <div class="explanation" id="p-explanation" style="display:none"></div>
+      <div class="exam-nav">
+        <button class="btn-secondary" onclick="backToPractica()">Salir</button>
+        <button class="btn-primary" id="p-btn-next" onclick="nextPractica()" style="display:none">Siguiente →</button>
+      </div>
+    </div>
+    <div id="practica-result" style="display:none">
+      <div class="practica-result">
+        <div class="score-circle" id="p-score-circle"></div>
+        <div class="result-title" id="p-result-title"></div>
+        <div class="result-sub" id="p-result-sub"></div>
+        <div class="stats-row">
+          <div class="stat-chip"><div class="n" id="p-r-correct">0</div><div class="l">Correctas</div></div>
+          <div class="stat-chip"><div class="n" id="p-r-wrong">0</div><div class="l">Incorrectas</div></div>
+          <div class="stat-chip"><div class="n" id="p-r-pct">0%</div><div class="l">Resultado</div></div>
+        </div>
+        <div class="result-btns">
+          <button class="btn-primary" id="p-retry-btn">Repetir tema</button>
+          <button class="btn-secondary" onclick="backToPractica()">Otros temas</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div id="screen-historial" class="screen">
+    <h2 style="font-size:20px;font-weight:600;margin-bottom:.3rem">Mi progreso</h2>
+    <p style="font-size:13px;color:#666;margin-bottom:1.1rem">Historial completo de tus exámenes</p>
+    <div id="historial-content"><div style="text-align:center;padding:2rem;color:#888">Cargando...</div></div>
+  </div>
+
+  <!-- SEÑALES -->
+  <div id="screen-senales" class="screen">
+    <input class="senales-search" type="text" placeholder="Buscar señal..." oninput="filterSenales()" id="senal-search">
+    <div class="senales-filters">
+      <button class="filter-chip active" onclick="setCatFilter('todas',this)">Todas</button>
+      <button class="filter-chip" onclick="setCatFilter('obligatoria',this)">Obligatorias</button>
+      <button class="filter-chip" onclick="setCatFilter('prohibicion',this)">Prohibición</button>
+      <button class="filter-chip" onclick="setCatFilter('precaucion',this)">Precaución</button>
+      <button class="filter-chip" onclick="setCatFilter('informativa',this)">Informativas</button>
+    </div>
+    <div class="senales-grid" id="senales-grid"></div>
+  </div>
+
+  <!-- TEORÍA -->
+  <div id="screen-teoria" class="screen">
+    <div class="teoria-sections" id="teoria-sections"></div>
+  </div>
+</div>
+
+<script>
+const TEMAS=[
+  {id:'velocidad',name:'Velocidades',icon:'💨',desc:'Límites urbanos, rurales y autopistas'},
+  {id:'senales',name:'Señales',icon:'🚦',desc:'Señales obligatorias, prohibición y precaución'},
+  {id:'alcohol',name:'Alcohol y drogas',icon:'🍺',desc:'Alcoholemia, límites y sanciones'},
+  {id:'prioridad',name:'Prioridad de paso',icon:'↔️',desc:'Intersecciones, rotondas y peatones'},
+  {id:'documentos',name:'Documentos',icon:'📋',desc:'SOAP, revisión técnica y licencias'},
+  {id:'seguridad',name:'Seguridad vial',icon:'🛡️',desc:'Cinturón, sillas y distancia'},
+  {id:'maniobras',name:'Maniobras',icon:'🔄',desc:'Adelantamiento, giros y estacionamiento'},
+  {id:'infracciones',name:'Infracciones',icon:'⚠️',desc:'Sistema de puntos y multas'}
+];
+const TCOLORS={velocidad:{bg:'#E6F1FB',color:'#0C447C'},senales:{bg:'#EAF3DE',color:'#27500A'},alcohol:{bg:'#FCEBEB',color:'#791F1F'},prioridad:{bg:'#FAEEDA',color:'#633806'},documentos:{bg:'#E1F5EE',color:'#085041'},seguridad:{bg:'#EEEDFE',color:'#3C3489'},maniobras:{bg:'#FAECE7',color:'#712B13'},infracciones:{bg:'#FBEAF0',color:'#72243E'}};
+
+const PREGUNTAS=[
+  {q:"¿A qué velocidad máxima se puede circular en zona urbana?",opts:["60 km/h","80 km/h","50 km/h","70 km/h"],ans:0,exp:"En zonas urbanas la velocidad máxima es 60 km/h, salvo señalización que indique lo contrario.",tema:'velocidad'},
+  {q:"¿Cuál es la velocidad mínima en autopistas?",opts:["60 km/h","70 km/h","80 km/h","50 km/h"],ans:0,exp:"En autopistas la velocidad mínima es 60 km/h. Ir más lento obstruye el tránsito.",tema:'velocidad'},
+  {q:"¿Velocidad máxima en caminos rurales de dos carriles?",opts:["100 km/h","90 km/h","110 km/h","80 km/h"],ans:0,exp:"En caminos rurales bidireccionales la velocidad máxima es 100 km/h.",tema:'velocidad'},
+  {q:"¿Velocidad máxima en autopistas de Chile?",opts:["100 km/h","110 km/h","120 km/h","130 km/h"],ans:2,exp:"La velocidad máxima en autopistas es 120 km/h.",tema:'velocidad'},
+  {q:"¿Velocidad máxima en zona escolar señalizada?",opts:["60 km/h","50 km/h","40 km/h","30 km/h"],ans:3,exp:"En zonas escolares la velocidad máxima es 30 km/h.",tema:'velocidad'},
+  {q:"¿Velocidad máxima al remolcar un vehículo?",opts:["60 km/h","80 km/h","100 km/h","40 km/h"],ans:0,exp:"Al remolcar, la velocidad máxima es 60 km/h en cualquier tipo de vía.",tema:'velocidad'},
+  {q:"¿A qué distancia se deben encender las luces largas en carretera?",opts:["100 metros","150 metros","200 metros","300 metros"],ans:2,exp:"Las luces largas se encienden cuando la visibilidad sea menor a 200 metros.",tema:'velocidad'},
+  {q:"¿Qué significa una señal octogonal de fondo rojo?",opts:["Ceda el paso","Pare obligatoriamente","Zona escolar","Peligro adelante"],ans:1,exp:"La señal octogonal roja PARE obliga a detenerse completamente.",tema:'senales'},
+  {q:"¿Qué significa una señal triangular con fondo amarillo?",opts:["Pare obligatorio","Ceda el paso","Advertencia o precaución","Información de ruta"],ans:2,exp:"Las señales triangulares amarillas son de advertencia.",tema:'senales'},
+  {q:"¿Qué indica una señal circular con fondo azul?",opts:["Prohibición","Información","Precaución","Instrucción obligatoria"],ans:3,exp:"Las señales circulares azules son instrucciones obligatorias.",tema:'senales'},
+  {q:"¿Qué indica la señal de un niño dentro de un triángulo amarillo?",opts:["Zona de juegos","Zona escolar","Prohibido niños","Parque infantil"],ans:1,exp:"Señal triangular con silueta de niño indica zona escolar.",tema:'senales'},
+  {q:"¿Qué indica una señal rectangular azul con P blanca?",opts:["Prohibido estacionar","Estacionamiento permitido","Zona de pago","Solo carga y descarga"],ans:1,exp:"La señal rectangular azul con P blanca indica estacionamiento permitido.",tema:'senales'},
+  {q:"¿Qué indica la señal de fondo azul con flecha curva a la derecha?",opts:["Giro prohibido","Giro obligatorio a la derecha","Carretera con curvas","Carril de giro"],ans:1,exp:"La señal circular azul con flecha indica instrucción obligatoria de girar.",tema:'senales'},
+  {q:"¿Qué significa la señal de fondo blanco con borde rojo y diagonal?",opts:["Detención obligatoria","Prohibición general","Ceda el paso","Zona restringida"],ans:1,exp:"La señal circular blanca con borde y diagonal rojos indica prohibición.",tema:'senales'},
+  {q:"¿Qué significa la señal de un vehículo derrapando con fondo amarillo?",opts:["Zona de hielo","Calzada resbaladiza","Prohibido derrapar","Zona de pruebas"],ans:1,exp:"La señal de vehículo derrapando indica calzada resbaladiza.",tema:'senales'},
+  {q:"¿Qué indica la señal de bicicleta con fondo azul?",opts:["Prohibido bicicletas","Ciclovía exclusiva","Precaución con ciclistas","Parqueadero de bicicletas"],ans:1,exp:"La señal de bicicleta en fondo azul indica ciclovía o carril bici exclusivo.",tema:'senales'},
+  {q:"¿Qué indica la señal de fondo verde en carretera?",opts:["Precaución","Prohibición","Información de ruta y destinos","Obligación"],ans:2,exp:"Las señales de fondo verde son informativas: rutas, distancias y direcciones.",tema:'senales'},
+  {q:"¿Cuánto es el límite de alcoholemia para conductores particulares?",opts:["0.8 g/l","0.5 g/l","0.3 g/l","1.0 g/l"],ans:1,exp:"El límite legal es 0.5 g/l de sangre.",tema:'alcohol'},
+  {q:"¿Categoría de infracción por conducir con 0.5 a 1.0 g/l de alcohol?",opts:["Leve","Menos grave","Grave","Gravísima"],ans:2,exp:"Conducir con 0.5 a 1.0 g/l es infracción grave. Sobre 1.0 g/l es gravísima.",tema:'alcohol'},
+  {q:"¿Cuándo se puede conducir después de consumir alcohol?",opts:["1 hora por trago","Cuando la alcoholemia baje bajo 0.5 g/l","Al día siguiente siempre","Después de 2 horas"],ans:1,exp:"Solo cuando la alcoholemia real sea inferior a 0.5 g/l.",tema:'alcohol'},
+  {q:"¿En qué condición se puede aplicar control de alcoholemia?",opts:["Solo si hubo accidente","Solo de noche","En cualquier momento por carabineros","Solo en retenes fijos"],ans:2,exp:"Carabineros puede solicitar control de alcoholemia en cualquier momento.",tema:'alcohol'},
+  {q:"¿Qué tolerancia de alcohol tienen menores de 18 años al conducir?",opts:["0.5 g/l","0.3 g/l","0.1 g/l","Cero tolerancia"],ans:3,exp:"La ley establece tolerancia cero de alcohol para menores de 18 años y transporte público.",tema:'alcohol'},
+  {q:"Un peatón cruza por paso de cebra. ¿Qué hace el conductor?",opts:["Tocar bocina y continuar","Reducir si hay espacio","Detenerse y dar paso","Cambiar de carril"],ans:2,exp:"El conductor debe detenerse. El peatón tiene prioridad absoluta.",tema:'prioridad'},
+  {q:"En una rotonda, ¿quién tiene preferencia?",opts:["El que ingresa","El que está dentro","El más grande","El que viene por la derecha"],ans:1,exp:"En rotondas tiene prioridad el vehículo que ya circula dentro.",tema:'prioridad'},
+  {q:"¿Quién tiene preferencia en intersección sin señalización?",opts:["El vehículo más grande","El que viene por la derecha","El que viene por la izquierda","El primero en llegar"],ans:1,exp:"Sin señalización, tiene prioridad el vehículo que viene por la derecha.",tema:'prioridad'},
+  {q:"¿Qué hace si un vehículo de emergencia se acerca con sirena?",opts:["Acelerar para no obstaculizar","Detenerse al costado derecho","Continuar normalmente","Tocar bocina en respuesta"],ans:1,exp:"Debe desplazarse al costado derecho y detenerse hasta que pase.",tema:'prioridad'},
+  {q:"¿Qué hacer al salir de un estacionamiento hacia la calzada?",opts:["Salir directamente","Ceder el paso al tráfico de la calzada","Tocar bocina y salir","Solo mirar por los espejos"],ans:1,exp:"Al salir de un estacionamiento se debe ceder el paso a todos los vehículos.",tema:'prioridad'},
+  {q:"¿Qué hacer si el semáforo está sin funcionar?",opts:["Circular con prioridad","Tratar como señal de PARE","Ceder al vehículo más grande","Acelerar para cruzar rápido"],ans:1,exp:"Un semáforo sin funcionar se trata como señal de PARE.",tema:'prioridad'},
+  {q:"¿Qué significa luz roja fija en semáforo?",opts:["Precaución","Detención obligatoria","Solo para buses","Se puede girar a la derecha"],ans:1,exp:"La luz roja fija obliga a detenerse completamente.",tema:'prioridad'},
+  {q:"¿Ante un peatón ciego con bastón blanco, qué hace el conductor?",opts:["Tocar bocina para avisarle","Detenerse y esperar que cruce con total seguridad","Acelerar y pasar rápido","Girar para evitarlo"],ans:1,exp:"Debe detenerse completamente y esperar que el peatón cruce con total seguridad.",tema:'prioridad'},
+  {q:"¿Qué debe hacer ante una barrera de ferrocarril bajada?",opts:["Pasar rápido antes de que baje","Detenerse y esperar que suba","Tocar bocina y continuar","Dar vuelta"],ans:1,exp:"Con barrera bajada debe detenerse y esperar que suba antes de cruzar.",tema:'prioridad'},
+  {q:"¿Es obligatorio portar el permiso de circulación?",opts:["No, solo la licencia","Sí, junto a licencia y SOAP","Solo en viajes largos","Solo si el vehículo es nuevo"],ans:1,exp:"Es obligatorio portar licencia, permiso de circulación y SOAP.",tema:'documentos'},
+  {q:"¿Qué es el SOAP?",opts:["Seguro voluntario","Seguro Obligatorio de Accidentes Personales","Revisión técnica","Permiso especial"],ans:1,exp:"El SOAP es el Seguro Obligatorio de Accidentes Personales causados por vehículos motorizados.",tema:'documentos'},
+  {q:"¿Vigencia de la licencia clase B para menores de 70 años?",opts:["5 años","8 años","10 años","6 años"],ans:2,exp:"La licencia clase B dura 10 años para menores de 70. Para mayores de 70, se renueva cada 3 años.",tema:'documentos'},
+  {q:"¿Edad mínima para obtener licencia clase B?",opts:["16 años","17 años","18 años","21 años"],ans:2,exp:"Para la licencia clase B se requiere ser mayor de 18 años.",tema:'documentos'},
+  {q:"¿Con cuántos puntos parte la licencia de conducir?",opts:["10 puntos","100 puntos","14 puntos","20 puntos"],ans:1,exp:"La licencia parte con 100 puntos.",tema:'documentos'},
+  {q:"¿Puede un conductor clase B conducir una moto?",opts:["Sí, siempre","No, necesita licencia clase A","Sí, si la moto es pequeña","Solo en autopistas"],ans:1,exp:"Para motocicletas se requiere licencia clase A.",tema:'documentos'},
+  {q:"¿Con qué frecuencia se hace la revisión técnica en autos nuevos?",opts:["Cada año","Cada 2 años los primeros 6 años","Cada 6 meses","Cada 3 años"],ans:1,exp:"Vehículos nuevos tienen revisión técnica cada 2 años los primeros 6 años, luego es anual.",tema:'documentos'},
+  {q:"¿Cuál es la categoría de licencia para conducir taxis y Uber?",opts:["Clase B","Clase D","Clase A","Clase C"],ans:1,exp:"Para taxis y servicios de transporte de pasajeros se requiere licencia clase D.",tema:'documentos'},
+  {q:"¿El cinturón de seguridad es obligatorio para quiénes?",opts:["Solo en autopistas","Solo el conductor","Solo conductor y acompañante delantero","Todos los ocupantes"],ans:3,exp:"El cinturón es obligatorio para todos los ocupantes.",tema:'seguridad'},
+  {q:"¿Qué distancia mantener con el vehículo de adelante?",opts:["La necesaria para frenar a tiempo","10 metros fijos","5 metros fijos","20 metros fijos"],ans:0,exp:"La Ley exige mantener distancia suficiente para frenar sin colisionar.",tema:'seguridad'},
+  {q:"¿Es obligatorio el uso de casco en motocicleta?",opts:["Solo en autopistas","Solo el conductor","Para conductor y pasajero","No es obligatorio"],ans:2,exp:"El casco es obligatorio tanto para el conductor como para el pasajero.",tema:'seguridad'},
+  {q:"¿Qué es el punto ciego?",opts:["La zona detrás del vehículo","Zona no visible por espejos donde puede haber otro vehículo","El área bajo el vehículo","La zona frente al vehículo de noche"],ans:1,exp:"El punto ciego es la zona lateral que los espejos no cubren.",tema:'seguridad'},
+  {q:"¿Cuántos espejos retrovisores debe tener un vehículo?",opts:["Solo el central","Al menos central y un lateral","Al menos tres: central y dos laterales","Solo los dos laterales"],ans:2,exp:"Un vehículo debe tener al menos tres espejos retrovisores.",tema:'seguridad'},
+  {q:"¿Está permitido usar audífonos al conducir?",opts:["Sí, en un oído","Sí, a bajo volumen","No, está prohibido","Solo en vías lentas"],ans:2,exp:"Los audífonos al conducir están prohibidos.",tema:'seguridad'},
+  {q:"¿Niños menores de qué edad deben usar silla de retención?",opts:["6 años o menos de 120 cm","8 años o menos de 135 cm","10 años o menos de 140 cm","5 años o menos de 110 cm"],ans:1,exp:"Niños menores de 8 años o menos de 135 cm deben usar silla de retención homologada.",tema:'seguridad'},
+  {q:"¿Cuándo se deben usar las luces de emergencia?",opts:["Solo en autopista","Cuando el vehículo es obstáculo o hay peligro","Para estacionar en doble fila","Cuando llueve"],ans:1,exp:"Las luces de emergencia se usan cuando el vehículo es un obstáculo o hay peligro.",tema:'seguridad'},
+  {q:"¿Qué es la distancia de frenado?",opts:["Distancia antes de reaccionar","Desde que se aplica el freno hasta detenerse","Distancia total desde que se percibe el peligro","Distancia de seguridad mínima"],ans:1,exp:"La distancia de frenado es desde que se aplica el freno hasta que el vehículo se detiene.",tema:'seguridad'},
+  {q:"¿Distancia mínima para colocar triángulos de emergencia?",opts:["10 metros","30 metros","50 metros","100 metros"],ans:2,exp:"Los triángulos deben colocarse a mínimo 50 metros del vehículo.",tema:'seguridad'},
+  {q:"¿Qué debe hacer si su vehículo falla en autopista?",opts:["Detenerse en el carril","Detenerse en el arcén derecho y usar triángulos","Continuar hasta la próxima salida","Esperar sin señalizar"],ans:1,exp:"Debe salir al arcén derecho, encender luces de emergencia y colocar triángulos.",tema:'seguridad'},
+  {q:"¿Cuándo se permite adelantar por la derecha?",opts:["Nunca","Cuando el de adelante va a girar a la izquierda","Con poca velocidad","Siempre que haya espacio"],ans:1,exp:"Solo se puede adelantar por la derecha cuando el vehículo de adelante va a girar a la izquierda.",tema:'maniobras'},
+  {q:"¿Qué indica una línea continua amarilla al centro?",opts:["Puede adelantar con espacio","Prohibido adelantar","Zona de estacionamiento","Vía de doble sentido"],ans:1,exp:"La línea continua amarilla prohíbe adelantar.",tema:'maniobras'},
+  {q:"Al estacionar cuesta arriba con acera, ¿hacia dónde se gira el volante?",opts:["Hacia la acera (derecha)","Hacia la calzada (izquierda)","Recto","No importa"],ans:0,exp:"Se gira a la derecha para que el neumático apoye en la acera.",tema:'maniobras'},
+  {q:"Al estacionar cuesta abajo sin acera, ¿hacia dónde se gira el volante?",opts:["Hacia la derecha","Hacia la izquierda (calzada)","Recto","No importa"],ans:1,exp:"Sin acera cuesta abajo se gira a la izquierda.",tema:'maniobras'},
+  {q:"¿Cuántos metros antes de girar se enciende el señalizador?",opts:["10 metros","20 metros","30 metros","50 metros"],ans:2,exp:"El señalizador debe activarse con al menos 30 metros de anticipación.",tema:'maniobras'},
+  {q:"¿Qué se debe hacer antes de cambiar de carril?",opts:["Solo mirar por el espejo","Encender señalizador, verificar punto ciego y ceder al tráfico","Acelerar y cambiar directamente","Solo encender el señalizador"],ans:1,exp:"Encender señalizador, revisar espejos y punto ciego, y ceder al tráfico del carril destino.",tema:'maniobras'},
+  {q:"¿Cuándo está prohibido estacionar frente a una salida de emergencia?",opts:["Con personas presentes","Máximo 5 minutos","Máximo 2 minutos","Nunca está permitido"],ans:3,exp:"Está absolutamente prohibido estacionar frente a salidas de emergencia.",tema:'maniobras'},
+  {q:"¿Puede un vehículo circular en contramano en emergencia?",opts:["Sí, con luces de emergencia","Sí, si avisa","No, está prohibido siempre","Solo por menos de 50 metros"],ans:2,exp:"Circular en contramano está absolutamente prohibido.",tema:'maniobras'},
+  {q:"¿Está prohibido adelantar con línea continua?",opts:["Solo de noche","No, nunca se puede","Solo con visibilidad reducida","Solo en curvas"],ans:1,exp:"La línea continua prohíbe adelantar en todo momento.",tema:'maniobras'},
+  {q:"¿Cuándo se usa la bocina?",opts:["Para saludar a conocidos","Solo en emergencias para advertir peligro","Cuando otro va lento","Para indicar cambio de carril"],ans:1,exp:"La bocina solo se usa para advertir un peligro inminente.",tema:'maniobras'},
+  {q:"¿En qué sentido circula el tránsito en Chile?",opts:["Por la izquierda","Por la derecha","Según señalización","Indistintamente"],ans:1,exp:"En Chile el tránsito circula por el lado derecho de la calzada.",tema:'maniobras'},
+  {q:"¿Bajo cuántos puntos se suspende la licencia?",opts:["Menos de 40","Menos de 25","Menos de 10","Menos de 50"],ans:0,exp:"Bajo 40 puntos el conductor puede ser suspendido. En 0 puntos se cancela la licencia.",tema:'infracciones'},
+  {q:"¿Cuántos puntos descuenta una infracción gravísima?",opts:["1 punto","2 puntos","3 puntos","4 puntos"],ans:3,exp:"Gravísimas descuentan 4 puntos. Graves: 3, menos graves: 2, leves: 1.",tema:'infracciones'},
+  {q:"¿Cuál es la multa base de una infracción gravísima?",opts:["1 UTM","2 UTM","3 UTM","5 UTM"],ans:2,exp:"Las infracciones gravísimas tienen multa base de 3 UTM.",tema:'infracciones'},
+  {q:"¿Está permitido usar celular al conducir?",opts:["Sí, con manos libres","Sí, por pocos segundos","No, en ninguna forma","Solo en semáforos en rojo"],ans:0,exp:"Solo se permite manos libres. Sostener el celular es infracción grave.",tema:'infracciones'},
+  {q:"¿Puede un vehículo circular con revisión técnica vencida?",opts:["Sí, con multa","No, puede ser retenido","Sí, por 30 días de gracia","Solo en vías urbanas"],ans:1,exp:"Circular con revisión técnica vencida es infracción y el vehículo puede ser retenido.",tema:'infracciones'},
+  {q:"¿Con qué porcentaje se aprueba el examen teórico del CONASET?",opts:["70%","75%","80%","85%"],ans:2,exp:"Se aprueba con al menos 80%: 32 de 40 preguntas correctas.",tema:'infracciones'},
+  {q:"¿Cuándo se produce el aquaplaning?",opts:["Con lluvia intensa y alta velocidad sobre agua","Solo con hielo","Con viento fuerte","Con neumáticos nuevos"],ans:0,exp:"El aquaplaning ocurre con lluvia intensa, alta velocidad y el neumático no elimina el agua.",tema:'seguridad'},
+  {q:"¿Cuándo están obligados a circular con luces encendidas en carretera?",opts:["Solo de noche","Solo en túneles","Siempre, de día y de noche en carretera","Solo con lluvia"],ans:2,exp:"Todos los vehículos deben circular con luces encendidas en carreteras, de día y de noche.",tema:'seguridad'},
+  {q:"¿Cuándo se permite usar luces antiniebla traseras?",opts:["Solo de noche","Con niebla densa o lluvia intensa","Siempre en carretera","Solo en invierno"],ans:1,exp:"Las luces antiniebla traseras solo se usan cuando la visibilidad sea notablemente reducida.",tema:'seguridad'},
+  {q:"¿Cuál es la prioridad entre ciclistas y peatones en cruce?",opts:["Siempre el ciclista","Siempre el peatón","Depende de la velocidad","Quien llegue primero"],ans:1,exp:"El peatón tiene prioridad sobre el ciclista en cruces y zonas compartidas.",tema:'prioridad'},
+  {q:"¿Qué se debe hacer en cruce de ferrocarril sin barreras?",opts:["Circular normalmente","Tocar bocina y cruzar","Detenerse, mirar y escuchar","Acelerar para cruzar"],ans:2,exp:"En cruces ferroviarios sin barrera se debe detenerse y mirar en ambos sentidos.",tema:'prioridad'},
+  {q:"¿Cuándo se debe ceder el paso a un bus interurbano?",opts:["Nunca","Cuando enciende las luces","Cuando sale de un paradero señalizado","Solo si es más rápido"],ans:2,exp:"Se cede el paso a buses interurbanos cuando salen de paraderos señalizados.",tema:'prioridad'}
+];
+
+const SENALES=[
+  {icon:"🛑",name:"Pare (STOP)",cat:"obligatoria",desc:"Obliga a detenerse completamente antes de la línea. Ceder el paso a todos antes de continuar."},
+  {icon:"⚠️",name:"Peligro general",cat:"precaucion",desc:"Indica un peligro próximo. Reducir velocidad y extremar precauciones."},
+  {icon:"🚸",name:"Zona escolar",cat:"precaucion",desc:"Establecimientos educacionales cercanos. Velocidad máxima 30 km/h."},
+  {icon:"⬇️",name:"Ceda el paso",cat:"obligatoria",desc:"Obliga a ceder el paso a todos los vehículos de la vía principal."},
+  {icon:"🔄",name:"Rotonda obligatoria",cat:"obligatoria",desc:"Indica rotonda. Los vehículos dentro tienen prioridad absoluta."},
+  {icon:"🚫",name:"Prohibido el paso",cat:"prohibicion",desc:"Prohíbe el acceso de vehículos en esa dirección."},
+  {icon:"🅿️",name:"Estacionamiento permitido",cat:"informativa",desc:"Zona de estacionamiento permitido."},
+  {icon:"📵",name:"Prohibido celular",cat:"prohibicion",desc:"Prohíbe el uso de teléfono celular al conducir."},
+  {icon:"🔊",name:"Prohibido bocina",cat:"prohibicion",desc:"Prohíbe el uso de la bocina. Cerca de hospitales o escuelas."},
+  {icon:"🚷",name:"Prohibido peatones",cat:"prohibicion",desc:"Prohíbe el tránsito peatonal por esa vía."},
+  {icon:"↔️",name:"Doble vía",cat:"informativa",desc:"La carretera es de doble sentido. Circular por el lado derecho."},
+  {icon:"🏥",name:"Hospital cercano",cat:"informativa",desc:"Proximidad de un centro asistencial. Reducir velocidad."},
+  {icon:"⛽",name:"Estación de servicio",cat:"informativa",desc:"Gasolinera próxima."},
+  {icon:"🛤️",name:"Inicio autopista",cat:"informativa",desc:"Inicio de autopista. Velocidad mínima 60 km/h, máxima 120 km/h."},
+  {icon:"🚦",name:"Semáforo próximo",cat:"precaucion",desc:"Advierte la presencia de un semáforo adelante."},
+  {icon:"🦌",name:"Cruce de animales",cat:"precaucion",desc:"Cruce frecuente de animales. Reducir velocidad."},
+  {icon:"⛰️",name:"Curva peligrosa",cat:"precaucion",desc:"Curva de radio reducido. Reducir velocidad antes."},
+  {icon:"🚧",name:"Obras en la vía",cat:"precaucion",desc:"Trabajos en calzada. Velocidad máxima 40 km/h."},
+  {icon:"❄️",name:"Calzada con hielo",cat:"precaucion",desc:"Riesgo de hielo. Reducir velocidad drásticamente."},
+  {icon:"🌊",name:"Riesgo de inundación",cat:"precaucion",desc:"Zona susceptible a anegamientos."}
+];
+
+const TEORIA=[
+  {title:"Categorías de licencias de conducir",body:`<ul><li><strong>Clase A</strong>: Motocicletas.</li><li><strong>Clase B</strong>: Automóviles y camionetas hasta 3.500 kg.</li><li><strong>Clase C</strong>: Vehículos de carga hasta 3.500 kg.</li><li><strong>Clase D</strong>: Buses y transporte de pasajeros.</li><li><strong>Clase E</strong>: Vehículos pesados sobre 3.500 kg.</li><li><strong>Clase F</strong>: Vehículos especiales.</li></ul>`},
+  {title:"Sistema de puntos de la licencia",body:`La licencia parte con <strong>100 puntos</strong>:<ul><li><strong>Leve</strong>: 1 punto.</li><li><strong>Menos grave</strong>: 2 puntos.</li><li><strong>Grave</strong>: 3 puntos.</li><li><strong>Gravísima</strong>: 4 puntos.</li></ul>Bajo <strong>40 puntos</strong>: suspensión. En <strong>0 puntos</strong>: cancelación.`},
+  {title:"Límites de velocidad en Chile",body:`<ul><li><strong>Zona urbana</strong>: 60 km/h.</li><li><strong>Zona escolar</strong>: 30 km/h.</li><li><strong>Caminos rurales</strong>: 100 km/h.</li><li><strong>Autopistas</strong>: 120 km/h máximo, 60 km/h mínimo.</li><li><strong>Remolque</strong>: 60 km/h máximo.</li></ul>`},
+  {title:"Alcoholemia y conducción",body:`<ul><li><strong>0.5 a 1.0 g/l</strong>: infracción <strong>grave</strong>.</li><li><strong>Sobre 1.0 g/l</strong>: ebriedad, infracción <strong>gravísima</strong>.</li><li><strong>Cero tolerancia</strong>: menores de 18 años y transporte público.</li></ul>`},
+  {title:"Prioridades de paso",body:`<ul><li>Semáforo verde: prioridad.</li><li>Sin señalización: prioridad al de la <strong>derecha</strong>.</li><li>Rotonda: prioridad al que ya está <strong>dentro</strong>.</li><li>Emergencias: prioridad <strong>absoluta</strong>.</li><li>Paso de cebra: peatón tiene prioridad <strong>absoluta</strong>.</li></ul>`},
+  {title:"Documentos obligatorios al conducir",body:`<ul><li><strong>Licencia de conducir</strong> vigente.</li><li><strong>Permiso de circulación</strong> vigente.</li><li><strong>SOAP</strong>: Seguro Obligatorio de Accidentes Personales.</li><li><strong>Revisión técnica</strong> vigente.</li></ul>`},
+  {title:"Señales: clasificación y colores",body:`<ul><li><strong>Obligatorias</strong>: Fondo azul o rojo.</li><li><strong>Prohibición</strong>: Circulares con borde rojo.</li><li><strong>Precaución</strong>: Triangulares amarillas.</li><li><strong>Informativas</strong>: Rectangulares azules o verdes.</li></ul>`},
+  {title:"Cinturón y seguridad pasiva",body:`<ul><li>Cinturón: <strong>obligatorio para todos los ocupantes</strong>.</li><li>Niños menores de 8 años o menos de 135 cm: <strong>silla de retención</strong>.</li><li>Casco: obligatorio para conductor y pasajero de moto.</li></ul>`}
+];
+
+let currentQ=0,answers=[],examQuestions=[],timerInterval=null,timeLeft=1800;
+let catFilter='todas';
+let practicaTema=null,practicaQ=0,practicaAnswers=[],practicaQuestions=[];
+let modoSimulacro=false;
+
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('visible'));
+  document.getElementById('screen-'+name).classList.add('visible');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const map={home:0,examen:1,examen:2,practica:3,historial:4,senales:5,teoria:6};
+  if(name==='senales')renderSenales();
+  if(name==='teoria')renderTeoria();
+  if(name==='practica')renderPracticaMenu();
+  if(name==='historial')renderHistorial();
+  if(name==='home')updateHomeBanner();
+}
+
+function startExam(simulacro){
+  modoSimulacro=simulacro;
+  currentQ=0;answers=[];timeLeft=1800;
+  clearInterval(timerInterval);
+  document.getElementById('exam-view').style.display='';
+  document.getElementById('result-view').style.display='none';
+  examQuestions=[...PREGUNTAS].sort(()=>Math.random()-.5).slice(0,40);
+  renderQuestion();
+  timerInterval=setInterval(()=>{timeLeft--;updateTimer();if(timeLeft<=0){clearInterval(timerInterval);showResult();}},1000);
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('visible'));
+  document.getElementById('screen-examen').classList.add('visible');
+}
+
+function updateTimer(){
+  const m=Math.floor(timeLeft/60),s=timeLeft%60;
+  const el=document.getElementById('exam-timer');
+  el.textContent='⏱ '+m+':'+String(s).padStart(2,'0');
+  el.className='exam-timer'+(timeLeft<120?' timer-warn':'');
+}
+
+function renderQuestion(){
+  const q=examQuestions[currentQ];
+  const tc=TCOLORS[q.tema]||{bg:'#E6F1FB',color:'#0C447C'};
+  const tname=TEMAS.find(t=>t.id===q.tema).name;
+  document.getElementById('q-num').innerHTML='<span class="tema-badge" style="background:'+tc.bg+';color:'+tc.color+'">'+tname+'</span>';
+  document.getElementById('q-text').textContent=q.q;
+  document.getElementById('exam-progress').textContent='Pregunta '+(currentQ+1)+' de '+examQuestions.length;
+  document.getElementById('exam-bar').style.width=((currentQ+1)/examQuestions.length*100)+'%';
+  document.getElementById('explanation').style.display='none';
+  document.getElementById('btn-next').style.display='none';
+  const ul=document.getElementById('options-list');ul.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const li=document.createElement('li');
+    const btn=document.createElement('button');
+    btn.className='option-btn';btn.textContent=opt;
+    btn.onclick=()=>selectAnswer(i);
+    li.appendChild(btn);ul.appendChild(li);
+  });
+}
+
+function selectAnswer(idx){
+  const q=examQuestions[currentQ];
+  const btns=document.querySelectorAll('#options-list .option-btn');
+  btns.forEach(b=>b.disabled=true);
+  btns[idx].classList.add(idx===q.ans?'correct':'wrong');
+  if(idx!==q.ans)btns[q.ans].classList.add('correct');
+  answers.push({correct:idx===q.ans,q,chosen:idx});
+  if(!modoSimulacro){
+    document.getElementById('explanation').textContent='💡 '+q.exp;
+    document.getElementById('explanation').style.display='';
+  }
+  if(currentQ<examQuestions.length-1)document.getElementById('btn-next').style.display='';
+  else setTimeout(showResult,900);
+}
+
+function nextQuestion(){currentQ++;renderQuestion();}
+function finishEarly(){clearInterval(timerInterval);showResult();}
+
+async function showResult(){
+  clearInterval(timerInterval);
+  document.getElementById('exam-view').style.display='none';
+  document.getElementById('result-view').style.display='';
+  const correct=answers.filter(a=>a.correct).length;
+  const total=answers.length||examQuestions.length;
+  const pct=Math.round(correct/total*100);
+  const pass=correct>=32;
+  const circle=document.getElementById('score-circle');
+  circle.className='score-circle '+(pass?'score-pass':'score-fail');
+  circle.innerHTML='<div style="font-size:28px;font-weight:700">'+pct+'%</div><div style="font-size:11px;margin-top:2px">'+(pass?'APROBADO':'REPROBADO')+'</div>';
+  document.getElementById('result-title').textContent=pass?'¡Felicitaciones, aprobaste!':'No alcanzaste el puntaje mínimo';
+  document.getElementById('result-sub').textContent=pass?'Obtuviste '+correct+' de '+total+' correctas.':'Necesitas 32 de 40 correctas (80%).';
+  document.getElementById('r-correct').textContent=correct;
+  document.getElementById('r-wrong').textContent=total-correct;
+  document.getElementById('r-pct').textContent=pct+'%';
+  await recordExam(correct,total,answers);
+  if(!modoSimulacro)renderErroresPorTema();
+  else document.getElementById('errores-section').innerHTML='<div style="text-align:center;padding:1rem;font-size:13px;color:#666">Modo simulacro — sin desglose de errores. Haz un examen normal para ver el detalle.</div>';
+}
+
+function renderErroresPorTema(){
+  const sec=document.getElementById('errores-section');
+  const errores=answers.filter(a=>!a.correct);
+  if(!errores.length){sec.innerHTML='<div style="text-align:center;padding:1rem;font-size:13px;color:#666">🎉 ¡Sin errores! Excelente preparación.</div>';return;}
+  const porTema={};
+  answers.forEach(a=>{
+    if(!porTema[a.q.tema])porTema[a.q.tema]={total:0,correct:0,errors:[]};
+    porTema[a.q.tema].total++;
+    if(a.correct)porTema[a.q.tema].correct++;
+    else porTema[a.q.tema].errors.push(a);
+  });
+  let html='<div class="errores-title">Rendimiento por tema</div>';
+  TEMAS.forEach(t=>{
+    if(!porTema[t.id])return;
+    const d=porTema[t.id];
+    const pct=Math.round(d.correct/d.total*100);
+    const barClass=pct>=80?'bar-good':pct>=50?'bar-mid':'bar-bad';
+    html+='<div class="tema-row"><div class="tema-row-header" onclick="toggleTemaErrors(this)"><span class="tema-row-name">'+t.icon+' '+t.name+'</span><span style="font-size:12px;color:#666">'+d.correct+'/'+d.total+' ▼</span></div>';
+    html+='<div class="tema-pct-bar-wrap"><div class="tema-pct-bar '+barClass+'" style="width:'+pct+'%"></div></div>';
+    html+='<div class="tema-pct-label">'+pct+'% correcto</div>';
+    if(d.errors.length){
+      html+='<div class="tema-errors-list">';
+      d.errors.forEach(e=>{html+='<div class="error-item"><div class="error-q">'+e.q.q+'</div><div class="error-correct">✓ '+e.q.opts[e.q.ans]+'</div></div>';});
+      html+='<button class="btn-primary" style="margin-top:6px;font-size:12px;padding:6px 14px" onclick="startPracticaTema(\''+t.id+'\')">Practicar este tema →</button>';
+      html+='</div>';
+    }
+    html+='</div>';
+  });
+  sec.innerHTML=html;
+}
+
+function toggleTemaErrors(header){
+  const list=header.parentElement.querySelector('.tema-errors-list');
+  if(!list)return;
+  list.classList.toggle('open');
+}
+
+async function renderPracticaMenu(){
+  const stats=await loadStats();
+  const tc=document.getElementById('tema-cards');tc.innerHTML='';
+  TEMAS.forEach(t=>{
+    const qs=PREGUNTAS.filter(p=>p.tema===t.id);
+    const d=stats.temaStats[t.id];
+    const pct=d?Math.round(d.correct/d.total*100):null;
+    const col=pct===null?'#e5e5ea':pct>=80?'#639922':pct>=50?'#BA7517':'#E24B4A';
+    const card=document.createElement('div');card.className='tema-card';
+    card.innerHTML='<div class="t-icon">'+t.icon+'</div><h4>'+t.name+'</h4><p>'+qs.length+' preguntas</p>'+(pct!==null?'<div class="mini-bar"><div style="width:'+pct+'%;height:3px;background:'+col+';border-radius:2px"></div></div><div style="font-size:10px;color:'+col+';margin-top:3px">'+pct+'%</div>':'');
+    card.onclick=()=>startPracticaTema(t.id);
+    tc.appendChild(card);
+  });
+  document.getElementById('practica-menu').style.display='';
+  document.getElementById('practica-exam').style.display='none';
+  document.getElementById('practica-result').style.display='none';
+}
+
+function startPracticaTema(temaId){
+  practicaTema=temaId;practicaQ=0;practicaAnswers=[];
+  practicaQuestions=PREGUNTAS.filter(p=>p.tema===temaId).sort(()=>Math.random()-.5);
+  const t=TEMAS.find(t=>t.id===temaId);
+  document.getElementById('practica-tema-label').textContent=t.icon+' '+t.name;
+  document.getElementById('practica-menu').style.display='none';
+  document.getElementById('practica-exam').style.display='';
+  document.getElementById('practica-result').style.display='none';
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('visible'));
+  document.getElementById('screen-practica').classList.add('visible');
+  renderPracticaQ();
+}
+
+function renderPracticaQ(){
+  const q=practicaQuestions[practicaQ];
+  document.getElementById('p-num').textContent='Pregunta '+(practicaQ+1);
+  document.getElementById('p-text').textContent=q.q;
+  document.getElementById('p-progress').textContent='Pregunta '+(practicaQ+1)+' de '+practicaQuestions.length;
+  document.getElementById('p-bar').style.width=((practicaQ+1)/practicaQuestions.length*100)+'%';
+  const corr=practicaAnswers.filter(Boolean).length;
+  document.getElementById('p-score-live').textContent=practicaQ>0?corr+' correctas de '+practicaQ:'';
+  document.getElementById('p-explanation').style.display='none';
+  document.getElementById('p-btn-next').style.display='none';
+  const ul=document.getElementById('p-options');ul.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const li=document.createElement('li');
+    const btn=document.createElement('button');
+    btn.className='option-btn';btn.textContent=opt;
+    btn.onclick=()=>selectPracticaAnswer(i);
+    li.appendChild(btn);ul.appendChild(li);
+  });
+}
+
+function selectPracticaAnswer(idx){
+  const q=practicaQuestions[practicaQ];
+  const btns=document.querySelectorAll('#p-options .option-btn');
+  btns.forEach(b=>b.disabled=true);
+  btns[idx].classList.add(idx===q.ans?'correct':'wrong');
+  if(idx!==q.ans)btns[q.ans].classList.add('correct');
+  practicaAnswers.push(idx===q.ans);
+  document.getElementById('p-explanation').textContent='💡 '+q.exp;
+  document.getElementById('p-explanation').style.display='';
+  if(practicaQ<practicaQuestions.length-1)document.getElementById('p-btn-next').style.display='';
+  else setTimeout(showPracticaResult,900);
+}
+
+function nextPractica(){practicaQ++;renderPracticaQ();}
+
+function showPracticaResult(){
+  document.getElementById('practica-exam').style.display='none';
+  document.getElementById('practica-result').style.display='';
+  const correct=practicaAnswers.filter(Boolean).length;
+  const total=practicaAnswers.length;
+  const pct=Math.round(correct/total*100);
+  const pass=pct>=80;
+  const circle=document.getElementById('p-score-circle');
+  circle.className='score-circle '+(pass?'score-pass':'score-fail');
+  circle.innerHTML='<div style="font-size:28px;font-weight:700">'+pct+'%</div>';
+  const t=TEMAS.find(t=>t.id===practicaTema);
+  document.getElementById('p-result-title').textContent=t.icon+' '+t.name;
+  document.getElementById('p-result-sub').textContent=correct+' de '+total+' correctas — '+(pass?'¡Dominas este tema!':'Sigue practicando');
+  document.getElementById('p-r-correct').textContent=correct;
+  document.getElementById('p-r-wrong').textContent=total-correct;
+  document.getElementById('p-r-pct').textContent=pct+'%';
+  document.getElementById('p-retry-btn').onclick=()=>startPracticaTema(practicaTema);
+}
+
+function backToPractica(){
+  document.getElementById('tema-cards').innerHTML='';
+  renderPracticaMenu();
+}
+
+async function loadStats(){
+  try{const r=localStorage.getItem('conducir-stats');return r?JSON.parse(r):{examenes:[],temaStats:{}};}
+  catch(e){return{examenes:[],temaStats:{}};}
+}
+
+async function recordExam(correct,total,answerDetails){
+  const stats=await loadStats();
+  const pct=Math.round(correct/total*100);
+  stats.examenes.unshift({date:new Date().toLocaleDateString('es-CL'),correct,total,pct,pass:correct>=32,simulacro:modoSimulacro});
+  if(stats.examenes.length>20)stats.examenes=stats.examenes.slice(0,20);
+  answerDetails.forEach(a=>{
+    if(!stats.temaStats[a.q.tema])stats.temaStats[a.q.tema]={total:0,correct:0};
+    stats.temaStats[a.q.tema].total++;
+    if(a.correct)stats.temaStats[a.q.tema].correct++;
+  });
+  localStorage.setItem('conducir-stats',JSON.stringify(stats));
+  return stats;
+}
+
+async function updateHomeBanner(){
+  const stats=await loadStats();
+  if(!stats.examenes.length){
+    document.getElementById('home-stats-banner').style.display='none';
+    document.getElementById('home-empty-banner').style.display='';
+    return;
+  }
+  document.getElementById('home-stats-banner').style.display='';
+  document.getElementById('home-empty-banner').style.display='none';
+  const total=stats.examenes.length;
+  const aprobados=stats.examenes.filter(e=>e.pass).length;
+  const mejor=Math.max(...stats.examenes.map(e=>e.pct));
+  const prom=Math.round(stats.examenes.reduce((s,e)=>s+e.pct,0)/total);
+  document.getElementById('hs-examenes').textContent=total;
+  document.getElementById('hs-mejor').textContent=mejor+'%';
+  document.getElementById('hs-promedio').textContent=prom+'%';
+  document.getElementById('hs-aprobados').textContent=aprobados;
+}
+
+async function renderHistorial(){
+  const sec=document.getElementById('historial-content');
+  const stats=await loadStats();
+  if(!stats.examenes.length){
+    sec.innerHTML='<div class="empty-state"><div class="big">📊</div><p>Aún no has hecho ningún examen.<br>¡Empieza ahora!</p><button class="btn-primary" style="margin-top:1rem" onclick="startExam(false)">Hacer primer examen</button></div>';
+    return;
+  }
+  const total=stats.examenes.length;
+  const aprobados=stats.examenes.filter(e=>e.pass).length;
+  const mejor=Math.max(...stats.examenes.map(e=>e.pct));
+  const prom=Math.round(stats.examenes.reduce((s,e)=>s+e.pct,0)/total);
+  let racha=0;for(let e of stats.examenes){if(e.pass)racha++;else break;}
+  let html='<div class="hist-summary">';
+  html+='<div class="hist-card"><div class="n">'+total+'</div><div class="l">Exámenes</div></div>';
+  html+='<div class="hist-card"><div class="n">'+aprobados+'</div><div class="l">Aprobados</div></div>';
+  html+='<div class="hist-card"><div class="n">'+mejor+'%</div><div class="l">Mejor nota</div></div>';
+  html+='<div class="hist-card"><div class="n">'+prom+'%</div><div class="l">Promedio</div></div>';
+  html+='<div class="hist-card"><div class="n">'+racha+'🔥</div><div class="l">Racha</div></div>';
+  html+='</div>';
+  if(stats.examenes.length>1){
+    const recent=stats.examenes.slice(0,10).reverse();
+    html+='<div style="font-size:11px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem">Evolución</div>';
+    html+='<div style="display:flex;align-items:flex-end;gap:4px;height:65px;margin-bottom:1.1rem">';
+    const mx=Math.max(...recent.map(e=>e.pct));
+    recent.forEach((e,i)=>{
+      const h=Math.max(4,Math.round(e.pct/mx*52));
+      const col=e.pass?'#639922':'#E24B4A';
+      html+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="font-size:9px;color:#888">'+e.pct+'%</div><div style="width:100%;height:'+h+'px;background:'+col+';border-radius:3px 3px 0 0;opacity:.85"></div><div style="font-size:9px;color:#888">#'+(stats.examenes.length-recent.length+i+1)+'</div></div>';
+    });
+    html+='</div>';
+  }
+  if(Object.keys(stats.temaStats).length){
+    html+='<div style="font-size:11px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem">Por tema</div>';
+    html+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:1.1rem">';
+    TEMAS.forEach(t=>{
+      const d=stats.temaStats[t.id];if(!d)return;
+      const pct=Math.round(d.correct/d.total*100);
+      const col=pct>=80?'#639922':pct>=50?'#BA7517':'#E24B4A';
+      html+='<div style="background:#fff;border:1px solid #e5e5ea;border-radius:12px;padding:.75rem"><div style="font-size:12px;font-weight:500;margin-bottom:4px">'+t.icon+' '+t.name+'</div><div style="height:5px;background:#f0f0f5;border-radius:3px;margin-bottom:3px"><div style="width:'+pct+'%;height:5px;background:'+col+';border-radius:3px"></div></div><div style="font-size:11px;color:#888">'+pct+'% ('+d.correct+'/'+d.total+')</div></div>';
+    });
+    html+='</div>';
+  }
+  html+='<div style="font-size:11px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem">Historial</div>';
+  stats.examenes.forEach((e,i)=>{
+    const badge=e.simulacro?'<span style="font-size:10px;background:#3a1a0a;color:#f0a500;padding:1px 6px;border-radius:10px;margin-left:5px">Simulacro</span>':'';
+    html+='<div class="session-item"><div class="si-left"><strong>Examen #'+(stats.examenes.length-i)+'</strong>'+badge+'<br>'+e.date+'</div><div style="text-align:right"><div class="si-wpm"'+( e.pass?'':' style="color:#E24B4A"')+'>'+e.pct+'% '+(e.pass?'✓':'✗')+'</div><div class="si-comp">'+e.correct+'/'+e.total+' correctas</div></div></div>';
+  });
+  html+='<div style="margin-top:1rem;text-align:right"><button onclick="clearStats()" style="padding:6px 14px;border-radius:8px;background:#fff;color:#E24B4A;border:1px solid #F09595;font-size:12px;cursor:pointer">Borrar historial</button></div>';
+  sec.innerHTML=html;
+}
+
+async function clearStats(){
+  if(!confirm('¿Seguro que quieres borrar todo tu historial?'))return;
+  localStorage.removeItem('conducir-stats');
+  renderHistorial();updateHomeBanner();
+}
+
+function renderSenales(){
+  const search=document.getElementById('senal-search').value.toLowerCase();
+  const grid=document.getElementById('senales-grid');grid.innerHTML='';
+  SENALES.filter(s=>(catFilter==='todas'||s.cat===catFilter)&&(s.name.toLowerCase().includes(search)||s.desc.toLowerCase().includes(search))).forEach(s=>{
+    const card=document.createElement('div');card.className='senal-card';
+    card.innerHTML='<div class="senal-icon">'+s.icon+'</div><div class="senal-name">'+s.name+'</div><div class="senal-cat">'+s.cat.charAt(0).toUpperCase()+s.cat.slice(1)+'</div><div class="senal-detail">'+s.desc+'</div>';
+    card.onclick=()=>{const d=card.querySelector('.senal-detail');d.style.display=d.style.display==='block'?'none':'block';};
+    grid.appendChild(card);
+  });
+}
+function filterSenales(){renderSenales();}
+function setCatFilter(cat,el){catFilter=cat;document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderSenales();}
+
+function renderTeoria(){
+  const sec=document.getElementById('teoria-sections');if(sec.innerHTML)return;
+  TEORIA.forEach((t,i)=>{
+    const card=document.createElement('div');card.className='teoria-card';
+    card.innerHTML='<div class="teoria-header" onclick="toggleTeoria('+i+',this)"><h3>'+t.title+'</h3><span class="chevron">▼</span></div><div class="teoria-body" id="teoria-body-'+i+'">'+t.body+'</div>';
+    sec.appendChild(card);
+  });
+}
+function toggleTeoria(i,header){
+  const body=document.getElementById('teoria-body-'+i);
+  const chev=header.querySelector('.chevron');
+  const open=body.classList.toggle('open');
+  chev.classList.toggle('open',open);
+}
+
+updateHomeBanner();
+renderSenales();
+</script>
+</body>
+</html>
