@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoxMind — Entrenador de Oratoria</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080810;--bg2:#0f0f1a;--bg3:#161625;--bg4:#1e1e30;--bg5:#252540;
+  --gold:#c9a84c;--gold2:#e8c97a;--gold3:#f5e0a0;--gold-dim:#4a3a1a;
+  --text:#f0ede8;--text2:#9a97a0;--text3:#4a4858;
+  --green:#3ecf8e;--red:#e85454;--blue:#5b8dee;
+  --font-display:'Cormorant Garamond',serif;--font-body:'DM Sans',sans-serif;
+  --radius:10px;--radius-lg:18px;
+}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body.light{
+  --bg:#f5f3ee;--bg2:#ede9e0;--bg3:#e0dbd0;--bg4:#d0cab8;--bg5:#c0b8a0;
+  --text:#1a1810;--text2:#5a5545;--text3:#9a9585;
+}
+
+/* FONDO ATMOSFÉRICO */
+.bg-glow{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.bg-glow::before{content:'';position:absolute;top:-20%;left:30%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(201,168,76,.07) 0%,transparent 70%);animation:pulseGlow 8s ease-in-out infinite}
+.bg-glow::after{content:'';position:absolute;bottom:-10%;right:20%;width:50%;height:50%;background:radial-gradient(ellipse,rgba(91,141,238,.05) 0%,transparent 70%);animation:pulseGlow 12s ease-in-out infinite reverse}
+@keyframes pulseGlow{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+
+#app{position:relative;z-index:1;max-width:740px;margin:0 auto;padding:1.5rem 1rem 4rem}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--bg4)}
+.logo{font-family:var(--font-display);font-size:26px;font-weight:300;letter-spacing:.04em;cursor:pointer}
+.logo strong{color:var(--gold);font-weight:600}
+.logo span{color:var(--text2);font-style:italic}
+.logo-sub{font-size:10px;color:var(--text3);letter-spacing:.15em;text-transform:uppercase;margin-top:-2px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.theme-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--bg5);background:var(--bg3);color:var(--text2);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.theme-btn:hover{border-color:var(--gold);color:var(--gold)}
+.habilia-badge{font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--bg5);padding:4px 10px;border-radius:20px}
+
+/* NAV */
+.nav{display:flex;gap:4px;background:var(--bg2);padding:4px;border-radius:30px;margin-bottom:2rem;flex-wrap:wrap;justify-content:center}
+.nav-btn{padding:7px 13px;border-radius:26px;font-size:12px;font-weight:500;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .2s;white-space:nowrap;font-family:var(--font-body)}
+.nav-btn.active{background:var(--gold);color:#080810}
+.nav-btn:hover:not(.active){color:var(--text)}
+
+/* SCREENS */
+.screen{display:none;animation:fadeIn .3s ease}
+.screen.visible{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero{text-align:center;padding:1rem 0 2rem}
+.hero-icon{font-size:48px;margin-bottom:.75rem;display:block;animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.hero h1{font-family:var(--font-display);font-size:38px;font-weight:300;line-height:1.1;color:var(--text);margin-bottom:.5rem}
+.hero h1 em{color:var(--gold);font-style:italic}
+.hero p{font-size:14px;color:var(--text2);max-width:400px;margin:0 auto 1.5rem;line-height:1.7}
+.hero-stats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.hs{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:.65rem 1rem;text-align:center;min-width:90px}
+.hs .n{font-family:var(--font-display);font-size:22px;color:var(--gold)}
+.hs .l{font-size:10px;color:var(--text3);letter-spacing:.05em;margin-top:1px}
+
+/* MODOS */
+.section-title{font-family:var(--font-display);font-size:20px;font-weight:300;color:var(--text);margin-bottom:1rem}
+.section-title em{color:var(--gold);font-style:italic}
+.modes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:1.5rem}
+.mode-card{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:1.1rem;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.mode-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,.08),transparent);opacity:0;transition:opacity .3s}
+.mode-card:hover{border-color:var(--gold-dim);transform:translateY(-2px)}
+.mode-card:hover::after{opacity:1}
+.mode-card.selected{border-color:var(--gold);background:rgba(201,168,76,.05)}
+.mode-card.selected::after{opacity:1}
+.mc-icon{font-size:24px;margin-bottom:.5rem}
+.mc-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px}
+.mc-desc{font-size:11px;color:var(--text2);line-height:1.5}
+.mc-chile{border-color:rgba(201,168,76,.3)!important;background:rgba(201,168,76,.04)!important}
+
+/* CONTROLES */
+.panel{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:1.2rem;margin-bottom:1rem}
+.panel-title{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.9rem}
+.ctrl-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.ctrl-row:last-child{margin-bottom:0}
+.ctrl-label{font-size:13px;color:var(--text2)}
+.ctrl-val{font-size:13px;font-weight:500;color:var(--gold);min-width:55px;text-align:right}
+.slider-wrap{display:flex;align-items:center;gap:8px;flex:1;margin:0 12px}
+input[type=range]{flex:1;height:3px;border-radius:2px;accent-color:var(--gold);background:var(--bg4);cursor:pointer}
+.toggle-group{display:flex;gap:3px;background:var(--bg3);padding:3px;border-radius:20px}
+.topt{padding:5px 12px;border-radius:17px;font-size:12px;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .2s;font-family:var(--font-body)}
+.topt.active{background:var(--gold);color:#080810;font-weight:500}
+
+/* PLAYER */
+.player-main{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1rem;text-align:center;position:relative;min-height:160px}
+.player-mode-badge{position:absolute;top:1rem;right:1rem;font-size:10px;padding:3px 10px;border-radius:20px;background:var(--gold-dim);color:var(--gold);letter-spacing:.08em;text-transform:uppercase}
+.player-status{font-size:11px;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.75rem}
+.player-affirmation{font-family:var(--font-display);font-size:22px;font-weight:300;color:var(--text);line-height:1.4;font-style:italic;min-height:60px;display:flex;align-items:center;justify-content:center;padding:0 1rem}
+.player-affirmation.speaking{color:var(--gold)}
+.player-progress{width:100%;height:2px;background:var(--bg4);border-radius:2px;margin:1rem 0;overflow:hidden}
+.player-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:2px;transition:width .3s linear;width:0%}
+.player-controls{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:.75rem}
+.ctrl-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--bg5);background:var(--bg3);color:var(--text);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.ctrl-btn:hover{border-color:var(--gold);color:var(--gold)}
+.ctrl-btn.play{width:52px;height:52px;background:var(--gold);color:#080810;border-color:var(--gold);font-size:20px}
+.ctrl-btn.play:hover{background:var(--gold2)}
+.queue-box{background:var(--bg3);border-radius:var(--radius);padding:.75rem;margin-top:1rem;max-height:160px;overflow-y:auto}
+.queue-box::-webkit-scrollbar{width:3px}
+.queue-box::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:2px}
+.queue-item{font-size:12px;color:var(--text2);padding:.35rem .5rem;border-radius:6px;margin-bottom:2px;transition:all .2s}
+.queue-item.current{background:rgba(201,168,76,.12);color:var(--gold)}
+.queue-item.played{color:var(--text3);text-decoration:line-through}
+
+/* GENERADOR IA */
+.ai-form{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:1.2rem;margin-bottom:1rem}
+.ai-label{font-size:13px;color:var(--text2);margin-bottom:.5rem;display:block}
+.ai-textarea{width:100%;background:var(--bg3);border:1px solid var(--bg4);border-radius:var(--radius);padding:.75rem 1rem;font-size:13px;color:var(--text);font-family:var(--font-body);resize:none;outline:none;transition:border-color .2s;line-height:1.6}
+.ai-textarea:focus{border-color:var(--gold)}
+.ai-textarea::placeholder{color:var(--text3)}
+.ai-results{display:flex;flex-direction:column;gap:6px;margin-top:1rem}
+.ai-aff{background:var(--bg3);border:1px solid var(--bg4);border-radius:var(--radius);padding:.75rem 1rem;font-size:13px;color:var(--text2);display:flex;justify-content:space-between;align-items:center;gap.5rem;cursor:pointer;transition:all .2s}
+.ai-aff:hover{border-color:var(--gold);color:var(--text)}
+.ai-aff.selected{background:rgba(201,168,76,.08);border-color:var(--gold);color:var(--text)}
+.ai-check{font-size:16px;color:var(--gold);flex-shrink:0;opacity:0;transition:opacity .2s}
+.ai-aff.selected .ai-check{opacity:1}
+.ai-loading{text-align:center;padding:1.5rem;color:var(--text2);font-size:13px}
+.ai-dots{display:inline-block}
+.ai-dots::after{content:'';animation:dots 1.5s steps(4,end) infinite}
+@keyframes dots{0%,20%{content:''}40%{content:'.'}60%{content:'..'}80%,100%{content:'...'}}
+
+/* CONTEXTOS */
+.ctx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:1.5rem}
+.ctx-card{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:1rem;cursor:pointer;transition:all .25s;text-align:center}
+.ctx-card:hover{border-color:var(--gold-dim);transform:translateY(-2px)}
+.ctx-card.selected{border-color:var(--gold);background:rgba(201,168,76,.05)}
+.ctx-icon{font-size:26px;margin-bottom:.5rem}
+.ctx-name{font-size:12px;font-weight:500;color:var(--text);margin-bottom:2px}
+.ctx-desc{font-size:10px;color:var(--text2)}
+
+/* EJEMPLOS */
+.example-tabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.ex-tab{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--bg4);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .2s}
+.ex-tab.active{background:var(--gold);color:#080810;border-color:var(--gold)}
+.example-pair{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:1.1rem;margin-bottom:.75rem}
+.ex-label{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;padding:3px 8px;border-radius:20px;display:inline-block}
+.ex-bad{background:#2a1010;color:#e85454}
+.ex-good{background:#0a2a1a;color:#3ecf8e}
+.ex-text{font-size:13px;color:var(--text2);line-height:1.7;font-style:italic;margin-bottom:.35rem}
+.ex-why{font-size:11px;color:var(--text3);line-height:1.5}
+
+/* BOTONES */
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;font-family:var(--font-body);border:none}
+.btn-gold{background:var(--gold);color:#080810}
+.btn-gold:hover{background:var(--gold2)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--bg5)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn-sm{padding:6px 14px;font-size:12px}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:1rem}
+.btn:disabled{opacity:.4;cursor:default}
+
+/* MISC */
+.tip{background:rgba(91,141,238,.06);border:1px solid rgba(91,141,238,.15);border-radius:var(--radius);padding:.75rem 1rem;font-size:12px;color:var(--text2);line-height:1.6;margin:.85rem 0}
+.tip strong{color:var(--blue)}
+.empty{text-align:center;padding:2.5rem 1rem;color:var(--text2)}
+.empty .big{font-size:36px;margin-bottom:.75rem}
+.divider{height:1px;background:var(--bg3);margin:1.25rem 0}
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div id="app">
+
+  <div class="topbar">
+    <div>
+      <div class="logo" onclick="showScreen('home')"><strong>Vox</strong><span>Mind</span></div>
+      <div class="logo-sub">habilia · oratoria & comunicación</div>
+    </div>
+    <div class="topbar-right">
+      <button class="theme-btn" onclick="toggleTheme()" title="Cambiar tema">☀️</button>
+      <div class="habilia-badge">HABIL/IA</div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <button class="nav-btn active" onclick="showScreen('home')">🏠 Inicio</button>
+    <button class="nav-btn" onclick="showScreen('player')">🎙️ Entrenador</button>
+    <button class="nav-btn" onclick="showScreen('ia')">✨ IA Personal</button>
+    <button class="nav-btn" onclick="showScreen('contextos')">🎯 Contextos</button>
+    <button class="nav-btn" onclick="showScreen('ejemplos')">💬 Ejemplos</button>
+  </nav>
+
+  <!-- HOME -->
+  <div id="screen-home" class="screen visible">
+    <div class="hero">
+      <span class="hero-icon">🎙️</span>
+      <h1>Habla con<br><em>poder real.</em></h1>
+      <p>Programación mental nocturna para transformar tu comunicación. Afirmaciones de oratoria mientras te relajas o duermes.</p>
+      <div class="hero-stats">
+        <div class="hs"><div class="n" id="hs-sesiones">0</div><div class="l">Sesiones</div></div>
+        <div class="hs"><div class="n" id="hs-afirm">0</div><div class="l">Afirmaciones</div></div>
+        <div class="hs"><div class="n" id="hs-racha">0🔥</div><div class="l">Racha días</div></div>
+      </div>
+    </div>
+
+    <div class="section-title">Modos de <em>entrenamiento</em></div>
+    <div class="modes-grid" id="home-modes"></div>
+
+    <div class="tip">
+      <strong>💡 Cómo usarlo de noche:</strong> Selecciona un modo, ajusta el volumen bajo, pon el intervalo en 30-60 segundos y deja el audio encendido mientras te duermes. Tu mente subconsciente procesa las afirmaciones sin esfuerzo consciente.
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="showScreen('player')">🎙️ Comenzar sesión</button>
+      <button class="btn btn-ghost" onclick="showScreen('ia')">✨ Generar con IA</button>
+    </div>
+  </div>
+
+  <!-- PLAYER -->
+  <div id="screen-player" class="screen">
+    <div class="section-title">Entrenador <em>nocturno</em></div>
+
+    <div class="panel">
+      <div class="panel-title">Modo activo</div>
+      <div class="modes-grid" id="player-modes" style="margin-bottom:0"></div>
+    </div>
+
+    <div class="player-main">
+      <div class="player-mode-badge" id="player-badge">Oratoria</div>
+      <div class="player-status" id="player-status">LISTO PARA INICIAR</div>
+      <div class="player-affirmation" id="player-aff">Selecciona un modo y presiona play</div>
+      <div class="player-progress"><div class="player-bar" id="player-bar"></div></div>
+      <div class="player-controls">
+        <button class="ctrl-btn" onclick="prevAff()" title="Anterior">⏮</button>
+        <button class="ctrl-btn play" id="play-btn" onclick="togglePlay()">▶</button>
+        <button class="ctrl-btn" onclick="nextAff()" title="Siguiente">⏭</button>
+        <button class="ctrl-btn" onclick="shuffleQueue()" title="Aleatorio">🔀</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Controles de audio</div>
+      <div class="ctrl-row">
+        <span class="ctrl-label">Volumen de voz</span>
+        <div class="slider-wrap"><input type="range" id="vol-slider" min="0" max="100" value="70" oninput="updateVol(this.value)"></div>
+        <span class="ctrl-val" id="vol-val">70%</span>
+      </div>
+      <div class="ctrl-row">
+        <span class="ctrl-label">Intervalo entre frases</span>
+        <div class="slider-wrap"><input type="range" id="int-slider" min="5" max="60" value="20" oninput="updateInt(this.value)"></div>
+        <span class="ctrl-val" id="int-val">20s</span>
+      </div>
+      <div class="ctrl-row">
+        <span class="ctrl-label">Velocidad de voz</span>
+        <div class="toggle-group">
+          <button class="topt" onclick="setRate(.7,this)">Lenta</button>
+          <button class="topt active" onclick="setRate(1,this)">Normal</button>
+          <button class="topt" onclick="setRate(1.3,this)">Rápida</button>
+        </div>
+      </div>
+      <div class="ctrl-row">
+        <span class="ctrl-label">Modo nocturno</span>
+        <div class="toggle-group">
+          <button class="topt active" onclick="setNight(true,this)">🌙 Noche</button>
+          <button class="topt" onclick="setNight(false,this)">☀️ Día</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Cola de reproducción <span id="queue-count" style="color:var(--gold)"></span></div>
+      <div class="queue-box" id="queue-box"></div>
+    </div>
+  </div>
+
+  <!-- IA PERSONAL -->
+  <div id="screen-ia" class="screen">
+    <div class="section-title">Afirmaciones <em>personalizadas</em></div>
+
+    <div class="ai-form">
+      <label class="ai-label">Describe tu situación (trabajo, contexto, desafío que enfrentas):</label>
+      <textarea class="ai-textarea" id="ai-context" rows="3" placeholder="Ej: Soy vendedor y me trabo cuando hablo con clientes importantes, uso mucho 'como que' y 'cachai'..."></textarea>
+
+      <div class="ctrl-row" style="margin-top:.75rem">
+        <span class="ctrl-label">Enfoque</span>
+        <div class="toggle-group">
+          <button class="topt active" id="ai-focus-oratoria" onclick="setAiFocus('oratoria',this)">Oratoria</button>
+          <button class="topt" id="ai-focus-chile" onclick="setAiFocus('chile',this)">🇨🇱 Chile</button>
+          <button class="topt" id="ai-focus-confianza" onclick="setAiFocus('confianza',this)">Confianza</button>
+          <button class="topt" id="ai-focus-liderazgo" onclick="setAiFocus('liderazgo',this)">Liderazgo</button>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="generateAI()" id="ai-btn">✨ Generar afirmaciones</button>
+      </div>
+    </div>
+
+    <div id="ai-output"></div>
+
+    <div id="ai-add-row" style="display:none">
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="addSelectedToQueue()">➕ Agregar seleccionadas a la sesión</button>
+        <button class="btn btn-ghost" onclick="addAllToQueue()">Agregar todas</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEXTOS -->
+  <div id="screen-contextos" class="screen">
+    <div class="section-title">Contextos <em>situacionales</em></div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:1.25rem;line-height:1.6">Afirmaciones específicas para cada situación real de tu vida. Selecciona el contexto y las afirmaciones se cargan en el entrenador.</p>
+
+    <div class="ctx-grid" id="ctx-grid"></div>
+
+    <div id="ctx-content" style="display:none">
+      <div class="divider"></div>
+      <div class="section-title" id="ctx-title"></div>
+      <div id="ctx-affs"></div>
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="loadContextToPlayer()">🎙️ Entrenar con este contexto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EJEMPLOS -->
+  <div id="screen-ejemplos" class="screen">
+    <div class="section-title">Conversaciones <em>reales</em></div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:1.25rem;line-height:1.6">Compara cómo hablas hoy con cómo podrías hablar. El cambio está en los detalles.</p>
+
+    <div class="example-tabs" id="ex-tabs"></div>
+    <div id="ex-content"></div>
+  </div>
+
+</div>
+
+<script>
+// ——— DATOS ———
+
+const MODES = [
+  {id:'oratoria',icon:'🎤',name:'Oratoria',desc:'Dicción, claridad y precisión al hablar',affs:[
+    'Mi voz es clara, firme y fácil de entender.',
+    'Articulo cada palabra con precisión y confianza.',
+    'Mi comunicación es directa y poderosa.',
+    'Cada palabra que digo tiene peso e intención.',
+    'Hablo con ritmo natural y pausa inteligente.',
+    'Mi dicción mejora con cada conversación.',
+    'Expreso mis ideas con orden y claridad.',
+    'Mi voz proyecta autoridad y convicción.',
+    'Hablo despacio cuando importa, rápido cuando fluidez.',
+    'Mis palabras impactan y se recuerdan.',
+  ]},
+  {id:'liderazgo',icon:'👑',name:'Liderazgo',desc:'Comunicación de autoridad e influencia',affs:[
+    'Cuando hablo, las personas me escuchan y me siguen.',
+    'Mi comunicación inspira acción en los demás.',
+    'Transmito visión con cada palabra que pronuncio.',
+    'Hablo con la seguridad de quien sabe lo que dice.',
+    'Mis ideas mueven a otros a tomar decisiones.',
+    'Comunico expectativas claras y motivadoras.',
+    'Lidero conversaciones difíciles con calma y autoridad.',
+    'Mi tono comunica confianza antes de que yo hable.',
+    'Escucho activamente y respondo con precisión.',
+    'Mi presencia en una conversación genera confianza.',
+  ]},
+  {id:'confianza',icon:'💎',name:'Confianza',desc:'Seguridad al hablar en público',affs:[
+    'Me siento completamente seguro al hablar frente a otros.',
+    'El nerviosismo se transforma en energía y entusiasmo.',
+    'Merezco ser escuchado y mi opinión tiene valor.',
+    'Hablo con calma incluso cuando siento presión.',
+    'Mi cuerpo refleja seguridad mientras hablo.',
+    'Disfruto hablar frente a grupos de personas.',
+    'Cada vez que hablo en público, mejoro y crezco.',
+    'Mi mente está clara y enfocada cuando me expreso.',
+    'Confío en mis palabras y en mi conocimiento.',
+    'Soy memorable cada vez que tomo la palabra.',
+  ]},
+  {id:'vocabulario',icon:'📖',name:'Vocabulario',desc:'Elimina muletillas, palabras precisas',affs:[
+    'Mi vocabulario es preciso, rico y poderoso.',
+    'Elijo las palabras exactas para lo que quiero decir.',
+    'Hablo sin muletillas ni rellenos innecesarios.',
+    'Cada silencio mío es intencional, no nervioso.',
+    'Expreso ideas complejas con palabras simples y claras.',
+    'Mi cerebro encuentra la palabra correcta al instante.',
+    'Uso el silencio como herramienta comunicacional.',
+    'Mi mente organiza el pensamiento antes de hablar.',
+    'Tengo vocabulario para cada situación y contexto.',
+    'Las palabras precisas fluyen naturales desde mí.',
+  ]},
+  {id:'presencia',icon:'⚡',name:'Presencia',desc:'Lenguaje corporal y tono',affs:[
+    'Mi postura comunica confianza antes de que hable.',
+    'Mantengo contacto visual con seguridad y calidez.',
+    'Mi tono de voz varía para mantener la atención.',
+    'Gesticulo con naturalidad y refuerzo mis palabras.',
+    'Ocupo el espacio con presencia física y mental.',
+    'Mi energía llena la sala cuando entro a hablar.',
+    'Respiro profundo y eso da fuerza a mi voz.',
+    'Mi cuerpo y mis palabras dicen lo mismo.',
+    'Proyecto calma y seguridad con mi lenguaje no verbal.',
+    'Soy magnético cuando me expreso con autenticidad.',
+  ]},
+  {id:'chile',icon:'🇨🇱',name:'Modo Chile',desc:'Identidad poderosa, sin perder lo tuyo',chile:true,affs:[
+    'Hablo con identidad chilena y precisión profesional.',
+    'Reemplazo el "cachai" por preguntas directas y claras.',
+    'Mi lenguaje es auténtico y al mismo tiempo poderoso.',
+    'Expreso mis ideas sin depender de muletillas locales.',
+    'Hablo con el mismo impacto en cualquier contexto.',
+    'Mi acento chileno es parte de mi identidad única.',
+    'Comunico con calidez y claridad al mismo tiempo.',
+    'Puedo ser cercano y profesional a la vez.',
+    'Elijo palabras que elevan mi credibilidad.',
+    'Mi forma de hablar abre puertas donde quiero llegar.',
+  ]},
+];
+
+const CONTEXTS = [
+  {id:'entrevista',icon:'💼',name:'Entrevista de trabajo',desc:'Primera impresión decisiva',affs:[
+    'Presento mis logros con claridad y confianza.',
+    'Respondo preguntas difíciles con calma y estructura.',
+    'Mi historia profesional es coherente y poderosa.',
+    'Transmito entusiasmo genuino por la oportunidad.',
+    'Mis respuestas son concisas y van al punto.',
+    'Demuestro valor con ejemplos concretos y reales.',
+    'Hago preguntas inteligentes que demuestran preparación.',
+    'Termino la entrevista siendo memorable positivamente.',
+  ]},
+  {id:'universidad',icon:'🎓',name:'Universidad',desc:'Exposiciones y defensas orales',affs:[
+    'Expongo con estructura clara: introducción, desarrollo, cierre.',
+    'Manejo la presión de las preguntas del panel con calma.',
+    'Mi voz proyecta seguridad frente al auditorio.',
+    'Defiendo mis ideas con argumentos sólidos y evidencia.',
+    'Mantengo contacto visual con el panel y el público.',
+    'Uso el pizarrón o la presentación como apoyo, no muleta.',
+    'Respiro antes de responder y organizo mis ideas.',
+    'Mi preparación se nota en cada palabra que digo.',
+  ]},
+  {id:'reuniones',icon:'💻',name:'Reuniones online',desc:'Zoom, Meet, Teams',affs:[
+    'Me expreso con claridad y concisión en reuniones virtuales.',
+    'Intervengo en el momento justo sin interrumpir.',
+    'Mi presencia online es tan impactante como en persona.',
+    'Estructuro mis intervenciones: punto, razón, ejemplo.',
+    'No me paralizo cuando hay silencio o problemas técnicos.',
+    'Hablo directamente a la cámara con naturalidad.',
+    'Mis aportes son valorados y recordados.',
+    'Termino mis ideas antes de ceder la palabra.',
+  ]},
+  {id:'publico',icon:'🎤',name:'Hablar en público',desc:'Presentaciones y charlas',affs:[
+    'El público me da energía, no me quita seguridad.',
+    'Empiezo con una frase que captura atención inmediata.',
+    'Manejo los nervios transformándolos en presencia.',
+    'Cuento historias que conectan emocionalmente.',
+    'Modulo mi voz para mantener el interés del auditorio.',
+    'Uso pausas dramáticas con intención y efecto.',
+    'Finalizo con un cierre memorable y un llamado a acción.',
+    'Cada presentación me hace mejor comunicador.',
+  ]},
+  {id:'llamadas',icon:'📞',name:'Llamadas formales',desc:'Clientes, proveedores, jefes',affs:[
+    'Inicio la llamada con claridad sobre mi propósito.',
+    'Mi tono telefónico comunica profesionalismo y calidez.',
+    'Escucho activamente sin interrumpir innecesariamente.',
+    'Confirmo lo acordado antes de terminar la llamada.',
+    'Manejo objeciones con calma y argumentos sólidos.',
+    'Mi voz suena segura incluso cuando no lo siento.',
+    'Termino la llamada con próximos pasos claros.',
+    'Soy eficiente: digo lo que necesito sin rodeos.',
+  ]},
+  {id:'chile_ctx',icon:'🇨🇱',name:'Modo Chile Pro',desc:'Para contextos formales',affs:[
+    'Presento mis ideas sin depender del "o sea" o "igual".',
+    'Reemplazo "a ver si me entiende" por afirmaciones directas.',
+    'Digo "entiendo" en vez de "cachai" sin perder naturalidad.',
+    'Mi vocabulario se expande sin que suene forzado.',
+    'Puedo ser cercano y preciso al mismo tiempo.',
+    'Elijo "sin embargo" sobre "pero igual po".',
+    'Mi forma de hablar abre puertas en todo Chile.',
+    'Tengo rango: puedo hablar formal o informal según el contexto.',
+  ]},
+];
+
+const EXAMPLES = [
+  {id:'entrevista',name:'Entrevista',icon:'💼',pairs:[
+    {bad:'Ehh... bueno, a ver... yo trabajo como que en ventas hace como 3 años más o menos, cachai, y... igual he tenido buenos resultados.',good:'Tengo tres años en ventas consultiva. En mi último cargo aumenté el cierre de contratos en un 40% aplicando una metodología de seguimiento estructurado.',why:'Sin "ehh", sin "cachai", sin "como que". Cifra concreta, metodología mencionada.'},
+    {bad:'Weon, es que igual me gusta trabajar en equipo, po, como que soy bueno pa relacionarme con la gente.',good:'Tengo facilidad para construir relaciones de confianza rápida. En mi equipo anterior fui el punto de contacto entre ventas y producto.',why:'Reemplaza "weon" y "po" por ejemplos de impacto real.'},
+    {bad:'O sea, mis debilidades... igual soy medio perfeccionista a veces, no sé.',good:'Trabajo en delegar sin microgestionar. Lo identifiqué el año pasado y hoy lidero un equipo de 4 personas exitosamente.',why:'Debilidad honesta + acción correctiva = candidato maduro.'},
+  ]},
+  {id:'reunion',name:'Reuniones',icon:'💻',pairs:[
+    {bad:'Oye, sí, igual pienso que po... a ver... no sé si me explico pero como que el proyecto igual tiene como problemas.',good:'El proyecto tiene tres bloqueos concretos: recursos, plazo y alineación del equipo. Propongo que revisemos cada uno ahora.',why:'Nombra el problema, cuantifícalo, propone estructura.'},
+    {bad:'Igual yo no sé si es mucho pedir pero como que alguien podría encargarse del informe, no sé, a ver.',good:'Necesito que alguien tome responsabilidad del informe antes del viernes. ¿Quién puede comprometerse con eso?',why:'Petición directa con fecha y pedido explícito de compromiso.'},
+  ]},
+  {id:'publico',name:'Hablar en público',icon:'🎤',pairs:[
+    {bad:'Bueno, este... gracias por estar acá, espero que no me aburran mucho, jajaja... igual no soy muy bueno pa hablar.',good:'Hoy les voy a mostrar cómo tres cambios de comunicación transformaron mi carrera en 90 días.',why:'Nunca te disculpes antes de hablar. Entra con promesa de valor.'},
+    {bad:'Como que... a ver si me entienden... es que igual es un tema medio complicado, o sea.',good:'Este tema parece complejo. Lo voy a dividir en tres partes simples para que quede claro.',why:'Reconoce la complejidad pero toma el control con estructura.'},
+  ]},
+  {id:'chile',name:'🇨🇱 Modo Chile',icon:'🇨🇱',pairs:[
+    {bad:'"Oye, y el proyecto po, ¿cachai lo que hay que hacer?"',good:'"¿Quedó claro el objetivo del proyecto o necesitamos revisar algún punto?"',why:'Misma cercanía, pregunta directa y profesional sin perder el tono cálido chileno.'},
+    {bad:'"Weon, igual pienso que la idea tuya no funciona tanto."',good:'"Tengo una duda sobre ese enfoque. ¿Podemos revisar este punto juntos?"',why:'El desacuerdo profesional no necesita "weon". Más respeto, mismo impacto.'},
+    {bad:'"O sea igual sí po, como que yo estoy de acuerdo."',good:'"Estoy de acuerdo. Avancemos con ese plan."',why:'Cuatro palabras en vez de diez. Más impacto, más presencia.'},
+  ]},
+];
+
+// ——— ESTADO ———
+let currentMode = MODES[0];
+let isPlaying = false;
+let affIndex = 0;
+let queue = [];
+let playTimeout = null;
+let utterance = null;
+let speechRate = 1;
+let isNightMode = true;
+let volume = 0.7;
+let intervalSecs = 20;
+let aiSelectedAffs = [];
+let aiGeneratedAffs = [];
+let aiFocus = 'oratoria';
+let selectedCtx = null;
+let sessions = 0, totalAffs = 0;
+let isDark = true;
+
+function loadStats(){
+  try{
+    const s=JSON.parse(localStorage.getItem('vm-stats')||'{}');
+    sessions=s.sessions||0; totalAffs=s.affs||0;
+    updateStats();
+  }catch(e){}
+}
+function saveStats(){
+  try{localStorage.setItem('vm-stats',JSON.stringify({sessions,affs:totalAffs}));}catch(e){}
+}
+function updateStats(){
+  document.getElementById('hs-sesiones').textContent=sessions;
+  document.getElementById('hs-afirm').textContent=totalAffs;
+  const today=new Date().toDateString();
+  let streak=0;
+  try{const d=JSON.parse(localStorage.getItem('vm-days')||'[]');let cur=new Date();for(let i=0;i<30;i++){if(d.includes(cur.toDateString()))streak++;else break;cur.setDate(cur.getDate()-1);}}catch(e){}
+  document.getElementById('hs-racha').textContent=streak+'🔥';
+}
+function markDay(){
+  try{const d=JSON.parse(localStorage.getItem('vm-days')||'[]');const t=new Date().toDateString();if(!d.includes(t)){d.unshift(t);if(d.length>30)d.splice(30);localStorage.setItem('vm-days',JSON.stringify(d));}}catch(e){}
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('visible'));
+  document.getElementById('screen-'+id).classList.add('visible');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const map={home:0,player:1,ia:2,contextos:3,ejemplos:4};
+  const btns=document.querySelectorAll('.nav-btn');
+  if(map[id]!==undefined)btns[map[id]].classList.add('active');
+}
+
+function toggleTheme(){
+  isDark=!isDark;
+  document.body.classList.toggle('light',!isDark);
+  document.querySelector('.theme-btn').textContent=isDark?'☀️':'🌙';
+}
+
+// ——— MODOS ———
+function renderModes(containerId, compact){
+  const c=document.getElementById(containerId);c.innerHTML='';
+  MODES.forEach(m=>{
+    const d=document.createElement('div');
+    d.className='mode-card'+(m.chile?' mc-chile':'')+(m.id===currentMode.id?' selected':'');
+    d.innerHTML=`<div class="mc-icon">${m.icon}</div><div class="mc-name">${m.name}</div><div class="mc-desc">${m.desc}</div>`;
+    d.onclick=()=>selectMode(m,containerId);
+    c.appendChild(d);
+  });
+}
+function selectMode(m, from){
+  currentMode=m;
+  document.querySelectorAll('.mode-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelectorAll('.mode-card').forEach(c=>{
+    const name=c.querySelector('.mc-name').textContent;
+    if(name===m.name)c.classList.add('selected');
+  });
+  loadQueue(m.affs);
+  document.getElementById('player-badge').textContent=m.name+' '+m.icon;
+}
+
+// ——— QUEUE & PLAYER ———
+function loadQueue(affs){
+  queue=[...affs];affIndex=0;
+  renderQueue();
+  if(affIndex<queue.length)document.getElementById('player-aff').textContent=queue[affIndex];
+}
+function renderQueue(){
+  const box=document.getElementById('queue-box');box.innerHTML='';
+  queue.forEach((a,i)=>{
+    const d=document.createElement('div');
+    d.className='queue-item'+(i===affIndex?' current':i<affIndex?' played':'');
+    d.textContent=(i+1)+'. '+a;
+    box.appendChild(d);
+  });
+  document.getElementById('queue-count').textContent='('+queue.length+')';
+}
+function shuffleQueue(){
+  for(let i=queue.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[queue[i],queue[j]]=[queue[j],queue[i]];}
+  affIndex=0;renderQueue();
+  document.getElementById('player-aff').textContent=queue[0]||'';
+}
+function nextAff(){affIndex=(affIndex+1)%queue.length;renderQueue();speak(queue[affIndex]);}
+function prevAff(){affIndex=(affIndex-1+queue.length)%queue.length;renderQueue();speak(queue[affIndex]);}
+
+function togglePlay(){
+  if(isPlaying)pausePlayer();
+  else startPlayer();
+}
+function startPlayer(){
+  if(!queue.length){alert('Selecciona un modo primero.');return;}
+  isPlaying=true;
+  document.getElementById('play-btn').textContent='⏸';
+  document.getElementById('player-status').textContent='REPRODUCIENDO';
+  sessions++;saveStats();updateStats();markDay();
+  scheduleNext(true);
+}
+function pausePlayer(){
+  isPlaying=false;
+  clearTimeout(playTimeout);
+  if(window.speechSynthesis)window.speechSynthesis.cancel();
+  document.getElementById('play-btn').textContent='▶';
+  document.getElementById('player-status').textContent='PAUSADO';
+  document.getElementById('player-aff').classList.remove('speaking');
+}
+function scheduleNext(immediate){
+  if(!isPlaying)return;
+  const delay=immediate?0:intervalSecs*1000;
+  playTimeout=setTimeout(()=>{
+    if(!isPlaying)return;
+    const aff=queue[affIndex];
+    speak(aff);
+    totalAffs++;saveStats();
+    renderQueue();
+    affIndex=(affIndex+1)%queue.length;
+  },delay);
+}
+function speak(text){
+  if(!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const el=document.getElementById('player-aff');
+  el.textContent=text;el.classList.add('speaking');
+
+  // Barra de progreso animada
+  let prog=0;const bar=document.getElementById('player-bar');bar.style.width='0%';
+  const estDuration=(text.split(' ').length/2.5)*(1/speechRate)*1000;
+  const step=50;const inc=(step/estDuration)*100;
+  const pInterval=setInterval(()=>{prog=Math.min(prog+inc,100);bar.style.width=prog+'%';if(prog>=100)clearInterval(pInterval);},step);
+
+  utterance=new SpeechSynthesisUtterance(text);
+  utterance.lang='es-CL';utterance.rate=speechRate;utterance.volume=isNightMode?volume*0.6:volume;
+  // Preferir voz española disponible
+  const voices=window.speechSynthesis.getVoices();
+  const esVoice=voices.find(v=>v.lang.startsWith('es')&&v.name.toLowerCase().includes('google'))||voices.find(v=>v.lang.startsWith('es'));
+  if(esVoice)utterance.voice=esVoice;
+  utterance.onend=()=>{
+    el.classList.remove('speaking');
+    clearInterval(pInterval);bar.style.width='100%';
+    setTimeout(()=>{bar.style.width='0%';},300);
+    if(isPlaying)scheduleNext(false);
+  };
+  window.speechSynthesis.speak(utterance);
+}
+
+function updateVol(v){volume=v/100;document.getElementById('vol-val').textContent=v+'%';}
+function updateInt(v){intervalSecs=parseInt(v);document.getElementById('int-val').textContent=v+'s';}
+function setRate(r,el){speechRate=r;el.closest('.toggle-group').querySelectorAll('.topt').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
+function setNight(v,el){isNightMode=v;el.closest('.toggle-group').querySelectorAll('.topt').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
+
+// ——— IA ———
+function setAiFocus(f,el){
+  aiFocus=f;
+  document.querySelectorAll('[id^="ai-focus-"]').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+async function generateAI(){
+  const ctx=document.getElementById('ai-context').value.trim();
+  if(!ctx){alert('Describe tu situación primero.');return;}
+  document.getElementById('ai-btn').disabled=true;
+  const focusMap={oratoria:'oratoria y dicción',chile:'comunicación chilena profesional sin perder identidad local',confianza:'confianza al hablar en público',liderazgo:'comunicación de liderazgo e influencia'};
+  document.getElementById('ai-output').innerHTML='<div class="ai-loading">Generando tus afirmaciones personalizadas<span class="ai-dots"></span></div>';
+  document.getElementById('ai-add-row').style.display='none';
+  aiGeneratedAffs=[];aiSelectedAffs=[];
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:600,
+        system:`Eres un experto en programación mental y comunicación. El usuario te describe su situación y tú generas 8 afirmaciones en primera persona, presente indicativo, enfocadas en ${focusMap[aiFocus]}. Las afirmaciones deben ser específicas para el contexto dado, en español chileno formal (sin muletillas), poderosas y creíbles. Devuelve SOLO un JSON array con 8 strings. Nada más, sin backticks ni texto adicional.`,
+        messages:[{role:'user',content:`Mi situación: ${ctx}`}]
+      })
+    });
+    const data=await resp.json();
+    const raw=data.content[0].text.trim().replace(/```json|```/g,'');
+    aiGeneratedAffs=JSON.parse(raw);
+    renderAIResults();
+  }catch(e){
+    document.getElementById('ai-output').innerHTML='<div class="ai-loading">Error al generar. Verifica tu conexión.</div>';
+  }
+  document.getElementById('ai-btn').disabled=false;
+}
+function renderAIResults(){
+  const out=document.getElementById('ai-output');out.innerHTML='';
+  aiGeneratedAffs.forEach((a,i)=>{
+    const d=document.createElement('div');d.className='ai-aff';
+    d.innerHTML=`<span>${a}</span><span class="ai-check">✓</span>`;
+    d.onclick=()=>{d.classList.toggle('selected');if(d.classList.contains('selected'))aiSelectedAffs.push(a);else aiSelectedAffs=aiSelectedAffs.filter(x=>x!==a);};
+    out.appendChild(d);
+  });
+  document.getElementById('ai-add-row').style.display='block';
+}
+function addSelectedToQueue(){
+  const sel=aiSelectedAffs.length?aiSelectedAffs:aiGeneratedAffs;
+  queue=[...queue,...sel];renderQueue();
+  showScreen('player');
+}
+function addAllToQueue(){aiSelectedAffs=aiGeneratedAffs;addSelectedToQueue();}
+
+// ——— CONTEXTOS ———
+function renderContexts(){
+  const g=document.getElementById('ctx-grid');g.innerHTML='';
+  CONTEXTS.forEach(c=>{
+    const d=document.createElement('div');d.className='ctx-card'+(selectedCtx&&selectedCtx.id===c.id?' selected':'');
+    d.innerHTML=`<div class="ctx-icon">${c.icon}</div><div class="ctx-name">${c.name}</div><div class="ctx-desc">${c.desc}</div>`;
+    d.onclick=()=>showContext(c);
+    g.appendChild(d);
+  });
+}
+function showContext(ctx){
+  selectedCtx=ctx;
+  document.querySelectorAll('.ctx-card').forEach(c=>c.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  document.getElementById('ctx-title').innerHTML=ctx.icon+' <em>'+ctx.name+'</em>';
+  const aff=document.getElementById('ctx-affs');aff.innerHTML='';
+  ctx.affs.forEach(a=>{
+    const d=document.createElement('div');
+    d.style.cssText='background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);padding:.7rem 1rem;font-size:13px;color:var(--text2);margin-bottom:5px;line-height:1.6';
+    d.textContent='• '+a;aff.appendChild(d);
+  });
+  document.getElementById('ctx-content').style.display='block';
+}
+function loadContextToPlayer(){
+  if(!selectedCtx)return;
+  queue=[...selectedCtx.affs];affIndex=0;renderQueue();
+  document.getElementById('player-badge').textContent=selectedCtx.name+' '+selectedCtx.icon;
+  showScreen('player');
+}
+
+// ——— EJEMPLOS ———
+function renderExamples(){
+  const tabs=document.getElementById('ex-tabs');tabs.innerHTML='';
+  EXAMPLES.forEach((ex,i)=>{
+    const b=document.createElement('button');b.className='ex-tab'+(i===0?' active':'');
+    b.textContent=ex.icon+' '+ex.name;b.onclick=()=>showExample(ex,b);
+    tabs.appendChild(b);
+  });
+  showExample(EXAMPLES[0],tabs.children[0]);
+}
+function showExample(ex,btn){
+  document.querySelectorAll('.ex-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  const c=document.getElementById('ex-content');c.innerHTML='';
+  ex.pairs.forEach(p=>{
+    const d=document.createElement('div');d.className='example-pair';
+    d.innerHTML=`
+      <div><span class="ex-label ex-bad">❌ Como hablamos hoy</span></div>
+      <div class="ex-text">${p.bad}</div>
+      <div style="margin-top:.75rem"><span class="ex-label ex-good">✅ Comunicación poderosa</span></div>
+      <div class="ex-text">${p.good}</div>
+      <div style="margin-top:.5rem" class="ex-why">💡 ${p.why}</div>
+    `;
+    c.appendChild(d);
+  });
+}
+
+// ——— INIT ———
+window.speechSynthesis&&window.speechSynthesis.getVoices();
+loadStats();
+renderModes('home-modes');
+renderModes('player-modes');
+renderContexts();
+renderExamples();
+loadQueue(MODES[0].affs);
+</script>
+</body>
+</html>
