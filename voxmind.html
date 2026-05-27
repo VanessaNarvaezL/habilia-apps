@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -644,7 +645,14 @@ function speak(text){
   utterance.lang='es-CL';utterance.rate=speechRate;utterance.volume=isNightMode?volume*0.6:volume;
   // Preferir voz española disponible
   const voices=window.speechSynthesis.getVoices();
-  const esVoice=voices.find(v=>v.lang.startsWith('es')&&v.name.toLowerCase().includes('google'))||voices.find(v=>v.lang.startsWith('es'));
+  const esVoice=
+    voices.find(v=>v.lang==='es-CL')||
+    voices.find(v=>v.lang==='es-MX'&&v.name.toLowerCase().includes('google'))||
+    voices.find(v=>v.lang==='es-MX')||
+    voices.find(v=>v.lang==='es-US')||
+    voices.find(v=>v.lang==='es-419')||
+    voices.find(v=>v.lang.startsWith('es')&&!v.lang.includes('-ES')&&v.name.toLowerCase().includes('google'))||
+    voices.find(v=>v.lang.startsWith('es')&&!v.lang.includes('-ES'));
   if(esVoice)utterance.voice=esVoice;
   utterance.onend=()=>{
     el.classList.remove('speaking');
