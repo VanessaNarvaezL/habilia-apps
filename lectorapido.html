@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LectoRápido — Velocidad lectora y aprendizaje de inglés</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0e0e11;--bg2:#16161a;--bg3:#1e1e24;--bg4:#26262e;
+  --accent:#e8c547;--accent2:#f0a500;--text:#f0ede8;--text2:#a09e99;--text3:#5a5855;
+  --green:#4ecb71;--red:#e85454;--blue:#5b8dee;
+  --font-display:'DM Serif Display',serif;--font-body:'DM Sans',sans-serif;
+  --radius:12px;--radius-lg:20px;
+}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh}
+#app{max-width:720px;margin:0 auto;padding:1.25rem 1rem 3rem}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--bg3);flex-wrap:wrap;gap:8px}
+.logo{font-family:var(--font-display);font-size:22px;color:var(--accent);letter-spacing:-.02em;cursor:pointer}
+.logo span{color:var(--text2);font-style:italic}
+.nav-pills{display:flex;gap:4px;background:var(--bg2);padding:4px;border-radius:30px;flex-wrap:wrap}
+.nav-pill{padding:6px 11px;border-radius:26px;font-size:12px;font-weight:500;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .2s;white-space:nowrap}
+.nav-pill.active{background:var(--accent);color:#0e0e11}
+.nav-pill:hover:not(.active){color:var(--text)}
+.screen{display:none;animation:fadeIn .25s ease}
+.screen.visible{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.btn{padding:10px 20px;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;font-family:var(--font-body);border:none}
+.btn-accent{background:var(--accent);color:#0e0e11}
+.btn-accent:hover{background:var(--accent2)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--bg4)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn-blue{background:transparent;color:var(--blue);border:1px solid #1a2a4a}
+.btn-blue:hover{border-color:var(--blue)}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+.section-label{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.7rem}
+
+/* HOME */
+.hero{text-align:center;padding:1.5rem 0 1rem}
+.hero h1{font-family:var(--font-display);font-size:32px;color:var(--text);line-height:1.1;margin-bottom:.4rem}
+.hero h1 em{color:var(--accent);font-style:italic}
+.hero p{font-size:14px;color:var(--text2);max-width:380px;margin:0 auto}
+.lang-toggle{display:flex;gap:6px;justify-content:center;margin:1rem 0}
+.lang-btn{padding:5px 16px;border-radius:20px;font-size:13px;font-weight:500;border:1px solid var(--bg4);background:transparent;color:var(--text2);cursor:pointer;transition:all .2s}
+.lang-btn.active{background:var(--accent);color:#0e0e11;border-color:var(--accent)}
+.hero-stats{display:flex;gap:8px;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap}
+.hero-stat{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:.65rem .9rem;text-align:center;min-width:80px}
+.hero-stat .n{font-family:var(--font-display);font-size:20px;color:var(--accent)}
+.hero-stat .l{font-size:11px;color:var(--text2);margin-top:1px}
+.mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px}
+.mode-card{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:1.1rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.mode-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transition:transform .3s;transform-origin:left}
+.mode-card:hover{border-color:var(--bg4);transform:translateY(-2px)}
+.mode-card:hover::before{transform:scaleX(1)}
+.mode-card .mc-icon{font-size:22px;margin-bottom:.6rem}
+.mode-card h3{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px}
+.mode-card p{font-size:11px;color:var(--text2);line-height:1.5}
+.mc-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;margin-top:5px;font-weight:500;background:#1a2a4a;color:var(--blue)}
+
+/* LIBRARY */
+.lib-tabs{display:flex;gap:6px;margin-bottom:1rem}
+.lib-tab{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;border:1px solid var(--bg4);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .2s}
+.lib-tab.active{background:var(--accent);color:#0e0e11;border-color:var(--accent)}
+.text-grid{display:flex;flex-direction:column;gap:7px}
+.text-card{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);padding:.85rem 1rem;cursor:pointer;transition:all .2s;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.text-card:hover{border-color:var(--accent)}
+.text-card-info h4{font-size:14px;font-weight:500;color:var(--text);margin-bottom:2px}
+.text-card-info p{font-size:12px;color:var(--text2)}
+.text-card-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.level-badge{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px}
+.level-facil,.level-easy{background:#1a3a22;color:#4ecb71}
+.level-medio,.level-medium{background:#3a2f1a;color:#e8a547}
+.level-avanzado,.level-advanced{background:#3a1a1a;color:#e85454}
+
+/* PDF */
+.pdf-zone{border:2px dashed var(--bg4);border-radius:var(--radius-lg);padding:1.75rem;text-align:center;cursor:pointer;transition:all .25s;margin-bottom:1rem;position:relative}
+.pdf-zone:hover{border-color:var(--accent);background:rgba(232,197,71,.04)}
+.pdf-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.pdf-zone .pz-icon{font-size:32px;margin-bottom:.6rem}
+.pdf-zone h3{font-size:14px;font-weight:500;color:var(--text);margin-bottom:.3rem}
+.pdf-zone p{font-size:12px;color:var(--text2)}
+.pdf-preview{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:1rem;margin-bottom:1rem;display:none}
+.pdf-preview-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.6rem}
+.pdf-excerpt{font-size:13px;color:var(--text2);line-height:1.7;max-height:60px;overflow:hidden;position:relative}
+.pdf-excerpt::after{content:'';position:absolute;bottom:0;left:0;right:0;height:20px;background:linear-gradient(transparent,var(--bg2))}
+.tip-box{background:rgba(91,141,238,.06);border:1px solid rgba(91,141,238,.18);border-radius:var(--radius);padding:.75rem 1rem;font-size:12px;color:var(--text2);line-height:1.6;margin-top:.85rem}
+.tip-box strong{color:var(--blue)}
+
+/* CONFIG */
+.config-panel{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:1.2rem;margin-bottom:1rem}
+.config-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.config-row:last-child{margin-bottom:0}
+.config-label{font-size:13px;color:var(--text2)}
+.config-val{font-size:13px;font-weight:500;color:var(--accent);min-width:50px;text-align:right}
+.slider-wrap{display:flex;align-items:center;gap:8px;flex:1;margin:0 10px}
+input[type=range]{flex:1;height:3px;border-radius:2px;accent-color:var(--accent)}
+.toggle-group{display:flex;gap:3px;background:var(--bg3);padding:3px;border-radius:20px}
+.toggle-opt{padding:4px 10px;border-radius:17px;font-size:12px;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .2s;font-family:var(--font-body)}
+.toggle-opt.active{background:var(--accent);color:#0e0e11;font-weight:500}
+
+/* READER */
+.reader-progress-bar{width:100%;height:3px;background:var(--bg3);border-radius:2px;margin-bottom:1rem;overflow:hidden}
+.reader-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .1s linear}
+.reader-stage{width:100%;background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:2.25rem 1.5rem;text-align:center;position:relative;min-height:170px;display:flex;align-items:center;justify-content:center;margin-bottom:.85rem;overflow:hidden}
+.focus-line{position:absolute;left:10%;right:10%;height:1px;background:var(--accent);opacity:.25;top:50%;pointer-events:none;display:none}
+.focus-dot{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--accent);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;display:none;box-shadow:0 0 12px var(--accent)}
+.reader-word{font-family:var(--font-display);font-size:38px;color:var(--text);letter-spacing:-.01em;line-height:1.2;max-width:100%;word-break:break-word}
+.reader-word .hl{color:var(--accent)}
+.reader-controls{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:.85rem}
+.ctrl-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--bg4);background:var(--bg2);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.ctrl-btn:hover{border-color:var(--accent);color:var(--accent)}
+.ctrl-btn.play{width:48px;height:48px;background:var(--accent);color:#0e0e11;border-color:var(--accent);font-size:18px}
+.ctrl-btn.play:hover{background:var(--accent2)}
+.reader-meta{display:flex;justify-content:center;gap:1.5rem;font-size:12px;color:var(--text3)}
+.wpm-live{color:var(--accent);font-weight:500}
+
+/* COMP */
+.comp-header{text-align:center;padding:.75rem 0 1.25rem}
+.comp-header h2{font-family:var(--font-display);font-size:24px;color:var(--text);margin-bottom:.3rem}
+.comp-header p{font-size:13px;color:var(--text2)}
+.comp-q{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:1rem;margin-bottom:.85rem}
+.comp-q-text{font-size:15px;font-weight:500;color:var(--text);margin-bottom:.75rem;line-height:1.5}
+.comp-opts{display:flex;flex-direction:column;gap:5px}
+.comp-opt{padding:9px 13px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text2);font-size:13px;cursor:pointer;text-align:left;transition:all .2s;font-family:var(--font-body)}
+.comp-opt:hover:not(:disabled){border-color:var(--accent);color:var(--text)}
+.comp-opt.correct{background:#1a3a22;border-color:#4ecb71;color:#4ecb71}
+.comp-opt.wrong{background:#3a1a1a;border-color:#e85454;color:#e85454}
+.comp-opt:disabled{cursor:default}
+
+/* REPASO */
+.repaso-header{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:.85rem 1rem;margin-bottom:.85rem;display:flex;justify-content:space-between;align-items:center}
+.repaso-q{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:1rem;margin-bottom:.85rem}
+.repaso-origin{font-size:11px;color:var(--text3);margin-bottom:.4rem}
+.repaso-q-text{font-size:15px;font-weight:500;color:var(--text);margin-bottom:.75rem;line-height:1.5}
+.repaso-opts{display:flex;flex-direction:column;gap:5px}
+.repaso-opt{padding:9px 13px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text2);font-size:13px;cursor:pointer;text-align:left;transition:all .2s;font-family:var(--font-body)}
+.repaso-opt:hover:not(:disabled){border-color:var(--accent);color:var(--text)}
+.repaso-opt.correct{background:#1a3a22;border-color:#4ecb71;color:#4ecb71}
+.repaso-opt.wrong{background:#3a1a1a;border-color:#e85454;color:#e85454}
+.repaso-opt:disabled{cursor:default}
+.repaso-exp{background:var(--bg3);border-radius:var(--radius);padding:.75rem .9rem;font-size:13px;color:var(--text2);line-height:1.6;margin-top:.6rem;border-left:2px solid var(--accent);display:none}
+
+/* RESULT */
+.result-hero{text-align:center;padding:1.25rem 0}
+.result-circle{width:100px;height:100px;border-radius:50%;margin:0 auto .9rem;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid var(--accent)}
+.result-circle .rn{font-family:var(--font-display);font-size:26px;color:var(--accent)}
+.result-circle .rl{font-size:11px;color:var(--text2);margin-top:2px}
+.result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:.85rem 0 1.1rem}
+.rs-card{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);padding:.75rem;text-align:center}
+.rs-card .n{font-family:var(--font-display);font-size:20px;color:var(--text)}
+.rs-card .l{font-size:11px;color:var(--text2);margin-top:2px}
+.wrong-item{background:var(--bg2);border:1px solid #3a1a1a;border-radius:var(--radius);padding:.75rem .9rem;margin-bottom:.5rem}
+.wrong-item-q{font-size:13px;font-weight:500;color:var(--text);margin-bottom:.25rem}
+.wrong-item-ans{font-size:12px;color:#4ecb71}
+
+/* STATS */
+.stats-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:7px;margin-bottom:1.1rem}
+.ss-card{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);padding:.75rem;text-align:center}
+.ss-card .n{font-family:var(--font-display);font-size:22px;color:var(--accent)}
+.ss-card .l{font-size:11px;color:var(--text2);margin-top:2px}
+.session-item{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);padding:.7rem .9rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.si-left{font-size:12px;color:var(--text2)}
+.si-left strong{color:var(--text);font-weight:500}
+.si-wpm{font-family:var(--font-display);font-size:17px;color:var(--accent)}
+.si-comp{font-size:11px;color:var(--text3)}
+.empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text2)}
+.empty-state .big{font-size:36px;margin-bottom:.7rem}
+
+/* CANCIONES */
+.song-hero{text-align:center;padding:1.25rem 0 1rem}
+.song-hero h1{font-family:var(--font-display);font-size:26px;color:var(--text);line-height:1.15;margin-bottom:.4rem}
+.song-hero h1 em{color:var(--accent);font-style:italic}
+.song-hero p{font-size:13px;color:var(--text2);max-width:380px;margin:0 auto}
+.how-box{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:1rem 1.1rem;margin:.85rem 0 1.1rem}
+.how-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem;margin-top:.6rem}
+.how-step{text-align:center}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--bg4);color:var(--accent);font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;margin:0 auto .4rem}
+.how-step h4{font-size:12px;font-weight:500;color:var(--text);margin-bottom:2px}
+.how-step p{font-size:11px;color:var(--text2);line-height:1.4}
+.songs-grid{display:flex;flex-direction:column;gap:8px}
+.song-card{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:1rem 1.1rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:1rem}
+.song-card:hover{border-color:var(--accent);transform:translateX(3px)}
+.song-art{width:50px;height:50px;border-radius:var(--radius);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.song-info h3{font-size:14px;font-weight:500;color:var(--text);margin-bottom:3px}
+.song-info p{font-size:12px;color:var(--text2);margin-bottom:5px}
+.song-tags{display:flex;gap:5px;flex-wrap:wrap}
+.song-tag{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500}
+.tag-easy{background:#1a3a22;color:#4ecb71}
+.tag-medium{background:#3a2f1a;color:#e8a547}
+.tag-hard{background:#3a1a1a;color:#e85454}
+.tag-genre{background:#1a2a3a;color:var(--blue)}
+.player-top{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:1rem 1.1rem;margin-bottom:.85rem}
+.player-top-row{display:flex;align-items:center;gap:.85rem;margin-bottom:.85rem}
+.player-art{width:46px;height:46px;border-radius:var(--radius);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.player-info h3{font-size:14px;font-weight:500;color:var(--text);margin-bottom:2px}
+.player-info p{font-size:12px;color:var(--text2)}
+.btn-yt{display:inline-flex;align-items:center;gap:6px;background:#ff0000;color:#fff;padding:8px 14px;border-radius:var(--radius);font-size:12px;font-weight:500;text-decoration:none;transition:opacity .2s}
+.btn-yt:hover{opacity:.88}
+.yt-hint{background:rgba(255,0,0,.06);border:1px solid rgba(255,0,0,.15);border-radius:var(--radius);padding:.7rem .9rem;font-size:12px;color:var(--text2);line-height:1.5;display:flex;align-items:flex-start;gap:.6rem}
+.yt-hint a{color:#ff4444;font-weight:500;text-decoration:none}
+.lyrics-stage{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:.85rem}
+.lyrics-scroll{height:280px;overflow-y:auto;padding:1.1rem 1.25rem;scroll-behavior:smooth}
+.lyrics-scroll::-webkit-scrollbar{width:3px}
+.lyrics-scroll::-webkit-scrollbar-track{background:var(--bg3)}
+.lyrics-scroll::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+.lyric-block{margin-bottom:1rem;padding:.6rem .75rem;border-radius:var(--radius);border:1px solid transparent;transition:all .3s}
+.lyric-block.future{opacity:.2}
+.lyric-block.past{opacity:.4}
+.lyric-block.current{opacity:1;background:rgba(232,197,71,.05);border-color:rgba(232,197,71,.15)}
+.lyric-en{line-height:1.8;margin-bottom:.25rem}
+.lyric-word{display:inline-block;font-family:var(--font-display);font-size:19px;color:var(--text);margin:0 2px;cursor:pointer;border-radius:5px;padding:1px 3px;transition:all .15s}
+.lyric-word:hover{background:var(--bg3);color:var(--accent)}
+.lyric-word.w-active{color:var(--accent);background:rgba(232,197,71,.18)}
+.lyric-word.w-past{color:var(--text3)}
+.lyric-tr{font-size:13px;color:var(--text3);line-height:1.5;font-style:italic;padding:0 2px;max-height:0;overflow:hidden;transition:max-height .3s,opacity .3s;opacity:0}
+.lyric-block.current .lyric-tr{max-height:60px;opacity:1;color:var(--text2)}
+.lyric-block.past .lyric-tr{max-height:40px;opacity:.5;color:var(--text3)}
+.word-popup{background:var(--bg3);border:1px solid rgba(232,197,71,.3);border-radius:var(--radius);padding:.75rem 1rem;margin-bottom:.85rem;display:none}
+.wp-word{font-family:var(--font-display);font-size:20px;color:var(--accent);margin-bottom:.25rem}
+.wp-def{font-size:13px;color:var(--text2);line-height:1.5}
+.wp-close{float:right;background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px}
+.progress-row{display:flex;align-items:center;gap:8px;margin-bottom:.75rem}
+.prog-time{font-size:11px;color:var(--text3);min-width:32px}
+.prog-bar{flex:1;height:5px;background:var(--bg3);border-radius:3px;cursor:pointer}
+.prog-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .3s linear}
+.video-controls{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:.75rem}
+.speed-pill{background:var(--bg3);color:var(--text2);font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid var(--bg4);cursor:pointer;font-family:var(--font-body)}
+.speed-pill:hover{border-color:var(--accent);color:var(--accent)}
+.meta-row{display:flex;justify-content:center;gap:1.5rem;font-size:12px;color:var(--text3);margin-bottom:.85rem}
+.meta-accent{color:var(--accent);font-weight:500}
+.vocab-panel{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-lg);padding:.9rem 1rem;margin-bottom:.85rem;display:none}
+.vocab-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:5px;margin-top:.6rem}
+.vi{display:flex;gap:.5rem;align-items:baseline;padding:.3rem .5rem;background:var(--bg3);border-radius:var(--radius)}
+.vi-w{font-size:12px;font-weight:500;color:var(--accent);min-width:70px}
+.vi-d{font-size:11px;color:var(--text2)}
+.song-result{text-align:center;padding:1.25rem 0}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="topbar">
+    <div class="logo" onclick="showScreen('home')">Lecto<span>Rápido</span></div>
+    <div class="nav-pills">
+      <button class="nav-pill active" onclick="showScreen('home')">🏠 Inicio</button>
+      <button class="nav-pill" onclick="showScreen('library')">📚 Textos</button>
+      <button class="nav-pill" onclick="showScreen('canciones')">🎵 Inglés</button>
+      <button class="nav-pill" onclick="showScreen('repaso')">🔁 Repaso</button>
+      <button class="nav-pill" onclick="showScreen('stats')">📈 Progreso</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div id="screen-home" class="screen visible">
+    <div class="hero">
+      <h1>Lee más rápido,<br><em>entiende más.</em></h1>
+      <p>Velocidad lectora · comprensión · inglés con canciones · tu propio PDF</p>
+      <div class="lang-toggle">
+        <button class="lang-btn active" id="lang-es" onclick="setLang('es',this)">🇨🇱 Español</button>
+        <button class="lang-btn" id="lang-en" onclick="setLang('en',this)">🇺🇸 English</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="n" id="hs-s">0</div><div class="l">Sesiones</div></div>
+        <div class="hero-stat"><div class="n" id="hs-w">—</div><div class="l">Mejor WPM</div></div>
+        <div class="hero-stat"><div class="n" id="hs-c">—</div><div class="l">Comprensión</div></div>
+        <div class="hero-stat"><div class="n" id="hs-r">0🔥</div><div class="l">Racha</div></div>
+      </div>
+    </div>
+    <div class="mode-grid">
+      <div class="mode-card" onclick="showScreen('library')"><div class="mc-icon">⚡</div><h3>Lector RSVP</h3><p>Textos por nivel en español e inglés</p></div>
+      <div class="mode-card" onclick="switchLibTab('pdf');showScreen('library')"><div class="mc-icon">📄</div><h3>Mi PDF</h3><p>Sube tu propio documento</p></div>
+      <div class="mode-card" onclick="showScreen('canciones')"><div class="mc-icon">🎵</div><h3>Inglés con canciones</h3><p>Letra sincronizada + traducción</p><span class="mc-badge">NUEVO</span></div>
+      <div class="mode-card" onclick="showScreen('repaso')"><div class="mc-icon">🔁</div><h3>Repaso de errores</h3><p>Vuelve a practicar lo que fallaste</p></div>
+    </div>
+  </div>
+
+  <!-- LIBRARY -->
+  <div id="screen-library" class="screen">
+    <div class="lib-tabs">
+      <button class="lib-tab active" id="lib-tab-textos" onclick="switchLibTab('textos')">📚 Textos</button>
+      <button class="lib-tab" id="lib-tab-pdf" onclick="switchLibTab('pdf')">📄 Mi PDF</button>
+    </div>
+    <div id="lib-textos">
+      <div class="lang-toggle" style="justify-content:flex-start">
+        <button class="lang-btn active" id="lib-es" onclick="setLang('es',this,true)">🇨🇱 Español</button>
+        <button class="lang-btn" id="lib-en" onclick="setLang('en',this,true)">🇺🇸 English</button>
+      </div>
+      <div class="section-label" id="lib-label">Textos en español</div>
+      <div class="text-grid" id="text-grid"></div>
+    </div>
+    <div id="lib-pdf" style="display:none">
+      <div class="pdf-zone" id="pdf-zone" ondragover="event.preventDefault();this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor=''" ondrop="handleDrop(event)">
+        <input type="file" accept=".pdf,.txt" onchange="handleFile(this.files[0])">
+        <div class="pz-icon">📄</div>
+        <h3>Arrastra tu PDF o TXT aquí</h3>
+        <p>Haz clic para seleccionar · máx. 5MB</p>
+      </div>
+      <div id="pdf-loading" style="display:none;text-align:center;padding:1.5rem;color:var(--text2);font-size:13px">Extrayendo texto...</div>
+      <div class="pdf-preview" id="pdf-preview">
+        <div class="pdf-preview-header">
+          <div><h4 id="pdf-name" style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:2px">doc.pdf</h4><p id="pdf-info" style="font-size:12px;color:var(--text2)">0 palabras</p></div>
+          <button class="btn btn-ghost btn-sm" onclick="clearPdf()">✕</button>
+        </div>
+        <div class="pdf-excerpt" id="pdf-excerpt"></div>
+      </div>
+      <div id="pdf-actions" style="display:none;margin-top:.75rem">
+        <button class="btn btn-accent" onclick="selectPdfText()">Leer este documento →</button>
+      </div>
+      <div class="tip-box"><strong>💡 Tip:</strong> Los PDFs de texto funcionan perfecto. PDFs escaneados no extraen texto. Los archivos .txt siempre funcionan.</div>
+    </div>
+  </div>
+
+  <!-- CONFIG -->
+  <div id="screen-config" class="screen">
+    <div class="section-label" id="cfg-title" style="margin-bottom:.4rem"></div>
+    <div class="config-panel">
+      <div class="config-row">
+        <span class="config-label">Velocidad</span>
+        <div class="slider-wrap"><input type="range" id="cfg-wpm" min="60" max="600" step="10" value="200" oninput="updateCfg()"></div>
+        <span class="config-val" id="val-wpm">200 wpm</span>
+      </div>
+      <div class="config-row">
+        <span class="config-label">Modo visual</span>
+        <div class="toggle-group">
+          <button class="toggle-opt active" onclick="setMode('none',this)">Normal</button>
+          <button class="toggle-opt" onclick="setMode('line',this)">Línea</button>
+          <button class="toggle-opt" onclick="setMode('dot',this)">Punto</button>
+        </div>
+      </div>
+      <div class="config-row">
+        <span class="config-label">Pulso sonoro</span>
+        <div class="toggle-group">
+          <button class="toggle-opt active" onclick="setSound(false,this)">Off</button>
+          <button class="toggle-opt" onclick="setSound(true,this)">On</button>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="showScreen('library')">← Volver</button>
+      <button class="btn btn-accent" onclick="startReader()">Comenzar lectura →</button>
+    </div>
+  </div>
+
+  <!-- READER -->
+  <div id="screen-reader" class="screen">
+    <div class="reader-progress-bar"><div class="reader-progress-fill" id="read-prog"></div></div>
+    <div class="reader-stage" id="reader-stage">
+      <div class="focus-line" id="focus-line"></div>
+      <div class="focus-dot" id="focus-dot"></div>
+      <div class="reader-word" id="reader-word">—</div>
+    </div>
+    <div class="reader-controls">
+      <button class="ctrl-btn" onclick="chSpeed(-20)">−</button>
+      <button class="ctrl-btn play" onclick="toggleRSVP()"><span id="play-icon">▶</span></button>
+      <button class="ctrl-btn" onclick="chSpeed(20)">+</button>
+      <button class="ctrl-btn" onclick="restartReader()">↺</button>
+    </div>
+    <div class="reader-meta">
+      <span><span class="wpm-live" id="live-wpm">200</span> wpm</span>
+      <span id="live-wc" style="color:var(--text3)">0/0</span>
+    </div>
+  </div>
+
+  <!-- COMP -->
+  <div id="screen-comp" class="screen">
+    <div class="comp-header"><h2>Test de comprensión</h2><p id="comp-subtitle">Responde sobre el texto que leíste</p></div>
+    <div id="comp-qs"></div>
+    <div id="comp-btn" style="display:none"><div class="btn-row"><button class="btn btn-accent" onclick="showCompResult()">Ver resultado →</button></div></div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result" class="screen">
+    <div class="result-hero">
+      <div class="result-circle"><div class="rn" id="res-pct">—</div><div class="rl">comprensión</div></div>
+      <div style="font-family:var(--font-display);font-size:20px;color:var(--text);margin-bottom:.3rem;text-align:center" id="res-title">¡Sesión completada!</div>
+      <div style="font-size:13px;color:var(--text2);text-align:center" id="res-sub"></div>
+    </div>
+    <div class="result-stats">
+      <div class="rs-card"><div class="n" id="res-wpm">—</div><div class="l">wpm</div></div>
+      <div class="rs-card"><div class="n" id="res-correct">—</div><div class="l">correctas</div></div>
+      <div class="rs-card"><div class="n" id="res-time">—</div><div class="l">tiempo</div></div>
+    </div>
+    <div id="res-wrongs" style="display:none">
+      <div class="section-label" style="margin-bottom:.5rem">Respuestas incorrectas</div>
+      <div id="wrongs-list"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="showScreen('library')">Otro texto</button>
+      <button class="btn btn-blue" id="btn-repaso-now" onclick="showScreen('repaso')" style="display:none">🔁 Repasar errores</button>
+      <button class="btn btn-accent" onclick="showScreen('stats')">Ver progreso →</button>
+    </div>
+  </div>
+
+  <!-- CANCIONES -->
+  <div id="screen-canciones" class="screen">
+    <div id="canciones-list">
+      <div class="song-hero">
+        <h1>Aprende inglés<br><em>con canciones.</em></h1>
+        <p>Sigue la letra en tiempo real con traducción automática al español.</p>
+      </div>
+      <div class="how-box">
+        <div class="section-label">¿Cómo funciona?</div>
+        <div class="how-steps">
+          <div class="how-step"><div class="step-num">1</div><h4>Elige una canción</h4><p>Abre YouTube con el botón rojo</p></div>
+          <div class="how-step"><div class="step-num">2</div><h4>Dale play en los dos</h4><p>YouTube y LectoRápido al mismo tiempo</p></div>
+          <div class="how-step"><div class="step-num">3</div><h4>Sigue la letra</h4><p>Con traducción automática en tiempo real</p></div>
+          <div class="how-step"><div class="step-num">4</div><h4>Toca para traducir</h4><p>Cualquier palabra al instante</p></div>
+        </div>
+      </div>
+      <div class="section-label">Canciones disponibles</div>
+      <div class="songs-grid" id="songs-grid"></div>
+    </div>
+    <div id="canciones-player" style="display:none">
+      <div class="player-top">
+        <div class="player-top-row">
+          <div class="player-art" id="pl-art"></div>
+          <div class="player-info" style="flex:1"><h3 id="pl-title"></h3><p id="pl-artist"></p></div>
+          <a class="btn-yt" id="yt-btn" href="#" target="_blank">▶ YouTube</a>
+        </div>
+        <div class="yt-hint">
+          <span style="font-size:16px;flex-shrink:0">💡</span>
+          <span>Abre <a id="yt-link2" href="#" target="_blank">YouTube</a> en otra pestaña · dale play · luego presiona ▶ aquí al mismo tiempo para sincronizar.</span>
+        </div>
+      </div>
+      <div class="word-popup" id="word-popup">
+        <button class="wp-close" onclick="closePopup()">✕</button>
+        <div class="wp-word" id="wp-word"></div>
+        <div class="wp-def" id="wp-def"></div>
+      </div>
+      <div class="lyrics-stage">
+        <div class="lyrics-scroll" id="lyrics-scroll"></div>
+      </div>
+      <div class="progress-row">
+        <span class="prog-time" id="prog-cur">0:00</span>
+        <div class="prog-bar" id="prog-bar" onclick="seekClick(event)"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+        <span class="prog-time" id="prog-tot">0:00</span>
+      </div>
+      <div class="video-controls">
+        <button class="ctrl-btn" onclick="seekSec(-10)">⏮</button>
+        <button class="ctrl-btn" onclick="seekSec(-3)">◀</button>
+        <button class="ctrl-btn play" onclick="toggleSongPlay()"><span id="song-play-icon">▶</span></button>
+        <button class="ctrl-btn" onclick="seekSec(3)">▶</button>
+        <button class="ctrl-btn" onclick="seekSec(10)">⏭</button>
+        <button class="speed-pill" id="spd-pill" onclick="cycleSongSpeed()">1x</button>
+      </div>
+      <div class="meta-row">
+        <span>⏱ <span class="meta-accent" id="meta-time">0:00</span></span>
+        <span>📍 Línea <span class="meta-accent" id="meta-line">—</span></span>
+        <span>📝 <span class="meta-accent" id="meta-words">0</span> palabras</span>
+      </div>
+      <div class="vocab-panel" id="vocab-panel">
+        <div class="section-label">Vocabulario clave</div>
+        <div class="vocab-list" id="vocab-list"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost btn-sm" onclick="backToSongList()">← Canciones</button>
+        <button class="btn btn-ghost btn-sm" onclick="toggleVocab()">📖 Vocabulario</button>
+        <button class="btn btn-accent btn-sm" id="btn-song-comp" style="display:none" onclick="goSongComp()">🧠 Test →</button>
+      </div>
+    </div>
+    <div id="canciones-comp" style="display:none">
+      <div style="text-align:center;padding:.75rem 0 1.25rem">
+        <div style="font-family:var(--font-display);font-size:24px;color:var(--text);margin-bottom:.3rem">Test de comprensión</div>
+        <div style="font-size:13px;color:var(--text2)" id="song-comp-sub"></div>
+      </div>
+      <div id="song-comp-qs"></div>
+      <div id="song-comp-btn" style="display:none"><div class="btn-row"><button class="btn btn-accent" onclick="showSongResult()">Ver resultado →</button></div></div>
+    </div>
+    <div id="canciones-result" style="display:none">
+      <div class="song-result">
+        <div class="result-circle"><div class="rn" id="sr-pct">—</div><div class="rl">comprensión</div></div>
+        <div style="font-family:var(--font-display);font-size:20px;color:var(--text);margin-bottom:.3rem" id="sr-title"></div>
+        <div style="font-size:13px;color:var(--text2)" id="sr-sub"></div>
+      </div>
+      <div class="result-stats">
+        <div class="rs-card"><div class="n" id="sr-words">0</div><div class="l">palabras vistas</div></div>
+        <div class="rs-card"><div class="n" id="sr-corr">—</div><div class="l">correctas</div></div>
+        <div class="rs-card"><div class="n" id="sr-touched">0</div><div class="l">palabras tocadas</div></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="backToSongList()">Otra canción</button>
+        <button class="btn btn-accent" onclick="replaySong()">Repetir →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPASO -->
+  <div id="screen-repaso" class="screen">
+    <div id="rep-empty" style="display:none"><div class="empty-state"><div class="big">🎯</div><p>Sin errores para repasar aún.<br>Completa textos con test de comprensión.</p><button class="btn btn-accent" style="margin-top:1rem" onclick="showScreen('library')">Ir a textos →</button></div></div>
+    <div id="rep-content" style="display:none">
+      <div class="repaso-header"><span id="rep-prog" style="font-size:13px;color:var(--text2)">Pregunta 1/N</span><span id="rep-score" style="font-size:13px;font-weight:500;color:var(--accent)">0 correctas</span></div>
+      <div class="reader-progress-bar"><div class="reader-progress-fill" id="rep-bar" style="width:0%"></div></div>
+      <div class="repaso-q">
+        <div class="repaso-origin" id="rep-origin"></div>
+        <div class="repaso-q-text" id="rep-q"></div>
+        <div class="repaso-opts" id="rep-opts"></div>
+        <div class="repaso-exp" id="rep-exp"></div>
+      </div>
+      <div class="btn-row"><button class="btn btn-ghost" onclick="showScreen('home')">Salir</button><button class="btn btn-accent" id="rep-next" onclick="nextRepaso()" style="display:none">Siguiente →</button></div>
+    </div>
+    <div id="rep-result" style="display:none">
+      <div class="result-hero">
+        <div class="result-circle"><div class="rn" id="rep-res-pct">0%</div><div class="rl">repaso</div></div>
+        <div style="font-family:var(--font-display);font-size:20px;color:var(--text);text-align:center;margin-bottom:.3rem" id="rep-res-title"></div>
+        <div style="font-size:13px;color:var(--text2);text-align:center" id="rep-res-sub"></div>
+      </div>
+      <div class="result-stats">
+        <div class="rs-card"><div class="n" id="rr-c">0</div><div class="l">Correctas</div></div>
+        <div class="rs-card"><div class="n" id="rr-w">0</div><div class="l">Incorrectas</div></div>
+        <div class="rs-card"><div class="n" id="rr-p">0%</div><div class="l">Resultado</div></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="showScreen('home')">Inicio</button>
+        <button class="btn btn-blue" onclick="startRepaso()">Repasar de nuevo</button>
+        <button class="btn btn-accent" onclick="showScreen('library')">Nuevo texto →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div id="screen-stats" class="screen">
+    <div style="font-family:var(--font-display);font-size:22px;color:var(--text);margin-bottom:.3rem">Mi progreso</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:1.1rem">Historial completo de tus sesiones</div>
+    <div id="stats-content"><div style="text-align:center;padding:2rem;color:var(--text2)">Cargando...</div></div>
+  </div>
+</div>
+
+<script>
+let lang='es',currentText=null;
+let rWords=[],rIdx=0,rWpm=200,rPlaying=false,rInterval=null;
+let rVisual='none',rSound=false,rStart=null,rEnd=null;
+let compAnswers=[],lastWrongs=[];
+let repQs=[],repIdx=0,repAnswers=[];
+let pdfText=null;
+let audioCtx=null;
+let currentSong=null,songElapsed=0,songPlaying=false,songTimer=null;
+let songCurrentLine=-1,songWordsSeen=0,songWordsTouched=0;
+let songSpeeds=[0.75,1,1.25,1.5],songSpdIdx=1;
+let songCompAnswers=[];
+
+const TEXTS={
+  es:[
+    {id:'es1',title:'El poder del hábito',level:'facil',words:170,lang:'es',
+     body:`Cada mañana, millones de personas repiten exactamente las mismas acciones sin pensarlo: se despiertan, apagan la alarma, preparan café y revisan el teléfono. Estos comportamientos automáticos se llaman hábitos, y gobiernan gran parte de nuestras vidas sin que nos demos cuenta. Los científicos estiman que casi el cuarenta por ciento de nuestras acciones diarias no son decisiones conscientes, sino rutinas grabadas en el cerebro. Un hábito se forma a través de un ciclo simple: una señal dispara una rutina que produce una recompensa. Con suficiente repetición, el cerebro automatiza ese proceso para ahorrar energía. La buena noticia es que los hábitos también se pueden cambiar. No basta con tener fuerza de voluntad; lo clave es identificar la señal que activa el comportamiento y reemplazar la rutina, manteniendo la misma recompensa. Pequeños cambios consistentes, aplicados día a día, son capaces de transformar radicalmente una vida en el largo plazo.`,
+     questions:[
+       {q:'¿Qué porcentaje de nuestras acciones son hábitos automáticos?',opts:['20%','40%','60%','80%'],ans:1,exp:'El texto indica que el 40% de las acciones diarias no son decisiones conscientes.'},
+       {q:'¿Qué forma un hábito según el texto?',opts:['Una decisión repetida','Un ciclo de señal, rutina y recompensa','Solo fuerza de voluntad','Imitación de otros'],ans:1,exp:'Un hábito se forma por un ciclo: señal → rutina → recompensa.'},
+       {q:'¿Cuál es la clave para cambiar un hábito?',opts:['Eliminar el deseo','Fuerza de voluntad','Identificar la señal y reemplazar la rutina','Evitar recompensas'],ans:2,exp:'La clave es identificar la señal que activa el comportamiento y reemplazar la rutina.'}
+     ]},
+    {id:'es2',title:'La memoria y el sueño',level:'medio',words:190,lang:'es',
+     body:`Durante décadas, los científicos creyeron que dormir era simplemente un período de inactividad necesario para recuperar energía. Hoy sabemos que es mucho más: el sueño es el momento en que el cerebro consolida los recuerdos y elimina los desechos acumulados durante el día. Mientras dormimos, el hipocampo transfiere información a la corteza cerebral para su almacenamiento a largo plazo. Este proceso se llama consolidación y es fundamental para aprender nuevas habilidades. Los estudios demuestran que las personas que duermen bien después de estudiar retienen hasta un cuarenta por ciento más de información que quienes se quedan despiertos toda la noche. Además, durante el sueño profundo el sistema linfático del cerebro elimina proteínas tóxicas asociadas al Alzheimer. Los expertos recomiendan entre siete y nueve horas de sueño para adultos.`,
+     questions:[
+       {q:'¿Qué sucede en el hipocampo durante el sueño?',opts:['Se generan nuevas neuronas','Transfiere información a la corteza a largo plazo','Se elimina la memoria antigua','Se procesa el dolor'],ans:1,exp:'El hipocampo transfiere información a la corteza cerebral para almacenamiento a largo plazo.'},
+       {q:'¿Cuánto más retienen quienes duermen bien tras estudiar?',opts:['20%','30%','40%','50%'],ans:2,exp:'El texto indica que retienen hasta un 40% más de información.'},
+       {q:'¿Cuántas horas de sueño recomiendan los expertos?',opts:['5-6 horas','6-7 horas','7-9 horas','9-11 horas'],ans:2,exp:'Los expertos recomiendan entre 7 y 9 horas para adultos.'}
+     ]},
+    {id:'es3',title:'Inteligencia artificial',level:'avanzado',words:200,lang:'es',
+     body:`La inteligencia artificial ha dejado de ser un concepto de ciencia ficción para convertirse en la tecnología más transformadora de nuestra época. Desde los algoritmos que determinan qué contenido vemos en redes sociales hasta los modelos de lenguaje capaces de mantener conversaciones complejas, la IA permea prácticamente todos los ámbitos de la vida moderna. Su funcionamiento se basa en redes neuronales artificiales que aprenden patrones a partir de enormes volúmenes de datos, un proceso denominado aprendizaje profundo. Lo que distingue a la IA actual es su capacidad de generalización: no solo memoriza respuestas correctas, sino que puede inferir soluciones en situaciones que nunca ha visto antes. Sin embargo, este poder conlleva riesgos significativos. Los sistemas de IA pueden perpetuar y amplificar sesgos presentes en los datos de entrenamiento, generando discriminación sistemática difícil de detectar.`,
+     questions:[
+       {q:'¿Qué es el aprendizaje profundo?',opts:['Memorización humana','Redes neuronales aprendiendo de grandes datos','Un tipo de robot','Un algoritmo de búsqueda'],ans:1,exp:'El aprendizaje profundo es el proceso donde redes neuronales aprenden patrones de grandes volúmenes de datos.'},
+       {q:'¿Qué distingue a la IA actual?',opts:['Su velocidad','Su capacidad de generalización','Su bajo consumo','Su diseño'],ans:1,exp:'La IA actual puede inferir soluciones en situaciones que nunca ha visto antes.'},
+       {q:'¿Cuál es uno de los principales riesgos de la IA?',opts:['Que se vuelva consciente','Que perpetúe sesgos de los datos','Que reemplace robots','Que sea costosa'],ans:1,exp:'Los sistemas de IA pueden perpetuar y amplificar sesgos presentes en los datos de entrenamiento.'}
+     ]}
+  ],
+  en:[
+    {id:'en1',title:'The Science of Flow',level:'easy',words:165,lang:'en',
+     body:`Have you ever been so absorbed in a task that you completely lost track of time? Psychologists call this state flow, and it is one of the most powerful experiences a human being can have. Flow occurs when the challenge of an activity perfectly matches your skill level: not too easy to be boring, and not too difficult to be frustrating. During flow, the brain reduces activity in the prefrontal cortex, the region responsible for self-criticism and doubt. This is why people in flow often describe feeling effortless and fully alive. The psychologist Mihaly Csikszentmihalyi spent decades studying flow across cultures and professions, from surgeons to chess grandmasters to factory workers. He found that flow is not reserved for the talented — anyone can access it by gradually increasing the challenge of their activities. The key is setting clear goals, removing distractions, and practicing consistently.`,
+     questions:[
+       {q:'What happens in the brain during flow?',opts:['Prefrontal cortex increases activity','Prefrontal cortex reduces activity','The amygdala shuts down','Memory accelerates'],ans:1,exp:'During flow the brain reduces activity in the prefrontal cortex, reducing self-criticism.'},
+       {q:'Who studied flow for decades?',opts:['Albert Einstein','Sigmund Freud','Mihaly Csikszentmihalyi','Carl Jung'],ans:2,exp:'Mihaly Csikszentmihalyi spent decades studying flow across cultures and professions.'},
+       {q:'What is the key condition for flow?',opts:['Being talented','No distractions','Challenge matching skill level','Working alone'],ans:2,exp:'Flow occurs when the challenge perfectly matches your skill level.'}
+     ]},
+    {id:'en2',title:'How Reading Changes the Brain',level:'medium',words:185,lang:'en',
+     body:`Reading is one of the most cognitively demanding activities a human brain can perform. Unlike spoken language, which evolved over hundreds of thousands of years, reading is a relatively recent invention — only about five thousand years old. This means the brain has no dedicated reading circuit; instead, it repurposes networks originally designed for object recognition, language processing, and motor coordination. Brain imaging studies reveal that when we read fiction, we simulate the experiences described. The same neural regions that fire when we physically run activate when we read about a character running. This phenomenon, called neural coupling, explains why reading literature builds empathy. Research also shows that people who read regularly have stronger brain connectivity, better working memory, and higher analytical reasoning scores.`,
+     questions:[
+       {q:'How old is reading as an invention?',opts:['500 years','2,000 years','5,000 years','10,000 years'],ans:2,exp:'Reading is only about 5,000 years old — a recent invention compared to spoken language.'},
+       {q:'What is neural coupling?',opts:['Connecting two languages','Brain regions activating during simulated reading experiences','A type of brain surgery','Reading-writing connection'],ans:1,exp:'Neural coupling is when brain regions that fire during real actions also activate when reading about them.'},
+       {q:'What type of reading is most beneficial?',opts:['Speed reading','Skimming','Deep reading with sustained attention','Reading on screens'],ans:2,exp:'Deep reading, requiring sustained attention and critical thinking, is particularly beneficial.'}
+     ]},
+    {id:'en3',title:'The Economics of Attention',level:'advanced',words:200,lang:'en',
+     body:`In the twenty-first century, attention has become the world's most contested resource. Every app, notification, and headline is engineered by teams of behavioral scientists to capture and hold your gaze for as long as possible. This is the deliberate outcome of an economic model in which your attention is the product being sold to advertisers. Studies show that the average human attention span has declined significantly over the past two decades, correlating with the rise of smartphones and social media. More troubling is the evidence that chronic distraction does not just reduce productivity — it fundamentally alters how the brain processes information, weakening our capacity for focused thinking. Some researchers call this cognitive exploitation: the harvesting of mental resources for commercial gain without informed consent.`,
+     questions:[
+       {q:'What is sold to advertisers?',opts:['User data','Personal information','User attention','App subscriptions'],ans:2,exp:'In this model, user attention is the product being sold to advertisers.'},
+       {q:'What does chronic distraction alter?',opts:['Only short-term memory','How the brain processes information','Physical health','Social relationships'],ans:1,exp:'Chronic distraction fundamentally alters how the brain processes information.'},
+       {q:'What is cognitive exploitation?',opts:['Digital theft','Harvesting mental resources for commercial gain without consent','Attention fraud','Mental colonization'],ans:1,exp:'Cognitive exploitation is harvesting mental resources for commercial gain without informed consent.'}
+     ]}
+  ]
+};
+
+const SONGS=[
+  {id:'rick',emoji:'🎵',title:'Never Gonna Give You Up',artist:'Rick Astley · 1987',level:'easy',genre:'Clásico',yt:'https://www.youtube.com/watch?v=dQw4w9WgXcQ',duration:213,
+   lyrics:[
+     {t:0,en:"We're no strangers to love",es:"No somos extraños al amor"},
+     {t:4,en:"You know the rules and so do I",es:"Tú conoces las reglas y yo también"},
+     {t:8,en:"A full commitment's what I'm thinking of",es:"Un compromiso total es lo que tengo en mente"},
+     {t:13,en:"You wouldn't get this from any other guy",es:"No encontrarías esto en ningún otro chico"},
+     {t:17,en:"I just wanna tell you how I'm feeling",es:"Solo quiero decirte cómo me siento"},
+     {t:21,en:"Gotta make you understand",es:"Tengo que hacerte entender"},
+     {t:25,en:"Never gonna give you up",es:"Nunca voy a abandonarte"},
+     {t:29,en:"Never gonna let you down",es:"Nunca voy a decepcionarte"},
+     {t:33,en:"Never gonna run around and desert you",es:"Nunca voy a huir y dejarte"},
+     {t:37,en:"Never gonna make you cry",es:"Nunca voy a hacerte llorar"},
+     {t:41,en:"Never gonna say goodbye",es:"Nunca voy a decir adiós"},
+     {t:45,en:"Never gonna tell a lie and hurt you",es:"Nunca voy a mentir y herirte"},
+     {t:53,en:"We've known each other for so long",es:"Nos conocemos desde hace tanto tiempo"},
+     {t:58,en:"Your heart's been aching but you're too shy to say it",es:"Tu corazón ha estado doliendo pero eres muy tímido para decirlo"},
+     {t:64,en:"Inside we both know what's been going on",es:"Por dentro ambos sabemos lo que ha estado pasando"},
+     {t:69,en:"We know the game and we're gonna play it",es:"Conocemos el juego y vamos a jugarlo"},
+     {t:73,en:"And if you ask me how I'm feeling",es:"Y si me preguntas cómo me siento"},
+     {t:77,en:"Don't tell me you're too blind to see",es:"No me digas que eres demasiado ciego para ver"},
+     {t:83,en:"Never gonna give you up",es:"Nunca voy a abandonarte"},
+     {t:87,en:"Never gonna let you down",es:"Nunca voy a decepcionarte"},
+     {t:91,en:"Never gonna run around and desert you",es:"Nunca voy a huir y dejarte"},
+     {t:95,en:"Never gonna make you cry",es:"Nunca voy a hacerte llorar"},
+   ],
+   vocab:{'strangers':'extraños','commitment':'compromiso','understand':'entender','desert':'abandonar','feeling':'sentimiento','blind':'ciego','aching':'doliendo','shy':'tímido','hurt':'herir'},
+   questions:[
+     {q:"What is the singer's main promise?",opts:['To always tell the truth','To never give up on the person','To always be happy','To travel together'],ans:1},
+     {q:"What does 'desert you' mean here?",opts:['Go to the desert','Abandon you','Make you sad','Forget you'],ans:1},
+     {q:"What does the singer say about the other person?",opts:['Too blind to see','Too shy to say it','Too busy to care','Too young to know'],ans:1},
+   ]},
+  {id:'happy',emoji:'😊',title:'Happy',artist:'Pharrell Williams · 2013',level:'easy',genre:'Pop',yt:'https://www.youtube.com/watch?v=ZbZSe6N_BXs',duration:233,
+   lyrics:[
+     {t:0,en:"It might seem crazy what I'm about to say",es:"Podría parecer una locura lo que estoy a punto de decir"},
+     {t:4,en:"Sunshine she's here, you can take a break",es:"El sol está aquí, puedes tomarte un descanso"},
+     {t:9,en:"I'm a hot air balloon that could go to space",es:"Soy un globo aerostático que podría ir al espacio"},
+     {t:13,en:"With the air like I don't care, baby by the way",es:"Con el aire como si no me importara, cariño por cierto"},
+     {t:18,en:"Because I'm happy",es:"Porque soy feliz"},
+     {t:21,en:"Clap along if you feel like a room without a roof",es:"Aplaude si te sientes como una habitación sin techo"},
+     {t:26,en:"Because I'm happy",es:"Porque soy feliz"},
+     {t:29,en:"Clap along if you feel like happiness is the truth",es:"Aplaude si sientes que la felicidad es la verdad"},
+     {t:34,en:"Because I'm happy",es:"Porque soy feliz"},
+     {t:37,en:"Clap along if you know what happiness is to you",es:"Aplaude si sabes lo que la felicidad significa para ti"},
+     {t:42,en:"Because I'm happy",es:"Porque soy feliz"},
+     {t:45,en:"Clap along if you feel like that's what you wanna do",es:"Aplaude si sientes que eso es lo que quieres hacer"},
+   ],
+   vocab:{'crazy':'loco','sunshine':'luz del sol','balloon':'globo','happiness':'felicidad','truth':'verdad','clap':'aplaudir','roof':'techo','warn':'advertir'},
+   questions:[
+     {q:"What does 'clap along' mean?",opts:['Clap your hands to the beat','Sing along','Dance','Jump'],ans:0},
+     {q:"What metaphor does Pharrell use for himself?",opts:['A shooting star','A hot air balloon','A ray of sunshine','A flying bird'],ans:1},
+     {q:"What does 'don't hold back' mean?",opts:['Hold your hands','Give everything, do not hesitate','Hold someone','Do not go back'],ans:1},
+   ]},
+  {id:'numb',emoji:'🎸',title:'Numb',artist:'Linkin Park · 2003',level:'medium',genre:'Rock',yt:'https://www.youtube.com/watch?v=kXYiU_JCYtU',duration:185,
+   lyrics:[
+     {t:0,en:"I'm tired of being what you want me to be",es:"Estoy cansado de ser lo que quieres que sea"},
+     {t:5,en:"Feeling so faithless lost under the surface",es:"Sintiéndome tan sin fe, perdido bajo la superficie"},
+     {t:10,en:"Don't know what you're expecting of me",es:"No sé qué esperas de mí"},
+     {t:14,en:"Put under the pressure of walking in your shoes",es:"Sometido a la presión de caminar en tus zapatos"},
+     {t:19,en:"Caught in the undertow just caught in the undertow",es:"Atrapado en la corriente, atrapado en la corriente"},
+     {t:25,en:"Every step that I take is another mistake to you",es:"Cada paso que doy es otro error para ti"},
+     {t:37,en:"I've become so numb I can't feel you there",es:"Me he vuelto tan insensible que no puedo sentirte ahí"},
+     {t:43,en:"Become so tired so much more aware",es:"Me he vuelto tan cansado, mucho más consciente"},
+     {t:48,en:"I'm becoming this all I want to do",es:"Me estoy convirtiendo en esto, todo lo que quiero hacer"},
+     {t:53,en:"Is be more like me and be less like you",es:"Es ser más como yo y menos como tú"},
+   ],
+   vocab:{'numb':'insensible','faithless':'sin fe','surface':'superficie','pressure':'presión','undertow':'corriente','mistake':'error','aware':'consciente','tired':'cansado','caught':'atrapado'},
+   questions:[
+     {q:"What does 'numb' mean?",opts:['Crazy','Insensible / without feeling','Happy','Confused'],ans:1},
+     {q:"What is the singer tired of?",opts:['Being alone','Being what others want him to be','Being in a band','Being in school'],ans:1},
+     {q:"What does 'walking in your shoes' mean?",opts:["Wearing someone's shoes","Living someone else's life","Walking far","Going for a walk"],ans:1},
+   ]},
+  {id:'shape',emoji:'🎶',title:'Shape of You',artist:'Ed Sheeran · 2017',level:'medium',genre:'Pop',yt:'https://www.youtube.com/watch?v=JGwWNGJdvx8',duration:234,
+   lyrics:[
+     {t:0,en:"The club isn't the best place to find a lover",es:"El club no es el mejor lugar para encontrar un amor"},
+     {t:5,en:"So the bar is where I go",es:"Así que el bar es donde voy"},
+     {t:8,en:"Me and my friends at the table doing shots",es:"Mis amigos y yo en la mesa tomando tragos"},
+     {t:12,en:"Drinking fast and then we talk slow",es:"Bebiendo rápido y luego hablamos despacio"},
+     {t:16,en:"Come over and start up a conversation with just me",es:"Acércate y empieza una conversación solo conmigo"},
+     {t:21,en:"And trust me I'll give it a chance now",es:"Y confía en mí, le daré una oportunidad ahora"},
+     {t:35,en:"Girl you know I want your love",es:"Chica, sabes que quiero tu amor"},
+     {t:39,en:"Your love was handmade for somebody like me",es:"Tu amor fue hecho a mano para alguien como yo"},
+     {t:44,en:"Come on now follow my lead",es:"Vamos, sigue mi guía"},
+     {t:68,en:"I'm in love with the shape of you",es:"Estoy enamorado de tu figura"},
+     {t:72,en:"We push and pull like a magnet do",es:"Nos empujamos y jalamos como lo hace un imán"},
+     {t:76,en:"Although my heart is falling too",es:"Aunque mi corazón también está cayendo"},
+     {t:80,en:"I'm in love with your body",es:"Estoy enamorado de tu cuerpo"},
+   ],
+   vocab:{'lover':'amante','trust':'confiar','chance':'oportunidad','handmade':'hecho a mano','waist':'cintura','magnet':'imán','crazy':'loco','lead':'guiar','shape':'figura'},
+   questions:[
+     {q:"Where does the singer go to meet people?",opts:['The club','The bar','The park','The gym'],ans:1},
+     {q:"What does 'handmade' mean?",opts:['Made in a factory','Made specially / by hand','Made quickly','Made of metal'],ans:1},
+     {q:"What metaphor is used for the relationship?",opts:['A river and a boat','A magnet pushing and pulling','Fire and water','Stars in the sky'],ans:1},
+   ]},
+  {id:'someone',emoji:'💛',title:'Someone Like You',artist:'Adele · 2011',level:'medium',genre:'Clásico',yt:'https://www.youtube.com/watch?v=hLQl3WQQoQ0',duration:285,
+   lyrics:[
+     {t:0,en:"I heard that you're settled down",es:"Escuché que te has establecido"},
+     {t:4,en:"That you found a girl and you're married now",es:"Que encontraste una chica y ahora estás casado"},
+     {t:9,en:"I heard that your dreams came true",es:"Escuché que tus sueños se hicieron realidad"},
+     {t:13,en:"Guess she gave you things I didn't give to you",es:"Supongo que ella te dio cosas que yo no te di"},
+     {t:18,en:"Old friend why are you so shy",es:"Viejo amigo, ¿por qué eres tan tímido?"},
+     {t:28,en:"I hate to turn up out of the blue uninvited",es:"Odio aparecer de la nada sin invitación"},
+     {t:33,en:"But I couldn't stay away I couldn't fight it",es:"Pero no pude mantenerme lejos, no pude resistirlo"},
+     {t:48,en:"Never mind I'll find someone like you",es:"No importa, encontraré a alguien como tú"},
+     {t:53,en:"I wish nothing but the best for you too",es:"Solo deseo lo mejor para ti también"},
+     {t:57,en:"Don't forget me I beg I remember you said",es:"No me olvides, te lo ruego, recuerdo que dijiste"},
+     {t:62,en:"Sometimes it lasts in love but sometimes it hurts instead",es:"A veces el amor dura pero a veces duele en cambio"},
+   ],
+   vocab:{'settled':'establecido','married':'casado','dreams':'sueños','shy':'tímido','uninvited':'sin invitación','beg':'rogar','lasts':'dura','hurts':'duele','hide':'esconder'},
+   questions:[
+     {q:"What does 'settled down' mean?",opts:['Feeling calm','Establishing a stable life','Moving somewhere','Giving up'],ans:1},
+     {q:"What does 'out of the blue' mean?",opts:['From the sky','Unexpectedly','Feeling sad','Coming from far'],ans:1},
+     {q:"What is the singer's main wish for her ex?",opts:['To come back','To be unhappy','Nothing but the best','To remember her'],ans:2},
+   ]},
+  {id:'rolling',emoji:'🌪️',title:'Rolling in the Deep',artist:'Adele · 2010',level:'advanced',genre:'Clásico',yt:'https://www.youtube.com/watch?v=rYEDA3JcQqw',duration:228,
+   lyrics:[
+     {t:0,en:"There's a fire starting in my heart",es:"Hay un fuego comenzando en mi corazón"},
+     {t:4,en:"Reaching a fever pitch and it's bringing me out the dark",es:"Alcanzando un punto álgido y sacándome de la oscuridad"},
+     {t:9,en:"Finally I can see you crystal clear",es:"Finalmente puedo verte con total claridad"},
+     {t:37,en:"The scars of your love remind me of us",es:"Las cicatrices de tu amor me recuerdan a nosotros"},
+     {t:41,en:"They keep me thinking that we almost had it all",es:"Me siguen haciendo pensar que casi lo tuvimos todo"},
+     {t:46,en:"The scars of your love they leave me breathless",es:"Las cicatrices de tu amor me dejan sin aliento"},
+     {t:50,en:"I can't help feeling we could have had it all",es:"No puedo evitar sentir que pudimos haberlo tenido todo"},
+     {t:55,en:"Rolling in the deep",es:"Rodando en lo profundo"},
+     {t:58,en:"You had my heart inside of your hand",es:"Tenías mi corazón en tus manos"},
+     {t:62,en:"And you played it to the beat",es:"Y lo tocaste al ritmo"},
+     {t:66,en:"We could have had it all",es:"Pudimos haberlo tenido todo"},
+     {t:69,en:"Rolling in the deep",es:"Rodando en lo profundo"},
+   ],
+   vocab:{'fever':'fiebre','pitch':'punto máximo','scars':'cicatrices','breathless':'sin aliento','underestimate':'subestimar','remind':'recordar','burning':'ardiente','crystal':'claro','deep':'profundo'},
+   questions:[
+     {q:"What does 'rolling in the deep' suggest?",opts:['Swimming in the ocean','Being deeply involved in emotions','Falling asleep','Rolling downhill'],ans:1},
+     {q:"What does 'fever pitch' mean?",opts:['Low temperature','Extreme intensity / excitement','A musical note','An illness'],ans:1},
+     {q:"What does 'breathless' mean here?",opts:["Can't breathe physically","Overwhelmed, can't speak","Running fast","Feeling sleepy"],ans:1},
+   ]}
+];
+
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('visible'));
+  document.getElementById('screen-'+name).classList.add('visible');
+  document.querySelectorAll('.nav-pill').forEach(b=>b.classList.remove('active'));
+  const map={home:0,library:1,config:1,reader:1,comp:1,result:1,canciones:2,repaso:3,stats:4};
+  const idx=map[name]!==undefined?map[name]:0;
+  document.querySelectorAll('.nav-pill')[idx].classList.add('active');
+  if(name==='library')renderLibrary();
+  if(name==='stats')renderStats();
+  if(name==='home')updateBanner();
+  if(name==='repaso')initRepaso();
+  if(name==='canciones'){document.getElementById('canciones-list').style.display='';document.getElementById('canciones-player').style.display='none';document.getElementById('canciones-comp').style.display='none';document.getElementById('canciones-result').style.display='none';renderSongList();}
+}
+
+function setLang(l,el,fromLib){
+  lang=l;
+  ['lang-es','lang-en','lib-es','lib-en'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('active');});
+  if(l==='es'){['lang-es','lib-es'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('active');});}
+  else{['lang-en','lib-en'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('active');});}
+  if(fromLib)renderLibrary();
+}
+
+function switchLibTab(tab){
+  document.getElementById('lib-textos').style.display=tab==='textos'?'':'none';
+  document.getElementById('lib-pdf').style.display=tab==='pdf'?'':'none';
+  document.getElementById('lib-tab-textos').classList.toggle('active',tab==='textos');
+  document.getElementById('lib-tab-pdf').classList.toggle('active',tab==='pdf');
+}
+
+function renderLibrary(){
+  const g=document.getElementById('text-grid');
+  const lm={facil:'Fácil',medio:'Medio',avanzado:'Avanzado',easy:'Easy',medium:'Medium',advanced:'Advanced'};
+  const lc={facil:'level-facil',medio:'level-medio',avanzado:'level-avanzado',easy:'level-easy',medium:'level-medium',advanced:'level-advanced'};
+  g.innerHTML='';
+  TEXTS[lang].forEach(tx=>{
+    const c=document.createElement('div');c.className='text-card';
+    c.innerHTML=`<div class="text-card-info"><h4>${tx.title}</h4><p>~${tx.words} ${lang==='es'?'palabras':'words'}</p></div><div class="text-card-meta"><span class="level-badge ${lc[tx.level]}">${lm[tx.level]}</span><span style="font-size:11px;color:var(--text3)">${lang==='es'?'Leer →':'Read →'}</span></div>`;
+    c.onclick=()=>{currentText=tx;document.getElementById('cfg-title').textContent=tx.title;showScreen('config');};
+    g.appendChild(c);
+  });
+  const lb=document.getElementById('lib-label');if(lb)lb.textContent=lang==='es'?'Textos en español':'Texts in English';
+}
+
+function handleDrop(e){e.preventDefault();const f=e.dataTransfer.files[0];if(f)handleFile(f);}
+function handleFile(file){
+  if(!file)return;
+  if(file.size>5*1024*1024){alert('Archivo muy grande. Máximo 5MB.');return;}
+  document.getElementById('pdf-loading').style.display='block';
+  document.getElementById('pdf-preview').style.display='none';
+  document.getElementById('pdf-actions').style.display='none';
+  if(file.name.endsWith('.txt')){const r=new FileReader();r.onload=e=>processPdf(e.target.result,file.name);r.readAsText(file,'UTF-8');}
+  else{const r=new FileReader();r.onload=e=>{try{processPdf(extractPdf(new Uint8Array(e.target.result)),file.name);}catch(err){document.getElementById('pdf-loading').style.display='none';alert('No se pudo extraer texto. Prueba con un .txt.');}};r.readAsArrayBuffer(file);}
+}
+function extractPdf(bytes){
+  let t='';const str=new TextDecoder('latin1').decode(bytes);
+  const re=/stream\r?\n([\s\S]*?)\r?\nendstream/g;let m;
+  while((m=re.exec(str))!==null){const s=m[1];const tjRe=/\(((?:[^()\\]|\\[\s\S])*)\)\s*Tj/g;let tm;while((tm=tjRe.exec(s))!==null)t+=tm[1].replace(/\\n/g,' ').replace(/\\\(/g,'(').replace(/\\\)/g,')').replace(/\\\\/g,'\\')+' ';}
+  return t.replace(/\s+/g,' ').trim();
+}
+function processPdf(text,name){
+  document.getElementById('pdf-loading').style.display='none';
+  const words=text.split(/\s+/).filter(w=>w.length>0);
+  if(words.length<50){alert('Poco texto extraído.');return;}
+  pdfText=words.join(' ');
+  document.getElementById('pdf-name').textContent=name;
+  document.getElementById('pdf-info').textContent=words.length+' palabras extraídas';
+  document.getElementById('pdf-excerpt').textContent=words.slice(0,60).join(' ')+'...';
+  document.getElementById('pdf-preview').style.display='block';
+  document.getElementById('pdf-actions').style.display='block';
+}
+function clearPdf(){pdfText=null;document.getElementById('pdf-preview').style.display='none';document.getElementById('pdf-actions').style.display='none';}
+function selectPdfText(){
+  if(!pdfText)return;
+  currentText={id:'pdf',title:'Mi documento',level:'—',words:pdfText.split(/\s+/).length,lang,body:pdfText,questions:null,isPdf:true};
+  document.getElementById('cfg-title').textContent=currentText.title;
+  showScreen('config');
+}
+
+function updateCfg(){rWpm=parseInt(document.getElementById('cfg-wpm').value);document.getElementById('val-wpm').textContent=rWpm+' wpm';}
+function setMode(m,el){rVisual=m;el.closest('.toggle-group').querySelectorAll('.toggle-opt').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
+function setSound(v,el){rSound=v;el.closest('.toggle-group').querySelectorAll('.toggle-opt').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
+
+function startReader(){
+  if(!currentText)return;
+  rWords=currentText.body.split(/\s+/).filter(w=>w.length>0);
+  rIdx=0;rPlaying=false;rStart=null;rEnd=null;
+  document.getElementById('focus-line').style.display=rVisual==='line'?'block':'none';
+  document.getElementById('focus-dot').style.display=rVisual==='dot'?'block':'none';
+  document.getElementById('live-wpm').textContent=rWpm;
+  document.getElementById('live-wc').textContent='0/'+rWords.length;
+  document.getElementById('read-prog').style.width='0%';
+  showRWord(0);showScreen('reader');
+  setTimeout(()=>toggleRSVP(),400);
+}
+function showRWord(i){
+  if(i>=rWords.length)return;
+  const w=rWords[i],mid=Math.floor(w.length/2);
+  document.getElementById('reader-word').innerHTML=w.slice(0,mid)+'<span class="hl">'+w[mid]+'</span>'+w.slice(mid+1);
+  document.getElementById('read-prog').style.width=((i+1)/rWords.length*100)+'%';
+  document.getElementById('live-wc').textContent=(i+1)+'/'+rWords.length;
+}
+function toggleRSVP(){
+  if(rPlaying){rPlaying=false;clearInterval(rInterval);document.getElementById('play-icon').textContent='▶';}
+  else{
+    rPlaying=true;if(!rStart)rStart=Date.now();
+    document.getElementById('play-icon').textContent='⏸';
+    const ms=Math.round(60000/rWpm);
+    rInterval=setInterval(()=>{
+      if(rIdx>=rWords.length){clearInterval(rInterval);rPlaying=false;rEnd=Date.now();document.getElementById('play-icon').textContent='▶';setTimeout(()=>currentText&&currentText.questions?showComp():finishNoComp(),600);return;}
+      showRWord(rIdx);if(rSound)playTick();rIdx++;
+    },ms);
+  }
+}
+function playTick(){try{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=880;g.gain.setValueAtTime(.05,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.04);o.start();o.stop(audioCtx.currentTime+.04);}catch(e){}}
+function chSpeed(d){rWpm=Math.max(60,Math.min(600,rWpm+d));document.getElementById('live-wpm').textContent=rWpm;if(rPlaying){clearInterval(rInterval);rPlaying=false;toggleRSVP();}}
+function restartReader(){clearInterval(rInterval);rPlaying=false;rIdx=0;rStart=null;document.getElementById('play-icon').textContent='▶';showRWord(0);document.getElementById('read-prog').style.width='0%';}
+
+function finishNoComp(){
+  const el=Math.round((rEnd-rStart)/1000)||0;
+  saveSession(rWpm,100,el,currentText);
+  document.getElementById('res-pct').textContent='—';document.getElementById('res-wpm').textContent=rWpm;
+  document.getElementById('res-correct').textContent='—';document.getElementById('res-time').textContent=el+'s';
+  document.getElementById('res-title').textContent='¡Lectura completada!';document.getElementById('res-sub').textContent=rWpm+' palabras por minuto.';
+  document.getElementById('res-wrongs').style.display='none';document.getElementById('btn-repaso-now').style.display='none';
+  showScreen('result');
+}
+function showComp(){
+  compAnswers=new Array(currentText.questions.length).fill(null);
+  const c=document.getElementById('comp-qs');c.innerHTML='';
+  document.getElementById('comp-btn').style.display='none';
+  currentText.questions.forEach((q,qi)=>{
+    const d=document.createElement('div');d.className='comp-q';
+    d.innerHTML=`<div class="comp-q-text">${q.q}</div><div class="comp-opts">${q.opts.map((o,oi)=>`<button class="comp-opt" onclick="selectComp(${qi},${oi},this)">${o}</button>`).join('')}</div>`;
+    c.appendChild(d);
+  });showScreen('comp');
+}
+function selectComp(qi,oi,el){
+  if(compAnswers[qi]!==null)return;compAnswers[qi]=oi;
+  const q=currentText.questions[qi];
+  const btns=el.parentElement.querySelectorAll('.comp-opt');btns.forEach(b=>b.disabled=true);
+  el.classList.add(oi===q.ans?'correct':'wrong');if(oi!==q.ans)btns[q.ans].classList.add('correct');
+  if(compAnswers.every(a=>a!==null))document.getElementById('comp-btn').style.display='block';
+}
+function showCompResult(){
+  const correct=currentText.questions.filter((q,i)=>compAnswers[i]===q.ans).length;
+  const total=currentText.questions.length,pct=Math.round(correct/total*100);
+  const el=rEnd&&rStart?Math.round((rEnd-rStart)/1000):0;
+  lastWrongs=currentText.questions.filter((q,i)=>compAnswers[i]!==q.ans).map(q=>({...q,source:currentText.title}));
+  if(lastWrongs.length)saveWrongs(lastWrongs);
+  saveSession(rWpm,pct,el,currentText);
+  document.getElementById('res-pct').textContent=pct+'%';document.getElementById('res-wpm').textContent=rWpm;
+  document.getElementById('res-correct').textContent=correct+'/'+total;document.getElementById('res-time').textContent=el+'s';
+  document.getElementById('res-title').textContent=pct>=80?'¡Excelente comprensión!':pct>=50?'¡Buen intento!':'Sigue practicando';
+  document.getElementById('res-sub').textContent=pct>=80?'Dominaste el texto y la velocidad.':'Repasa los errores para mejorar.';
+  if(lastWrongs.length){document.getElementById('res-wrongs').style.display='block';document.getElementById('btn-repaso-now').style.display='inline-block';document.getElementById('wrongs-list').innerHTML=lastWrongs.map(q=>`<div class="wrong-item"><div class="wrong-item-q">${q.q}</div><div class="wrong-item-ans">✓ ${q.opts[q.ans]}</div></div>`).join('');}
+  else{document.getElementById('res-wrongs').style.display='none';document.getElementById('btn-repaso-now').style.display='none';}
+  showScreen('result');
+}
+
+/* CANCIONES */
+function renderSongList(){
+  const g=document.getElementById('songs-grid');g.innerHTML='';
+  const lv={easy:'Fácil',medium:'Medio',advanced:'Avanzado'};const lc={easy:'tag-easy',medium:'tag-medium',advanced:'tag-hard'};
+  SONGS.forEach(s=>{
+    const c=document.createElement('div');c.className='song-card';
+    c.innerHTML=`<div class="song-art">${s.emoji}</div><div class="song-info" style="flex:1"><h3>${s.title}</h3><p>${s.artist} · ${fmt(s.duration)}</p><div class="song-tags"><span class="song-tag ${lc[s.level]}">${lv[s.level]}</span><span class="song-tag tag-genre">${s.genre}</span></div></div><span style="font-size:18px;color:var(--text3)">→</span>`;
+    c.onclick=()=>openSong(s);g.appendChild(c);
+  });
+}
+
+function openSong(s){
+  currentSong=s;songElapsed=0;songPlaying=false;songCurrentLine=-1;songWordsSeen=0;songWordsTouched=0;
+  clearInterval(songTimer);
+  document.getElementById('pl-art').textContent=s.emoji;
+  document.getElementById('pl-title').textContent=s.title;
+  document.getElementById('pl-artist').textContent=s.artist;
+  document.getElementById('yt-btn').href=s.yt;
+  document.getElementById('yt-link2').href=s.yt;
+  document.getElementById('prog-tot').textContent=fmt(s.duration);
+  document.getElementById('prog-fill').style.width='0%';
+  document.getElementById('prog-cur').textContent='0:00';
+  document.getElementById('meta-time').textContent='0:00';
+  document.getElementById('meta-line').textContent='—';
+  document.getElementById('meta-words').textContent='0';
+  document.getElementById('song-play-icon').textContent='▶';
+  document.getElementById('spd-pill').textContent='1x';songSpdIdx=1;
+  document.getElementById('btn-song-comp').style.display='none';
+  document.getElementById('word-popup').style.display='none';
+  document.getElementById('vocab-panel').style.display='none';
+  renderVocab(s);renderSongLyrics(s);
+  document.getElementById('canciones-list').style.display='none';
+  document.getElementById('canciones-player').style.display='block';
+  document.getElementById('canciones-comp').style.display='none';
+  document.getElementById('canciones-result').style.display='none';
+}
+
+function renderSongLyrics(s){
+  const sc=document.getElementById('lyrics-scroll');sc.innerHTML='';
+  s.lyrics.forEach((l,i)=>{
+    const block=document.createElement('div');block.className='lyric-block future';block.id='lb-'+i;
+    const en=document.createElement('div');en.className='lyric-en';
+    en.innerHTML=l.en.split(' ').map((w,wi)=>`<span class="lyric-word" id="lw-${i}-${wi}" onclick="touchSongWord('${w.replace(/[^a-zA-Z]/g,'').toLowerCase()}')">${w}</span>`).join(' ');
+    const tr=document.createElement('div');tr.className='lyric-tr';tr.textContent=l.es;
+    block.appendChild(en);block.appendChild(tr);sc.appendChild(block);
+  });
+}
+
+function renderVocab(s){
+  document.getElementById('vocab-list').innerHTML=Object.entries(s.vocab).map(([w,d])=>`<div class="vi"><span class="vi-w">${w}</span><span class="vi-d">${d}</span></div>`).join('');
+}
+function toggleVocab(){const p=document.getElementById('vocab-panel');p.style.display=p.style.display==='none'||!p.style.display?'block':'none';}
+
+function touchSongWord(word){
+  if(!word)return;songWordsTouched++;
+  const def=currentSong.vocab[word];
+  const pop=document.getElementById('word-popup');
+  document.getElementById('wp-word').textContent=word;
+  document.getElementById('wp-def').textContent=def||('"'+word+'" — toca para buscar su significado');
+  pop.style.display='block';
+}
+function closePopup(){document.getElementById('word-popup').style.display='none';}
+
+function toggleSongPlay(){
+  if(songPlaying){songPlaying=false;clearInterval(songTimer);document.getElementById('song-play-icon').textContent='▶';}
+  else{
+    songPlaying=true;document.getElementById('song-play-icon').textContent='⏸';
+    const spd=songSpeeds[songSpdIdx];
+    songTimer=setInterval(()=>{
+      songElapsed+=0.1*spd;
+      if(songElapsed>=currentSong.duration){songElapsed=currentSong.duration;songPlaying=false;clearInterval(songTimer);document.getElementById('song-play-icon').textContent='▶';document.getElementById('btn-song-comp').style.display='inline-block';}
+      updateSongTick();
+    },100);
+  }
+}
+
+function updateSongTick(){
+  document.getElementById('prog-fill').style.width=(songElapsed/currentSong.duration*100)+'%';
+  document.getElementById('prog-cur').textContent=fmt(songElapsed);
+  document.getElementById('meta-time').textContent=fmt(songElapsed);
+  updateSongLine();
+}
+
+function updateSongLine(){
+  let idx=-1;
+  for(let i=0;i<currentSong.lyrics.length;i++){const nx=currentSong.lyrics[i+1];if(songElapsed>=currentSong.lyrics[i].t&&(!nx||songElapsed<nx.t)){idx=i;break;}}
+  if(idx===songCurrentLine)return;songCurrentLine=idx;
+  currentSong.lyrics.forEach((_,i)=>{const b=document.getElementById('lb-'+i);if(!b)return;b.className='lyric-block '+(i<idx?'past':i===idx?'current':'future');});
+  if(idx>=0){
+    const b=document.getElementById('lb-'+idx);if(b)b.scrollIntoView({behavior:'smooth',block:'center'});
+    document.getElementById('meta-line').textContent=(idx+1)+'/'+currentSong.lyrics.length;
+    songWordsSeen+=currentSong.lyrics[idx].en.split(' ').length;
+    document.getElementById('meta-words').textContent=songWordsSeen;
+    animSongWords(idx);
+  }
+}
+
+function animSongWords(li){
+  const line=currentSong.lyrics[li];const words=line.en.split(' ');
+  const nx=currentSong.lyrics[li+1];const dur=nx?(nx.t-line.t):3.5;const perW=dur/words.length*1000;
+  words.forEach((_,wi)=>setTimeout(()=>{if(songCurrentLine!==li)return;words.forEach((__,wj)=>{const el=document.getElementById(`lw-${li}-${wj}`);if(!el)return;el.classList.toggle('w-past',wj<wi);el.classList.toggle('w-active',wj===wi);});},wi*perW));
+}
+
+function seekSec(s){songElapsed=Math.max(0,Math.min(currentSong.duration,songElapsed+s));songCurrentLine=-1;updateSongTick();}
+function seekClick(e){const b=document.getElementById('prog-bar'),r=b.getBoundingClientRect();songElapsed=Math.max(0,Math.min(currentSong.duration,currentSong.duration*(e.clientX-r.left)/r.width));songCurrentLine=-1;updateSongTick();}
+function cycleSongSpeed(){songSpdIdx=(songSpdIdx+1)%songSpeeds.length;document.getElementById('spd-pill').textContent=songSpeeds[songSpdIdx]+'x';if(songPlaying){clearInterval(songTimer);songPlaying=false;toggleSongPlay();}}
+
+function backToSongList(){clearInterval(songTimer);document.getElementById('canciones-list').style.display='';document.getElementById('canciones-player').style.display='none';document.getElementById('canciones-comp').style.display='none';document.getElementById('canciones-result').style.display='none';songCurrentLine=-1;}
+function replaySong(){if(currentSong)openSong(currentSong);}
+
+function goSongComp(){
+  songCompAnswers=new Array(currentSong.questions.length).fill(null);
+  document.getElementById('song-comp-sub').textContent=currentSong.title+' — '+currentSong.artist;
+  const c=document.getElementById('song-comp-qs');c.innerHTML='';
+  document.getElementById('song-comp-btn').style.display='none';
+  currentSong.questions.forEach((q,qi)=>{
+    const d=document.createElement('div');d.className='comp-q';
+    d.innerHTML=`<div class="comp-q-text">${q.q}</div><div class="comp-opts">${q.opts.map((o,oi)=>`<button class="comp-opt" onclick="selSongComp(${qi},${oi},this)">${o}</button>`).join('')}</div>`;
+    c.appendChild(d);
+  });
+  document.getElementById('canciones-player').style.display='none';
+  document.getElementById('canciones-comp').style.display='block';
+}
+function selSongComp(qi,oi,el){
+  if(songCompAnswers[qi]!==null)return;songCompAnswers[qi]=oi;
+  const q=currentSong.questions[qi];
+  const btns=el.parentElement.querySelectorAll('.comp-opt');btns.forEach(b=>b.disabled=true);
+  el.classList.add(oi===q.ans?'correct':'wrong');if(oi!==q.ans)btns[q.ans].classList.add('correct');
+  if(songCompAnswers.every(a=>a!==null))document.getElementById('song-comp-btn').style.display='block';
+}
+function showSongResult(){
+  const correct=currentSong.questions.filter((q,i)=>songCompAnswers[i]===q.ans).length;
+  const total=currentSong.questions.length,pct=Math.round(correct/total*100);
+  document.getElementById('sr-pct').textContent=pct+'%';
+  document.getElementById('sr-title').textContent=pct>=80?'¡Excelente comprensión!':pct>=66?'¡Buen intento!':'Sigue practicando';
+  document.getElementById('sr-sub').textContent=correct+' de '+total+' correctas en "'+currentSong.title+'"';
+  document.getElementById('sr-words').textContent=songWordsSeen;document.getElementById('sr-corr').textContent=correct+'/'+total;document.getElementById('sr-touched').textContent=songWordsTouched;
+  document.getElementById('canciones-comp').style.display='none';document.getElementById('canciones-result').style.display='block';
+}
+
+/* REPASO */
+function saveWrongs(ws){try{const r=localStorage.getItem('lr-wrongs');let s=r?JSON.parse(r):[];s=[...ws,...s].slice(0,50);localStorage.setItem('lr-wrongs',JSON.stringify(s));}catch(e){}}
+function loadWrongs(){try{const r=localStorage.getItem('lr-wrongs');return r?JSON.parse(r):[];}catch(e){return[];}}
+
+function initRepaso(){
+  const ws=loadWrongs();
+  if(!ws.length){document.getElementById('rep-empty').style.display='block';document.getElementById('rep-content').style.display='none';document.getElementById('rep-result').style.display='none';return;}
+  repQs=ws.sort(()=>Math.random()-.5).slice(0,20);startRepaso();
+}
+function startRepaso(){repIdx=0;repAnswers=[];document.getElementById('rep-empty').style.display='none';document.getElementById('rep-content').style.display='block';document.getElementById('rep-result').style.display='none';renderRepQ();}
+function renderRepQ(){
+  const q=repQs[repIdx];
+  document.getElementById('rep-prog').textContent='Pregunta '+(repIdx+1)+'/'+repQs.length;
+  document.getElementById('rep-score').textContent=repAnswers.filter(Boolean).length+' correctas';
+  document.getElementById('rep-bar').style.width=((repIdx+1)/repQs.length*100)+'%';
+  document.getElementById('rep-origin').textContent='📖 '+(q.source||'');
+  document.getElementById('rep-q').textContent=q.q;
+  document.getElementById('rep-exp').style.display='none';
+  document.getElementById('rep-next').style.display='none';document.getElementById('rep-next').textContent='Siguiente →';document.getElementById('rep-next').onclick=nextRepaso;
+  const opts=document.getElementById('rep-opts');opts.innerHTML='';
+  q.opts.forEach((o,i)=>{const b=document.createElement('button');b.className='repaso-opt';b.textContent=o;b.onclick=()=>selectRep(i,b,q);opts.appendChild(b);});
+}
+function selectRep(idx,el,q){
+  const btns=document.querySelectorAll('#rep-opts .repaso-opt');btns.forEach(b=>b.disabled=true);
+  el.classList.add(idx===q.ans?'correct':'wrong');if(idx!==q.ans)btns[q.ans].classList.add('correct');repAnswers.push(idx===q.ans);
+  if(q.exp){document.getElementById('rep-exp').textContent='💡 '+q.exp;document.getElementById('rep-exp').style.display='block';}
+  const nb=document.getElementById('rep-next');nb.style.display='inline-block';
+  if(repIdx===repQs.length-1){nb.textContent='Ver resultado →';nb.onclick=showRepResult;}
+}
+function nextRepaso(){repIdx++;if(repIdx>=repQs.length){showRepResult();return;}renderRepQ();}
+function showRepResult(){
+  document.getElementById('rep-content').style.display='none';document.getElementById('rep-result').style.display='block';
+  const c=repAnswers.filter(Boolean).length,t=repAnswers.length,p=Math.round(c/t*100);
+  document.getElementById('rep-res-pct').textContent=p+'%';
+  document.getElementById('rep-res-title').textContent=p>=80?'¡Excelente repaso!':'Sigue practicando';
+  document.getElementById('rep-res-sub').textContent=c+' de '+t+' correctas.';
+  document.getElementById('rr-c').textContent=c;document.getElementById('rr-w').textContent=t-c;document.getElementById('rr-p').textContent=p+'%';
+  if(p>=80)try{localStorage.removeItem('lr-wrongs');}catch(e){}
+}
+
+/* STATS & SESSIONS */
+function saveSession(wpm,comp,elapsed,text){try{const r=localStorage.getItem('lr-sessions');const ss=r?JSON.parse(r):[];ss.unshift({date:new Date().toLocaleDateString('es-CL'),wpm,comp,elapsed,title:text.title,lang:text.lang||lang});if(ss.length>30)ss.splice(30);localStorage.setItem('lr-sessions',JSON.stringify(ss));}catch(e){}}
+function loadSessions(){try{const r=localStorage.getItem('lr-sessions');return r?JSON.parse(r):[];}catch(e){return[];}}
+
+function updateBanner(){
+  const ss=loadSessions();
+  if(!ss.length){['hs-s','hs-w','hs-c'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='—';});document.getElementById('hs-r').textContent='0🔥';return;}
+  document.getElementById('hs-s').textContent=ss.length;
+  document.getElementById('hs-w').textContent=Math.max(...ss.map(s=>s.wpm));
+  document.getElementById('hs-c').textContent=Math.round(ss.reduce((a,s)=>a+s.comp,0)/ss.length)+'%';
+  let r=0;for(const s of ss){if(s.comp>=70)r++;else break;}document.getElementById('hs-r').textContent=r+'🔥';
+}
+
+function renderStats(){
+  const sec=document.getElementById('stats-content');
+  const ss=loadSessions();
+  if(!ss.length){sec.innerHTML='<div class="empty-state"><div class="big">📖</div><p>Aún no tienes sesiones.<br>Comienza tu primera lectura.</p><button class="btn btn-accent" style="margin-top:1rem" onclick="showScreen(\'library\')">Ir a textos →</button></div>';return;}
+  const bw=Math.max(...ss.map(s=>s.wpm)),aw=Math.round(ss.reduce((a,s)=>a+s.wpm,0)/ss.length),ac=Math.round(ss.reduce((a,s)=>a+s.comp,0)/ss.length);
+  let h=`<div class="stats-summary"><div class="ss-card"><div class="n">${ss.length}</div><div class="l">Sesiones</div></div><div class="ss-card"><div class="n">${bw}</div><div class="l">Mejor WPM</div></div><div class="ss-card"><div class="n">${aw}</div><div class="l">WPM prom.</div></div><div class="ss-card"><div class="n">${ac}%</div><div class="l">Comprensión</div></div></div>`;
+  if(ss.length>1){
+    const rc=ss.slice(0,10).reverse();h+='<div class="section-label" style="margin-bottom:.5rem">Evolución WPM</div><div style="display:flex;align-items:flex-end;gap:4px;height:65px;margin-bottom:1.1rem">';
+    const mx=Math.max(...rc.map(s=>s.wpm));
+    rc.forEach((s,i)=>{const ht=Math.max(4,Math.round(s.wpm/mx*52));const col=s.comp>=80?'#4ecb71':s.comp>=50?'#e8a547':'#e85454';h+=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="font-size:9px;color:var(--text3)">${s.wpm}</div><div style="width:100%;height:${ht}px;background:${col};border-radius:3px 3px 0 0;opacity:.85"></div><div style="font-size:9px;color:var(--text3)">#${ss.length-rc.length+i+1}</div></div>`;});
+    h+='</div>';
+  }
+  h+='<div class="section-label" style="margin-bottom:.5rem">Sesiones recientes</div>';
+  ss.slice(0,10).forEach((s,i)=>{const fl=s.lang==='es'?'🇨🇱':'🇺🇸';h+=`<div class="session-item"><div class="si-left">${fl} <strong>${s.title}</strong><br>${s.date} · ${s.elapsed}s</div><div style="text-align:right"><div class="si-wpm">${s.wpm} wpm</div><div class="si-comp">${s.comp}% comprensión</div></div></div>`;});
+  h+='<div style="margin-top:1rem;text-align:right"><button class="btn btn-ghost btn-sm" style="color:#e85454;border-color:#3a1a1a" onclick="clearAll()">Borrar historial</button></div>';
+  sec.innerHTML=h;
+}
+function clearAll(){if(!confirm('¿Borrar todo el historial?'))return;try{localStorage.removeItem('lr-sessions');localStorage.removeItem('lr-wrongs');}catch(e){}renderStats();updateBanner();}
+
+function fmt(s){const t=Math.floor(s),m=Math.floor(t/60);return m+':'+(t%60).toString().padStart(2,'0');}
+
+updateBanner();renderLibrary();
+</script>
+</body>
+</html>
