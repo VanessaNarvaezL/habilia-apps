@@ -3,349 +3,211 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Terapeutas Famosos</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<title>HABIL/IA — Inteligencia aplicada</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--cream:#f5f0e8;--ink:#1a1410;--gold:#c9a84c;--gold-light:#e8c97a;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--ink);font-family:'Cormorant Garamond',Georgia,serif;min-height:100vh;}
-#welcome-screen{position:fixed;inset:0;background:rgba(15,10,8,0.97);z-index:100;display:flex;align-items:center;justify-content:center;padding:1.5rem;}
-.welcome-box{background:linear-gradient(160deg,#2a2018,#1e1812);border:1px solid rgba(201,168,76,0.25);border-top:2px solid var(--gold);border-radius:2px;max-width:560px;width:100%;padding:2.5rem 2rem;text-align:center;}
-.welcome-symbol{font-size:2.5rem;margin-bottom:1rem;}
-.welcome-title{font-family:'Cinzel',serif;color:var(--gold-light);font-size:1.3rem;letter-spacing:0.08em;margin-bottom:1rem;}
-.welcome-text{font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.65);font-size:0.98rem;line-height:1.75;margin-bottom:1.8rem;}
-.welcome-text strong{color:rgba(245,240,232,0.85);font-style:normal;}
-.crisis-section{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.12);border-radius:2px;padding:1rem 1.2rem;margin-bottom:1.8rem;text-align:left;}
-.crisis-title{font-family:'Cinzel',serif;color:var(--gold);font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.8rem;}
-.crisis-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem;}
-.crisis-list li{font-family:'Cormorant Garamond',serif;color:rgba(245,240,232,0.6);font-size:0.9rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
-.crisis-list li span:first-child{color:rgba(245,240,232,0.4);font-size:0.82rem;}
-.crisis-list a{color:var(--gold-light);text-decoration:none;font-weight:600;}
-.crisis-note{margin-top:0.8rem;font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.35);font-size:0.82rem;text-align:center;line-height:1.6;}
-.crisis-note span{color:rgba(201,168,76,0.6);font-style:normal;}
-.welcome-btn{background:linear-gradient(135deg,#c9a84c,#a8862e);border:none;color:var(--ink);font-family:'Cinzel',serif;font-size:0.78rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;padding:0.9rem 2.5rem;cursor:pointer;border-radius:1px;width:100%;}
-#selection-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;background:radial-gradient(ellipse at 20% 50%,rgba(201,168,76,0.06) 0%,transparent 60%),#1a1410;}
-.header{text-align:center;margin-bottom:3rem;}
-.header-ornament{color:var(--gold);font-size:1.2rem;letter-spacing:0.5rem;opacity:0.7;margin-bottom:0.5rem;}
-.header h1{font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3.5rem);color:var(--cream);font-weight:400;letter-spacing:0.1em;line-height:1.1;}
-.header h1 span{color:var(--gold);font-style:italic;font-family:'Cormorant Garamond',serif;}
-.header-sub{font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.5);font-size:1.1rem;margin-top:1rem;}
-.divider{display:flex;align-items:center;gap:1rem;margin:1.5rem 0;color:var(--gold);opacity:0.5;}
-.divider::before,.divider::after{content:'';flex:1;max-width:80px;height:1px;background:linear-gradient(to right,transparent,var(--gold));}
-.divider::after{background:linear-gradient(to left,transparent,var(--gold));}
-.therapists-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;max-width:1000px;width:100%;}
-.therapist-card{background:linear-gradient(160deg,#2a2018,#1e1812);border:1px solid rgba(201,168,76,0.2);border-radius:2px;padding:2.5rem 2rem;cursor:pointer;transition:all 0.4s;text-align:center;}
-.therapist-card:hover{border-color:rgba(201,168,76,0.5);transform:translateY(-4px);}
-.card-symbol{font-size:3rem;margin-bottom:1rem;}
-.card-name{font-family:'Cinzel',serif;font-size:1.3rem;color:var(--gold-light);font-weight:600;letter-spacing:0.08em;margin-bottom:0.3rem;}
-.card-years{font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.35);font-size:0.85rem;margin-bottom:1rem;}
-.card-school{color:var(--gold);font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.2rem;opacity:0.8;}
-.card-desc{font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.6);font-size:0.95rem;line-height:1.6;margin-bottom:1.5rem;}
-.card-btn{padding:0.6rem 1.8rem;border:1px solid rgba(201,168,76,0.4);color:var(--gold-light);font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;background:transparent;cursor:pointer;border-radius:1px;}
-#chat-screen{display:none;height:100vh;flex-direction:column;background:#1a1410;}
-.chat-header{background:linear-gradient(90deg,#221a10,#2a2018,#221a10);border-bottom:1px solid rgba(201,168,76,0.2);padding:0.8rem 1.2rem;display:flex;align-items:center;gap:1rem;flex-shrink:0;}
-.back-btn{background:none;border:1px solid rgba(201,168,76,0.3);color:var(--gold);font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.15em;padding:0.4rem 0.9rem;cursor:pointer;border-radius:1px;white-space:nowrap;}
-.chat-header-info{flex:1;min-width:0;}
-.chat-therapist-name{font-family:'Cinzel',serif;color:var(--gold-light);font-size:1rem;letter-spacing:0.08em;}
-.chat-therapist-school{color:rgba(245,240,232,0.4);font-size:0.75rem;font-family:'IM Fell English',serif;font-style:italic;}
-.chat-symbol-header{font-size:1.8rem;flex-shrink:0;}
-.messages-wrapper{flex:1;overflow-y:auto;}
-.messages-container{padding:1.5rem 1rem;display:flex;flex-direction:column;gap:1.2rem;max-width:720px;width:100%;margin:0 auto;min-height:100%;justify-content:flex-end;}
-.suggestions-wrap{display:flex;flex-direction:column;gap:0.5rem;}
-.suggestions-label{font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.3);font-size:0.8rem;text-align:center;}
-.suggestion-btn{background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.12);border-radius:2px;color:rgba(245,240,232,0.5);font-family:'IM Fell English',serif;font-style:italic;font-size:0.9rem;padding:0.6rem 1rem;cursor:pointer;text-align:left;line-height:1.4;}
-.message{max-width:82%;}
-.message.therapist{align-self:flex-start;}
-.message.user{align-self:flex-end;}
-.message-bubble{padding:1rem 1.3rem;border-radius:2px;font-size:1rem;line-height:1.7;}
-.message.therapist .message-bubble{background:linear-gradient(135deg,#2a2018,#241d14);border:1px solid rgba(201,168,76,0.15);border-left:2px solid var(--gold);color:var(--cream);font-family:'IM Fell English',serif;font-style:italic;}
-.message.user .message-bubble{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);color:rgba(245,240,232,0.85);}
-.message-sender{font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.12em;margin-bottom:0.4rem;color:rgba(201,168,76,0.6);}
-.message.user .message-sender{text-align:right;}
-.typing-indicator{align-self:flex-start;display:none;}
-.typing-indicator.visible{display:block;}
-.typing-bubble{background:linear-gradient(135deg,#2a2018,#241d14);border:1px solid rgba(201,168,76,0.15);border-left:2px solid var(--gold);padding:0.8rem 1.2rem;border-radius:2px;display:flex;gap:0.4rem;align-items:center;}
-.typing-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:tp 1.2s infinite;}
-.typing-dot:nth-child(2){animation-delay:0.2s;}
-.typing-dot:nth-child(3){animation-delay:0.4s;}
-@keyframes tp{0%,100%{opacity:0.3;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
-.input-area-wrapper{background:linear-gradient(0deg,#1e1812,#221a10);border-top:1px solid rgba(201,168,76,0.15);padding:0.8rem 1rem;flex-shrink:0;}
-.input-area{display:flex;gap:0.8rem;align-items:flex-end;max-width:720px;width:100%;margin:0 auto;}
-#message-input{flex:1;background:rgba(245,240,232,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:2px;padding:0.75rem 1rem;color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:1rem;resize:none;min-height:44px;max-height:120px;outline:none;line-height:1.5;}
-#message-input::placeholder{color:rgba(245,240,232,0.25);font-style:italic;}
-#send-btn{background:linear-gradient(135deg,#c9a84c,#a8862e);border:none;color:var(--ink);font-family:'Cinzel',serif;font-size:0.7rem;font-weight:600;letter-spacing:0.15em;padding:0 1.2rem;cursor:pointer;border-radius:1px;height:44px;white-space:nowrap;}
-#send-btn:disabled{opacity:0.4;cursor:not-allowed;}
-.error-bubble{background:rgba(180,60,60,0.08);border-left:2px solid rgba(180,60,60,0.4);padding:0.8rem 1.2rem;border-radius:2px;color:rgba(245,200,200,0.65);font-family:'IM Fell English',serif;font-style:italic;font-size:0.9rem;align-self:flex-start;max-width:82%;}
-.messages-wrapper::-webkit-scrollbar{width:3px;}
-.messages-wrapper::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.2);}
-@media(max-width:480px){.therapists-grid{grid-template-columns:1fr;}.message{max-width:92%;}}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#08090c;--bg2:#0d0f14;--bg3:#12151c;--bg4:#181c26;--gold:#c9a84c;--gold2:#e8c97a;--text:#f0ede8;--text2:#8a8798;--text3:#3a3848;--radius:14px}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 0%,rgba(201,168,76,.06) 0%,transparent 60%),radial-gradient(ellipse at 80% 100%,rgba(201,168,76,.04) 0%,transparent 60%);pointer-events:none;z-index:0}
+*{position:relative;z-index:1}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;border-bottom:1px solid var(--bg4);backdrop-filter:blur(10px);position:sticky;top:0;z-index:100;background:rgba(8,9,12,.85)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;letter-spacing:.06em;color:var(--text)}
+.nav-logo strong{color:var(--gold);font-weight:600}
+.nav-badge{font-size:10px;color:var(--text3);letter-spacing:.15em;text-transform:uppercase;border:1px solid var(--bg4);padding:4px 10px;border-radius:20px}
+
+/* HERO */
+.hero{text-align:center;padding:5rem 1.5rem 4rem;max-width:700px;margin:0 auto;animation:fadeUp .8s ease}
+.hero-eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;display:flex;align-items:center;justify-content:center;gap:8px}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';width:30px;height:1px;background:var(--gold);opacity:.4}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,6vw,62px);font-weight:300;line-height:1.1;color:var(--text);margin-bottom:1.2rem}
+.hero h1 em{color:var(--gold);font-style:italic}
+.hero p{font-size:16px;color:var(--text2);line-height:1.8;max-width:480px;margin:0 auto 2.5rem}
+.hero-cta{display:inline-flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn-primary{padding:.85rem 2rem;border-radius:30px;background:linear-gradient(135deg,var(--gold),#b8922a);color:#08090c;font-size:14px;font-weight:600;border:none;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,.3)}
+.btn-ghost{padding:.85rem 2rem;border-radius:30px;border:1px solid var(--bg4);color:var(--text2);font-size:14px;background:transparent;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+
+/* STATS */
+.stats{display:flex;gap:1px;background:var(--bg4);border-radius:16px;overflow:hidden;max-width:500px;margin:0 auto 5rem}
+.stat{flex:1;background:var(--bg2);padding:1.2rem;text-align:center}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);font-weight:300}
+.stat-l{font-size:11px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+
+/* SECTION */
+.section{padding:3rem 1.5rem;max-width:900px;margin:0 auto}
+.section-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,38px);font-weight:300;color:var(--text);margin-bottom:.5rem}
+.section-title em{color:var(--gold);font-style:italic}
+.section-sub{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:2.5rem}
+
+/* APPS GRID */
+.apps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:1.5rem}
+.app-card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:1.4rem;text-decoration:none;color:inherit;display:block;transition:all .25s;overflow:hidden;position:relative}
+.app-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,.06),transparent);opacity:0;transition:opacity .3s}
+.app-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.3)}
+.app-card:hover::before{opacity:1}
+.app-card.coming{opacity:.5;cursor:default}
+.app-card.coming:hover{transform:none;box-shadow:none;border-color:var(--bg4)}
+.app-icon{font-size:32px;margin-bottom:.75rem;display:block;animation:float 4s ease-in-out infinite}
+.app-tag{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:3px;display:inline-block;margin-bottom:.6rem}
+.app-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--text);margin-bottom:.4rem;line-height:1.2}
+.app-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:1rem}
+.app-link{font-size:11px;font-weight:600;letter-spacing:.06em;display:flex;align-items:center;gap:5px;transition:gap .2s}
+.app-card:hover .app-link{gap:8px}
+.soon-badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:var(--bg4);color:var(--text3)}
+
+/* DIVIDER */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--bg4),transparent);margin:1rem 0}
+
+/* FOOTER */
+footer{text-align:center;padding:3rem 1.5rem;border-top:1px solid var(--bg4);margin-top:4rem}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--text);margin-bottom:.5rem}
+.footer-logo strong{color:var(--gold);font-weight:600}
+.footer-sub{font-size:12px;color:var(--text3);letter-spacing:.08em}
 </style>
 </head>
 <body>
 
-<div id="welcome-screen">
-  <div class="welcome-box">
-    <div class="welcome-symbol">🤍</div>
-    <div class="welcome-title">Un espacio para ti</div>
-    <div class="welcome-text">Este es un lugar de <strong>apoyo emocional y reflexión</strong>, creado con cuidado para acompañarte.<br><br>No reemplaza la atención de un profesional de salud mental. Si estás pasando por un momento muy difícil, recuerda que hay personas reales que pueden ayudarte ahora mismo.</div>
-    <div class="crisis-section">
-      <div class="crisis-title">📞 Líneas de crisis — ayuda gratuita</div>
-      <ul class="crisis-list">
-        <li><span>🇨🇱 Chile</span><a href="tel:6003607777">600 360 7777</a></li>
-        <li><span>🇦🇷 Argentina</span><a href="tel:135">135</a></li>
-        <li><span>🇲🇽 México</span><a href="tel:8002900024">800 290 0024</a></li>
-        <li><span>🇪🇸 España</span><a href="tel:024">024</a></li>
-        <li><span>🇨🇴 Colombia</span><a href="tel:106">106</a></li>
-        <li><span>🇺🇾 Uruguay</span><a href="tel:08008884">0800 8884</a></li>
-        <li><span>🇵🇪 Perú</span><a href="tel:113">113</a></li>
-      </ul>
-      <div class="crisis-note">¿Tu país no aparece? Busca en Google:<br><span>"línea de crisis salud mental + tu país"</span></div>
-    </div>
-    <button class="welcome-btn" onclick="closeWelcome()">Entrar al espacio ✦</button>
+<nav>
+  <div>
+    <div class="nav-logo"><strong>HABIL</strong>/IA</div>
+    <div style="font-size:10px;color:var(--text3);letter-spacing:.1em">Inteligencia aplicada</div>
+  </div>
+  <div class="nav-badge">Beta · 2026</div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Plataforma de aprendizaje inteligente</div>
+  <h1>Aprende más rápido.<br>Con <em>inteligencia real.</em></h1>
+  <p>Apps diseñadas para que domines trading, finanzas, memoria, oratoria y más — con tutores de IA, simuladores y contenido que funciona.</p>
+  <div class="hero-cta">
+    <a href="#apps" class="btn-primary">Explorar apps →</a>
+    <a href="#apps" class="btn-ghost">Ver catálogo</a>
   </div>
 </div>
 
-<div id="selection-screen">
-  <div class="header">
-    <div class="header-ornament">✦ ✦ ✦</div>
-    <h1>Terapeutas<br><span>Famosos</span></h1>
-    <div class="header-sub">Elige a tu guía y comienza tu sesión</div>
-    <div class="divider">✦</div>
-  </div>
-  <div class="therapists-grid">
-    <div class="therapist-card" onclick="startSession('jung')">
-      <div class="card-symbol">🌙</div>
-      <div class="card-name">Carl Gustav Jung</div>
-      <div class="card-years">1875 – 1961</div>
-      <div class="card-school">Psicología Analítica</div>
-      <div class="card-desc">"Quien mira hacia afuera, sueña. Quien mira hacia adentro, despierta."</div>
-      <button class="card-btn">Iniciar sesión</button>
+<div class="stats">
+  <div class="stat"><div class="stat-n">7</div><div class="stat-l">Apps listas</div></div>
+  <div class="stat"><div class="stat-n">IA</div><div class="stat-l">Tutor en cada app</div></div>
+  <div class="stat"><div class="stat-n">∞</div><div class="stat-l">Acceso libre</div></div>
+</div>
+
+<div class="section" id="apps">
+  <div class="section-label">Catálogo completo</div>
+  <div class="section-title">Todo lo que <em>necesitas</em> aprender.</div>
+  <div class="section-sub">Desde trading institucional hasta preparar el examen de conducir. Cada app tiene teoría, práctica y tutor de IA.</div>
+
+  <div class="apps-grid">
+
+    <a href="trading-academy.html" class="app-card">
+      <span class="app-icon">📊</span>
+      <span class="app-tag" style="background:rgba(0,201,255,.1);color:#00C9FF">Trading · SMC</span>
+      <div class="app-name">Institutional Trading Academy</div>
+      <div class="app-desc">Smart Money Concepts, Order Blocks, liquidez institucional y gestión de riesgo profesional.</div>
+      <div class="app-link" style="color:#00C9FF">Abrir app <span>→</span></div>
+    </a>
+
+    <a href="cripto-academy.html" class="app-card">
+      <span class="app-icon">₿</span>
+      <span class="app-tag" style="background:rgba(0,232,160,.1);color:#00e8a0">Cripto · ISO 20022</span>
+      <div class="app-name">Cripto Academy</div>
+      <div class="app-desc">Blockchain, DeFi y el estándar ISO 20022 que está rediseñando el sistema financiero global.</div>
+      <div class="app-link" style="color:#00e8a0">Abrir app <span>→</span></div>
+    </a>
+
+    <a href="opciones-academy.html" class="app-card">
+      <span class="app-icon">◎</span>
+      <span class="app-tag" style="background:rgba(255,170,0,.1);color:#ffaa00">Opciones · Acciones</span>
+      <div class="app-name">Opciones & Acciones Academy</div>
+      <div class="app-desc">Calls, puts, las griegas, ETFs y scanner de señales. El mercado americano desde adentro.</div>
+      <div class="app-link" style="color:#ffaa00">Abrir app <span>→</span></div>
+    </a>
+
+    <a href="lectorapido.html" class="app-card">
+      <span class="app-icon">📖</span>
+      <span class="app-tag" style="background:rgba(168,85,247,.1);color:#a855f7">Productividad</span>
+      <div class="app-name">Lector Veloz</div>
+      <div class="app-desc">Entrena tu velocidad lectora con textos propios o PDFs. Duplica tu velocidad en semanas.</div>
+      <div class="app-link" style="color:#a855f7">Abrir app <span>→</span></div>
+    </a>
+
+    <a href="voxmind.html" class="app-card">
+      <span class="app-icon">🎙️</span>
+      <span class="app-tag" style="background:rgba(201,168,76,.1);color:#c9a84c">Oratoria · Voz</span>
+      <div class="app-name">VoxMind</div>
+      <div class="app-desc">Afirmaciones sublimales de noche para transformar tu comunicación. Con Modo Chile 🇨🇱.</div>
+      <div class="app-link" style="color:#c9a84c">Abrir app <span>→</span></div>
+    </a>
+
+    <a href="app_conducir_chile.html" class="app-card">
+      <span class="app-icon">🚗</span>
+      <span class="app-tag" style="background:rgba(255,61,90,.1);color:#ff3d5a">Chile · CONASET</span>
+      <div class="app-name">Examen de Conducir</div>
+      <div class="app-desc">85 preguntas reales, simulacro oficial, práctica por temas y estadísticas. Aprueba al primer intento.</div>
+      <div class="app-link" style="color:#ff3d5a">Abrir app <span>→</span></div>
+    </a>
+
+    <a href="memoria-abuelo.html" class="app-card">
+      <span class="app-icon">🧠</span>
+      <span class="app-tag" style="background:rgba(46,125,50,.1);color:#4caf50">Memoria · Familia</span>
+      <div class="app-name">Juego de Memoria</div>
+      <div class="app-desc">Ejercita la memoria con temas que te gustan — fútbol, vaqueros, música y cocina. Para todas las edades.</div>
+      <div class="app-link" style="color:#4caf50">Abrir app <span>→</span></div>
+    </a>
+
+    <div class="app-card coming">
+      <span class="app-icon" style="animation:none">🛋️</span>
+      <span class="app-tag" style="background:var(--bg4);color:var(--text3)">Salud Mental</span>
+      <div class="app-name">Terapeutas Famosos</div>
+      <div class="app-desc">Jung, Frankl, Perls y más. Un espacio seguro para explorar tu mente con los grandes de la psicología.</div>
+      <div class="soon-badge">Próximamente</div>
     </div>
-    <div class="therapist-card" onclick="startSession('frankl')">
-      <div class="card-symbol">🕯️</div>
-      <div class="card-name">Viktor Frankl</div>
-      <div class="card-years">1905 – 1997</div>
-      <div class="card-school">Logoterapia</div>
-      <div class="card-desc">"Al hombre se le puede arrebatar todo, salvo la última de las libertades: elegir su actitud ante cualquier circunstancia."</div>
-      <button class="card-btn">Iniciar sesión</button>
+
+    <div class="app-card coming">
+      <span class="app-icon" style="animation:none">👴</span>
+      <span class="app-tag" style="background:var(--bg4);color:var(--text3)">Asistente</span>
+      <div class="app-name">Asistente para Adultos Mayores</div>
+      <div class="app-desc">Tecnología simple y accesible. Música, búsquedas por voz y todo lo que necesitan al alcance de un toque.</div>
+      <div class="soon-badge">Próximamente</div>
     </div>
-    <div class="therapist-card" onclick="startSession('bach')">
-      <div class="card-symbol">🌿</div>
-      <div class="card-name">Dr. Edward Bach</div>
-      <div class="card-years">1886 – 1936</div>
-      <div class="card-school">Medicina Floral</div>
-      <div class="card-desc">"La enfermedad del cuerpo es resultado de la desarmonía entre el alma y la mente."</div>
-      <button class="card-btn">Iniciar sesión</button>
-    </div>
+
   </div>
 </div>
 
-<div id="chat-screen">
-  <div class="chat-header">
-    <button class="back-btn" onclick="goBack()">← Volver</button>
-    <div class="chat-header-info">
-      <div class="chat-therapist-name" id="chat-name"></div>
-      <div class="chat-therapist-school" id="chat-school"></div>
-    </div>
-    <div class="chat-symbol-header" id="chat-symbol"></div>
-  </div>
-  <div class="messages-wrapper">
-    <div class="messages-container" id="messages">
-      <div class="typing-indicator" id="typing">
-        <div class="message-sender" id="typing-name"></div>
-        <div class="typing-bubble">
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="input-area-wrapper">
-    <div class="input-area">
-      <textarea id="message-input" placeholder="Escribe aquí tu pensamiento..." rows="1"></textarea>
-      <button id="send-btn">Enviar</button>
-    </div>
+<div class="divider"></div>
+
+<div class="section" style="text-align:center;padding:3rem 1.5rem">
+  <div class="section-label">¿Por qué HABIL/IA?</div>
+  <div class="section-title" style="margin-bottom:2rem">Aprendizaje que <em>funciona.</em></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;max-width:700px;margin:0 auto">
+    {['🎯 Contenido especializado','🤖 Tutor IA en cada app','📱 Funciona en el celular','🆓 Acceso libre','🇨🇱 Hecho para Latinoamérica','📊 Simuladores reales'].map(f=>`<div style="background:var(--bg2);border:1px solid var(--bg4);border-radius:10px;padding:1rem;font-size:13px;color:var(--text2)">${f}</div>`).join('')}
   </div>
 </div>
+
+<footer>
+  <div class="footer-logo"><strong>HABIL</strong>/IA</div>
+  <div class="footer-sub">Inteligencia Artificial aplicada a negocios reales · NL Consultoría</div>
+</footer>
 
 <script>
-var THERAPISTS = {
-  jung: {
-    name: "Carl Gustav Jung", school: "Psicología Analítica", symbol: "🌙",
-    greeting: "Qué bueno que estás aquí. A veces el alma nos lleva a lugares que la mente no entiende todavía... y eso está bien. Antes de comenzar, me gustaría conocerte. ¿Cómo te llamas?",
-    suggestions: ["No sé bien qué me pasa, pero algo no está bien", "Estoy pasando por un momento muy difícil", "Me siento perdido/a y sin rumbo", "Tengo miedos que no puedo explicar"],
-    prompt: "Eres Carl Gustav Jung en una PRIMERA SESIÓN terapéutica. Hablas en primera persona. No ofreces esperanza vacía sino PRESENCIA REAL. Conduces con preguntas graduales: primero el nombre, luego edad, luego área de dolor. Valida siempre antes de profundizar. Explica términos técnicos en palabras simples. 3-5 oraciones. Una pregunta al final. Responde SIEMPRE en español."
-  },
-  frankl: {
-    name: "Viktor Frankl", school: "Logoterapia", symbol: "🕯️",
-    greeting: "Gracias por estar aquí. Sé que a veces llegar a un lugar como este cuesta mucho. Quiero que sepas que aquí puedes hablar con total libertad. Para comenzar... ¿cómo te llamas?",
-    suggestions: ["No sé bien qué me pasa, pero algo no está bien", "Siento que nada tiene sentido en mi vida", "Estoy pasando por algo muy difícil y no veo salida", "Me cuesta encontrar fuerzas para seguir"],
-    prompt: "Eres Viktor Frankl en una PRIMERA SESIÓN. Hablas en primera persona. No ofreces esperanza vacía. Ofreces PRESENCIA REAL y VERDAD AMOROSA. Conduces con preguntas graduales: nombre, edad, área de dolor. Acoge antes de profundizar. Explica términos técnicos. 3-5 oraciones. Una pregunta al final. Responde SIEMPRE en español."
-  },
-  bach: {
-    name: "Dr. Edward Bach", school: "Medicina Floral", symbol: "🌿",
-    greeting: "Qué alegría que hayas llegado hasta aquí. A veces el cuerpo y el alma nos hablan de maneras que no entendemos... y está bien. Estoy aquí contigo. ¿Cómo te llamas?",
-    suggestions: ["No sé bien qué me pasa, pero algo no está bien", "Me siento muy agotado/a por dentro", "Tengo mucha angustia o miedo y no sé por qué", "Estoy triste y sin energía hace tiempo"],
-    prompt: "Eres el Dr. Edward Bach en una PRIMERA SESIÓN. Hablas en primera persona. Ofreces PRESENCIA y TERNURA. Conduces con preguntas graduales: nombre, edad, sensaciones del cuerpo, área de dolor. Acoge con calidez antes de profundizar. Cuando tengas info suficiente sugiere 2-3 Remedios Florales con descripción completa. 3-5 oraciones. Una pregunta al final. Responde SIEMPRE en español."
-  }
-};
+// Fix template literals in HTML (can't use them directly)
+const features=['🎯 Contenido especializado','🤖 Tutor IA en cada app','📱 Funciona en el celular','🆓 Acceso libre','🇨🇱 Hecho para Latinoamérica','📊 Simuladores reales'];
+document.querySelector('[style*="max-width:700px"]').innerHTML=features.map(f=>`<div style="background:var(--bg2);border:1px solid var(--bg4);border-radius:10px;padding:1rem;font-size:13px;color:var(--text2)">${f}</div>`).join('');
 
-var ct = null, ch = [], busy = false;
-
-function closeWelcome() {
-  var s = document.getElementById('welcome-screen');
-  s.style.opacity = '0';
-  s.style.transition = 'opacity 0.5s';
-  setTimeout(function(){ s.style.display = 'none'; }, 500);
-}
-
-function startSession(k) {
-  ct = THERAPISTS[k];
-  ch = [];
-  document.getElementById('chat-name').textContent = ct.name;
-  document.getElementById('chat-school').textContent = ct.school;
-  document.getElementById('chat-symbol').textContent = ct.symbol;
-  var m = document.getElementById('messages');
-  m.innerHTML = '<div class="typing-indicator" id="typing"><div class="message-sender">' + ct.name + '</div><div class="typing-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>';
-  document.getElementById('selection-screen').style.display = 'none';
-  document.getElementById('chat-screen').style.display = 'flex';
-  setTimeout(function(){
-    document.getElementById('typing').classList.add('visible');
-    setTimeout(function(){
-      document.getElementById('typing').classList.remove('visible');
-      addMsg('therapist', ct.greeting);
-      ch.push({role:'assistant', content: ct.greeting});
-      showSugg();
-    }, 1800);
-  }, 300);
-}
-
-function showSugg() {
-  var m = document.getElementById('messages');
-  var t = document.getElementById('typing');
-  var w = document.createElement('div');
-  w.className = 'suggestions-wrap';
-  w.id = 'suggestions';
-  var h = '<div class="suggestions-label">¿No sabes por dónde empezar?</div>';
-  for (var i = 0; i < ct.suggestions.length; i++) {
-    h += '<button class="suggestion-btn" data-i="' + i + '">' + ct.suggestions[i] + '</button>';
-  }
-  w.innerHTML = h;
-  w.addEventListener('click', function(e) {
-    var b = e.target.closest('.suggestion-btn');
-    if (!b) return;
-    var txt = ct.suggestions[parseInt(b.getAttribute('data-i'))];
-    var s = document.getElementById('suggestions');
-    if (s) s.remove();
-    document.getElementById('message-input').value = txt;
-    doSend();
-  });
-  m.insertBefore(w, t);
-  scroll();
-}
-
-function goBack() {
-  document.getElementById('chat-screen').style.display = 'none';
-  document.getElementById('selection-screen').style.display = 'flex';
-  ct = null;
-  ch = [];
-}
-
-function addMsg(role, text, isErr) {
-  var m = document.getElementById('messages');
-  var t = document.getElementById('typing');
-  var d = document.createElement('div');
-  if (isErr) {
-    d.className = 'error-bubble';
-    d.textContent = text;
-  } else {
-    d.className = 'message ' + role;
-    d.innerHTML = '<div class="message-sender">' + (role === 'therapist' ? ct.name : 'Tú') + '</div><div class="message-bubble">' + text.replace(/\n/g,'<br>') + '</div>';
-  }
-  m.insertBefore(d, t);
-  scroll();
-}
-
-function scroll() {
-  var w = document.querySelector('.messages-wrapper');
-  if (w) w.scrollTop = w.scrollHeight;
-}
-
-function doSend() {
-  var inp = document.getElementById('message-input');
-  var txt = inp.value.trim();
-  if (!txt || busy) return;
-  var s = document.getElementById('suggestions');
-  if (s) s.remove();
-  busy = true;
-  document.getElementById('send-btn').disabled = true;
-  inp.value = '';
-  inp.style.height = 'auto';
-  addMsg('user', txt);
-  ch.push({role:'user', content: txt});
-  document.getElementById('typing').classList.add('visible');
-  scroll();
-
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', '/api/chat', true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.timeout = 30000;
-  
-  xhr.onload = function() {
-    document.getElementById('typing').classList.remove('visible');
-    if (xhr.status === 200) {
-      try {
-        var data = JSON.parse(xhr.responseText);
-        if (data.content && data.content[0] && data.content[0].text) {
-          addMsg('therapist', data.content[0].text);
-          ch.push({role:'assistant', content: data.content[0].text});
-        } else if (data.error) {
-          addMsg('therapist', 'Error: ' + data.error, true);
-        } else {
-          addMsg('therapist', 'Respuesta inesperada: ' + xhr.responseText, true);
-        }
-      } catch(e) {
-        addMsg('therapist', 'Error al leer respuesta: ' + xhr.responseText, true);
-      }
-    } else {
-      addMsg('therapist', 'Error ' + xhr.status + ': ' + xhr.responseText, true);
-    }
-    busy = false;
-    document.getElementById('send-btn').disabled = false;
-    document.getElementById('message-input').focus();
-  };
-  
-  xhr.onerror = function() {
-    document.getElementById('typing').classList.remove('visible');
-    addMsg('therapist', 'Error de red al conectar con /api/chat', true);
-    busy = false;
-    document.getElementById('send-btn').disabled = false;
-  };
-  
-  xhr.ontimeout = function() {
-    document.getElementById('typing').classList.remove('visible');
-    addMsg('therapist', 'Tiempo de espera agotado', true);
-    busy = false;
-    document.getElementById('send-btn').disabled = false;
-  };
-
-  xhr.send(JSON.stringify({
-    system: ct.prompt,
-    messages: ch
-  }));
-}
-
-document.getElementById('send-btn').addEventListener('click', doSend);
-document.getElementById('message-input').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    doSend();
-  }
+// Stagger card animations
+document.querySelectorAll('.app-card').forEach((card,i)=>{
+  card.style.animation=`fadeUp .6s ease ${i*.08}s both`;
 });
-document.getElementById('message-input').addEventListener('input', function() {
-  this.style.height = 'auto';
-  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+
+// Smooth scroll
+document.querySelector('[href="#apps"]').addEventListener('click',e=>{
+  e.preventDefault();document.getElementById('apps').scrollIntoView({behavior:'smooth'});
 });
 </script>
 </body>
