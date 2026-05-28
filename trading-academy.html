@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Institutional Trading Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04080F;--surface:#080F1A;--card:#0C1624;--border:#152236;
+  --accent:#00C9FF;--gold:#FFAA00;--green:#00E8A0;--red:#FF3D5A;--purple:#A855F7;
+  --text:#D8EEF8;--muted:#4A6A85;--dim:#243040;
+}
+body{background:var(--bg);font-family:'Syne',sans-serif;color:var(--text);min-height:100vh}
+*::-webkit-scrollbar{width:4px}*::-webkit-scrollbar-thumb{background:#1E3350;border-radius:2px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+input[type=range]{accent-color:var(--accent);height:4px;width:100%}
+button{font-family:'Syne',sans-serif;cursor:pointer}
+
+/* HEADER */
+#header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;height:56px;position:sticky;top:0;z-index:100;gap:12px}
+.logo-box{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.logo-text .t1{color:var(--text);font-weight:800;font-size:14px;line-height:1.1}
+.logo-text .t2{color:var(--muted);font-size:9px;letter-spacing:2px}
+#nav-tabs{flex:1;display:flex;justify-content:center;gap:4px}
+.nav-tab{background:none;border:1px solid transparent;border-radius:6px;padding:5px 14px;color:var(--muted);font-size:12px;font-weight:400;transition:all .2s}
+.nav-tab.active{background:rgba(0,201,255,.08);border-color:rgba(0,201,255,.27);color:var(--accent);font-weight:700}
+#xp-display{text-align:right}
+#xp-display .xp-num{color:var(--gold);font-family:'JetBrains Mono';font-size:13px;font-weight:700}
+#xp-display .xp-sub{color:var(--muted);font-size:10px}
+#xp-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,rgba(255,170,0,.27),rgba(255,170,0,.13));border:2px solid rgba(255,170,0,.4);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:14px;flex-shrink:0}
+
+/* MAIN */
+#main{max-width:820px;margin:0 auto;padding:20px 16px;animation:fadeIn .4s ease}
+
+/* CARDS */
+.card{background:var(--card);border-radius:12px;border:1px solid var(--border);padding:16px;margin-bottom:12px}
+.card-sm{background:var(--card);border-radius:10px;border:1px solid var(--border);padding:14px;margin-bottom:10px}
+
+/* MODULE */
+.module-wrap{border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:16px;background:var(--card)}
+.module-header{padding:16px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border)}
+.mod-icon{font-size:22px}
+.mod-tag{font-size:10px;font-weight:800;letter-spacing:1.5px;padding:2px 8px;border-radius:3px}
+.mod-title{font-weight:700;font-size:16px;margin-top:4px}
+.mod-sub{color:var(--muted);font-size:12px;margin-top:2px}
+.mod-count{text-align:right;font-family:'JetBrains Mono';font-weight:700}
+.lessons-wrap{padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+.lesson-btn{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);text-align:left;width:100%;transition:all .2s}
+.lesson-btn:hover:not(:disabled){filter:brightness(1.15)}
+.lesson-btn:disabled{opacity:.45;cursor:not-allowed}
+.lesson-num{width:28px;height:28px;border-radius:50%;background:var(--dim);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);flex-shrink:0;font-family:'JetBrains Mono'}
+.lesson-title{flex:1;font-size:13px}
+.lesson-mins{font-size:11px;color:var(--muted);margin-top:2px}
+.lesson-xp{font-family:'JetBrains Mono';font-size:12px;font-weight:700;color:var(--muted)}
+.lesson-arr{color:var(--muted);font-size:14px}
+
+/* PROGRESS BAR */
+.prog-wrap{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border);margin-bottom:16px;display:flex;align-items:center;gap:16px}
+.prog-bar-bg{flex:1;background:var(--border);border-radius:4px;height:6px}
+.prog-bar{height:100%;border-radius:4px;transition:width .5s ease}
+
+/* LESSON VIEW */
+#lesson-view{display:none;animation:fadeIn .3s ease}
+.lesson-tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.lesson-tab{background:none;border:none;padding:8px 16px;font-size:13px;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s}
+.lesson-tab.active{font-weight:700;border-bottom-color:currentColor}
+.content-block{background:var(--card);border-radius:10px;padding:16px;margin-bottom:10px;border:1px solid var(--border);border-left-width:3px}
+.content-heading{font-weight:700;font-size:13px;margin-bottom:8px}
+.content-body{font-size:13px;line-height:1.8;color:var(--text)}
+
+/* QUIZ */
+.quiz-opt{width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:13px;text-align:left;margin-bottom:8px;transition:all .2s}
+.quiz-opt:hover{filter:brightness(1.2)}
+.quiz-submit{width:100%;padding:12px;border-radius:8px;border:none;color:#fff;font-weight:700;font-size:14px;margin-top:8px}
+.quiz-result{border-radius:12px;padding:20px;text-align:center}
+
+/* SIMULATOR */
+.sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sim-label{color:var(--muted);font-size:12px}
+.sim-val{font-family:'JetBrains Mono';font-size:12px;font-weight:700;color:var(--accent)}
+.sim-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.sim-btn{width:100%;padding:10px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff;font-weight:800;font-size:13px;margin-top:8px;letter-spacing:.5px}
+.dir-btn{flex:1;padding:8px 0;border-radius:6px;border:none;font-weight:700;font-size:12px;font-family:'JetBrains Mono';transition:all .2s}
+.trade-row{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;margin-bottom:4px;font-family:'JetBrains Mono';font-size:11px}
+.feedback-bar{border-radius:10px;padding:12px 16px;text-align:center;font-weight:800;font-size:15px;margin-bottom:10px}
+
+/* TUTOR */
+#chat-messages{height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px;margin-bottom:12px}
+.msg{max-width:85%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.7;white-space:pre-wrap}
+.msg-ai{background:var(--card);border:1px solid var(--border);align-self:flex-start;border-radius:12px 12px 12px 4px}
+.msg-user{background:rgba(0,201,255,.08);border:1px solid rgba(0,201,255,.2);align-self:flex-end;border-radius:12px 12px 4px 12px}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;animation:bounce 1s infinite}
+.suggestion-chip{background:rgba(0,201,255,.08);border:1px solid rgba(0,201,255,.2);border-radius:20px;color:var(--accent);font-size:11px;padding:5px 12px;cursor:pointer;margin:0 4px 4px 0}
+#chat-input-wrap{display:flex;gap:8px}
+#chat-input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13px;outline:none;font-family:'Syne',sans-serif}
+#chat-send{padding:10px 18px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff;font-weight:700;font-size:13px}
+#chat-send:disabled{background:var(--dim)}
+
+/* LOCKED */
+.locked-wrap{opacity:.45;pointer-events:none}
+
+/* SVG CHART */
+.chart-wrap{background:var(--bg);border-radius:8px;overflow:hidden;width:100%}
+
+/* SECTION TITLE */
+.section-title{font-weight:800;font-size:20px;color:var(--text);margin-bottom:4px}
+.section-sub{color:var(--muted);font-size:13px;margin-bottom:16px}
+
+/* BACK BTN */
+.back-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 12px;font-size:12px}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div class="logo-box">⬟</div>
+  <div class="logo-text"><div class="t1">INSTITUTIONAL</div><div class="t2">TRADING ACADEMY</div></div>
+  <div id="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('academy')">◈ Academia</button>
+    <button class="nav-tab" onclick="switchTab('simulator')">⬡ Simulador</button>
+    <button class="nav-tab" onclick="switchTab('tutor')">✦ Tutor IA</button>
+  </div>
+  <div id="xp-display"><div class="xp-num" id="xp-num">0 XP</div><div class="xp-sub" id="xp-sub">0/12 lecciones</div></div>
+  <div id="xp-avatar" id="xp-av">◎</div>
+</div>
+
+<div id="main">
+  <!-- ACADEMY -->
+  <div id="tab-academy">
+    <div id="prog-banner" style="display:none" class="prog-wrap">
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span style="font-weight:700">Tu progreso</span>
+          <span style="font-family:'JetBrains Mono';font-size:13px;color:var(--accent)" id="prog-pct">0%</span>
+        </div>
+        <div class="prog-bar-bg"><div class="prog-bar" id="prog-bar" style="width:0%;background:linear-gradient(90deg,var(--accent),var(--purple));box-shadow:0 0 10px rgba(0,201,255,.4)"></div></div>
+      </div>
+      <div style="text-align:center"><div style="font-family:'JetBrains Mono';font-weight:700;font-size:18px;color:var(--gold)" id="prog-xp">0</div><div style="font-size:10px;color:var(--muted)">XP total</div></div>
+    </div>
+    <div id="modules-list"></div>
+
+    <!-- LESSON VIEW -->
+    <div id="lesson-view">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <button class="back-btn" onclick="closeLesson()">← Volver</button>
+        <div style="flex:1">
+          <div id="lv-tag" style="font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:2px"></div>
+          <div id="lv-title" style="font-weight:700;font-size:15px"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span id="lv-done-badge" style="display:none;color:var(--green);font-size:12px">✓ Completado</span>
+          <span id="lv-xp-badge" style="border-radius:4px;padding:3px 8px;font-size:11px;font-weight:700"></span>
+        </div>
+      </div>
+      <div class="lesson-tabs">
+        <button class="lesson-tab active" id="tab-btn-teoria" onclick="lessonTab('teoria')" style="color:inherit">📖 Teoría</button>
+        <button class="lesson-tab" id="tab-btn-grafico" onclick="lessonTab('grafico')" style="color:inherit">📊 Gráfico</button>
+        <button class="lesson-tab" id="tab-btn-quiz" onclick="lessonTab('quiz')" style="color:inherit;display:none">✏️ Quiz</button>
+      </div>
+      <div id="lv-teoria"></div>
+      <div id="lv-grafico" style="display:none"></div>
+      <div id="lv-quiz" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- SIMULATOR -->
+  <div id="tab-simulator" style="display:none">
+    <div class="section-title">Simulador de Trading</div>
+    <div class="section-sub">Practica position sizing y gestión de riesgo con capital ficticio</div>
+    <div class="card-sm" style="margin-bottom:12px">
+      <div style="font-size:11px;font-family:'JetBrains Mono';color:var(--muted);margin-bottom:8px">XAUUSD · M15 · SIMULADO</div>
+      <div id="sim-chart" class="chart-wrap"></div>
+    </div>
+    <div class="sim-grid">
+      <div class="card-sm">
+        <div style="font-size:12px;font-weight:700;letter-spacing:1px;color:var(--accent);margin-bottom:12px">PARÁMETROS</div>
+        <div id="sim-params"></div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="dir-btn" id="btn-buy" onclick="setDir('buy')" style="background:var(--green);color:var(--bg)">▲ BUY</button>
+          <button class="dir-btn" id="btn-sell" onclick="setDir('sell')" style="background:var(--dim);color:var(--muted)">▼ SELL</button>
+        </div>
+      </div>
+      <div class="card-sm">
+        <div style="font-size:12px;font-weight:700;letter-spacing:1px;color:var(--gold);margin-bottom:12px">CÁLCULO</div>
+        <div id="sim-calc"></div>
+        <button class="sim-btn" onclick="executeTrade()">EJECUTAR TRADE SIMULADO</button>
+        <button onclick="resetSim()" style="width:100%;padding:6px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--muted);font-size:11px;margin-top:6px">Reiniciar cuenta</button>
+      </div>
+    </div>
+    <div id="sim-feedback" style="display:none"></div>
+    <div id="sim-history" style="display:none">
+      <div class="card-sm">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:10px">HISTORIAL</div>
+        <div id="trade-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TUTOR -->
+  <div id="tab-tutor" style="display:none">
+    <div class="section-title">Tutor IA</div>
+    <div class="section-sub">Resuelve dudas sobre trading institucional en tiempo real</div>
+    <div class="card-sm" style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">⬡</div>
+      <div><div style="font-weight:700;font-size:14px">Tutor IA — Trading Institucional</div><div style="color:var(--muted);font-size:11px">SMC · ICT · Order Blocks · Risk Management</div></div>
+      <div style="margin-left:auto;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)"></div>
+    </div>
+    <div id="chat-messages"></div>
+    <div id="suggestions-wrap" style="margin-bottom:10px;flex-wrap:wrap;display:flex"></div>
+    <div id="chat-input-wrap">
+      <input id="chat-input" placeholder="Pregunta sobre SMC, ICT, liquidez, riesgo..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+      <button id="chat-send" onclick="sendMsg()">→</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ DATA ═══
+const MODULES = [
+  {id:1,tag:"FUNDAMENTOS",icon:"◈",color:"#00C9FF",title:"La Mente Institucional",subtitle:"Cómo piensan los que mueven el mercado",
+    lessons:[{id:"1a",title:"Retail vs Institucional: La guerra invisible",xp:100,mins:8},{id:"1b",title:"Market Structure: HH, HL, LH, LL",xp:150,mins:12},{id:"1c",title:"Sesiones de mercado y su liquidez",xp:120,mins:10}],
+    content:[{h:"¿Por qué el retail siempre pierde?",b:"El 80% de los traders retail pierde dinero. No es falta de inteligencia — es que están operando con herramientas diseñadas para perder. Los indicadores populares (RSI, MACD, medias móviles) son reactivos y rezagados. Los institucionales los conocen y los usan como trampas."},{h:"El mercado es un iceberg",b:"Lo que ves en el gráfico es el 10% visible. El 90% son órdenes institucionales, flujos de capital, posiciones ocultas y manipulación deliberada. Los market makers necesitan liquidez para llenar sus posiciones masivas. Tus stops son su combustible."},{h:"Market Structure básica",b:"El mercado se mueve en impulsos y correcciones. Una tendencia alcista forma Higher Highs (HH) y Higher Lows (HL). Una bajista forma Lower Highs (LH) y Lower Lows (LL). Cuando esta estructura se rompe — ahí empieza la oportunidad institucional."}]},
+  {id:2,tag:"SMC",icon:"⬡",color:"#FFAA00",title:"Smart Money Concepts",subtitle:"BOS, CHoCH, Order Blocks y FVG",
+    lessons:[{id:"2a",title:"Break of Structure y Change of Character",xp:200,mins:15},{id:"2b",title:"Order Blocks: donde duermen los institucionales",xp:250,mins:20},{id:"2c",title:"Fair Value Gaps e Imbalances",xp:220,mins:18}],
+    content:[{h:"Break of Structure (BOS)",b:"Un BOS ocurre cuando el precio rompe un swing high o low previo en la dirección de la tendencia. Confirma que los institucionales siguen en control y el momentum continúa. Es tu señal para buscar entradas en la dirección del movimiento."},{h:"Change of Character (CHoCH)",b:"El CHoCH es la primera señal de que el mercado puede cambiar de dirección. El precio rompe en contra de la tendencia actual. Atención: un CHoCH no confirma reversión — es una alerta. Necesitas confluencia adicional para operar."},{h:"Order Blocks",b:"Un OB alcista es la última vela bajista (roja) antes de un impulso alcista fuerte. Los institucionales colocaron sus órdenes de compra ahí. El precio regresará a esa zona para recargar — ese es tu punto de entrada."},{h:"Fair Value Gaps (FVG)",b:"Un FVG es un desequilibrio en 3 velas consecutivas. La mecha inferior de la primera vela no toca la mecha superior de la tercera. Esa brecha es territorio desvisitado. El mercado tiende a regresar a llenarlos antes de continuar."}]},
+  {id:3,tag:"ICT / LIQUIDEZ",icon:"✦",color:"#00E8A0",title:"Liquidez e ICT Concepts",subtitle:"Cómo los institucionales cazan al retail",
+    lessons:[{id:"3a",title:"Buy Side y Sell Side Liquidity",xp:300,mins:20},{id:"3b",title:"Inducement y caza de stops",xp:350,mins:25},{id:"3c",title:"Optimal Trade Entry (OTE) con Fibonacci",xp:320,mins:22}],
+    content:[{h:"¿Qué es la liquidez?",b:"Liquidez = órdenes. Donde hay stops acumulados, hay liquidez. Los institucionales necesitan contrapartida para llenar posiciones masivas. No pueden comprar millones sin que alguien les venda — esos vendedores son los stops del retail."},{h:"Buy Side Liquidity (BSL)",b:"Existe por encima de swing highs, líneas de resistencia obvias y máximos del día anterior. El precio sube para cazar esa liquidez, los institucionales venden ahí — luego el precio cae."},{h:"Sell Side Liquidity (SSL)",b:"Existe por debajo de swing lows, soportes obvios y mínimos del día. El precio baja a cazar SSL, los institucionales compran — luego el precio sube. Este ciclo se repite en todos los timeframes."},{h:"Optimal Trade Entry (OTE)",b:"Después de un BOS, el precio hace un retroceso. Usando Fibonacci del impulso completo, la zona 61.8%-79% es el OTE — donde los institucionales recargan en la dirección del movimiento."}]},
+  {id:4,tag:"RIESGO",icon:"⬟",color:"#A855F7",title:"Gestión de Riesgo Institucional",subtitle:"El secreto que separa ganadores de perdedores",
+    lessons:[{id:"4a",title:"Position sizing: la fórmula del profesional",xp:280,mins:15},{id:"4b",title:"Risk/Reward Ratio y probabilidad real",xp:300,mins:18},{id:"4c",title:"Psicología del trader ganador",xp:350,mins:20}],
+    content:[{h:"La regla del 1%",b:"Nunca arriesgues más del 1% de tu capital en una sola operación. Con $10,000, tu riesgo máximo por trade es $100. Necesitarías 100 trades perdedores consecutivos para perder todo — estadísticamente imposible si tu sistema tiene ventaja."},{h:"Position Sizing",b:"Tamaño = (Capital × % Riesgo) ÷ (Distancia al stop en pips × Valor por pip). Ejemplo: Capital $10,000, riesgo 1% = $100. Stop de 20 pips, valor $1/pip → tamaño = $100 ÷ 20 = 5 mini lotes."},{h:"Risk/Reward Ratio",b:"Con un RRR mínimo de 1:2, necesitas tener razón solo el 34% del tiempo para ser rentable. Con 1:3, el 25% es suficiente. Esto te libera de la presión de tener que acertar siempre."},{h:"Psicología ganadora",b:"Las pérdidas son el costo del negocio. Un trader profesional no abandona su sistema después de 5 stops seguidos. La consistencia en la ejecución supera a cualquier setup perfecto."}]},
+];
+
+const QUIZZES = {
+  "1a":[{q:"¿Por qué los traders retail pierden consistentemente?",opts:["Falta de capital","Usan herramientas reactivas y caen en trampas institucionales","No estudian suficiente","El mercado es impredecible"],ans:1},{q:"¿Para qué usan los institucionales los stop losses del retail?",opts:["Como señales de trading","Para predecir movimientos","Como liquidez para llenar sus posiciones masivas","Para manipular indicadores"],ans:2}],
+  "2b":[{q:"¿Qué es un Order Block alcista?",opts:["Zona de alta demanda visible en el DOM","La última vela bajista antes de un impulso alcista fuerte","Cualquier zona de soporte con alto volumen","Un nivel de precio con muchos FVG"],ans:1},{q:"¿Por qué regresa el precio a los Order Blocks?",opts:["Efecto de memoria del mercado","Los algoritmos lo programan así","Para llenar órdenes institucionales pendientes en esa zona","Es una profecía autocumplida del retail"],ans:2}],
+  "3a":[{q:"¿Qué es Buy Side Liquidity?",opts:["Órdenes de compra en el libro visible","Acumulación de stops e órdenes por encima de swing highs","El volumen de compradores activos en el mercado","Zonas de alta demanda en el gráfico"],ans:1},{q:"¿Qué patrón repiten los institucionales constantemente?",opts:["Cazar BSL → vender, luego cazar SSL → comprar","Acumular en soportes, distribuir en resistencias","Seguir tendencias con alto volumen","Operar solo en sesión de Londres"],ans:0}],
+  "4a":[{q:"¿Cuál es el riesgo máximo recomendado por trade para un profesional?",opts:["5% del capital","10% si hay confluencia","1-2% del capital total","Depende del setup"],ans:2},{q:"Con un RRR de 1:2, ¿qué efectividad mínima necesitas para ser rentable?",opts:["50%","40%","34%","60%"],ans:2}],
+};
+
+// ═══ STATE ═══
+let completed = new Set();
+let totalXP = 0;
+let activeModule = null;
+let activeLesson = null;
+let currentLessonTab = 'teoria';
+let quizAnswers = {};
+let quizDone = false;
+
+// SIM STATE
+let simCapital = 10000;
+let simRisk = 1;
+let simStop = 20;
+let simPip = 1;
+let simRRR = 2;
+let simDir = 'buy';
+let simTrades = [];
+
+// CHAT STATE
+let chatMessages = [{role:'assistant',content:'Hola, soy tu tutor de trading institucional. Puedo explicarte SMC, Order Blocks, liquidez, ICT, gestión de riesgo o cualquier concepto de la academia. ¿Qué quieres aprender hoy?'}];
+let chatLoading = false;
+
+// ═══ CANDLE GEN ═══
+function genCandles(n=70,seed=1){
+  const s=x=>Math.sin(x*9301+seed*49297+233)*0.5+0.5;
+  let price=1800+seed*3;
+  return Array.from({length:n},(_,i)=>{
+    const r=s(i),change=(r-0.47)*9,open=price,close=price+change;
+    const hi=Math.max(open,close)+s(i+100)*6,lo=Math.min(open,close)-s(i+200)*6;
+    price=close;return{open,close,high:hi,low:lo};
+  });
+}
+
+function buildChart(candles,{showFVG,showOB,showLiq}={}){
+  const W=680,H=200,PL=52,PR=8,PT=10,PB=28;
+  const prices=candles.flatMap(c=>[c.high,c.low]);
+  const mn=Math.min(...prices)-3,mx=Math.max(...prices)+3;
+  const cw=(W-PL-PR)/candles.length;
+  const py=p=>PT+((mx-p)/(mx-mn))*(H-PT-PB);
+  const cx=i=>PL+i*cw+cw/2;
+  const gridN=5,gs=(mx-mn)/gridN;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block"><rect width="${W}" height="${H}" fill="#04080F" rx="8"/>`;
+  for(let i=0;i<=gridN;i++){
+    const p=mn+i*gs;
+    svg+=`<line x1="${PL}" y1="${py(p)}" x2="${W-PR}" y2="${py(p)}" stroke="#152236" stroke-width="0.5" stroke-dasharray="3,4"/>`;
+    svg+=`<text x="${PL-4}" y="${py(p)+4}" text-anchor="end" fill="#4A6A85" font-size="9" font-family="JetBrains Mono">${p.toFixed(0)}</text>`;
+  }
+  if(showFVG)candles.forEach((c,i)=>{if(i<2)return;const p2=candles[i-2];if(c.low>p2.high+1){const y=py(c.low),h2=Math.max(py(p2.high)-py(c.low),2);svg+=`<rect x="${PL+(i-2)*cw}" y="${y}" width="${cw*3}" height="${h2}" fill="#FFAA0020" stroke="#FFAA00" stroke-width="0.6" stroke-dasharray="3,3"/>`;}}); 
+  if(showOB)candles.forEach((c,i)=>{if(i<3||i>candles.length-3)return;const next=candles[i+1];if(c.close<c.open&&next&&next.close>next.open&&(next.close-next.open)>5){const y=py(c.high),h2=Math.max(py(c.low)-py(c.high),2);svg+=`<rect x="${PL+i*cw-1}" y="${y}" width="${cw*1.8}" height="${h2}" fill="#00C9FF18" stroke="#00C9FF" stroke-width="0.8" rx="1"/>`;}}); 
+  if(showLiq){
+    const sH=candles.filter((_,i)=>i>1&&i<candles.length-2&&candles[i].high>candles[i-1].high&&candles[i].high>candles[i+1].high).slice(0,3);
+    const sL=candles.filter((_,i)=>i>1&&i<candles.length-2&&candles[i].low<candles[i-1].low&&candles[i].low<candles[i+1].low).slice(0,3);
+    sH.forEach(c=>{svg+=`<line x1="${PL}" y1="${py(c.high)}" x2="${W-PR}" y2="${py(c.high)}" stroke="#00E8A0" stroke-width="0.7" stroke-dasharray="5,4" opacity="0.6"/>`;});
+    sL.forEach(c=>{svg+=`<line x1="${PL}" y1="${py(c.low)}" x2="${W-PR}" y2="${py(c.low)}" stroke="#FF3D5A" stroke-width="0.7" stroke-dasharray="5,4" opacity="0.6"/>`;});
+  }
+  candles.forEach((c,i)=>{
+    const bull=c.close>=c.open,col=bull?'#00E8A0':'#FF3D5A';
+    const bodyH=Math.max(Math.abs(py(c.open)-py(c.close)),1);
+    svg+=`<line x1="${cx(i)}" y1="${py(c.high)}" x2="${cx(i)}" y2="${py(c.low)}" stroke="${col}" stroke-width="0.7"/>`;
+    svg+=`<rect x="${cx(i)-cw*0.34}" y="${py(Math.max(c.open,c.close))}" width="${cw*0.68}" height="${bodyH}" fill="${col}" opacity="0.9" rx="0.5"/>`;
+  });
+  svg+='</svg>';
+  return svg;
+}
+
+// ═══ RENDER ACADEMY ═══
+function renderModules(){
+  const list=document.getElementById('modules-list');
+  list.innerHTML='';
+  const totalL=MODULES.reduce((s,m)=>s+m.lessons.length,0);
+  MODULES.forEach((mod,mi)=>{
+    const mc=mod.lessons.filter(l=>completed.has(l.id)).length;
+    const locked=mi>0&&MODULES[mi-1].lessons.filter(l=>completed.has(l.id)).length<1;
+    let lessons='';
+    mod.lessons.forEach((l,li)=>{
+      const done=completed.has(l.id);
+      const numStyle=done?`background:${mod.color};color:#04080F`:'';
+      const btnStyle=done?`background:${mod.color}08;border-color:${mod.color}33`:'';
+      const titleStyle=done?`color:${mod.color};font-weight:600`:'';
+      const xpStyle=done?`color:${mod.color}`:'';
+      lessons+=`<button class="lesson-btn" ${locked?'disabled':''} onclick="openLesson(${mod.id},'${l.id}')" style="${btnStyle}">
+        <div class="lesson-num" style="${numStyle}">${done?'✓':li+1}</div>
+        <div style="flex:1"><div class="lesson-title" style="${titleStyle}">${l.title}</div><div class="lesson-mins">${l.mins} min</div></div>
+        <div class="lesson-xp" style="${xpStyle}">+${l.xp} XP</div>
+        <div class="lesson-arr">›</div>
+      </button>`;
+    });
+    const grad=`linear-gradient(135deg,${mod.color}10,transparent)`;
+    list.innerHTML+=`<div class="module-wrap" style="${locked?'opacity:.45':''}" id="mod-${mod.id}">
+      <div class="module-header" style="background:${grad}">
+        <div class="mod-icon" style="color:${mod.color}">${mod.icon}</div>
+        <div style="flex:1">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">
+            <span class="mod-tag" style="color:${mod.color};background:${mod.color}15">${mod.tag}</span>
+            ${locked?'<span style="color:var(--muted);font-size:10px">🔒 Completa el módulo anterior</span>':''}
+          </div>
+          <div class="mod-title">${mod.title}</div>
+          <div class="mod-sub">${mod.subtitle}</div>
+        </div>
+        <div class="mod-count" style="color:${mod.color}">${mc}/${mod.lessons.length}<div style="color:var(--muted);font-size:10px;font-weight:400">lecciones</div></div>
+      </div>
+      <div class="lessons-wrap">${lessons}</div>
+    </div>`;
+  });
+}
+
+function updateProgress(){
+  const total=12,done=completed.size,pct=Math.round(done/total*100);
+  document.getElementById('xp-num').textContent=totalXP.toLocaleString()+' XP';
+  document.getElementById('xp-sub').textContent=done+'/'+total+' lecciones';
+  const av=document.getElementById('xp-avatar');
+  av.textContent=pct<33?'◎':pct<66?'◕':'●';
+  if(done>0){
+    document.getElementById('prog-banner').style.display='flex';
+    document.getElementById('prog-pct').textContent=pct+'%';
+    document.getElementById('prog-bar').style.width=pct+'%';
+    document.getElementById('prog-xp').textContent=totalXP;
+  }
+}
+
+// ═══ LESSON ═══
+function openLesson(modId, lessonId){
+  activeModule=MODULES.find(m=>m.id===modId);
+  activeLesson=activeModule.lessons.find(l=>l.id===lessonId);
+  document.getElementById('modules-list').style.display='none';
+  document.getElementById('prog-banner').style.display='none';
+  const lv=document.getElementById('lesson-view');
+  lv.style.display='block';
+  document.getElementById('lv-tag').textContent=activeModule.tag;
+  document.getElementById('lv-tag').style.color=activeModule.color;
+  document.getElementById('lv-title').textContent=activeLesson.title;
+  const xpBadge=document.getElementById('lv-xp-badge');
+  xpBadge.textContent=activeLesson.xp+' XP';
+  xpBadge.style.background=activeModule.color+'20';
+  xpBadge.style.color=activeModule.color;
+  xpBadge.style.border=`1px solid ${activeModule.color}44`;
+  document.getElementById('lv-done-badge').style.display=completed.has(lessonId)?'inline':'none';
+  const hasQuiz=!!QUIZZES[lessonId];
+  document.getElementById('tab-btn-quiz').style.display=hasQuiz?'inline-block':'none';
+  quizAnswers={};quizDone=false;
+  // Style tabs with module color
+  ['teoria','grafico','quiz'].forEach(t=>{
+    const btn=document.getElementById('tab-btn-'+t);
+    btn.style.color=currentLessonTab===t?activeModule.color:'var(--muted)';
+    btn.style.borderBottomColor=currentLessonTab===t?activeModule.color:'transparent';
+    btn.classList.toggle('active',t===currentLessonTab);
+  });
+  lessonTab('teoria');
+}
+
+function closeLesson(){
+  activeLesson=null;activeModule=null;
+  document.getElementById('lesson-view').style.display='none';
+  document.getElementById('modules-list').style.display='block';
+  if(completed.size>0)document.getElementById('prog-banner').style.display='flex';
+  renderModules();updateProgress();
+}
+
+function lessonTab(t){
+  currentLessonTab=t;
+  ['teoria','grafico','quiz'].forEach(tab=>{
+    document.getElementById('lv-'+tab).style.display=tab===t?'block':'none';
+    const btn=document.getElementById('tab-btn-'+tab);
+    const isActive=tab===t;
+    btn.classList.toggle('active',isActive);
+    btn.style.color=isActive?(activeModule?activeModule.color:'var(--accent)'):'var(--muted)';
+    btn.style.borderBottomColor=isActive?(activeModule?activeModule.color:'var(--accent)'):'transparent';
+  });
+  if(t==='teoria')renderTheory();
+  if(t==='grafico')renderChart();
+  if(t==='quiz')renderQuiz();
+}
+
+function renderTheory(){
+  const c=activeModule.content;
+  let html='';
+  c.forEach(block=>{
+    html+=`<div class="content-block" style="border-left-color:${activeModule.color}">
+      <div class="content-heading" style="color:${activeModule.color}">${block.h}</div>
+      <div class="content-body">${block.b}</div>
+    </div>`;
+  });
+  document.getElementById('lv-teoria').innerHTML=html;
+}
+
+function renderChart(){
+  const id=activeLesson.id;
+  const showFVG=id==='2c',showOB=id==='2b',showLiq=id==='3a'||id==='3b';
+  const candles=genCandles(55,id.charCodeAt(0)*7+id.charCodeAt(1));
+  let legend='';
+  if(showFVG)legend+=`<span style="color:#FFAA00;font-size:11px;background:#FFAA0015;padding:3px 8px;border-radius:4px;margin-right:8px">■ Fair Value Gap</span>`;
+  if(showOB)legend+=`<span style="color:#00C9FF;font-size:11px;background:#00C9FF15;padding:3px 8px;border-radius:4px;margin-right:8px">■ Order Block</span>`;
+  if(showLiq)legend+=`<span style="color:#00E8A0;font-size:11px;background:#00E8A010;padding:3px 8px;border-radius:4px;margin-right:8px">── BSL</span><span style="color:#FF3D5A;font-size:11px;background:#FF3D5A10;padding:3px 8px;border-radius:4px">── SSL</span>`;
+  document.getElementById('lv-grafico').innerHTML=`
+    <div class="card-sm">
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">${legend||'<span style="color:var(--muted);font-size:11px">Gráfico de velas institucional</span>'}</div>
+      ${buildChart(candles,{showFVG,showOB,showLiq})}
+      <div style="color:var(--muted);font-size:11px;margin-top:8px">Gráfico simulado · XAUUSD · M15</div>
+    </div>`;
+}
+
+function renderQuiz(){
+  const qData=QUIZZES[activeLesson.id]||[];
+  if(!qData.length){document.getElementById('lv-quiz').innerHTML='<div style="color:var(--muted);padding:20px;text-align:center">No hay quiz para esta lección.</div>';return;}
+  if(quizDone){
+    const pass=Object.values(quizAnswers).filter((a,i)=>a===qData[i].ans).length;
+    const ok=pass>=Math.ceil(qData.length*0.5);
+    document.getElementById('lv-quiz').innerHTML=`<div class="quiz-result" style="background:${ok?'#00E8A010':'#FF3D5A10'};border:1px solid ${ok?'#00E8A0':'#FF3D5A'}">
+      <div style="font-size:28px;margin-bottom:8px">${ok?'🏆':'📚'}</div>
+      <div style="font-weight:700;font-size:16px">${pass}/${qData.length} correctas</div>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px">${ok?'+'+activeLesson.xp+' XP ganados':'Revisa la teoría e intenta de nuevo'}</div>
+      ${!ok?`<button onclick="retryQuiz()" style="margin-top:12px;padding:8px 20px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text);font-size:13px">Reintentar</button>`:''}
+    </div>`;
+    return;
+  }
+  let html='';
+  qData.forEach((q,qi)=>{
+    let opts='';
+    q.opts.forEach((opt,oi)=>{
+      const sel=quizAnswers[qi]===oi;
+      opts+=`<button class="quiz-opt" onclick="selectOpt(${qi},${oi})" style="${sel?`border-color:${activeModule.color};background:${activeModule.color}15;color:${activeModule.color}`:''}">${opt}</button>`;
+    });
+    html+=`<div class="card-sm"><div style="font-weight:600;font-size:14px;margin-bottom:12px">${qi+1}. ${q.q}</div>${opts}</div>`;
+  });
+  const allAnswered=Object.keys(quizAnswers).length>=qData.length;
+  html+=`<button class="quiz-submit" onclick="submitQuiz()" ${!allAnswered?'disabled':''} style="background:${allAnswered?`linear-gradient(135deg,${activeModule.color},#A855F7)`:'var(--dim)'}">Enviar respuestas</button>`;
+  document.getElementById('lv-quiz').innerHTML=html;
+}
+
+function selectOpt(qi,oi){quizAnswers[qi]=oi;renderQuiz();}
+function retryQuiz(){quizAnswers={};quizDone=false;renderQuiz();}
+function submitQuiz(){
+  const qData=QUIZZES[activeLesson.id]||[];
+  let score=0;qData.forEach((q,i)=>{if(quizAnswers[i]===q.ans)score++;});
+  quizDone=true;
+  if(score>=Math.ceil(qData.length*0.5)&&!completed.has(activeLesson.id)){
+    completed.add(activeLesson.id);totalXP+=activeLesson.xp;
+    document.getElementById('lv-done-badge').style.display='inline';
+  }
+  renderQuiz();
+}
+
+// ═══ SIMULATOR ═══
+function renderSimParams(){
+  const params=[
+    {label:'Capital ($)',val:simCapital,set:'simCapital',min:100,max:100000,step:100},
+    {label:'Riesgo (%)',val:simRisk,set:'simRisk',min:0.1,max:5,step:0.1},
+    {label:'Stop (pips)',val:simStop,set:'simStop',min:5,max:100,step:1},
+    {label:'RRR (1:?)',val:simRRR,set:'simRRR',min:1,max:5,step:0.5},
+  ];
+  let html='';
+  params.forEach(p=>{
+    html+=`<div style="margin-bottom:10px">
+      <div class="sim-row" style="margin-bottom:4px"><span class="sim-label">${p.label}</span><span class="sim-val">${p.val}</span></div>
+      <input type="range" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.val}" oninput="updateParam('${p.set}',this.value);renderSimCalc()">
+    </div>`;
+  });
+  document.getElementById('sim-params').innerHTML=html;
+}
+
+function updateParam(key,val){
+  if(key==='simCapital')simCapital=parseFloat(val);
+  if(key==='simRisk')simRisk=parseFloat(val);
+  if(key==='simStop')simStop=parseFloat(val);
+  if(key==='simRRR')simRRR=parseFloat(val);
+  renderSimParams();renderSimCalc();
+}
+
+function renderSimCalc(){
+  const posSize=((simCapital*simRisk/100)/(simStop*simPip)).toFixed(2);
+  const riskAmt=(simCapital*simRisk/100).toFixed(2);
+  const targetPips=(simStop*simRRR).toFixed(0);
+  const profit=(simStop*simRRR*simPip*posSize).toFixed(2);
+  const rows=[
+    {l:'Riesgo en $',v:'$'+riskAmt,c:'#FF3D5A'},
+    {l:'Posición (lotes)',v:posSize,c:'#D8EEF8'},
+    {l:'Target (pips)',v:targetPips,c:'#00E8A0'},
+    {l:'Ganancia potencial',v:'$'+profit,c:'#00E8A0'},
+    {l:'Capital actual',v:'$'+simCapital.toLocaleString(),c:'#00C9FF'},
+  ];
+  let html='';
+  rows.forEach(r=>html+=`<div class="sim-row"><span class="sim-label">${r.l}</span><span style="font-family:'JetBrains Mono';font-size:13px;font-weight:700;color:${r.c}">${r.v}</span></div>`);
+  document.getElementById('sim-calc').innerHTML=html;
+}
+
+function setDir(d){
+  simDir=d;
+  document.getElementById('btn-buy').style.background=d==='buy'?'#00E8A0':'var(--dim)';
+  document.getElementById('btn-buy').style.color=d==='buy'?'#04080F':'var(--muted)';
+  document.getElementById('btn-sell').style.background=d==='sell'?'#FF3D5A':'var(--dim)';
+  document.getElementById('btn-sell').style.color=d==='sell'?'#04080F':'var(--muted)';
+}
+
+function executeTrade(){
+  const posSize=((simCapital*simRisk/100)/(simStop*simPip)).toFixed(2);
+  const riskAmt=simCapital*simRisk/100;
+  const profit=simStop*simRRR*simPip*posSize;
+  const win=Math.random()>0.45;
+  const pnl=win?parseFloat(profit):-riskAmt;
+  const newCap=simCapital+pnl;
+  simTrades=[...simTrades.slice(-9),{dir:simDir,size:posSize,pnl,win,capital:newCap}];
+  simCapital=parseFloat(newCap.toFixed(2));
+  renderSimParams();renderSimCalc();
+  const fb=document.getElementById('sim-feedback');
+  fb.style.display='block';
+  fb.innerHTML=`<div style="background:${win?'#00E8A015':'#FF3D5A15'};border:1px solid ${win?'#00E8A0':'#FF3D5A'};border-radius:10px;padding:12px 16px;text-align:center;font-weight:800;font-size:15px;color:${win?'#00E8A0':'#FF3D5A'};margin-bottom:10px">${win?'✓ TRADE GANADOR +$'+pnl.toFixed(2):'✗ STOP LOSS -$'+Math.abs(pnl).toFixed(2)}</div>`;
+  setTimeout(()=>fb.style.display='none',2500);
+  renderTradeHistory();
+}
+
+function renderTradeHistory(){
+  if(!simTrades.length)return;
+  document.getElementById('sim-history').style.display='block';
+  let html='';
+  [...simTrades].reverse().forEach(t=>{
+    html+=`<div class="trade-row" style="background:${t.win?'#00E8A010':'#FF3D5A10'};border:1px solid ${t.win?'#00E8A022':'#FF3D5A22'}">
+      <span style="color:${t.dir==='buy'?'#00E8A0':'#FF3D5A'}">${t.dir==='buy'?'▲':'▼'} ${t.dir.toUpperCase()} · ${t.size} lotes</span>
+      <span style="color:${t.win?'#00E8A0':'#FF3D5A'};font-weight:700">${t.win?'+':''}${t.pnl.toFixed(2)}$</span>
+      <span style="color:var(--muted)">Cap: $${t.capital.toLocaleString()}</span>
+    </div>`;
+  });
+  document.getElementById('trade-list').innerHTML=html;
+}
+
+function resetSim(){simCapital=10000;simTrades=[];renderSimParams();renderSimCalc();document.getElementById('sim-history').style.display='none';}
+
+// ═══ TUTOR ═══
+const SUGGESTIONS=['¿Qué diferencia hay entre BOS y CHoCH?','Explícame los Order Blocks con un ejemplo','¿Cómo identifico liquidez en el gráfico?','¿Cuánto debo arriesgar por trade?'];
+const TUTOR_SYSTEM=`Eres un tutor experto en trading institucional con especialidad en Smart Money Concepts (SMC), ICT, Order Blocks, Fair Value Gaps, gestión de liquidez y risk management. Tu estilo es claro, directo y pedagógico. Respondes en español. Nunca das consejos de inversión específicos. Enseñas metodología, conceptos y lógica del mercado institucional.`;
+
+function renderChat(){
+  const box=document.getElementById('chat-messages');
+  box.innerHTML='';
+  chatMessages.forEach(m=>{
+    const d=document.createElement('div');
+    d.className='msg '+(m.role==='user'?'msg-user':'msg-ai');
+    d.textContent=m.content;
+    box.appendChild(d);
+  });
+  if(chatLoading){
+    const d=document.createElement('div');
+    d.style.cssText='display:flex;gap:4px;padding:10px 14px;width:fit-content';
+    d.innerHTML=[0,1,2].map(i=>`<div class="typing-dot" style="animation-delay:${i*0.15}s"></div>`).join('');
+    box.appendChild(d);
+  }
+  box.scrollTop=box.scrollHeight;
+  // suggestions
+  const sw=document.getElementById('suggestions-wrap');
+  sw.style.display=chatMessages.length<=1?'flex':'none';
+}
+
+function renderSuggestions(){
+  const sw=document.getElementById('suggestions-wrap');
+  sw.innerHTML=SUGGESTIONS.map(s=>`<button class="suggestion-chip" onclick="document.getElementById('chat-input').value='${s}';sendMsg()">${s}</button>`).join('');
+}
+
+async function sendMsg(){
+  const inp=document.getElementById('chat-input');
+  const txt=inp.value.trim();
+  if(!txt||chatLoading)return;
+  chatMessages=[...chatMessages,{role:'user',content:txt}];
+  inp.value='';chatLoading=true;
+  document.getElementById('chat-send').disabled=true;
+  renderChat();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:TUTOR_SYSTEM,messages:chatMessages.map(m=>({role:m.role,content:m.content}))})
+    });
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||'No pude procesar tu pregunta.';
+    chatMessages=[...chatMessages,{role:'assistant',content:reply}];
+  }catch{chatMessages=[...chatMessages,{role:'assistant',content:'Error de conexión. Intenta de nuevo.'}];}
+  chatLoading=false;
+  document.getElementById('chat-send').disabled=false;
+  renderChat();
+}
+
+// ═══ TAB SWITCHING ═══
+function switchTab(tab){
+  ['academy','simulator','tutor'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===tab?'block':'none';
+  });
+  document.querySelectorAll('.nav-tab').forEach((b,i)=>{
+    b.classList.toggle('active',['academy','simulator','tutor'][i]===tab);
+  });
+}
+
+// ═══ INIT ═══
+renderModules();
+updateProgress();
+// Sim chart
+document.getElementById('sim-chart').innerHTML=buildChart(genCandles(60,77),{showOB:true,showFVG:true});
+renderSimParams();
+renderSimCalc();
+renderChat();
+renderSuggestions();
+</script>
+</body>
+</html>
