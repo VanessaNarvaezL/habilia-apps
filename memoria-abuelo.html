@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juego de Memoria</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fff8ee;--bg2:#fff3e0;--card:#ffffff;
+  --azul:#1a4fa0;--rojo:#d32f2f;--gold:#f5a623;--gold2:#ffcc02;
+  --green:#2e7d32;--warm:#ff6f00;--text:#2c1810;--text2:#6d4c41;
+  --shadow:0 4px 20px rgba(0,0,0,.12);--radius:18px;
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* FONDO DECORATIVO */
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:
+  radial-gradient(circle at 10% 20%,rgba(26,79,160,.06) 0%,transparent 50%),
+  radial-gradient(circle at 90% 80%,rgba(245,166,35,.08) 0%,transparent 50%);pointer-events:none;z-index:0}
+
+#app{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:1.5rem 1rem 3rem}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:1.5rem}
+.header-icon{font-size:52px;display:block;margin-bottom:.3rem;animation:bounce 2s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.header h1{font-family:'Fredoka One',cursive;font-size:36px;color:var(--azul);margin-bottom:.2rem;text-shadow:2px 2px 0 rgba(26,79,160,.12)}
+.header p{font-size:17px;color:var(--text2);font-weight:600}
+
+/* STATS BAR */
+.stats{display:flex;gap:10px;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap}
+.stat{background:var(--card);border-radius:14px;padding:.6rem 1.2rem;box-shadow:var(--shadow);text-align:center;min-width:90px;border:2px solid transparent}
+.stat.azul{border-color:var(--azul)}
+.stat.gold{border-color:var(--gold)}
+.stat.green{border-color:var(--green)}
+.stat-num{font-family:'Fredoka One',cursive;font-size:26px;line-height:1}
+.stat-label{font-size:12px;font-weight:700;color:var(--text2);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+.stat.azul .stat-num{color:var(--azul)}
+.stat.gold .stat-num{color:var(--warm)}
+.stat.green .stat-num{color:var(--green)}
+
+/* DIFFICULTY */
+.diff-wrap{display:flex;gap:8px;justify-content:center;margin-bottom:1.5rem}
+.diff-btn{padding:.6rem 1.4rem;border-radius:30px;font-size:15px;font-weight:700;border:2px solid;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+.diff-btn.easy{border-color:var(--green);color:var(--green);background:transparent}
+.diff-btn.easy.active, .diff-btn.easy:hover{background:var(--green);color:white}
+.diff-btn.medium{border-color:var(--warm);color:var(--warm);background:transparent}
+.diff-btn.medium.active, .diff-btn.medium:hover{background:var(--warm);color:white}
+.diff-btn.hard{border-color:var(--rojo);color:var(--rojo);background:transparent}
+.diff-btn.hard.active, .diff-btn.hard:hover{background:var(--rojo);color:white}
+
+/* THEME SELECTOR */
+.theme-wrap{display:flex;gap:8px;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap}
+.theme-btn{padding:.5rem 1rem;border-radius:24px;font-size:14px;font-weight:700;border:2px solid #e0c090;background:var(--card);color:var(--text2);cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+.theme-btn.active{background:var(--azul);color:white;border-color:var(--azul)}
+.theme-btn:hover:not(.active){border-color:var(--azul);color:var(--azul)}
+
+/* GRID */
+.grid{display:grid;gap:12px;margin-bottom:1.5rem;justify-items:center}
+.grid.easy{grid-template-columns:repeat(4,1fr)}
+.grid.medium{grid-template-columns:repeat(4,1fr)}
+.grid.hard{grid-template-columns:repeat(5,1fr)}
+
+/* CARD */
+.card{width:100%;aspect-ratio:1;border-radius:var(--radius);cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);box-shadow:var(--shadow)}
+.card.flipped,.card.matched{transform:rotateY(180deg)}
+.card.matched{cursor:default}
+.card-front,.card-back{position:absolute;inset:0;border-radius:var(--radius);backface-visibility:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.card-back{background:linear-gradient(135deg,var(--azul),#1565c0);border:3px solid rgba(255,255,255,.2)}
+.card-back-inner{font-size:28px;opacity:.6}
+.card-back-pattern{position:absolute;inset:0;border-radius:calc(var(--radius) - 2px);background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(255,255,255,.05) 6px,rgba(255,255,255,.05) 12px)}
+.card-front{background:var(--card);border:3px solid #e8d5b0;transform:rotateY(180deg)}
+.card-front .card-emoji{font-size:42px;line-height:1;margin-bottom:4px}
+.card-front .card-label{font-size:11px;font-weight:700;color:var(--text2);text-align:center;padding:0 4px;line-height:1.3}
+.card.matched .card-front{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-color:var(--green)}
+.card:not(.flipped):not(.matched):hover{transform:translateY(-4px) scale(1.03)}
+.card:not(.flipped):not(.matched):hover .card-back{box-shadow:0 8px 24px rgba(26,79,160,.3)}
+
+/* WRONG SHAKE */
+@keyframes shake{0%,100%{transform:rotateY(180deg) translateX(0)}25%{transform:rotateY(180deg) translateX(-6px)}75%{transform:rotateY(180deg) translateX(6px)}}
+.card.wrong{animation:shake .4s ease}
+
+/* MATCHED PULSE */
+@keyframes matchPulse{0%{transform:rotateY(180deg) scale(1)}50%{transform:rotateY(180deg) scale(1.08)}100%{transform:rotateY(180deg) scale(1)}}
+.card.match-anim{animation:matchPulse .4s ease}
+
+/* ACTIONS */
+.actions{display:flex;gap:10px;justify-content:center;margin-bottom:1rem}
+.btn{padding:.75rem 1.8rem;border-radius:30px;font-size:16px;font-weight:800;border:none;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;box-shadow:var(--shadow)}
+.btn-primary{background:linear-gradient(135deg,var(--azul),#1565c0);color:white}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,79,160,.3)}
+.btn-secondary{background:var(--card);color:var(--text2);border:2px solid #e0c090}
+.btn-secondary:hover{border-color:var(--azul);color:var(--azul)}
+
+/* WIN SCREEN */
+#win-screen{display:none;text-align:center;background:var(--card);border-radius:24px;padding:2.5rem 2rem;box-shadow:0 8px 40px rgba(0,0,0,.15);margin:1rem 0;border:3px solid var(--gold2)}
+.win-icon{font-size:72px;display:block;animation:bounce 1s ease-in-out infinite}
+.win-title{font-family:'Fredoka One',cursive;font-size:38px;color:var(--azul);margin:.5rem 0}
+.win-sub{font-size:18px;color:var(--text2);margin-bottom:1.5rem;font-weight:600}
+.win-stats{display:flex;gap:12px;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap}
+.win-stat{background:var(--bg2);border-radius:14px;padding:.8rem 1.2rem;text-align:center}
+.win-stat-n{font-family:'Fredoka One',cursive;font-size:28px;color:var(--azul)}
+.win-stat-l{font-size:12px;color:var(--text2);font-weight:700}
+.stars{font-size:42px;margin-bottom:.5rem}
+
+/* TIMER BAR */
+.timer-wrap{background:#e8d5b0;border-radius:10px;height:10px;margin-bottom:1.2rem;overflow:hidden}
+.timer-bar{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--green),var(--gold2));transition:width .5s linear}
+
+/* CONFETTI */
+.confetti-piece{position:fixed;width:10px;height:10px;border-radius:2px;pointer-events:none;z-index:9999;animation:confettiFall linear forwards}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* RESPONSIVE */
+@media(max-width:500px){
+  .grid.easy{grid-template-columns:repeat(4,1fr);gap:8px}
+  .grid.medium{grid-template-columns:repeat(4,1fr);gap:8px}
+  .grid.hard{grid-template-columns:repeat(4,1fr);gap:8px}
+  .card-front .card-emoji{font-size:32px}
+  .header h1{font-size:28px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="header">
+    <span class="header-icon">🧠</span>
+    <h1>Juego de Memoria</h1>
+    <p>¡Encuentra los pares iguales!</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat azul"><div class="stat-num" id="stat-pairs">0</div><div class="stat-label">Pares</div></div>
+    <div class="stat gold"><div class="stat-num" id="stat-moves">0</div><div class="stat-label">Intentos</div></div>
+    <div class="stat green"><div class="stat-num" id="stat-time">0s</div><div class="stat-label">Tiempo</div></div>
+  </div>
+
+  <div class="theme-wrap">
+    <button class="theme-btn active" onclick="setTheme('mix')" id="theme-mix">🌟 Todo mezclado</button>
+    <button class="theme-btn" onclick="setTheme('futbol')" id="theme-futbol">⚽ Fútbol</button>
+    <button class="theme-btn" onclick="setTheme('vaquero')" id="theme-vaquero">🤠 Vaqueros</button>
+    <button class="theme-btn" onclick="setTheme('musica')" id="theme-musica">🎵 Música</button>
+    <button class="theme-btn" onclick="setTheme('cocina')" id="theme-cocina">🍳 Cocina</button>
+  </div>
+
+  <div class="diff-wrap">
+    <button class="diff-btn easy active" onclick="setDiff('easy')" id="diff-easy">😊 Fácil (8 pares)</button>
+    <button class="diff-btn medium" onclick="setDiff('medium')" id="diff-medium">🤔 Normal (12 pares)</button>
+    <button class="diff-btn hard" onclick="setDiff('hard')" id="diff-hard">💪 Difícil (15 pares)</button>
+  </div>
+
+  <div class="timer-wrap"><div class="timer-bar" id="timer-bar" style="width:100%"></div></div>
+
+  <div id="game-grid" class="grid easy"></div>
+
+  <div class="actions">
+    <button class="btn btn-primary" onclick="startGame()">🔄 Nueva partida</button>
+  </div>
+
+  <div id="win-screen">
+    <span class="win-icon">🏆</span>
+    <div class="stars" id="win-stars">⭐⭐⭐</div>
+    <div class="win-title">¡Lo lograste!</div>
+    <div class="win-sub" id="win-msg">¡Excelente memoria!</div>
+    <div class="win-stats">
+      <div class="win-stat"><div class="win-stat-n" id="ws-time">0s</div><div class="win-stat-l">Tiempo</div></div>
+      <div class="win-stat"><div class="win-stat-n" id="ws-moves">0</div><div class="win-stat-l">Intentos</div></div>
+      <div class="win-stat"><div class="win-stat-n" id="ws-best">-</div><div class="win-stat-l">Mejor tiempo</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="startGame()">🎮 Jugar de nuevo</button>
+  </div>
+
+</div>
+
+<script>
+const THEMES = {
+  futbol:[
+    {e:'⚽',l:'Pelota'},{e:'🥅',l:'Arco'},{e:'🏆',l:'Copa'},{e:'👕',l:'Camiseta'},
+    {e:'🦅',l:'La U'},{e:'🔵',l:'Azul'},{e:'📣',l:'Hinchada'},{e:'🎽',l:'Uniforme'},
+    {e:'🥇',l:'Campeón'},{e:'🧤',l:'Guantes'},{e:'🏟️',l:'Estadio'},{e:'⭐',l:'Estrella'},
+    {e:'🎯',l:'Gol'},{e:'🏃',l:'Jugador'},{e:'📊',l:'Marcador'},
+  ],
+  vaquero:[
+    {e:'🤠',l:'Vaquero'},{e:'🐴',l:'Caballo'},{e:'⭐',l:'Estrella'},{e:'🌵',l:'Cactus'},
+    {e:'🔫',l:'Pistola'},{e:'🪢',l:'Lazo'},{e:'🏜️',l:'Desierto'},{e:'🐂',l:'Toro'},
+    {e:'🎸',l:'Guitarra'},{e:'🥾',l:'Bota'},{e:'🪨',l:'Roca'},{e:'🌅',l:'Atardecer'},
+    {e:'🎠',l:'Rancho'},{e:'🗺️',l:'Mapa'},{e:'🦅',l:'Águila'},
+  ],
+  musica:[
+    {e:'🎵',l:'Nota'},{e:'🎤',l:'Micrófono'},{e:'🎸',l:'Guitarra'},{e:'🥁',l:'Batería'},
+    {e:'🎹',l:'Piano'},{e:'🎺',l:'Trompeta'},{e:'🎻',l:'Violín'},{e:'🎶',l:'Melodía'},
+    {e:'💃',l:'Bailarina'},{e:'🕺',l:'Bailarín'},{e:'🎙️',l:'Estudio'},{e:'📻',l:'Radio'},
+    {e:'🎼',l:'Partitura'},{e:'🎧',l:'Auriculares'},{e:'🌟',l:'Estrella'},
+  ],
+  cocina:[
+    {e:'🍳',l:'Sartén'},{e:'🥘',l:'Cazuela'},{e:'🧅',l:'Cebolla'},{e:'🧄',l:'Ajo'},
+    {e:'🍖',l:'Asado'},{e:'🥩',l:'Carne'},{e:'🫕',l:'Guiso'},{e:'🧑‍🍳',l:'Cocinero'},
+    {e:'🌶️',l:'Ají'},{e:'🍞',l:'Pan'},{e:'🥗',l:'Ensalada'},{e:'☕',l:'Café'},
+    {e:'🍷',l:'Vino'},{e:'🥄',l:'Cuchara'},{e:'🔪',l:'Cuchillo'},
+  ],
+};
+THEMES.mix=[
+  {e:'⚽',l:'Fútbol'},{e:'🤠',l:'Vaquero'},{e:'🎵',l:'Música'},{e:'🍳',l:'Cocina'},
+  {e:'🐴',l:'Caballo'},{e:'🏆',l:'Copa'},{e:'🎤',l:'Cantar'},{e:'🥘',l:'Cazuela'},
+  {e:'🌵',l:'Cactus'},{e:'🦅',l:'La U'},{e:'🎸',l:'Guitarra'},{e:'🧑‍🍳',l:'Asado'},
+  {e:'🥅',l:'Arco'},{e:'⭐',l:'Estrella'},{e:'💃',l:'Bailar'},
+];
+
+const DIFF = {easy:8, medium:12, hard:15};
+const DIFF_TIMES = {easy:120, hard:240, medium:180};
+const WIN_MSGS = ['¡Eres un maestro de la memoria!','¡Qué memoria tan prodigiosa!','¡Increíble, lo hiciste perfecto!','¡Campeón de la memoria!'];
+
+let currentTheme='mix', currentDiff='easy';
+let cards=[], flipped=[], matched=0, moves=0;
+let timer=null, seconds=0, maxTime=120;
+let gameActive=false, bestTimes={};
+let canFlip=true;
+
+function setTheme(t){
+  currentTheme=t;
+  document.querySelectorAll('.theme-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('theme-'+t).classList.add('active');
+  startGame();
+}
+
+function setDiff(d){
+  currentDiff=d;
+  document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('diff-'+d).classList.add('active');
+  startGame();
+}
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function startGame(){
+  clearInterval(timer);
+  document.getElementById('win-screen').style.display='none';
+  flipped=[];matched=0;moves=0;seconds=0;canFlip=true;gameActive=true;
+  maxTime=DIFF_TIMES[currentDiff];
+  updateStats();
+
+  const pool=THEMES[currentTheme].slice(0,DIFF[currentDiff]);
+  cards=shuffle([...pool,...pool]);
+
+  const grid=document.getElementById('game-grid');
+  grid.className='grid '+currentDiff;
+  grid.innerHTML='';
+
+  cards.forEach((card,i)=>{
+    const el=document.createElement('div');
+    el.className='card';
+    el.dataset.index=i;
+    el.dataset.emoji=card.e;
+    el.innerHTML=`
+      <div class="card-back">
+        <div class="card-back-pattern"></div>
+        <div class="card-back-inner">🧠</div>
+      </div>
+      <div class="card-front">
+        <div class="card-emoji">${card.e}</div>
+        <div class="card-label">${card.l}</div>
+      </div>`;
+    el.addEventListener('click',()=>flipCard(el,i));
+    grid.appendChild(el);
+  });
+
+  // Timer
+  updateTimerBar(100);
+  timer=setInterval(()=>{
+    seconds++;
+    updateStats();
+    const pct=Math.max(0,100-(seconds/maxTime*100));
+    updateTimerBar(pct);
+    if(seconds>=maxTime){
+      clearInterval(timer);
+      gameActive=false;
+      // Show time out
+      setTimeout(()=>{
+        document.getElementById('win-screen').style.display='block';
+        document.getElementById('win-stars').textContent='⏰';
+        document.getElementById('win-title')||null;
+        document.querySelector('.win-title').textContent='¡Se acabó el tiempo!';
+        document.getElementById('win-msg').textContent='No te preocupes, ¡inténtalo de nuevo!';
+        document.getElementById('ws-time').textContent=seconds+'s';
+        document.getElementById('ws-moves').textContent=moves;
+        document.getElementById('ws-best').textContent=bestTimes[currentDiff+currentTheme]?bestTimes[currentDiff+currentTheme]+'s':'-';
+      },300);
+    }
+  },1000);
+}
+
+function updateTimerBar(pct){
+  const bar=document.getElementById('timer-bar');
+  bar.style.width=pct+'%';
+  bar.style.background=pct>50?'linear-gradient(90deg,#2e7d32,#ffcc02)':pct>25?'linear-gradient(90deg,#ff6f00,#ffcc02)':'linear-gradient(90deg,#d32f2f,#ff6f00)';
+}
+
+function updateStats(){
+  document.getElementById('stat-pairs').textContent=matched+'/'+DIFF[currentDiff];
+  document.getElementById('stat-moves').textContent=moves;
+  document.getElementById('stat-time').textContent=seconds+'s';
+}
+
+function flipCard(el,idx){
+  if(!canFlip||!gameActive)return;
+  if(el.classList.contains('flipped')||el.classList.contains('matched'))return;
+  if(flipped.length>=2)return;
+  el.classList.add('flipped');
+  flipped.push({el,idx});
+  if(flipped.length===2){
+    moves++;
+    updateStats();
+    canFlip=false;
+    const [a,b]=flipped;
+    if(cards[a.idx].e===cards[b.idx].e){
+      // Match!
+      setTimeout(()=>{
+        a.el.classList.add('matched','match-anim');
+        b.el.classList.add('matched','match-anim');
+        flipped=[];canFlip=true;matched++;updateStats();
+        if(matched===DIFF[currentDiff])winGame();
+      },400);
+    } else {
+      // No match
+      setTimeout(()=>{
+        a.el.classList.add('wrong');b.el.classList.add('wrong');
+        setTimeout(()=>{
+          a.el.classList.remove('flipped','wrong');
+          b.el.classList.remove('flipped','wrong');
+          flipped=[];canFlip=true;
+        },500);
+      },700);
+    }
+  }
+}
+
+function winGame(){
+  clearInterval(timer);gameActive=false;
+  const key=currentDiff+currentTheme;
+  if(!bestTimes[key]||seconds<bestTimes[key])bestTimes[key]=seconds;
+  setTimeout(()=>{
+    launchConfetti();
+    const stars=seconds<maxTime*.4?'⭐⭐⭐':seconds<maxTime*.7?'⭐⭐':'⭐';
+    document.getElementById('win-stars').textContent=stars;
+    document.querySelector('.win-title').textContent='¡Lo lograste!';
+    document.getElementById('win-msg').textContent=WIN_MSGS[Math.floor(Math.random()*WIN_MSGS.length)];
+    document.getElementById('ws-time').textContent=seconds+'s';
+    document.getElementById('ws-moves').textContent=moves;
+    document.getElementById('ws-best').textContent=bestTimes[key]+'s';
+    document.getElementById('win-screen').style.display='block';
+    document.getElementById('win-screen').scrollIntoView({behavior:'smooth',block:'center'});
+  },600);
+}
+
+function launchConfetti(){
+  const colors=['#1a4fa0','#d32f2f','#f5a623','#ffcc02','#2e7d32','#ff6f00'];
+  for(let i=0;i<60;i++){
+    setTimeout(()=>{
+      const c=document.createElement('div');
+      c.className='confetti-piece';
+      c.style.left=Math.random()*100+'vw';
+      c.style.background=colors[Math.floor(Math.random()*colors.length)];
+      c.style.animationDuration=(1.5+Math.random()*2)+'s';
+      c.style.animationDelay=Math.random()*.5+'s';
+      c.style.transform=`rotate(${Math.random()*360}deg)`;
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(),3500);
+    },i*30);
+  }
+}
+
+// Start on load
+startGame();
+</script>
+</body>
+</html>

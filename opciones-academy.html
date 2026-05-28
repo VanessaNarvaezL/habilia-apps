@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opciones & Acciones Academy — HABIL/IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;scrollbar-width:thin;scrollbar-color:#2a1a0a #080500}
+:root{
+  --bg:#080500;--surface:#0f0a00;--card:#161000;--border:#2a1e00;--borderhi:#3d2d00;
+  --gold:#ffaa00;--golddim:#ffaa0015;--orange:#ff7c00;--orangedim:#ff7c0015;
+  --green:#00e8a0;--greendim:#00e8a010;--red:#ff3d5a;--reddim:#ff3d5a10;
+  --blue:#4da6ff;--bluedim:#4da6ff15;--purple:#a855f7;
+  --text:#f0e8d0;--muted:#7a6a3a;--dim:#1e1600;
+}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 15%,rgba(255,170,0,.05) 0%,transparent 55%),radial-gradient(ellipse at 85% 85%,rgba(255,124,0,.03) 0%,transparent 55%);pointer-events:none;z-index:0}
+*::-webkit-scrollbar{width:4px}*::-webkit-scrollbar-thumb{background:#2a1e00;border-radius:2px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes scanline{0%{transform:translateY(-100%)}100%{transform:translateY(400px)}}
+button{font-family:'Syne',sans-serif;cursor:pointer}
+
+/* HEADER */
+#header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;height:58px;position:sticky;top:0;z-index:100;gap:12px}
+.logo-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--orange));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;font-weight:800;color:#080500}
+.logo-text .l1{font-weight:800;font-size:13px;line-height:1.1;color:var(--text)}
+.logo-text .l2{font-size:9px;letter-spacing:2px;color:var(--muted)}
+#nav{flex:1;display:flex;justify-content:center;gap:3px;flex-wrap:wrap}
+.nav-btn{background:none;border:1px solid transparent;border-radius:6px;padding:5px 10px;color:var(--muted);font-size:11px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.nav-btn.active{background:var(--golddim);border-color:rgba(255,170,0,.3);color:var(--gold);font-weight:700}
+.xp-box .xp-n{color:var(--gold);font-family:'JetBrains Mono';font-size:13px;font-weight:700}
+.xp-box .xp-s{color:var(--muted);font-size:10px}
+.xp-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,rgba(255,170,0,.3),rgba(255,170,0,.1));border:2px solid rgba(255,170,0,.4);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:13px;flex-shrink:0}
+
+/* MAIN */
+#main{max-width:860px;margin:0 auto;padding:20px 16px 40px;position:relative;z-index:1;animation:fadeIn .4s ease}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--card),var(--surface));border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(255,170,0,.06),transparent);pointer-events:none}
+.hero-tag{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--gold);background:var(--golddim);padding:3px 10px;border-radius:3px;display:inline-block;margin-bottom:10px}
+.hero h2{font-size:23px;font-weight:800;color:var(--text);margin-bottom:6px;line-height:1.25}
+.hero p{font-size:13px;color:var(--muted);line-height:1.7;max-width:540px}
+.hero-chips{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.chip{background:var(--dim);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--muted)}
+.chip.g{color:var(--gold);border-color:rgba(255,170,0,.2)}
+.chip.b{color:var(--blue);border-color:rgba(77,166,255,.2)}
+.chip.r{color:var(--red);border-color:rgba(255,61,90,.2)}
+
+/* PROGRESS */
+.prog-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:16px;display:none}
+.prog-bar-bg{flex:1;background:var(--border);border-radius:4px;height:6px}
+.prog-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold),var(--orange));box-shadow:0 0 8px rgba(255,170,0,.4);transition:width .5s}
+
+/* MODULE */
+.module{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.mod-hdr{padding:15px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border)}
+.mod-tag{font-size:10px;font-weight:800;letter-spacing:1.5px;padding:2px 8px;border-radius:3px}
+.lessons{padding:10px 14px;display:flex;flex-direction:column;gap:7px}
+.lesson-btn{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:8px;border:1px solid var(--border);background:var(--surface);text-align:left;width:100%;cursor:pointer;transition:all .2s}
+.lesson-btn:hover:not(:disabled){filter:brightness(1.2);transform:translateX(2px)}
+.lesson-btn:disabled{opacity:.4;cursor:not-allowed}
+.ln{width:26px;height:26px;border-radius:50%;background:var(--dim);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);flex-shrink:0;font-family:'JetBrains Mono'}
+
+/* LESSON */
+#lesson-view{display:none;animation:fadeIn .3s ease}
+.back-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer}
+.lv-tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.lv-tab{background:none;border:none;padding:8px 16px;font-size:12px;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s}
+.lv-tab.active{font-weight:700}
+.cb{background:var(--card);border-radius:10px;padding:16px;margin-bottom:10px;border:1px solid var(--border);border-left-width:3px}
+.cb-h{font-weight:700;font-size:13px;margin-bottom:8px}
+.cb-b{font-size:13px;line-height:1.85;color:var(--text)}
+
+/* GREEKS TABLE */
+.greek-table{width:100%;border-collapse:collapse;font-size:12px}
+.greek-table th{background:var(--dim);color:var(--muted);padding:8px 10px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.05em}
+.greek-table td{padding:9px 10px;border-bottom:1px solid var(--border);font-size:12px}
+.greek-table tr:last-child td{border-bottom:none}
+.greek-sym{font-family:'JetBrains Mono';font-size:18px;font-weight:700}
+
+/* QUIZ */
+.quiz-q{background:var(--card);border-radius:10px;padding:16px;margin-bottom:10px;border:1px solid var(--border)}
+.quiz-opt{width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:13px;text-align:left;margin-bottom:7px;cursor:pointer;transition:all .2s;font-family:'Syne',sans-serif}
+.quiz-submit{width:100%;padding:12px;border-radius:8px;border:none;color:#080500;font-weight:800;font-size:14px;cursor:pointer;font-family:'Syne',sans-serif;margin-top:4px}
+.quiz-result{border-radius:12px;padding:20px;text-align:center;margin-top:10px}
+
+/* SIMULATOR */
+.sim-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sim-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.sim-label{font-size:12px;color:var(--muted)}
+.sim-val{font-family:'JetBrains Mono';font-size:13px;font-weight:700;color:var(--gold)}
+.type-btn{flex:1;padding:9px 0;border-radius:6px;border:none;font-weight:700;font-size:12px;font-family:'JetBrains Mono';cursor:pointer;transition:all .2s}
+.exec-btn{width:100%;padding:11px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--gold),var(--orange));color:#080500;font-weight:800;font-size:13px;cursor:pointer;margin-top:8px;letter-spacing:.5px;font-family:'Syne',sans-serif}
+.trade-row{display:flex;justify-content:space-between;padding:7px 10px;border-radius:6px;margin-bottom:4px;font-family:'JetBrains Mono';font-size:11px}
+
+/* SCANNER */
+.scanner-wrap{position:relative;overflow:hidden}
+.scan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:14px}
+.scan-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;overflow:hidden;cursor:pointer;transition:all .25s}
+.scan-card:hover{transform:translateY(-2px);border-color:var(--gold)}
+.scan-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.scan-card.bullish::before{background:linear-gradient(90deg,var(--green),transparent)}
+.scan-card.bearish::before{background:linear-gradient(90deg,var(--red),transparent)}
+.scan-card.neutral::before{background:linear-gradient(90deg,var(--gold),transparent)}
+.scan-ticker{font-family:'JetBrains Mono';font-size:18px;font-weight:700;color:var(--text);margin-bottom:2px}
+.scan-name{font-size:10px;color:var(--muted);margin-bottom:8px}
+.scan-price{font-family:'JetBrains Mono';font-size:14px;font-weight:700;margin-bottom:6px}
+.scan-signal{font-size:10px;font-weight:800;letter-spacing:1px;padding:3px 8px;border-radius:3px;display:inline-block;margin-bottom:6px}
+.scan-signal.bullish{color:var(--green);background:var(--greendim)}
+.scan-signal.bearish{color:var(--red);background:var(--reddim)}
+.scan-signal.neutral{color:var(--gold);background:var(--golddim)}
+.scan-metrics{display:flex;gap:6px;flex-wrap:wrap}
+.scan-metric{font-size:10px;background:var(--dim);border-radius:3px;padding:2px 6px;color:var(--muted)}
+.scan-iv{font-family:'JetBrains Mono';font-weight:700}
+.scan-bar{position:absolute;bottom:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);transition:width .5s}
+.scan-refresh{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.refresh-btn{padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--gold);font-size:12px;cursor:pointer;font-weight:700;transition:all .2s}
+.refresh-btn:hover{border-color:var(--gold);background:var(--golddim)}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.filter-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.filter-tab{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s}
+.filter-tab.active{background:var(--golddim);border-color:rgba(255,170,0,.3);color:var(--gold)}
+
+/* TUTOR */
+#chat-box{height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px;margin-bottom:12px}
+.msg{max-width:86%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.75;white-space:pre-wrap}
+.msg-ai{background:var(--card);border:1px solid var(--border);align-self:flex-start;border-radius:12px 12px 12px 4px}
+.msg-user{background:var(--golddim);border:1px solid rgba(255,170,0,.2);align-self:flex-end;border-radius:12px 12px 4px 12px}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);display:inline-block;animation:bounce 1s infinite}
+.sugg-chip{background:var(--golddim);border:1px solid rgba(255,170,0,.2);border-radius:20px;color:var(--gold);font-size:11px;padding:5px 12px;cursor:pointer;margin:0 4px 4px 0}
+#chat-input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13px;outline:none;font-family:'Syne',sans-serif}
+#chat-input:focus{border-color:var(--gold)}
+#chat-send{padding:10px 18px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--gold),var(--orange));color:#080500;font-weight:700;font-size:13px;cursor:pointer}
+#chat-send:disabled{background:var(--dim);color:var(--muted)}
+
+/* MISC */
+.sec-title{font-weight:800;font-size:20px;margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--muted);margin-bottom:16px}
+.tip-box{background:var(--golddim);border:1px solid rgba(255,170,0,.2);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text);line-height:1.7;margin:10px 0}
+.tip-box strong{color:var(--gold)}
+.api-notice{background:rgba(77,166,255,.06);border:1px solid rgba(77,166,255,.2);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text);margin-bottom:14px}
+.api-notice strong{color:var(--blue)}
+</style>
+</head>
+<body>
+<div id="header">
+  <div class="logo-icon">◎</div>
+  <div class="logo-text"><div class="l1">OPCIONES & ACCIONES</div><div class="l2">HABIL/IA · ACADEMY</div></div>
+  <div id="nav">
+    <button class="nav-btn active" onclick="switchTab('academy')">◈ Academia</button>
+    <button class="nav-btn" onclick="switchTab('scanner')">⬡ Scanner</button>
+    <button class="nav-btn" onclick="switchTab('simulator')">⬟ Simulador</button>
+    <button class="nav-btn" onclick="switchTab('tutor')">✦ Tutor IA</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="xp-box"><div class="xp-n" id="xp-n">0 XP</div><div class="xp-s" id="xp-s">0/16 lecciones</div></div>
+    <div class="xp-av" id="xp-av">◎</div>
+  </div>
+</div>
+
+<div id="main">
+
+  <!-- ACADEMY -->
+  <div id="tab-academy">
+    <div class="hero">
+      <div class="hero-tag">MERCADOS DE CAPITALES</div>
+      <h2>Acciones, Opciones y ETFs:<br>El mercado americano desde adentro.</h2>
+      <p>Desde leer una acción hasta operar calls y puts sobre AAPL, TSLA o SPY. Aprende las Griegas, las estrategias y el scanner de señales que los traders profesionales usan cada día.</p>
+      <div class="hero-chips">
+        <div class="chip g">📈 Acciones NYSE/NASDAQ</div>
+        <div class="chip r">⚡ Calls & Puts</div>
+        <div class="chip b">🇺🇸 ETFs SPY/QQQ</div>
+        <div class="chip g">Δ Las Griegas</div>
+        <div class="chip r">🔍 Scanner de señales</div>
+      </div>
+    </div>
+    <div class="prog-card" id="prog-banner">
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span style="font-weight:700;font-size:13px">Tu progreso</span>
+          <span style="font-family:'JetBrains Mono';font-size:12px;color:var(--gold)" id="prog-pct">0%</span>
+        </div>
+        <div class="prog-bar-bg"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+      </div>
+      <div style="text-align:center;min-width:60px">
+        <div style="font-family:'JetBrains Mono';font-weight:700;font-size:18px;color:var(--gold)" id="prog-xp">0</div>
+        <div style="font-size:10px;color:var(--muted)">XP total</div>
+      </div>
+    </div>
+    <div id="modules-list"></div>
+  </div>
+
+  <div id="lesson-view">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <button class="back-btn" onclick="closeLesson()">← Volver</button>
+      <div style="flex:1">
+        <div id="lv-tag" style="font-size:10px;font-weight:800;letter-spacing:1px;margin-bottom:2px"></div>
+        <div id="lv-title" style="font-weight:700;font-size:15px"></div>
+      </div>
+      <span id="lv-done" style="display:none;color:var(--green);font-size:12px">✓ Completado</span>
+      <span id="lv-xp" style="border-radius:4px;padding:3px 8px;font-size:11px;font-weight:700"></span>
+    </div>
+    <div class="lv-tabs">
+      <button class="lv-tab active" id="ltb-teoria" onclick="lessonTab('teoria')">📖 Teoría</button>
+      <button class="lv-tab" id="ltb-visual" onclick="lessonTab('visual')">📊 Visual</button>
+      <button class="lv-tab" id="ltb-quiz" onclick="lessonTab('quiz')" style="display:none">✏️ Quiz</button>
+    </div>
+    <div id="lv-teoria"></div>
+    <div id="lv-visual" style="display:none"></div>
+    <div id="lv-quiz" style="display:none"></div>
+  </div>
+
+  <!-- SCANNER -->
+  <div id="tab-scanner" style="display:none">
+    <div class="sec-title">📡 Scanner de Señales</div>
+    <div class="sec-sub">Identifica setups de opciones en tiempo real — calls, puts, volatilidad implícita y momentum</div>
+    <div class="api-notice">
+      <strong>🔌 Modo demostración:</strong> Los datos son simulados con lógica real. Para datos en vivo conecta una API (Polygon.io, Alpaca, Tradier) — la estructura ya está lista para recibirlos.
+    </div>
+    <div class="scan-refresh">
+      <div class="live-dot"></div>
+      <span style="font-size:12px;color:var(--muted)">Simulado en tiempo real</span>
+      <button class="refresh-btn" onclick="refreshScanner()">↻ Actualizar señales</button>
+      <span id="scan-time" style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted)"></span>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="setFilter('all',this)">Todos</button>
+      <button class="filter-tab" onclick="setFilter('bullish',this)">🟢 Alcistas</button>
+      <button class="filter-tab" onclick="setFilter('bearish',this)">🔴 Bajistas</button>
+      <button class="filter-tab" onclick="setFilter('iv',this)">⚡ IV Alto</button>
+      <button class="filter-tab" onclick="setFilter('etf',this)">🇺🇸 ETFs</button>
+    </div>
+    <div id="scan-grid" class="scan-grid"></div>
+    <div id="scan-detail" style="display:none"></div>
+  </div>
+
+  <!-- SIMULATOR -->
+  <div id="tab-simulator" style="display:none">
+    <div class="sec-title">Simulador de Opciones</div>
+    <div class="sec-sub">Calcula P&L, prima y griegas de tus contratos antes de operar</div>
+    <div id="sim-content"></div>
+  </div>
+
+  <!-- TUTOR -->
+  <div id="tab-tutor" style="display:none">
+    <div class="sec-title">Tutor IA — Opciones & Acciones</div>
+    <div class="sec-sub">Resuelve dudas sobre calls, puts, griegas, estrategias y análisis de mercado</div>
+    <div style="background:var(--golddim);border:1px solid rgba(255,170,0,.2);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:14px">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--orange));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">◎</div>
+      <div><div style="font-weight:700;font-size:14px">Tutor especializado en opciones americanas</div><div style="color:var(--muted);font-size:11px">Calls · Puts · Griegas · ETFs · Estrategias avanzadas</div></div>
+      <div style="margin-left:auto;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite"></div>
+    </div>
+    <div id="chat-box"></div>
+    <div id="sugg-wrap" style="display:flex;flex-wrap:wrap;margin-bottom:10px"></div>
+    <div style="display:flex;gap:8px">
+      <input id="chat-input" placeholder="Pregunta sobre calls, puts, delta, estrategias..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+      <button id="chat-send" onclick="sendMsg()">→</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const MODULES = [
+  {
+    id:1, tag:"ACCIONES", icon:"📈", color:"#ffaa00",
+    title:"Acciones: el mercado americano",
+    subtitle:"NYSE, NASDAQ, cómo leer una empresa y sus resultados",
+    lessons:[
+      {id:"1a",title:"¿Cómo funciona la bolsa americana?",xp:100,mins:8},
+      {id:"1b",title:"Cómo leer una acción: precio, volumen, capitalización",xp:120,mins:10},
+      {id:"1c",title:"Earnings, dividendos y eventos del mercado",xp:130,mins:11},
+      {id:"1d",title:"Sectores del mercado y rotación de capital",xp:110,mins:9},
+    ],
+    content:[
+      {h:"El mercado americano: NYSE y NASDAQ",b:"NYSE (New York Stock Exchange) es la bolsa más grande del mundo por capitalización. NASDAQ es el hogar de las tecnológicas — Apple, Google, Amazon, Tesla. Ambas operan de lunes a viernes de 9:30am a 4:00pm (hora del Este). Pre-market (4am-9:30am) y after-hours (4pm-8pm) también tienen actividad, pero con menor liquidez y mayor volatilidad."},
+      {h:"¿Qué es una acción realmente?",b:"Cuando compras una acción de Apple, eres dueño de una fracción de la empresa. Si Apple vale $3 trillones y hay 15,000 millones de acciones en circulación, cada acción vale ~$200. Tu poder de voto es proporcional a tus acciones. Los accionistas tienen derecho a una parte de las ganancias (dividendos) y del valor residual si la empresa se liquida."},
+      {h:"Market Cap: cómo medir el tamaño de una empresa",b:"Market Cap = Precio × Acciones en circulación. Large Cap (+$10B): empresas estables, menor riesgo. Mid Cap ($2B-$10B): crecimiento moderado. Small Cap (-$2B): mayor riesgo, mayor potencial. El S&P 500 incluye las 500 empresas más grandes de EEUU. Si inviertes en SPY (ETF del S&P 500), inviertes en todas simultáneamente."},
+      {h:"Cómo analizar una acción antes de invertir",b:"P/E Ratio (Price/Earnings): cuánto pagas por cada dólar de ganancia. P/E de 20 significa que pagas $20 por cada $1 de ganancia anual. EPS (Earnings Per Share): ganancia neta dividida entre acciones. Revenue Growth: ¿está creciendo la empresa? Free Cash Flow: dinero real que genera. Estos indicadores te dicen si una acción está cara, barata o en precio justo."},
+    ]
+  },
+  {
+    id:2, tag:"OPCIONES BÁSICO", icon:"⚡", color:"#ff7c00",
+    title:"Calls y Puts: la mecánica de las opciones",
+    subtitle:"Qué son, cómo funcionan y por qué son poderosas",
+    lessons:[
+      {id:"2a",title:"¿Qué es una opción y por qué existe?",xp:150,mins:12},
+      {id:"2b",title:"Call Options: el derecho a comprar",xp:180,mins:14},
+      {id:"2c",title:"Put Options: el derecho a vender",xp:180,mins:14},
+      {id:"2d",title:"Strike, expiración y prima: los 3 elementos clave",xp:200,mins:16},
+    ],
+    content:[
+      {h:"¿Qué es una opción?",b:"Una opción es un contrato que te da el DERECHO (no la obligación) de comprar o vender 100 acciones a un precio específico antes de una fecha determinada. Pagas una prima por ese derecho. Si el mercado va en tu dirección, el valor de tu opción puede multiplicarse varias veces. Si va en contra, pierdes solo la prima pagada — nunca más. Esta asimetría riesgo/recompensa es lo que hace a las opciones tan poderosas."},
+      {h:"Call Option: apostando al alza",b:"Un CALL te da el derecho de COMPRAR 100 acciones al precio de ejercicio (strike). Ejemplo: Compras un CALL de Apple con strike $200, expiración en 30 días, prima $3 (= $300 totales por el contrato de 100 acciones). Si Apple sube a $220, tu opción vale ~$20 = $2,000. Ganaste $1,700 sobre $300 invertidos (+566%). Si Apple baja, pierdes solo los $300."},
+      {h:"Put Option: apostando a la baja",b:"Un PUT te da el derecho de VENDER 100 acciones al precio de ejercicio. Ejemplo: Compras un PUT de Tesla con strike $250, prima $4 (=$400). Si Tesla cae a $220, tu PUT vale ~$30 = $3,000. Ganaste $2,600 sobre $400 (+650%). Los puts también sirven como seguro de cartera — si tienes acciones y temes una caída, un put te protege."},
+      {h:"Strike, expiración y prima: el triángulo",b:"STRIKE: precio al que puedes ejercer el contrato. In-the-money (ITM): call con strike menor al precio actual. Out-of-the-money (OTM): call con strike mayor al precio actual. EXPIRACIÓN: fecha límite. Opciones semanales (más especulativas), mensuales (más balanceadas), LEAPS (hasta 2 años, más conservadoras). PRIMA: precio del contrato = Valor Intrínseco + Valor Extrínseco (tiempo + volatilidad)."},
+    ]
+  },
+  {
+    id:3, tag:"LAS GRIEGAS", icon:"Δ", color:"#a855f7",
+    title:"Delta, Theta, Gamma y Vega",
+    subtitle:"Las 4 fuerzas que controlan el precio de tus opciones",
+    lessons:[
+      {id:"3a",title:"Delta: cómo se mueve tu opción con el precio",xp:220,mins:16},
+      {id:"3b",title:"Theta: el tiempo es tu enemigo o aliado",xp:240,mins:18},
+      {id:"3c",title:"Gamma y Vega: aceleración y volatilidad",xp:230,mins:17},
+      {id:"3d",title:"Estrategias con las Griegas: cómo usarlas juntas",xp:260,mins:20},
+    ],
+    content:[
+      {h:"Delta (Δ): sensibilidad al precio",b:"Delta mide cuánto cambia el precio de tu opción por cada $1 que se mueve la acción subyacente. Delta 0.50 significa que si la acción sube $1, tu opción sube $0.50. Calls tienen delta positivo (0 a 1). Puts tienen delta negativo (-1 a 0). Una opción ATM (at-the-money) tiene delta ~0.50. Una opción deep ITM tiene delta cercano a 1 — se mueve casi igual que la acción."},
+      {h:"Theta (Θ): la erosión del tiempo",b:"Theta es tu peor enemigo si compras opciones, y tu mejor amigo si las vendes. Mide cuánto pierde valor tu opción cada día que pasa, con todo lo demás igual. Una opción con theta -0.05 pierde $5 de valor diariamente (por contrato de 100 acciones). Los últimos 30 días antes de expiración, el tiempo decay se acelera dramáticamente. Por eso los vendedores de opciones prefieren vender opciones con 30-45 días de vida."},
+      {h:"Gamma (Γ): la aceleración de Delta",b:"Gamma mide la velocidad con que cambia el Delta. Alta gamma = delta cambia rápido = la opción es más explosiva en ambas direcciones. Las opciones ATM cercanas a expiración tienen el mayor gamma — son las más especulativas. Si eres comprador, quieres gamma alta. Si eres vendedor, gamma alta es peligrosa — un movimiento fuerte puede destruir tu posición."},
+      {h:"Vega (V): el poder de la volatilidad",b:"Vega mide cuánto cambia el precio de tu opción por cada 1% de cambio en la Volatilidad Implícita (IV). Alta IV = opciones más caras. Baja IV = opciones más baratas. Estrategia: comprar opciones cuando IV está baja (antes de earnings tranquilos), vender cuando IV está alta (antes de eventos que inflan el miedo). IV Crush: cuando la IV cae bruscamente después de un earnings — tus opciones pueden perder 50% de valor aunque la acción se mueva a tu favor."},
+    ],
+    greeks:true
+  },
+  {
+    id:4, tag:"ETFs & ESTRATEGIAS", icon:"🇺🇸", color:"#4da6ff",
+    title:"ETFs, SPY/QQQ y Estrategias Avanzadas",
+    subtitle:"Iron Condor, Straddle, Covered Call y más",
+    lessons:[
+      {id:"4a",title:"SPY y QQQ: operando los índices con opciones",xp:240,mins:16},
+      {id:"4b",title:"Covered Call: generando ingresos con tus acciones",xp:260,mins:18},
+      {id:"4c",title:"Iron Condor y Straddle: jugando con la volatilidad",xp:280,mins:20},
+      {id:"4d",title:"Gestión de riesgo en opciones: las reglas del profesional",xp:300,mins:22},
+    ],
+    content:[
+      {h:"SPY y QQQ: los ETFs más operados del mundo",b:"SPY es el ETF que replica el S&P 500 — las 500 empresas más grandes de EEUU. QQQ replica el NASDAQ-100 — las 100 mayores tecnológicas. ¿Por qué operar opciones sobre ETFs? Mayor liquidez, spreads más ajustados, menos riesgo de gap por evento individual (earnings de una empresa), y mayor previsibilidad. SPY es el activo con más volumen de opciones del mundo. Para aprender, muchos traders empiezan aquí."},
+      {h:"Covered Call: ingresos con tus acciones",b:"El Covered Call es la estrategia más conservadora con opciones. Si tienes 100 acciones de Apple ($200 c/u = $20,000), vendes un CALL con strike $210, prima $2 ($200). Si Apple NO supera $210 al vencimiento, te quedas la prima — es ingreso pasivo sobre acciones que ya posees. Si Apple supera $210, vendes tus acciones a $210 (ganancia de $10/acc + la prima). Riesgo: si Apple cae, tu pérdida es en la acción, compensada parcialmente por la prima."},
+      {h:"Straddle: cuando no sabes hacia dónde va el mercado",b:"Un Straddle compra simultáneamente un CALL y un PUT del mismo strike y expiración. Ganas si la acción se mueve MUCHO en cualquier dirección — perfecta antes de earnings inciertos. Costo: pagas dos primas. Para ser rentable, la acción debe moverse más que el costo total de las dos opciones. Un Strangle es similar pero con strikes diferentes — más barato pero necesita un movimiento mayor."},
+      {h:"Iron Condor: ganando con la calma del mercado",b:"El Iron Condor vende un call spread y un put spread simultáneamente. Ganas si la acción se mantiene dentro de un rango — exactamente lo opuesto al straddle. Es la estrategia favorita de traders que venden volatilidad. Tu ganancia máxima es la prima recibida. Tu pérdida máxima está limitada. La probabilidad de éxito puede ser del 70-80% si el iron condor está bien posicionado, pero la ganancia por trade es menor."},
+    ],
+    advanced:true
+  },
+];
+
+const QUIZZES = {
+  "1b":[
+    {q:"¿Qué indica un P/E Ratio muy alto en una acción?",opts:["La empresa está barata y es una gran oportunidad","Los inversores pagan una prima alta por sus ganancias futuras esperadas","La empresa tiene pocas deudas","El precio de la acción es bajo"],ans:1},
+    {q:"Si Apple tiene 15,000 millones de acciones y cotiza a $200, ¿cuál es su Market Cap?",opts:["$200 millones","$15,000 millones","$3 trillones","$200,000 millones"],ans:2},
+  ],
+  "2b":[
+    {q:"Compras un CALL de TSLA strike $250, prima $5. ¿Cuánto es tu pérdida máxima?",opts:["Ilimitada","$250","$500 (el contrato completo)","$5,000"],ans:2},
+    {q:"Un CALL está 'in-the-money' cuando:",opts:["El strike es mayor al precio actual","El strike es menor al precio actual de la acción","La prima es muy alta","El vencimiento está próximo"],ans:1},
+  ],
+  "3a":[
+    {q:"Una opción tiene Delta 0.70. Si la acción sube $2, ¿cuánto sube la opción?",opts:["$2","$0.70","$1.40","$7.00"],ans:2},
+    {q:"¿Qué tipo de opción tiene Delta negativo?",opts:["Call ITM","Call OTM","Put","Todas las opciones ATM"],ans:2},
+  ],
+  "4b":[
+    {q:"¿Cuándo es más conveniente el Covered Call?",opts:["Cuando esperas una subida explosiva de la acción","Cuando quieres generar ingresos y la acción está lateral o levemente alcista","Cuando quieres protegerte de una caída fuerte","Cuando la volatilidad implícita está muy baja"],ans:1},
+    {q:"¿Qué ocurre en un Iron Condor si la acción se mantiene dentro del rango?",opts:["Pierdes la prima pagada","No pasa nada","Ganas la prima recibida","El contrato se cancela automáticamente"],ans:2},
+  ],
+};
+
+// SCANNER DATA
+const SCAN_STOCKS = [
+  {ticker:'AAPL',name:'Apple Inc.',type:'stock',sector:'Tech'},
+  {ticker:'TSLA',name:'Tesla Inc.',type:'stock',sector:'EV'},
+  {ticker:'NVDA',name:'NVIDIA Corp.',type:'stock',sector:'Semiconductores'},
+  {ticker:'MSFT',name:'Microsoft Corp.',type:'stock',sector:'Tech'},
+  {ticker:'AMZN',name:'Amazon.com',type:'stock',sector:'E-commerce'},
+  {ticker:'GOOGL',name:'Alphabet Inc.',type:'stock',sector:'Tech'},
+  {ticker:'META',name:'Meta Platforms',type:'stock',sector:'Social'},
+  {ticker:'SPY',name:'S&P 500 ETF',type:'etf',sector:'Índice'},
+  {ticker:'QQQ',name:'NASDAQ-100 ETF',type:'etf',sector:'Índice'},
+  {ticker:'IWM',name:'Russell 2000 ETF',type:'etf',sector:'Small Cap'},
+  {ticker:'GLD',name:'Gold ETF',type:'etf',sector:'Commodities'},
+  {ticker:'AMD',name:'Advanced Micro',type:'stock',sector:'Semiconductores'},
+];
+
+let scanData=[], scanFilter='all';
+
+function generateScanData(){
+  const signals=['bullish','bearish','neutral'];
+  return SCAN_STOCKS.map(s=>{
+    const base={AAPL:195,TSLA:260,NVDA:890,MSFT:415,AMZN:185,GOOGL:170,META:510,SPY:525,QQQ:440,IWM:210,GLD:185,AMD:165}[s.ticker]||100;
+    const change=(Math.random()-.45)*8;
+    const price=base+change;
+    const iv=Math.round(20+Math.random()*60);
+    const signal=iv>50?'neutral':change>1.5?'bullish':change<-1.5?'bearish':'neutral';
+    const rsi=Math.round(30+Math.random()*50);
+    const volume=Math.round((0.8+Math.random()*.8)*100)/100;
+    return{...s,price:price.toFixed(2),change:change.toFixed(2),changePct:((change/base)*100).toFixed(2),iv,signal,rsi,volume,call_signal:change>0&&iv<40,put_signal:change<0&&iv<40};
+  });
+}
+
+function renderScanner(){
+  scanData=generateScanData();
+  document.getElementById('scan-time').textContent='Actualizado: '+new Date().toLocaleTimeString('es-CL');
+  let filtered=scanData;
+  if(scanFilter==='bullish')filtered=scanData.filter(s=>s.signal==='bullish');
+  else if(scanFilter==='bearish')filtered=scanData.filter(s=>s.signal==='bearish');
+  else if(scanFilter==='iv')filtered=scanData.filter(s=>s.iv>50);
+  else if(scanFilter==='etf')filtered=scanData.filter(s=>s.type==='etf');
+  const grid=document.getElementById('scan-grid');
+  grid.innerHTML='';
+  filtered.forEach(s=>{
+    const pos=parseFloat(s.change)>=0;
+    const card=document.createElement('div');
+    card.className=`scan-card ${s.signal}`;
+    card.innerHTML=`
+      <div class="scan-ticker">${s.ticker}</div>
+      <div class="scan-name">${s.name}</div>
+      <div class="scan-price" style="color:${pos?'#00e8a0':'#ff3d5a'}">$${s.price} <span style="font-size:11px">${pos?'▲':'▼'} ${Math.abs(s.changePct)}%</span></div>
+      <div class="scan-signal ${s.signal}">${s.signal==='bullish'?'▲ ALCISTA':s.signal==='bearish'?'▼ BAJISTA':'◆ NEUTRAL'}</div>
+      <div class="scan-metrics">
+        <span class="scan-metric">IV <span class="scan-iv" style="color:${s.iv>50?'#ff7c00':'#00e8a0'}">${s.iv}%</span></span>
+        <span class="scan-metric">RSI ${s.rsi}</span>
+        <span class="scan-metric">Vol ${s.volume}M</span>
+        <span class="scan-metric" style="color:${s.type==='etf'?'#4da6ff':'var(--muted)'}">${s.type==='etf'?'🇺🇸 ETF':'📈 ACCIÓN'}</span>
+      </div>
+      ${s.call_signal?'<div style="margin-top:6px;font-size:10px;color:#00e8a0;font-weight:800">⚡ SEÑAL CALL</div>':''}
+      ${s.put_signal?'<div style="margin-top:6px;font-size:10px;color:#ff3d5a;font-weight:800">⚡ SEÑAL PUT</div>':''}
+      <div class="scan-bar" style="width:${Math.min(Math.abs(parseFloat(s.changePct))*20,100)}%"></div>
+    `;
+    card.onclick=()=>showScanDetail(s);
+    grid.appendChild(card);
+  });
+}
+
+function showScanDetail(s){
+  const pos=parseFloat(s.change)>=0;
+  document.getElementById('scan-detail').style.display='block';
+  document.getElementById('scan-detail').innerHTML=`
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-top:10px;animation:fadeIn .3s ease">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+        <div>
+          <div style="font-family:'JetBrains Mono';font-size:22px;font-weight:700;color:var(--text)">${s.ticker}</div>
+          <div style="font-size:12px;color:var(--muted)">${s.name} · ${s.sector}</div>
+        </div>
+        <button onclick="document.getElementById('scan-detail').style.display='none'" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer">✕</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+        ${[
+          {l:'Precio',v:'$'+s.price,c:pos?'#00e8a0':'#ff3d5a'},
+          {l:'Cambio',v:(pos?'+':'')+s.changePct+'%',c:pos?'#00e8a0':'#ff3d5a'},
+          {l:'IV',v:s.iv+'%',c:s.iv>50?'#ff7c00':'#00e8a0'},
+          {l:'RSI',v:s.rsi,c:s.rsi>70?'#ff3d5a':s.rsi<30?'#00e8a0':'var(--text)'},
+          {l:'Volumen',v:s.volume+'M',c:'var(--text)'},
+          {l:'Señal',v:s.signal.toUpperCase(),c:s.signal==='bullish'?'#00e8a0':s.signal==='bearish'?'#ff3d5a':'#ffaa00'},
+        ].map(r=>`<div style="background:var(--surface);border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">${r.l}</div>
+          <div style="font-family:'JetBrains Mono';font-size:14px;font-weight:700;color:${r.c}">${r.v}</div>
+        </div>`).join('')}
+      </div>
+      <div style="background:var(--golddim);border:1px solid rgba(255,170,0,.2);border-radius:8px;padding:12px;font-size:12px;color:var(--text)">
+        <strong style="color:var(--gold)">💡 Setup sugerido:</strong><br>
+        ${s.signal==='bullish'&&s.iv<40?`CALL con strike ${(parseFloat(s.price)*1.03).toFixed(0)} (~3% OTM), expiración 30-45 días. IV baja = prima relativamente barata.`:
+          s.signal==='bearish'&&s.iv<40?`PUT con strike ${(parseFloat(s.price)*.97).toFixed(0)} (~3% OTM), expiración 30-45 días. Confirma con ruptura de soporte.`:
+          s.iv>50?`IV alta (${s.iv}%) → considera vender opciones (Iron Condor o Covered Call) en lugar de comprar. El tiempo decay trabaja a tu favor.`:
+          `Sin setup claro actualmente. Espera confirmación de dirección antes de operar.`}
+      </div>
+    </div>`;
+}
+
+function refreshScanner(){renderScanner();document.getElementById('scan-detail').style.display='none';}
+function setFilter(f,btn){scanFilter=f;document.querySelectorAll('.filter-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderScanner();}
+
+// ══════════════════════════════════════════
+// ACADEMY
+// ══════════════════════════════════════════
+let completed=new Set(),totalXP=0,activeModule=null,activeLesson=null;
+let quizAnswers={},quizDone=false;
+
+function renderModules(){
+  const el=document.getElementById('modules-list');el.innerHTML='';
+  MODULES.forEach((mod,mi)=>{
+    const mc=mod.lessons.filter(l=>completed.has(l.id)).length;
+    const locked=mi>0&&MODULES[mi-1].lessons.filter(l=>completed.has(l.id)).length<1;
+    let lessons='';
+    mod.lessons.forEach((l,li)=>{
+      const done=completed.has(l.id);
+      lessons+=`<button class="lesson-btn" ${locked?'disabled':''} onclick="openLesson(${mod.id},'${l.id}')" style="${done?`background:${mod.color}08;border-color:${mod.color}33`:''}">
+        <div class="ln" style="${done?`background:${mod.color};color:#080500`:''}"> ${done?'✓':li+1}</div>
+        <div style="flex:1"><div style="font-size:13px;${done?`color:${mod.color};font-weight:600`:''}">${l.title}</div><div style="font-size:11px;color:var(--muted);margin-top:1px">${l.mins} min · ${done?`<span style="color:${mod.color}">✓ Completado</span>`:'Pendiente'}</div></div>
+        <div style="font-family:'JetBrains Mono';font-size:11px;font-weight:700;${done?`color:${mod.color}`:'color:var(--muted)'}">+${l.xp} XP</div>
+        <div style="color:var(--muted);font-size:13px">›</div>
+      </button>`;
+    });
+    el.innerHTML+=`<div class="module ${locked?'locked':''}" id="mod-${mod.id}">
+      <div class="mod-hdr" style="background:linear-gradient(135deg,${mod.color}10,transparent)">
+        <div style="font-size:22px;color:${mod.color}">${mod.icon}</div>
+        <div style="flex:1">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:3px">
+            <span class="mod-tag" style="color:${mod.color};background:${mod.color}15">${mod.tag}</span>
+            ${mod.greeks?'<span class="mod-tag" style="color:#a855f7;background:#a855f715">Δ GRIEGAS</span>':''}
+            ${mod.advanced?'<span class="mod-tag" style="color:#4da6ff;background:#4da6ff15">AVANZADO</span>':''}
+            ${locked?'<span style="color:var(--muted);font-size:10px">🔒 Completa el módulo anterior</span>':''}
+          </div>
+          <div style="font-weight:700;font-size:15px;color:var(--text)">${mod.title}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">${mod.subtitle}</div>
+        </div>
+        <div style="text-align:right;font-family:'JetBrains Mono';font-weight:700;color:${mod.color}">${mc}/${mod.lessons.length}<div style="font-size:10px;font-weight:400;color:var(--muted)">lecciones</div></div>
+      </div>
+      <div class="lessons">${lessons}</div>
+    </div>`;
+  });
+}
+
+function updateProgress(){
+  const total=MODULES.reduce((s,m)=>s+m.lessons.length,0);
+  const done=completed.size,pct=Math.round(done/total*100);
+  document.getElementById('xp-n').textContent=totalXP.toLocaleString()+' XP';
+  document.getElementById('xp-s').textContent=done+'/'+total+' lecciones';
+  document.getElementById('xp-av').textContent=pct<33?'◎':pct<66?'◕':'●';
+  if(done>0){
+    document.getElementById('prog-banner').style.display='flex';
+    document.getElementById('prog-pct').textContent=pct+'%';
+    document.getElementById('prog-bar').style.width=pct+'%';
+    document.getElementById('prog-xp').textContent=totalXP;
+  }
+}
+
+function openLesson(modId,lessonId){
+  activeModule=MODULES.find(m=>m.id===modId);
+  activeLesson=activeModule.lessons.find(l=>l.id===lessonId);
+  document.getElementById('modules-list').style.display='none';
+  document.getElementById('prog-banner').style.display='none';
+  document.getElementById('lesson-view').style.display='block';
+  document.getElementById('lv-tag').textContent=activeModule.tag;
+  document.getElementById('lv-tag').style.color=activeModule.color;
+  document.getElementById('lv-title').textContent=activeLesson.title;
+  const xpb=document.getElementById('lv-xp');
+  xpb.textContent=activeLesson.xp+' XP';xpb.style.background=activeModule.color+'20';xpb.style.color=activeModule.color;xpb.style.border=`1px solid ${activeModule.color}44`;
+  document.getElementById('lv-done').style.display=completed.has(lessonId)?'inline':'none';
+  document.getElementById('ltb-quiz').style.display=QUIZZES[lessonId]?'inline-block':'none';
+  quizAnswers={};quizDone=false;
+  lessonTab('teoria');
+}
+
+function closeLesson(){
+  activeLesson=null;activeModule=null;
+  document.getElementById('lesson-view').style.display='none';
+  document.getElementById('modules-list').style.display='block';
+  if(completed.size>0)document.getElementById('prog-banner').style.display='flex';
+  renderModules();updateProgress();
+}
+
+function lessonTab(t){
+  ['teoria','visual','quiz'].forEach(tab=>{
+    document.getElementById('lv-'+tab).style.display=tab===t?'block':'none';
+    const btn=document.getElementById('ltb-'+tab);
+    btn.classList.toggle('active',tab===t);
+    btn.style.color=tab===t?activeModule.color:'var(--muted)';
+    btn.style.borderBottomColor=tab===t?activeModule.color:'transparent';
+  });
+  if(t==='teoria')renderTheory();
+  if(t==='visual')renderVisual();
+  if(t==='quiz')renderQuiz();
+}
+
+function renderTheory(){
+  let html='';
+  activeModule.content.forEach(b=>{
+    html+=`<div class="cb" style="border-left-color:${activeModule.color}">
+      <div class="cb-h" style="color:${activeModule.color}">${b.h}</div>
+      <div class="cb-b">${b.b.replace(/\n/g,'<br>')}</div>
+    </div>`;
+  });
+  document.getElementById('lv-teoria').innerHTML=html;
+}
+
+function renderVisual(){
+  const id=activeLesson.id;
+  let html='<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px">';
+  if(id==='2b'||id==='2c'||id==='2d'){
+    // P&L diagram
+    html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">DIAGRAMA P&L — ${id==='2b'?'CALL':'id'==='2c'?'PUT':'OPCIONES'}</div>`;
+    const isCall=id==='2b'||id==='2d';
+    html+=`<svg viewBox="0 0 400 200" style="width:100%;height:auto;background:#04080F;border-radius:8px">
+      <line x1="40" y1="10" x2="40" y2="180" stroke="#2a1e00" stroke-width="1"/>
+      <line x1="40" y1="130" x2="390" y2="130" stroke="#2a1e00" stroke-width="1"/>
+      <text x="20" y="135" fill="#7a6a3a" font-size="9" font-family="JetBrains Mono">0</text>
+      <text x="200" y="195" fill="#7a6a3a" font-size="9" font-family="JetBrains Mono" text-anchor="middle">Precio acción al vencimiento</text>
+      ${isCall?
+        `<polyline points="40,130 180,130 360,30" fill="none" stroke="#ff3d5a" stroke-width="2"/>
+         <polyline points="40,130 180,130 360,30" fill="none" stroke="#00e8a0" stroke-width="2" stroke-dasharray="180,1000" stroke-dashoffset="-180"/>
+         <text x="185" y="125" fill="#ffaa00" font-size="9" font-family="JetBrains Mono">Strike</text>
+         <line x1="180" y1="10" x2="180" y2="180" stroke="#ffaa00" stroke-width="0.8" stroke-dasharray="4,4"/>
+         <text x="50" y="148" fill="#ff3d5a" font-size="9">Pérdida = Prima</text>
+         <text x="270" y="60" fill="#00e8a0" font-size="9">Ganancia ilimitada ▲</text>`
+        :
+        `<polyline points="40,30 220,130 390,130" fill="none" stroke="#4da6ff" stroke-width="2"/>
+         <text x="225" y="125" fill="#ffaa00" font-size="9" font-family="JetBrains Mono">Strike</text>
+         <line x1="220" y1="10" x2="220" y2="180" stroke="#ffaa00" stroke-width="0.8" stroke-dasharray="4,4"/>
+         <text x="300" y="148" fill="#ff3d5a" font-size="9">Pérdida = Prima</text>
+         <text x="50" y="60" fill="#00e8a0" font-size="9">Ganancia acción → 0</text>`
+      }
+    </svg>`;
+    html+=`<div class="tip-box" style="margin-top:12px"><strong>💡 Clave:</strong> ${isCall?'El comprador de un CALL tiene pérdida LIMITADA (prima pagada) y ganancia ILIMITADA hacia arriba.':'El comprador de un PUT gana cuando la acción cae. La ganancia máxima es si la acción llega a $0.'}</div>`;
+  } else if(id==='3a'||id==='3b'||id==='3c'||id==='3d'){
+    // Greeks table
+    html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">LAS 4 GRIEGAS — RESUMEN VISUAL</div>`;
+    html+=`<table class="greek-table"><thead><tr><th>Griega</th><th>Qué mide</th><th>Rango</th><th>¿Quieres que suba?</th></tr></thead><tbody>`;
+    [{sym:'Δ',name:'Delta',color:'#ffaa00',mide:'Sensibilidad al precio',rango:'0 a ±1',sube:'Si compras opciones'},{sym:'Θ',name:'Theta',color:'#ff7c00',mide:'Erosión por tiempo',rango:'Siempre negativo',sube:'Si VENDES opciones'},{sym:'Γ',name:'Gamma',color:'#a855f7',mide:'Velocidad del Delta',rango:'0 a ∞',sube:'Si compras cerca exp.'},{sym:'V',name:'Vega',color:'#4da6ff',mide:'Sensibilidad a IV',rango:'0 a ∞',sube:'Si compras antes de news'}].forEach(g=>{
+      html+=`<tr><td><span class="greek-sym" style="color:${g.color}">${g.sym}</span> <span style="font-size:11px;color:var(--muted)">${g.name}</span></td><td style="color:var(--text);font-size:12px">${g.mide}</td><td style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted)">${g.rango}</td><td style="font-size:11px;color:var(--green)">${g.sube}</td></tr>`;
+    });
+    html+=`</tbody></table>`;
+    html+=`<div class="tip-box" style="margin-top:12px"><strong>💡 Regla de oro:</strong> Como comprador de opciones, quieres Delta alto (se mueve contigo), Gamma alto (acelerás), Theta bajo (no pierdas tiempo) y Vega alto (antes de noticias). Como vendedor, exactamente lo contrario.</div>`;
+  } else if(id==='4b'||id==='4c'||id==='4d'){
+    // Strategies
+    html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">COMPARATIVA DE ESTRATEGIAS</div>`;
+    const strats=[
+      {name:'Covered Call',risk:'Bajo',reward:'Limitado',cuando:'Mercado lateral/alcista suave',color:'#00e8a0'},
+      {name:'Long Call',risk:'Prima',reward:'Ilimitado',cuando:'Alcista fuerte',color:'#ffaa00'},
+      {name:'Long Put',risk:'Prima',reward:'Hasta $0 acción',cuando:'Bajista fuerte',color:'#ff3d5a'},
+      {name:'Straddle',risk:'2 primas',reward:'Movimiento grande',cuando:'Antes de earnings/news',color:'#a855f7'},
+      {name:'Iron Condor',risk:'Limitado',reward:'Prima recibida',cuando:'Mercado lateral, IV alta',color:'#4da6ff'},
+    ];
+    strats.forEach(s=>{
+      html+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px">
+        <div style="width:3px;height:40px;background:${s.color};border-radius:2px;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-weight:700;font-size:13px;color:${s.color}">${s.name}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">${s.cuando}</div></div>
+        <div style="text-align:right"><div style="font-size:10px;color:var(--red)">Riesgo: ${s.risk}</div><div style="font-size:10px;color:var(--green);margin-top:2px">Reward: ${s.reward}</div></div>
+      </div>`;
+    });
+  } else {
+    // Sectors / general
+    html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">SECTORES DEL S&P 500</div>`;
+    [{s:'Technology',p:29,c:'#4da6ff'},{s:'Healthcare',p:13,c:'#00e8a0'},{s:'Financials',p:13,c:'#ffaa00'},{s:'Consumer Disc.',p:11,c:'#ff7c00'},{s:'Industrials',p:9,c:'#a855f7'},{s:'Otros',p:25,c:'#7a6a3a'}].forEach(s=>{
+      html+=`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:12px;color:var(--text)">${s.s}</span><span style="font-family:'JetBrains Mono';font-size:12px;color:${s.c}">${s.p}%</span></div><div style="background:var(--border);border-radius:3px;height:5px"><div style="width:${s.p}%;height:100%;border-radius:3px;background:${s.c}"></div></div></div>`;
+    });
+  }
+  html+='</div>';
+  document.getElementById('lv-visual').innerHTML=html;
+}
+
+function renderQuiz(){
+  const qData=QUIZZES[activeLesson.id]||[];
+  if(!qData.length){document.getElementById('lv-quiz').innerHTML='<div style="color:var(--muted);padding:20px;text-align:center">No hay quiz para esta lección.</div>';return;}
+  if(quizDone){
+    const pass=qData.filter((q,i)=>quizAnswers[i]===q.ans).length;
+    const ok=pass>=Math.ceil(qData.length*.5);
+    document.getElementById('lv-quiz').innerHTML=`<div class="quiz-result" style="background:${ok?'var(--greendim)':'var(--reddim)'};border:1px solid ${ok?'var(--green)':'var(--red)'}">
+      <div style="font-size:32px;margin-bottom:8px">${ok?'🏆':'📚'}</div>
+      <div style="font-weight:700;font-size:16px">${pass}/${qData.length} correctas</div>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px">${ok?'+'+activeLesson.xp+' XP ganados':'Revisa la teoría e intenta de nuevo'}</div>
+      ${!ok?`<button onclick="retryQuiz()" style="margin-top:12px;padding:8px 20px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px">Reintentar</button>`:''}
+    </div>`;return;
+  }
+  let html='';
+  qData.forEach((q,qi)=>{
+    let opts='';
+    q.opts.forEach((o,oi)=>{
+      const sel=quizAnswers[qi]===oi;
+      opts+=`<button class="quiz-opt" onclick="selOpt(${qi},${oi})" style="${sel?`border-color:${activeModule.color};background:${activeModule.color}15;color:${activeModule.color}`:''}">
+        <span style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted);margin-right:8px">${['A','B','C','D'][oi]}</span>${o}
+      </button>`;
+    });
+    html+=`<div class="quiz-q"><div style="font-weight:600;font-size:14px;margin-bottom:12px">${qi+1}. ${q.q}</div>${opts}</div>`;
+  });
+  const all=Object.keys(quizAnswers).length>=qData.length;
+  html+=`<button class="quiz-submit" onclick="submitQuiz()" ${!all?'disabled':''} style="background:${all?`linear-gradient(135deg,${activeModule.color},var(--orange))`:'var(--dim)'}">Enviar respuestas →</button>`;
+  document.getElementById('lv-quiz').innerHTML=html;
+}
+
+function selOpt(qi,oi){quizAnswers[qi]=oi;renderQuiz();}
+function retryQuiz(){quizAnswers={};quizDone=false;renderQuiz();}
+function submitQuiz(){
+  const qData=QUIZZES[activeLesson.id]||[];
+  const pass=qData.filter((q,i)=>quizAnswers[i]===q.ans).length;
+  quizDone=true;
+  if(pass>=Math.ceil(qData.length*.5)&&!completed.has(activeLesson.id)){
+    completed.add(activeLesson.id);totalXP+=activeLesson.xp;
+    document.getElementById('lv-done').style.display='inline';
+  }
+  renderQuiz();
+}
+
+// ══════════════════════════════════════════
+// SIMULATOR
+// ══════════════════════════════════════════
+let simType='call',simStock='AAPL',simStrike=200,simPremium=3,simExpiry=30,simContracts=1,simTrades=[];
+
+function renderSim(){
+  const stockPrices={AAPL:195,TSLA:260,NVDA:890,MSFT:415,SPY:525,QQQ:440};
+  const currentPrice=stockPrices[simStock]||200;
+  const totalCost=(simPremium*100*simContracts).toFixed(0);
+  const breakeven=simType==='call'?(simStrike+simPremium).toFixed(2):(simStrike-simPremium).toFixed(2);
+  const scenarios=[
+    {move:'+5%',price:(currentPrice*1.05).toFixed(2)},
+    {move:'+10%',price:(currentPrice*1.10).toFixed(2)},
+    {move:'-5%',price:(currentPrice*.95).toFixed(2)},
+    {move:'-10%',price:(currentPrice*.90).toFixed(2)},
+  ].map(sc=>{
+    const p=parseFloat(sc.price);
+    let pnl=0;
+    if(simType==='call')pnl=p>simStrike?((p-simStrike-simPremium)*100*simContracts):(simPremium*100*simContracts*-1);
+    else pnl=p<simStrike?((simStrike-p-simPremium)*100*simContracts):(simPremium*100*simContracts*-1);
+    return{...sc,pnl:pnl.toFixed(0)};
+  });
+
+  document.getElementById('sim-content').innerHTML=`
+    <div class="sim-card">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">CONFIGURAR CONTRATO</div>
+      <div class="sim-grid">
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Tipo</div>
+          <div style="display:flex;gap:6px">
+            <button class="type-btn" onclick="simType='call';renderSim()" style="background:${simType==='call'?'var(--green)':'var(--dim)'};color:${simType==='call'?'#080500':'var(--muted)'}">▲ CALL</button>
+            <button class="type-btn" onclick="simType='put';renderSim()" style="background:${simType==='put'?'var(--red)':'var(--dim)'};color:${simType==='put'?'#fff':'var(--muted)'}">▼ PUT</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Activo</div>
+          <select onchange="simStock=this.value;renderSim()" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:13px;font-family:'Syne',sans-serif">
+            ${['AAPL','TSLA','NVDA','MSFT','SPY','QQQ'].map(s=>`<option ${s===simStock?'selected':''} value="${s}">${s}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <div class="sim-row"><span class="sim-label">Strike Price ($${simStrike})</span><span class="sim-val">$${simStrike}</span></div>
+        <input type="range" min="${Math.round(currentPrice*.85)}" max="${Math.round(currentPrice*1.15)}" step="1" value="${simStrike}" oninput="simStrike=parseInt(this.value);renderSim()" style="width:100%;accent-color:var(--gold)">
+        <div class="sim-row" style="margin-top:10px"><span class="sim-label">Prima por acción ($${simPremium})</span><span class="sim-val">$${simPremium}</span></div>
+        <input type="range" min="0.5" max="20" step="0.5" value="${simPremium}" oninput="simPremium=parseFloat(this.value);renderSim()" style="width:100%;accent-color:var(--orange)">
+        <div class="sim-row" style="margin-top:10px"><span class="sim-label">Contratos (${simContracts})</span><span class="sim-val">${simContracts}</span></div>
+        <input type="range" min="1" max="20" step="1" value="${simContracts}" oninput="simContracts=parseInt(this.value);renderSim()" style="width:100%;accent-color:var(--gold)">
+      </div>
+    </div>
+
+    <div class="sim-card">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">RESUMEN DEL CONTRATO</div>
+      ${[
+        {l:'Precio actual '+simStock,v:'$'+currentPrice,c:'var(--text)'},
+        {l:'Tipo de opción',v:simType.toUpperCase(),c:simType==='call'?'var(--green)':'var(--red)'},
+        {l:'Strike Price',v:'$'+simStrike,c:'var(--text)'},
+        {l:'Prima total (costo)',v:'$'+totalCost,c:'var(--red)'},
+        {l:'Breakeven',v:'$'+breakeven,c:'var(--gold)'},
+        {l:'Pérdida máxima',v:'-$'+totalCost,c:'var(--red)'},
+      ].map(r=>`<div class="sim-row"><span class="sim-label">${r.l}</span><span style="font-family:'JetBrains Mono';font-size:13px;font-weight:700;color:${r.c}">${r.v}</span></div>`).join('')}
+    </div>
+
+    <div class="sim-card">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">ESCENARIOS AL VENCIMIENTO</div>
+      ${scenarios.map(sc=>`<div class="sim-row" style="padding:8px 0;border-bottom:1px solid var(--border)">
+        <span style="font-family:'JetBrains Mono';font-size:12px;color:${parseFloat(sc.move)>0?'var(--green)':'var(--red)'}">${sc.move} → $${sc.price}</span>
+        <span style="font-family:'JetBrains Mono';font-size:13px;font-weight:700;color:${parseFloat(sc.pnl)>=0?'var(--green)':'var(--red)'}">${parseFloat(sc.pnl)>=0?'+':''}$${sc.pnl}</span>
+      </div>`).join('')}
+      <div class="tip-box" style="margin-top:12px"><strong>⚠️ Recuerda:</strong> Esto es educativo. Los datos son simulados. Nunca operes opciones reales sin entender completamente el riesgo.</div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════
+// TUTOR
+// ══════════════════════════════════════════
+const TUTOR_SYS=`Eres un tutor experto en mercados de capitales americanos con especialidad en opciones (calls, puts, griegas, estrategias como covered call, iron condor, straddle), acciones (NYSE, NASDAQ, análisis fundamental), ETFs (SPY, QQQ) y análisis técnico. Tu estilo es claro, pedagógico y con ejemplos concretos. Respondes en español. Nunca das recomendaciones de inversión específicas ni predices precios. Enseñas conceptos, mecánica y lógica del mercado.`;
+let chatMessages=[{role:'assistant',content:'Hola, soy tu tutor de opciones y mercados americanos. Puedo explicarte desde qué es un call y un put hasta las griegas, estrategias avanzadas como el iron condor, cómo leer una acción o cómo funcionan SPY y QQQ. ¿Por dónde empezamos?'}];
+let chatLoading=false;
+const SUGGESTIONS=['¿Cuál es la diferencia entre call y put?','Explícame el Delta con un ejemplo real','¿Cómo funciona el Iron Condor?','¿Por qué el Theta destroye mis opciones?','¿Qué es el IV Crush en earnings?'];
+
+function renderChat(){
+  const box=document.getElementById('chat-box');box.innerHTML='';
+  chatMessages.forEach(m=>{const d=document.createElement('div');d.className='msg '+(m.role==='user'?'msg-user':'msg-ai');d.textContent=m.content;box.appendChild(d);});
+  if(chatLoading){const d=document.createElement('div');d.style.cssText='display:flex;gap:4px;padding:10px 14px;width:fit-content';d.innerHTML=[0,1,2].map(i=>`<div class="typing-dot" style="animation-delay:${i*.15}s"></div>`).join('');box.appendChild(d);}
+  box.scrollTop=box.scrollHeight;
+  document.getElementById('sugg-wrap').style.display=chatMessages.length<=1?'flex':'none';
+}
+function renderSuggs(){document.getElementById('sugg-wrap').innerHTML=SUGGESTIONS.map(s=>`<button class="sugg-chip" onclick="document.getElementById('chat-input').value='${s}';sendMsg()">${s}</button>`).join('');}
+
+async function sendMsg(){
+  const inp=document.getElementById('chat-input'),txt=inp.value.trim();
+  if(!txt||chatLoading)return;
+  chatMessages=[...chatMessages,{role:'user',content:txt}];inp.value='';chatLoading=true;
+  document.getElementById('chat-send').disabled=true;renderChat();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:TUTOR_SYS,messages:chatMessages.map(m=>({role:m.role,content:m.content}))})});
+    const data=await res.json();
+    chatMessages=[...chatMessages,{role:'assistant',content:data.content?.[0]?.text||'Error al obtener respuesta.'}];
+  }catch{chatMessages=[...chatMessages,{role:'assistant',content:'Error de conexión. Intenta de nuevo.'}];}
+  chatLoading=false;document.getElementById('chat-send').disabled=false;renderChat();
+}
+
+function switchTab(tab){
+  ['academy','scanner','simulator','tutor'].forEach(t=>document.getElementById('tab-'+t).style.display=t===tab?'block':'none');
+  document.querySelectorAll('.nav-btn').forEach((b,i)=>b.classList.toggle('active',['academy','scanner','simulator','tutor'][i]===tab));
+  document.getElementById('lesson-view').style.display='none';
+  if(tab==='scanner')renderScanner();
+  if(tab==='simulator')renderSim();
+}
+
+// INIT
+renderModules();updateProgress();renderChat();renderSuggs();
+</script>
+</body>
+</html>

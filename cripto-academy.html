@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cripto Academy — HABIL/IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;scrollbar-width:thin;scrollbar-color:#1a2a1a #050e05}
+:root{
+  --bg:#050e05;--surface:#080f08;--card:#0c160c;--border:#152415;--borderhi:#1e381e;
+  --green:#00e8a0;--greendim:#00e8a015;--gold:#ffaa00;--golddim:#ffaa0015;
+  --blue:#4da6ff;--bluedim:#4da6ff15;--purple:#a855f7;--purpledim:#a855f715;
+  --red:#ff3d5a;--reddim:#ff3d5a10;--orange:#ff7c00;
+  --text:#d8f0e8;--muted:#4a7a5a;--dim:#1a2a1a;
+}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(0,232,160,.04) 0%,transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(77,166,255,.03) 0%,transparent 60%);pointer-events:none;z-index:0}
+*::-webkit-scrollbar{width:4px}*::-webkit-scrollbar-thumb{background:#1e381e;border-radius:2px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes glow{0%,100%{opacity:.6}50%{opacity:1}}
+button{font-family:'Syne',sans-serif}
+
+/* HEADER */
+#header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;height:58px;position:sticky;top:0;z-index:100;gap:12px}
+.logo-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--green),var(--blue));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.logo-text .l1{font-weight:800;font-size:14px;line-height:1.1;color:var(--text)}
+.logo-text .l2{font-size:9px;letter-spacing:2px;color:var(--muted)}
+#nav{flex:1;display:flex;justify-content:center;gap:4px}
+.nav-btn{background:none;border:1px solid transparent;border-radius:6px;padding:5px 12px;color:var(--muted);font-size:11px;font-weight:400;cursor:pointer;transition:all .2s;white-space:nowrap}
+.nav-btn.active{background:var(--greendim);border-color:rgba(0,232,160,.3);color:var(--green);font-weight:700}
+#hdr-right{display:flex;align-items:center;gap:10px}
+.xp-box{text-align:right}
+.xp-n{color:var(--gold);font-family:'JetBrains Mono';font-size:13px;font-weight:700}
+.xp-s{color:var(--muted);font-size:10px}
+.xp-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,rgba(0,232,160,.3),rgba(0,232,160,.1));border:2px solid rgba(0,232,160,.4);display:flex;align-items:center;justify-content:center;color:var(--green);font-size:13px}
+
+/* MAIN */
+#main{max-width:840px;margin:0 auto;padding:20px 16px 40px;position:relative;z-index:1;animation:fadeIn .4s ease}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--card),var(--surface));border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(0,232,160,.08),transparent);pointer-events:none}
+.hero-tag{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--green);background:var(--greendim);padding:3px 10px;border-radius:3px;display:inline-block;margin-bottom:10px}
+.hero h2{font-size:24px;font-weight:800;color:var(--text);margin-bottom:6px;line-height:1.2}
+.hero p{font-size:13px;color:var(--muted);line-height:1.7;max-width:520px}
+.hero-chips{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.chip{background:var(--dim);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--muted)}
+.chip.g{color:var(--green);border-color:rgba(0,232,160,.2)}
+.chip.b{color:var(--blue);border-color:rgba(77,166,255,.2)}
+.chip.gold{color:var(--gold);border-color:rgba(255,170,0,.2)}
+
+/* PROGRESS */
+.prog-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:16px}
+.prog-bar-bg{flex:1;background:var(--border);border-radius:4px;height:6px}
+.prog-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),var(--blue));box-shadow:0 0 8px rgba(0,232,160,.4);transition:width .5s}
+.prog-xp{text-align:center;min-width:60px}
+.prog-xp-n{font-family:'JetBrains Mono';font-weight:700;font-size:18px;color:var(--gold)}
+.prog-xp-l{font-size:10px;color:var(--muted)}
+
+/* MODULES */
+.module{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.mod-hdr{padding:16px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border)}
+.mod-icon{font-size:22px}
+.mod-tag{font-size:10px;font-weight:800;letter-spacing:1.5px;padding:2px 8px;border-radius:3px}
+.mod-title{font-weight:700;font-size:15px;color:var(--text);margin-top:3px}
+.mod-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.mod-count{text-align:right;font-family:'JetBrains Mono';font-weight:700;font-size:14px;min-width:40px}
+.lessons{padding:10px 14px;display:flex;flex-direction:column;gap:7px}
+.lesson-btn{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:8px;border:1px solid var(--border);background:var(--surface);text-align:left;width:100%;cursor:pointer;transition:all .2s}
+.lesson-btn:hover:not(:disabled){filter:brightness(1.15);transform:translateX(2px)}
+.lesson-btn:disabled{opacity:.4;cursor:not-allowed}
+.ln{width:26px;height:26px;border-radius:50%;background:var(--dim);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);flex-shrink:0;font-family:'JetBrains Mono'}
+.lt{flex:1}
+.lt-title{font-size:13px;color:var(--text)}
+.lt-min{font-size:11px;color:var(--muted);margin-top:1px}
+.lxp{font-family:'JetBrains Mono';font-size:11px;font-weight:700;color:var(--muted)}
+.larr{color:var(--muted);font-size:13px}
+
+/* LESSON VIEW */
+#lesson-view{display:none;animation:fadeIn .3s ease}
+.lv-hdr{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.back-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer}
+.lv-tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.lv-tab{background:none;border:none;padding:8px 16px;font-size:12px;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s}
+.lv-tab.active{font-weight:700;border-bottom-color:currentColor}
+.content-block{background:var(--card);border-radius:10px;padding:16px;margin-bottom:10px;border:1px solid var(--border);border-left-width:3px}
+.cb-head{font-weight:700;font-size:13px;margin-bottom:8px}
+.cb-body{font-size:13px;line-height:1.85;color:var(--text)}
+.cb-body strong{font-weight:700}
+.iso-badge{display:inline-block;background:linear-gradient(135deg,var(--golddim),var(--bluedim));border:1px solid rgba(255,170,0,.3);border-radius:4px;padding:2px 8px;font-size:10px;font-weight:800;letter-spacing:1px;color:var(--gold);margin-bottom:10px}
+
+/* ISO COINS TABLE */
+.iso-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+.iso-table th{background:var(--dim);color:var(--muted);padding:8px 10px;text-align:left;font-weight:700;letter-spacing:.05em;font-size:10px}
+.iso-table td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.iso-table tr:last-child td{border-bottom:none}
+.coin-tag{display:inline-block;padding:2px 8px;border-radius:3px;font-family:'JetBrains Mono';font-size:11px;font-weight:700}
+.use-tag{font-size:10px;color:var(--muted);background:var(--dim);padding:2px 7px;border-radius:10px}
+
+/* QUIZ */
+.quiz-q{background:var(--card);border-radius:10px;padding:16px;margin-bottom:10px;border:1px solid var(--border)}
+.quiz-q-text{font-weight:600;font-size:14px;margin-bottom:12px}
+.quiz-opt{width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:13px;text-align:left;margin-bottom:7px;cursor:pointer;transition:all .2s;font-family:'Syne',sans-serif}
+.quiz-opt:hover{filter:brightness(1.2)}
+.quiz-submit{width:100%;padding:12px;border-radius:8px;border:none;color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:'Syne',sans-serif}
+.quiz-result{border-radius:12px;padding:20px;text-align:center;margin-top:10px}
+
+/* SIMULATOR */
+.sim-coins{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.coin-btn{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'JetBrains Mono'}
+.coin-btn.active{border-color:var(--green);color:var(--green);background:var(--greendim)}
+.port-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.port-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.port-row:last-child{border-bottom:none}
+.sim-btn-main{width:100%;padding:11px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--green),var(--blue));color:#050e05;font-weight:800;font-size:13px;cursor:pointer;font-family:'Syne',sans-serif;letter-spacing:.5px;margin-top:8px}
+.pnl-pos{color:var(--green);font-weight:700;font-family:'JetBrains Mono'}
+.pnl-neg{color:var(--red);font-weight:700;font-family:'JetBrains Mono'}
+
+/* TUTOR */
+#chat-box{height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px;margin-bottom:12px}
+.msg{max-width:86%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.75;white-space:pre-wrap}
+.msg-ai{background:var(--card);border:1px solid var(--border);align-self:flex-start;border-radius:12px 12px 12px 4px}
+.msg-user{background:var(--greendim);border:1px solid rgba(0,232,160,.2);align-self:flex-end;border-radius:12px 12px 4px 12px}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:bounce 1s infinite}
+.sugg-chip{background:var(--greendim);border:1px solid rgba(0,232,160,.2);border-radius:20px;color:var(--green);font-size:11px;padding:5px 12px;cursor:pointer;margin:0 4px 4px 0}
+#chat-input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13px;outline:none;font-family:'Syne',sans-serif}
+#chat-input:focus{border-color:var(--green)}
+#chat-send{padding:10px 18px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--green),var(--blue));color:#050e05;font-weight:700;font-size:13px;cursor:pointer}
+#chat-send:disabled{background:var(--dim);color:var(--muted)}
+
+/* MISC */
+.sec-title{font-weight:800;font-size:20px;color:var(--text);margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--muted);margin-bottom:16px}
+.locked{opacity:.4;pointer-events:none}
+.badge-done{color:var(--green);font-size:12px}
+.xp-badge{border-radius:4px;padding:3px 8px;font-size:11px;font-weight:700}
+.tip-box{background:var(--greendim);border:1px solid rgba(0,232,160,.2);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text);line-height:1.7;margin:10px 0}
+.tip-box strong{color:var(--green)}
+</style>
+</head>
+<body>
+<div id="header">
+  <div class="logo-icon">₿</div>
+  <div class="logo-text"><div class="l1">CRIPTO ACADEMY</div><div class="l2">HABIL/IA · ISO 20022</div></div>
+  <div id="nav">
+    <button class="nav-btn active" onclick="switchTab('academy')">◈ Academia</button>
+    <button class="nav-btn" onclick="switchTab('simulator')">⬡ Portafolio</button>
+    <button class="nav-btn" onclick="switchTab('tutor')">✦ Tutor IA</button>
+  </div>
+  <div id="hdr-right">
+    <div class="xp-box"><div class="xp-n" id="xp-n">0 XP</div><div class="xp-s" id="xp-s">0/16 lecciones</div></div>
+    <div class="xp-av" id="xp-av">◎</div>
+  </div>
+</div>
+
+<div id="main">
+
+  <!-- ACADEMY -->
+  <div id="tab-academy">
+    <div class="hero">
+      <div class="hero-tag">NUEVA ECONOMÍA DIGITAL</div>
+      <h2>El mundo cripto va<br>mucho más allá del Bitcoin.</h2>
+      <p>Aprende desde blockchain hasta el estándar ISO 20022 que está rediseñando el sistema financiero global — y por qué importa saber qué criptomonedas forman parte de él.</p>
+      <div class="hero-chips">
+        <div class="chip g">⛓ Blockchain</div>
+        <div class="chip b">🏦 ISO 20022</div>
+        <div class="chip gold">₿ Más allá del BTC</div>
+        <div class="chip g">🔐 DeFi</div>
+        <div class="chip b">💱 Tokenización</div>
+      </div>
+    </div>
+
+    <div id="prog-banner" style="display:none" class="prog-card">
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span style="font-weight:700;font-size:13px">Tu progreso</span>
+          <span style="font-family:'JetBrains Mono';font-size:12px;color:var(--green)" id="prog-pct">0%</span>
+        </div>
+        <div class="prog-bar-bg"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-xp"><div class="prog-xp-n" id="prog-xp-n">0</div><div class="prog-xp-l">XP total</div></div>
+    </div>
+
+    <div id="modules-list"></div>
+  </div>
+
+  <!-- LESSON VIEW inside academy -->
+  <div id="lesson-view">
+    <div class="lv-hdr">
+      <button class="back-btn" onclick="closeLesson()">← Volver</button>
+      <div style="flex:1">
+        <div id="lv-tag" style="font-size:10px;font-weight:800;letter-spacing:1px;margin-bottom:2px"></div>
+        <div id="lv-title" style="font-weight:700;font-size:15px"></div>
+      </div>
+      <span id="lv-done" style="display:none;color:var(--green);font-size:12px">✓ Completado</span>
+      <span id="lv-xp" class="xp-badge"></span>
+    </div>
+    <div class="lv-tabs">
+      <button class="lv-tab active" id="ltb-teoria" onclick="lessonTab('teoria')">📖 Teoría</button>
+      <button class="lv-tab" id="ltb-grafico" onclick="lessonTab('grafico')">📊 Visual</button>
+      <button class="lv-tab" id="ltb-quiz" onclick="lessonTab('quiz')" style="display:none">✏️ Quiz</button>
+    </div>
+    <div id="lv-teoria"></div>
+    <div id="lv-grafico" style="display:none"></div>
+    <div id="lv-quiz" style="display:none"></div>
+  </div>
+
+  <!-- SIMULATOR -->
+  <div id="tab-simulator" style="display:none">
+    <div class="sec-title">Simulador de Portafolio</div>
+    <div class="sec-sub">Practica cómo distribuir tu inversión cripto con capital ficticio</div>
+    <div id="sim-content"></div>
+  </div>
+
+  <!-- TUTOR -->
+  <div id="tab-tutor" style="display:none">
+    <div class="sec-title">Tutor IA — Cripto & ISO 20022</div>
+    <div class="sec-sub">Pregunta cualquier cosa sobre blockchain, criptos, DeFi o el estándar ISO 20022</div>
+    <div style="background:var(--greendim);border:1px solid rgba(0,232,160,.2);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:14px">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--blue));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">₿</div>
+      <div><div style="font-weight:700;font-size:14px">Tutor especializado en cripto e ISO 20022</div><div style="color:var(--muted);font-size:11px">Blockchain · DeFi · XRP · XLM · HBAR · Tokenización</div></div>
+      <div style="margin-left:auto;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:glow 2s infinite"></div>
+    </div>
+    <div id="chat-box"></div>
+    <div id="sugg-wrap" style="display:flex;flex-wrap:wrap;margin-bottom:10px"></div>
+    <div style="display:flex;gap:8px">
+      <input id="chat-input" placeholder="Pregunta sobre cripto, blockchain, ISO 20022..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+      <button id="chat-send" onclick="sendMsg()">→</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+const MODULES = [
+  {
+    id:1, tag:"FUNDAMENTOS", icon:"⛓", color:"#00e8a0",
+    title:"Blockchain: La tecnología que lo cambió todo",
+    subtitle:"Cómo funciona el motor detrás de las criptomonedas",
+    lessons:[
+      {id:"1a",title:"¿Qué es blockchain y por qué importa?",xp:100,mins:8},
+      {id:"1b",title:"Cómo funciona una transacción cripto",xp:120,mins:10},
+      {id:"1c",title:"Wallets, claves y seguridad",xp:110,mins:9},
+      {id:"1d",title:"Tipos de blockchain: pública, privada e híbrida",xp:130,mins:11},
+    ],
+    content:[
+      {h:"¿Qué es un blockchain?",b:"Un blockchain es una base de datos distribuida que guarda información en bloques encadenados y sellados criptográficamente. Nadie puede alterar un bloque sin alterar todos los siguientes — lo que hace al sistema prácticamente inalterable. Imagínalo como un libro contable que miles de computadoras tienen en simultáneo, y que nadie puede borrar ni falsificar."},
+      {h:"¿Por qué es revolucionario?",b:"Antes de blockchain, necesitabas un intermediario de confianza para cualquier transacción: un banco, un notario, una empresa. Blockchain elimina ese intermediario. Dos personas pueden intercambiar valor directamente, sin que ninguna empresa controle la transacción. Esto no es solo sobre dinero — es sobre contratos, identidades, votos, títulos de propiedad."},
+      {h:"Descentralización: el concepto clave",b:"Una red centralizada tiene un punto de fallo: si el servidor cae, todo cae. Una red descentralizada tiene miles de nodos — si 100 caen, la red sigue funcionando. Bitcoin lleva funcionando más de 15 años sin parar ni una sola vez. Ningún banco del mundo puede decir lo mismo."},
+      {h:"Consenso: cómo se ponen de acuerdo sin conocerse",b:"En blockchain, computadoras de todo el mundo validan transacciones sin conocerse entre sí. Los mecanismos de consenso (Proof of Work, Proof of Stake) son las reglas del juego que evitan el fraude. Si quieres gastar la misma moneda dos veces, la red lo detecta y rechaza la segunda transacción automáticamente."},
+    ]
+  },
+  {
+    id:2, tag:"CRIPTOMONEDAS", icon:"💎", color:"#4da6ff",
+    title:"El ecosistema cripto: más allá del Bitcoin",
+    subtitle:"Altcoins, tokens, utilidad real y casos de uso",
+    lessons:[
+      {id:"2a",title:"Bitcoin: el oro digital y sus límites",xp:150,mins:12},
+      {id:"2b",title:"Ethereum y los contratos inteligentes",xp:170,mins:14},
+      {id:"2c",title:"Altcoins con utilidad real: XRP, XLM, HBAR, ALGO",xp:200,mins:16},
+      {id:"2d",title:"Tokens vs Monedas: la diferencia crucial",xp:140,mins:11},
+    ],
+    content:[
+      {h:"Bitcoin: el pionero y sus límites",b:"Bitcoin fue la primera criptomoneda (2009) y sigue siendo la más conocida. Funciona como reserva de valor — el 'oro digital'. Pero tiene limitaciones importantes: procesa solo 7 transacciones por segundo (Visa procesa 24,000), sus comisiones pueden ser altísimas, y su huella energética es enorme. Bitcoin abrió la puerta, pero no es la solución para el sistema financiero global."},
+      {h:"Ethereum: la computadora mundial",b:"Ethereum (2015) introdujo los contratos inteligentes — código que se ejecuta automáticamente cuando se cumplen condiciones, sin intermediarios. Esto hizo posible DeFi, NFTs, DAOs, y miles de aplicaciones descentralizadas. Si Bitcoin es el oro, Ethereum es el petróleo que hace funcionar la máquina. Aun así, sigue teniendo problemas de escalabilidad y comisiones variables."},
+      {h:"Las criptos que el sistema financiero está adoptando",b:"XRP (Ripple): diseñado para pagos internacionales bancarios. Liquida en 3-5 segundos vs 3-5 días de los bancos tradicionales.\nXLM (Stellar): enfocado en inclusión financiera, pagos entre países en desarrollo.\nHBAR (Hedera): usado por Google, IBM, Boeing. Red empresarial de alta velocidad.\nALGO (Algorand): blockchain de alta velocidad adoptada por bancos centrales de varios países.\nEstas 4 son las más alineadas con el estándar ISO 20022."},
+      {h:"La diferencia entre moneda y token",b:"Una moneda (BTC, ETH, XRP) opera en su propia blockchain. Un token vive sobre otra blockchain — como USDC que vive sobre Ethereum. Los tokens pueden representar acciones, deuda, derechos de voto, activos del mundo real. La tokenización de activos reales (inmuebles, acciones, bonos) es uno de los desarrollos más importantes de los próximos años."},
+    ]
+  },
+  {
+    id:3, tag:"ISO 20022", icon:"🏦", color:"#ffaa00",
+    title:"ISO 20022: El estándar que reescribe las finanzas",
+    subtitle:"Por qué los bancos centrales y Swift lo están adoptando ahora",
+    lessons:[
+      {id:"3a",title:"¿Qué es ISO 20022 y por qué existe?",xp:220,mins:15},
+      {id:"3b",title:"Swift y la migración global al nuevo estándar",xp:250,mins:18},
+      {id:"3c",title:"Qué criptomonedas están alineadas y por qué",xp:280,mins:20},
+      {id:"3d",title:"El futuro: CBDCs y la nueva arquitectura financiera",xp:260,mins:18},
+    ],
+    content:[
+      {h:"¿Qué es ISO 20022?",b:"ISO 20022 es el nuevo estándar internacional para mensajes de pagos financieros. Reemplaza a sistemas legacy como SWIFT MT que llevan 50 años sin actualizarse. La diferencia clave: los mensajes antiguos son como telegramas — poco datos, formato rígido. ISO 20022 es como un formulario estructurado con datos ricos: quién envía, quién recibe, propósito del pago, referencias, todo detallado y machine-readable."},
+      {h:"¿Por qué importa tanto?",b:"Hoy en día, enviar dinero internacionalmente puede tomar 3-5 días, costar hasta 10% en comisiones, y los bancos no pueden ver la información completa de la transacción. ISO 20022 permite liquidación en segundos, trazabilidad completa, cumplimiento automático de regulaciones anti-lavado, e interoperabilidad entre todos los sistemas financieros del mundo. Es la infraestructura del dinero del futuro."},
+      {h:"Swift y la adopción global",b:"Swift (el sistema que conecta a más de 11,000 bancos en 200 países) comenzó su migración a ISO 20022 en 2023 con deadline en 2025. Esto significa que prácticamente todo el sistema bancario global se está migrando al mismo tiempo. Las criptomonedas que hablen el mismo idioma — que sean compatibles con ISO 20022 — tienen ventaja enorme para ser adoptadas por bancos y gobiernos."},
+      {h:"La conexión cripto-ISO 20022",b:"No todas las criptomonedas pueden integrarse con el sistema bancario. Las que están diseñadas para ello son:\n• XRP: Ripple trabaja directamente con bancos desde 2012. Ya tiene partnerships con 300+ instituciones.\n• XLM: Stellar fue co-fundado por el creador original de Ripple. Enfocado en pagos transfronterizos.\n• HBAR: Hedera usa un ledger distribuido (no exactamente blockchain) de altísima velocidad.\n• ALGO: Algorand es usada por la Fundación de Comercio Internacional de la ONU.\n• IOTA: diseñada para machine-to-machine payments en IoT."},
+    ],
+    iso:true
+  },
+  {
+    id:4, tag:"DEFI & FUTURO", icon:"🔐", color:"#a855f7",
+    title:"DeFi, NFTs y la economía tokenizada",
+    subtitle:"Finanzas descentralizadas y el nuevo paradigma económico",
+    lessons:[
+      {id:"4a",title:"DeFi: el sistema financiero sin bancos",xp:240,mins:16},
+      {id:"4b",title:"Staking, yield farming y liquidez",xp:220,mins:15},
+      {id:"4c",title:"Tokenización de activos reales",xp:260,mins:18},
+      {id:"4d",title:"Estrategia de portafolio cripto inteligente",xp:280,mins:20},
+    ],
+    content:[
+      {h:"¿Qué es DeFi?",b:"DeFi (Finanzas Descentralizadas) es el ecosistema de servicios financieros que funciona sin bancos ni intermediarios. Puedes pedir prestado, prestar, ganar intereses, cambiar activos — todo desde tu wallet, sin abrir una cuenta en ningún banco, sin que nadie te pida documentos. Los protocolos DeFi están gobernados por código y sus usuarios, no por empresas."},
+      {h:"Staking: el interés del mundo cripto",b:"El staking es bloquear tus criptomonedas para ayudar a validar la red, a cambio de recompensas. Es el equivalente a poner dinero en un plazo fijo, pero con rendimientos que pueden ir del 3% al 20%+ anual dependiendo del activo. Los riesgos también existen: el valor del activo puede caer, y en algunos protocolos existe el 'slashing' (penalización por mal comportamiento del validador)."},
+      {h:"Tokenización: el puente entre lo real y lo digital",b:"La tokenización convierte activos del mundo real en tokens digitales en una blockchain. Un edificio puede dividirse en 1,000 tokens — cualquier persona puede comprar una fracción. Esto democratiza el acceso a inversiones antes reservadas para millonarios: inmuebles, arte, bonos corporativos, fondos de inversión. BlackRock, el mayor gestor de activos del mundo, ya lanzó su primer fondo tokenizado en blockchain."},
+      {h:"Construyendo un portafolio cripto inteligente",b:"La diversificación en cripto no es comprar muchas monedas al azar. Una estrategia sólida incluye: una base de reserva de valor (BTC, ETH), exposición a infraestructura ISO 20022 (XRP, XLM, HBAR), proyectos DeFi con utilidad probada, y una reserva en stablecoins para aprovechar oportunidades. La gestión de riesgo es igual de importante que en trading tradicional: nunca más del 5-10% de tu patrimonio neto total."},
+    ]
+  },
+];
+
+const QUIZZES = {
+  "1a":[
+    {q:"¿Cuál es la principal ventaja de blockchain sobre bases de datos tradicionales?",opts:["Es más rápida","Es descentralizada e inmutable, sin punto único de fallo","Es más barata de mantener","Puede guardar más datos"],ans:1},
+    {q:"¿Qué hace prácticamente imposible alterar un bloque ya registrado?",opts:["La velocidad de la red","El consenso de los nodos y el encadenamiento criptográfico","Las leyes de cada país","La cantidad de usuarios"],ans:1},
+  ],
+  "2c":[
+    {q:"¿Cuánto tarda XRP en liquidar una transacción internacional?",opts:["1-2 horas","3-5 días como los bancos","3-5 segundos","24 horas"],ans:2},
+    {q:"¿Qué tienen en común XRP, XLM, HBAR y ALGO?",opts:["Todas fueron creadas por Bitcoin","Son las 4 criptos más antiguas","Están alineadas con el estándar ISO 20022","Son stablecoins"],ans:2},
+  ],
+  "3a":[
+    {q:"¿Qué problema principal resuelve ISO 20022 frente a los sistemas actuales?",opts:["Elimina a los bancos completamente","Proporciona mensajes de pago ricos, estructurados e interoperables globalmente","Crea una nueva criptomoneda bancaria","Reemplaza a Bitcoin"],ans:1},
+    {q:"¿Cuándo comenzó Swift su migración a ISO 20022?",opts:["2018","2020","2023","2026"],ans:2},
+  ],
+  "4a":[
+    {q:"¿Qué caracteriza a DeFi frente a las finanzas tradicionales?",opts:["Requiere documentos y cuenta bancaria","Opera con intermediarios regulados","Funciona mediante código sin intermediarios ni bancos","Solo existe en países desarrollados"],ans:2},
+    {q:"¿Qué empresa global lanzó ya un fondo de inversión tokenizado en blockchain?",opts:["Apple","Google","BlackRock","Amazon"],ans:2},
+  ],
+};
+
+const COINS = [
+  {sym:"BTC",name:"Bitcoin",color:"#f7931a",use:"Reserva de valor",iso:false,desc:"Oro digital. Alta volatilidad, baja velocidad."},
+  {sym:"ETH",name:"Ethereum",color:"#627eea",use:"Contratos inteligentes",iso:false,desc:"Plataforma DeFi líder. Mejorando escalabilidad."},
+  {sym:"XRP",name:"Ripple",color:"#00aae4",use:"Pagos bancarios internacionales",iso:true,desc:"300+ partnerships bancarios. 3-5 seg liquidación."},
+  {sym:"XLM",name:"Stellar",color:"#14b6e7",use:"Inclusión financiera",iso:true,desc:"Pagos transfronterizos de bajo costo."},
+  {sym:"HBAR",name:"Hedera",color:"#00e396",use:"Empresas / Gobierno",iso:true,desc:"Google, IBM, Boeing. Alta velocidad y eficiencia."},
+  {sym:"ALGO",name:"Algorand",color:"#00b4d8",use:"Bancos centrales",iso:true,desc:"Adoptada por ONU y bancos centrales."},
+  {sym:"IOTA",name:"IOTA",color:"#242424",use:"IoT / Machine payments",iso:true,desc:"Pagos entre máquinas. Sin comisiones."},
+  {sym:"USDC",name:"USD Coin",color:"#2775ca",use:"Stablecoin",iso:false,desc:"Dólar digital. Capital estable en cripto."},
+];
+
+// STATE
+let completed=new Set(), totalXP=0;
+let activeModule=null, activeLesson=null;
+let curLessonTab='teoria';
+let quizAnswers={}, quizDone=false;
+let chatMessages=[{role:'assistant',content:'Hola, soy tu tutor especializado en criptomonedas e ISO 20022. Puedo explicarte blockchain, DeFi, por qué XRP y XLM son diferentes a Bitcoin, cómo funciona el estándar ISO 20022, o cualquier concepto del mundo cripto. ¿Por dónde empezamos?'}];
+let chatLoading=false;
+let simCapital=10000, simPortfolio={}, simHistory=[];
+
+const SUGGESTIONS=['¿Por qué XRP es diferente al Bitcoin?','Explícame ISO 20022 como si tuviera 10 años','¿Qué criptos están adoptando los bancos?','¿Qué es DeFi y cómo funciona?','¿Es seguro invertir en cripto?'];
+
+// ═══════════════════════════════════════════
+// ACADEMY
+// ═══════════════════════════════════════════
+function renderModules(){
+  const el=document.getElementById('modules-list');
+  el.innerHTML='';
+  MODULES.forEach((mod,mi)=>{
+    const mc=mod.lessons.filter(l=>completed.has(l.id)).length;
+    const locked=mi>0&&MODULES[mi-1].lessons.filter(l=>completed.has(l.id)).length<1;
+    let lessons='';
+    mod.lessons.forEach((l,li)=>{
+      const done=completed.has(l.id);
+      lessons+=`<button class="lesson-btn" ${locked?'disabled':''} onclick="openLesson(${mod.id},'${l.id}')" style="${done?`background:${mod.color}08;border-color:${mod.color}33`:''}">
+        <div class="ln" style="${done?`background:${mod.color};color:#050e05`:''}">
+          ${done?'✓':li+1}
+        </div>
+        <div class="lt">
+          <div class="lt-title" style="${done?`color:${mod.color};font-weight:600`:''}">${l.title}</div>
+          <div class="lt-min">${l.mins} min · ${done?'<span style="color:'+mod.color+'">Completado</span>':'Pendiente'}</div>
+        </div>
+        <div class="lxp" style="${done?`color:${mod.color}`:''}">+${l.xp} XP</div>
+        <div class="larr">›</div>
+      </button>`;
+    });
+    el.innerHTML+=`<div class="module ${locked?'locked':''}" id="mod-${mod.id}">
+      <div class="mod-hdr" style="background:linear-gradient(135deg,${mod.color}10,transparent)">
+        <div class="mod-icon" style="color:${mod.color}">${mod.icon}</div>
+        <div style="flex:1">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:3px">
+            <span class="mod-tag" style="color:${mod.color};background:${mod.color}15">${mod.tag}</span>
+            ${mod.iso?'<span class="mod-tag" style="color:#ffaa00;background:#ffaa0015">ISO 20022</span>':''}
+            ${locked?'<span style="color:var(--muted);font-size:10px">🔒 Completa el módulo anterior</span>':''}
+          </div>
+          <div class="mod-title">${mod.title}</div>
+          <div class="mod-sub">${mod.subtitle}</div>
+        </div>
+        <div class="mod-count" style="color:${mod.color}">${mc}/${mod.lessons.length}<div style="color:var(--muted);font-size:10px;font-weight:400">lecciones</div></div>
+      </div>
+      <div class="lessons">${lessons}</div>
+    </div>`;
+  });
+}
+
+function updateProgress(){
+  const total=MODULES.reduce((s,m)=>s+m.lessons.length,0);
+  const done=completed.size, pct=Math.round(done/total*100);
+  document.getElementById('xp-n').textContent=totalXP.toLocaleString()+' XP';
+  document.getElementById('xp-s').textContent=done+'/'+total+' lecciones';
+  document.getElementById('xp-av').textContent=pct<33?'◎':pct<66?'◕':'●';
+  if(done>0){
+    document.getElementById('prog-banner').style.display='flex';
+    document.getElementById('prog-pct').textContent=pct+'%';
+    document.getElementById('prog-bar').style.width=pct+'%';
+    document.getElementById('prog-xp-n').textContent=totalXP;
+  }
+}
+
+function openLesson(modId,lessonId){
+  activeModule=MODULES.find(m=>m.id===modId);
+  activeLesson=activeModule.lessons.find(l=>l.id===lessonId);
+  document.getElementById('modules-list').style.display='none';
+  document.getElementById('prog-banner').style.display='none';
+  const lv=document.getElementById('lesson-view');
+  lv.style.display='block';
+  document.getElementById('lv-tag').textContent=activeModule.tag;
+  document.getElementById('lv-tag').style.color=activeModule.color;
+  document.getElementById('lv-title').textContent=activeLesson.title;
+  const xpb=document.getElementById('lv-xp');
+  xpb.textContent=activeLesson.xp+' XP';
+  xpb.style.background=activeModule.color+'20';
+  xpb.style.color=activeModule.color;
+  xpb.style.border=`1px solid ${activeModule.color}44`;
+  document.getElementById('lv-done').style.display=completed.has(lessonId)?'inline':'none';
+  const hasQ=!!QUIZZES[lessonId];
+  document.getElementById('ltb-quiz').style.display=hasQ?'inline-block':'none';
+  quizAnswers={};quizDone=false;
+  lessonTab('teoria');
+}
+
+function closeLesson(){
+  activeLesson=null;activeModule=null;
+  document.getElementById('lesson-view').style.display='none';
+  document.getElementById('modules-list').style.display='block';
+  if(completed.size>0)document.getElementById('prog-banner').style.display='flex';
+  renderModules();updateProgress();
+}
+
+function lessonTab(t){
+  curLessonTab=t;
+  ['teoria','grafico','quiz'].forEach(tab=>{
+    document.getElementById('lv-'+tab).style.display=tab===t?'block':'none';
+    const btn=document.getElementById('ltb-'+tab);
+    const active=tab===t;
+    btn.classList.toggle('active',active);
+    btn.style.color=active?activeModule.color:'var(--muted)';
+    btn.style.borderBottomColor=active?activeModule.color:'transparent';
+  });
+  if(t==='teoria')renderTheory();
+  if(t==='grafico')renderVisual();
+  if(t==='quiz')renderQuiz();
+}
+
+function renderTheory(){
+  let html='';
+  if(activeModule.iso)html+='<div class="iso-badge">🏦 MÓDULO ISO 20022</div>';
+  activeModule.content.forEach(b=>{
+    html+=`<div class="content-block" style="border-left-color:${activeModule.color}">
+      <div class="cb-head" style="color:${activeModule.color}">${b.h}</div>
+      <div class="cb-body">${b.b.replace(/\n/g,'<br>')}</div>
+    </div>`;
+  });
+  document.getElementById('lv-teoria').innerHTML=html;
+}
+
+function renderVisual(){
+  const id=activeLesson.id;
+  let html='<div class="port-card">';
+  if(id==='1a'||id==='1b'){
+    // Blockchain diagram
+    html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">CÓMO FUNCIONA UN BLOCKCHAIN</div>`;
+    const blocks=['Bloque #001<br><small style="color:var(--muted)">Hash: 0x3f9a...</small>','Bloque #002<br><small style="color:var(--muted)">Hash: 0x7b2c...</small>','Bloque #003<br><small style="color:var(--muted)">Hash: 0x1d8e...</small>','Bloque #004<br><small style="color:var(--muted)">Hash: 0x5f4a...</small>'];
+    html+=`<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:16px">`;
+    blocks.forEach((b,i)=>{
+      html+=`<div style="background:var(--surface);border:1px solid ${i===3?'var(--green)':'var(--border)'};border-radius:8px;padding:10px 12px;font-size:12px;font-family:'JetBrains Mono';color:var(--text);text-align:center;flex:1;min-width:80px">${b}</div>`;
+      if(i<3)html+=`<div style="color:var(--green);font-size:18px;font-weight:700">→</div>`;
+    });
+    html+=`</div>`;
+    html+=`<div class="tip-box"><strong>💡 Clave:</strong> Cada bloque contiene el hash del anterior. Si alguien intenta modificar el bloque #002, cambia su hash, lo que invalida el #003, #004... y toda la red lo rechaza automáticamente.</div>`;
+  } else if(id==='2c'||id==='3a'||id==='3b'||id==='3c'){
+    // ISO coins table
+    html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">CRIPTOMONEDAS ALINEADAS CON ISO 20022</div>`;
+    html+=`<table class="iso-table"><thead><tr><th>Token</th><th>Nombre</th><th>Uso principal</th><th>ISO 20022</th></tr></thead><tbody>`;
+    COINS.forEach(c=>{
+      html+=`<tr>
+        <td><span class="coin-tag" style="background:${c.color}20;color:${c.color}">${c.sym}</span></td>
+        <td style="font-size:13px;font-weight:600;color:var(--text)">${c.name}</td>
+        <td><span class="use-tag">${c.use}</span></td>
+        <td style="text-align:center">${c.iso?'<span style="color:#00e8a0;font-size:16px">✓</span>':'<span style="color:var(--muted)">—</span>'}</td>
+      </tr>`;
+    });
+    html+=`</tbody></table>`;
+    html+=`<div class="tip-box" style="margin-top:12px"><strong>🏦 ISO 20022:</strong> Las monedas marcadas con ✓ están diseñadas para ser compatibles con el sistema bancario global. BTC y ETH no están en esta lista — son excelentes activos, pero no fueron diseñados para integrarse con Swift o bancos centrales.</div>`;
+  } else if(id==='4a'||id==='4b'){
+    // DeFi diagram
+    html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">FINANZAS TRADICIONALES vs DeFi</div>`;
+    html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">`;
+    const trad=[{i:'🏦',t:'Banco central'},{i:'🏢',t:'Banco comercial'},{i:'📋',t:'KYC / Documentos'},{i:'⏳',t:'3-5 días'},{i:'💸',t:'Comisiones altas'}];
+    const defi=[{i:'🔐',t:'Smart contract'},{i:'💻',t:'Tu wallet'},{i:'🌐',t:'Solo internet'},{i:'⚡',t:'Segundos'},{i:'✅',t:'Comisiones mínimas'}];
+    html+=`<div style="background:var(--reddim,#ff3d5a10);border:1px solid rgba(255,61,90,.2);border-radius:8px;padding:12px"><div style="color:#ff3d5a;font-size:11px;font-weight:800;margin-bottom:8px">TRADICIONAL</div>`;
+    trad.forEach(i=>html+=`<div style="font-size:12px;color:var(--text);margin-bottom:5px">${i.i} ${i.t}</div>`);
+    html+=`</div><div style="background:var(--greendim);border:1px solid rgba(0,232,160,.2);border-radius:8px;padding:12px"><div style="color:var(--green);font-size:11px;font-weight:800;margin-bottom:8px">DeFi</div>`;
+    defi.forEach(i=>html+=`<div style="font-size:12px;color:var(--text);margin-bottom:5px">${i.i} ${i.t}</div>`);
+    html+=`</div></div>`;
+  } else {
+    // Portafolio chart genérico
+    html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">DISTRIBUCIÓN DE PORTAFOLIO SUGERIDA</div>`;
+    const alloc=[{sym:'BTC',pct:30,color:'#f7931a'},{sym:'ETH',pct:20,color:'#627eea'},{sym:'XRP',pct:15,color:'#00aae4'},{sym:'XLM',pct:10,color:'#14b6e7'},{sym:'HBAR',pct:10,color:'#00e396'},{sym:'USDC',pct:15,color:'#2775ca'}];
+    alloc.forEach(a=>{
+      html+=`<div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+          <span style="font-family:'JetBrains Mono';font-size:12px;font-weight:700;color:${a.color}">${a.sym}</span>
+          <span style="font-size:12px;color:var(--muted)">${a.pct}%</span>
+        </div>
+        <div style="background:var(--border);border-radius:3px;height:6px">
+          <div style="width:${a.pct}%;height:100%;border-radius:3px;background:${a.color}"></div>
+        </div>
+      </div>`;
+    });
+    html+=`<div class="tip-box"><strong>⚠️ Importante:</strong> Esto es educativo, no consejo financiero. Nunca inviertas más de lo que puedas perder. El mercado cripto es altamente volátil.</div>`;
+  }
+  html+='</div>';
+  document.getElementById('lv-grafico').innerHTML=html;
+}
+
+function renderQuiz(){
+  const qData=QUIZZES[activeLesson.id]||[];
+  if(!qData.length){document.getElementById('lv-quiz').innerHTML='<div style="color:var(--muted);padding:20px;text-align:center">No hay quiz para esta lección.</div>';return;}
+  if(quizDone){
+    const pass=qData.filter((q,i)=>quizAnswers[i]===q.ans).length;
+    const ok=pass>=Math.ceil(qData.length*.5);
+    document.getElementById('lv-quiz').innerHTML=`<div class="quiz-result" style="background:${ok?'var(--greendim)':'var(--reddim)'};border:1px solid ${ok?'var(--green)':'var(--red)'}">
+      <div style="font-size:32px;margin-bottom:8px">${ok?'🏆':'📚'}</div>
+      <div style="font-weight:700;font-size:16px">${pass}/${qData.length} correctas</div>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px">${ok?'+'+activeLesson.xp+' XP ganados':'Revisa la teoría e intenta de nuevo'}</div>
+      ${!ok?`<button onclick="retryQuiz()" style="margin-top:12px;padding:8px 20px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px">Reintentar</button>`:''}
+    </div>`;return;
+  }
+  let html='';
+  qData.forEach((q,qi)=>{
+    let opts='';
+    q.opts.forEach((o,oi)=>{
+      const sel=quizAnswers[qi]===oi;
+      opts+=`<button class="quiz-opt" onclick="selectOpt(${qi},${oi})" style="${sel?`border-color:${activeModule.color};background:${activeModule.color}15;color:${activeModule.color}`:''}">
+        <span style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted);margin-right:8px">${['A','B','C','D'][oi]}</span>${o}
+      </button>`;
+    });
+    html+=`<div class="quiz-q"><div class="quiz-q-text">${qi+1}. ${q.q}</div>${opts}</div>`;
+  });
+  const all=Object.keys(quizAnswers).length>=qData.length;
+  html+=`<button class="quiz-submit" onclick="submitQuiz()" ${!all?'disabled':''} style="background:${all?`linear-gradient(135deg,${activeModule.color},var(--blue))`:'var(--dim)'}">Enviar respuestas →</button>`;
+  document.getElementById('lv-quiz').innerHTML=html;
+}
+
+function selectOpt(qi,oi){quizAnswers[qi]=oi;renderQuiz();}
+function retryQuiz(){quizAnswers={};quizDone=false;renderQuiz();}
+function submitQuiz(){
+  const qData=QUIZZES[activeLesson.id]||[];
+  const pass=qData.filter((q,i)=>quizAnswers[i]===q.ans).length;
+  quizDone=true;
+  if(pass>=Math.ceil(qData.length*.5)&&!completed.has(activeLesson.id)){
+    completed.add(activeLesson.id);totalXP+=activeLesson.xp;
+    document.getElementById('lv-done').style.display='inline';
+  }
+  renderQuiz();
+}
+
+// ═══════════════════════════════════════════
+// SIMULATOR
+// ═══════════════════════════════════════════
+function renderSim(){
+  const alloc=simPortfolio;
+  const totalAlloc=Object.values(alloc).reduce((s,v)=>s+v,0);
+  let html=`<div class="port-card">
+    <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">SELECCIONA TUS ACTIVOS</div>
+    <div class="sim-coins">`;
+  COINS.forEach(c=>{
+    const active=alloc[c.sym]!==undefined;
+    html+=`<button class="coin-btn ${active?'active':''}" onclick="toggleCoin('${c.sym}')" style="${active?`border-color:${c.color};color:${c.color};background:${c.color}15`:''}">
+      ${c.sym} ${c.iso?'🏦':''}
+    </button>`;
+  });
+  html+=`</div>`;
+  if(Object.keys(alloc).length>0){
+    html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin:12px 0 8px">DISTRIBUCIÓN (%)</div>`;
+    Object.keys(alloc).forEach(sym=>{
+      const coin=COINS.find(c=>c.sym===sym);
+      html+=`<div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+          <span style="font-family:'JetBrains Mono';font-size:12px;font-weight:700;color:${coin.color}">${sym}</span>
+          <span style="font-family:'JetBrains Mono';font-size:12px;color:var(--text)">${alloc[sym]}%</span>
+        </div>
+        <input type="range" min="0" max="100" value="${alloc[sym]}" oninput="updateAlloc('${sym}',this.value)" style="accent-color:${coin.color}">
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">${coin.desc}</div>
+      </div>`;
+    });
+    const remaining=100-totalAlloc;
+    html+=`<div style="display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--border);margin-top:8px">
+      <span style="font-size:13px;color:var(--muted)">Restante en efectivo</span>
+      <span style="font-family:'JetBrains Mono';font-size:13px;font-weight:700;color:${remaining<0?'var(--red)':'var(--green)'}">${remaining}%</span>
+    </div>`;
+    if(remaining<0)html+=`<div style="color:var(--red);font-size:12px;margin-top:6px">⚠️ Tu distribución supera el 100%. Reduce algún activo.</div>`;
+  }
+  html+=`</div>`;
+
+  // Capital inputs
+  html+=`<div class="port-card">
+    <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">CAPITAL DE SIMULACIÓN</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <span style="font-size:13px;color:var(--muted)">Capital inicial ($)</span>
+      <span style="font-family:'JetBrains Mono';font-size:14px;font-weight:700;color:var(--green)">$${simCapital.toLocaleString()}</span>
+    </div>
+    <input type="range" min="1000" max="100000" step="1000" value="${simCapital}" oninput="simCapital=parseInt(this.value);renderSim()" style="accent-color:var(--green);width:100%">
+    <button class="sim-btn-main" onclick="runSimulation()">⚡ SIMULAR PORTAFOLIO</button>
+  </div>`;
+
+  // History
+  if(simHistory.length>0){
+    html+=`<div class="port-card">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:10px">RESULTADOS</div>`;
+    simHistory.slice(-1)[0].breakdown.forEach(b=>{
+      const coin=COINS.find(c=>c.sym===b.sym);
+      const change=(Math.random()-.4)*30;
+      const pnl=b.amount*(change/100);
+      html+=`<div class="port-row">
+        <span style="font-family:'JetBrains Mono';font-size:12px;font-weight:700;color:${coin.color}">${b.sym}</span>
+        <span style="font-size:12px;color:var(--text)">$${b.amount.toLocaleString()}</span>
+        <span class="${pnl>=0?'pnl-pos':'pnl-neg'}">${pnl>=0?'+':''}$${pnl.toFixed(0)}</span>
+        <span style="font-size:11px;color:${pnl>=0?'var(--green)':'var(--red)'}">(${change>=0?'+':''}${change.toFixed(1)}%)</span>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+
+  document.getElementById('sim-content').innerHTML=html;
+}
+
+function toggleCoin(sym){
+  if(simPortfolio[sym]!==undefined)delete simPortfolio[sym];
+  else simPortfolio[sym]=Math.floor(100/Math.max(Object.keys(simPortfolio).length+1,1));
+  renderSim();
+}
+function updateAlloc(sym,val){simPortfolio[sym]=parseInt(val);renderSim();}
+function runSimulation(){
+  const alloc=simPortfolio;
+  const total=Object.values(alloc).reduce((s,v)=>s+v,0);
+  if(total>100){alert('La distribución supera el 100%. Ajústala primero.');return;}
+  if(Object.keys(alloc).length===0){alert('Selecciona al menos una criptomoneda.');return;}
+  const breakdown=Object.keys(alloc).map(sym=>({sym,pct:alloc[sym],amount:Math.round(simCapital*alloc[sym]/100)}));
+  simHistory=[...simHistory,{capital:simCapital,breakdown}];
+  renderSim();
+}
+
+// ═══════════════════════════════════════════
+// TUTOR
+// ═══════════════════════════════════════════
+const TUTOR_SYS=`Eres un tutor experto en criptomonedas, blockchain y el estándar financiero ISO 20022. Tienes conocimiento profundo de: Bitcoin, Ethereum, XRP (Ripple), XLM (Stellar), HBAR (Hedera), ALGO (Algorand), DeFi, staking, tokenización de activos, y cómo el estándar ISO 20022 está transformando el sistema financiero global con Swift. Tu estilo es claro, pedagógico y apasionante. Explicas conceptos complejos de forma simple. Respondes siempre en español. NUNCA das consejos de inversión específicos ni predices precios. Enseñas conceptos, tecnología y lógica del ecosistema cripto.`;
+
+function renderChat(){
+  const box=document.getElementById('chat-box');box.innerHTML='';
+  chatMessages.forEach(m=>{
+    const d=document.createElement('div');
+    d.className='msg '+(m.role==='user'?'msg-user':'msg-ai');
+    d.textContent=m.content;box.appendChild(d);
+  });
+  if(chatLoading){
+    const d=document.createElement('div');
+    d.style.cssText='display:flex;gap:4px;padding:10px 14px;width:fit-content';
+    d.innerHTML=[0,1,2].map(i=>`<div class="typing-dot" style="animation-delay:${i*.15}s"></div>`).join('');
+    box.appendChild(d);
+  }
+  box.scrollTop=box.scrollHeight;
+  document.getElementById('sugg-wrap').style.display=chatMessages.length<=1?'flex':'none';
+}
+
+function renderSuggestions(){
+  document.getElementById('sugg-wrap').innerHTML=SUGGESTIONS.map(s=>`<button class="sugg-chip" onclick="document.getElementById('chat-input').value='${s}';sendMsg()">${s}</button>`).join('');
+}
+
+async function sendMsg(){
+  const inp=document.getElementById('chat-input');
+  const txt=inp.value.trim();if(!txt||chatLoading)return;
+  chatMessages=[...chatMessages,{role:'user',content:txt}];inp.value='';chatLoading=true;
+  document.getElementById('chat-send').disabled=true;renderChat();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:TUTOR_SYS,messages:chatMessages.map(m=>({role:m.role,content:m.content}))})});
+    const data=await res.json();
+    chatMessages=[...chatMessages,{role:'assistant',content:data.content?.[0]?.text||'Error al obtener respuesta.'}];
+  }catch{chatMessages=[...chatMessages,{role:'assistant',content:'Error de conexión. Intenta de nuevo.'}];}
+  chatLoading=false;document.getElementById('chat-send').disabled=false;renderChat();
+}
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+function switchTab(tab){
+  ['academy','simulator','tutor'].forEach(t=>{document.getElementById('tab-'+t).style.display=t===tab?'block':'none';});
+  document.querySelectorAll('.nav-btn').forEach((b,i)=>{b.classList.toggle('active',['academy','simulator','tutor'][i]===tab);});
+  if(tab==='simulator')renderSim();
+}
+
+// INIT
+renderModules();
+updateProgress();
+renderChat();
+renderSuggestions();
+</script>
+</body>
+</html>
