@@ -605,7 +605,7 @@ async function sendChat(){
   const typing = addTyping();
   try{
     const res = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
+      method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:SYSTEM,messages:chatHistory.map(m=>({role:m.role,content:m.content}))})
     });
     const data = await res.json();
@@ -656,7 +656,7 @@ function speak(text){
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'es-CL';u.rate = 0.88;u.volume = 1;u.pitch = 1;
   const voices = window.speechSynthesis.getVoices();
-  const v = voices.find(v=>v.lang==='es-CL')||voices.find(v=>v.lang==='es-MX')||voices.find(v=>v.lang.startsWith('es'));
+  const v = voices.find(v=>v.lang==='es-CL') || voices.find(v=>v.lang==='es-MX'&&v.name.toLowerCase().includes('google')) || voices.find(v=>v.lang==='es-MX') || voices.find(v=>v.lang==='es-US') || voices.find(v=>v.lang.startsWith('es')&&!v.lang.includes('-ES')&&v.name.toLowerCase().includes('google')) || voices.find(v=>v.lang.startsWith('es')&&!v.lang.includes('-ES'));
   if(v) u.voice = v;
   window.speechSynthesis.speak(u);
 }
