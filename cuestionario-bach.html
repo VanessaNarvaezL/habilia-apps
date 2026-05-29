@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuestionario Floral — habilia</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f4ef;--bg2:#f0ebe2;--bg3:#e8e0d4;--card:#ffffff;
+  --green:#2d6a4f;--green2:#40916c;--green3:#74c69d;--greendim:#d8f3dc;
+  --gold:#b5883a;--golddim:#fdf3e0;
+  --text:#2c2416;--text2:#6b5c42;--text3:#a89880;
+  --border:#ddd4c4;--radius:14px;
+  --shadow:0 2px 16px rgba(44,36,22,.08);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 10% 0%,rgba(45,106,79,.05),transparent 50%),radial-gradient(ellipse at 90% 100%,rgba(181,136,58,.05),transparent 50%);pointer-events:none}
+
+/* HEADER */
+header{background:white;border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--text)}
+.logo strong{color:var(--green);font-weight:600}
+.progress-wrap{display:flex;align-items:center;gap:10px}
+.progress-text{font-size:12px;color:var(--text3);font-weight:500}
+.progress-bar-bg{width:140px;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green2),var(--green3));border-radius:3px;transition:width .5s ease}
+
+/* MAIN */
+main{max-width:680px;margin:0 auto;padding:2rem 1.2rem 4rem}
+
+/* WELCOME */
+#screen-welcome{text-align:center;padding:3rem 1rem}
+.welcome-icon{font-size:56px;display:block;margin-bottom:1rem;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.welcome-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--text);margin-bottom:.75rem;line-height:1.2}
+.welcome-title em{color:var(--green);font-style:italic}
+.welcome-sub{font-size:15px;color:var(--text2);line-height:1.8;max-width:480px;margin:0 auto 2rem}
+.section-chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:2rem}
+.chip{background:var(--greendim);border:1px solid rgba(45,106,79,.2);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:500;color:var(--green)}
+
+/* SECTION HEADER */
+.section-header{background:white;border-radius:var(--radius);padding:1.2rem 1.4rem;margin-bottom:1.2rem;border:1px solid var(--border);box-shadow:var(--shadow)}
+.section-tag{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--green);margin-bottom:.4rem}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--text);margin-bottom:.3rem}
+.section-desc{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* QUESTION CARD */
+.q-card{background:white;border-radius:var(--radius);padding:1.4rem;margin-bottom:1rem;border:1px solid var(--border);box-shadow:var(--shadow);animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.q-num{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:.5rem}
+.q-text{font-size:14px;font-weight:500;color:var(--text);margin-bottom:1rem;line-height:1.6}
+.q-hint{font-size:12px;color:var(--text3);margin-bottom:.75rem;font-style:italic}
+
+/* TEXTAREA */
+textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;resize:vertical;min-height:80px;outline:none;transition:border-color .2s;line-height:1.6}
+textarea:focus{border-color:var(--green2)}
+textarea::placeholder{color:var(--text3)}
+
+/* OPTIONS */
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.opt{padding:.75rem 1rem;border-radius:10px;border:1px solid var(--border);background:var(--bg);font-size:13px;color:var(--text2);cursor:pointer;text-align:left;transition:all .2s;font-family:'DM Sans',sans-serif}
+.opt:hover{border-color:var(--green2);background:var(--greendim);color:var(--green)}
+.opt.selected{border-color:var(--green);background:var(--greendim);color:var(--green);font-weight:500}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+
+/* FLORAL CARD */
+.floral-card{background:white;border-radius:var(--radius);padding:1.4rem;margin-bottom:1rem;border:1px solid var(--border);box-shadow:var(--shadow)}
+.floral-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--green);margin-bottom:3px}
+.floral-group{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem}
+.floral-fields{display:flex;flex-direction:column;gap:10px}
+.floral-field label{display:block;font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.floral-field textarea{min-height:60px}
+.floral-done{background:var(--greendim);border-color:var(--green3)!important}
+.floral-done .floral-name{color:var(--green2)}
+.done-check{float:right;color:var(--green);font-size:18px;margin-top:2px}
+
+/* NAV BUTTONS */
+.nav-buttons{display:flex;gap:10px;justify-content:space-between;margin-top:1.5rem;flex-wrap:wrap}
+.btn{padding:.8rem 1.6rem;border-radius:30px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s;font-family:'DM Sans',sans-serif}
+.btn-primary{background:linear-gradient(135deg,var(--green),var(--green2));color:white;box-shadow:0 4px 14px rgba(45,106,79,.25)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(45,106,79,.3)}
+.btn-secondary{background:white;color:var(--text2);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--green);color:var(--green)}
+.btn-sm{padding:.6rem 1.2rem;font-size:12px}
+
+/* SAVED BADGE */
+.saved-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--green2);background:var(--greendim);padding:4px 10px;border-radius:20px;margin-top:.5rem;opacity:0;transition:opacity .3s}
+.saved-badge.show{opacity:1}
+
+/* FLORAL PROGRESS */
+.floral-progress{background:white;border-radius:var(--radius);padding:1rem 1.4rem;margin-bottom:1rem;border:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.floral-prog-bar{flex:1;background:var(--bg3);border-radius:3px;height:6px;overflow:hidden}
+.floral-prog-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--green3));border-radius:3px;transition:width .4s}
+
+/* COMPLETE SCREEN */
+#screen-complete{text-align:center;padding:3rem 1rem}
+.complete-icon{font-size:64px;margin-bottom:1rem;display:block}
+.complete-title{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;color:var(--green);margin-bottom:.75rem}
+.complete-sub{font-size:15px;color:var(--text2);line-height:1.8;margin-bottom:2rem}
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:2rem}
+.sum-card{background:white;border-radius:var(--radius);padding:1.2rem;border:1px solid var(--border);text-align:center}
+.sum-n{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--green);font-weight:300}
+.sum-l{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+
+/* SECTION NAV */
+.section-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem}
+.snav-btn{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid var(--border);background:white;color:var(--text3);cursor:pointer;transition:all .2s}
+.snav-btn.active{background:var(--green);color:white;border-color:var(--green)}
+.snav-btn.done{background:var(--greendim);color:var(--green);border-color:var(--green3)}
+
+/* RESPONSIVE */
+@media(max-width:500px){
+  .opt-grid{grid-template-columns:1fr}
+  .progress-bar-bg{width:80px}
+  .summary-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><strong>HABIL</strong>/IA · <span style="color:var(--text3);font-size:14px">Flores de Bach</span></div>
+  <div class="progress-wrap">
+    <span class="progress-text" id="prog-text">0%</span>
+    <div class="progress-bar-bg"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+</header>
+
+<main>
+
+<!-- BIENVENIDA -->
+<div id="screen-welcome">
+  <span class="welcome-icon">🌸</span>
+  <div class="welcome-title">Tu voz dentro<br>de la <em>app floral.</em></div>
+  <div class="welcome-sub">Este cuestionario va a poco — guarda tu progreso automáticamente. Puedes salir y volver cuando quieras, siempre desde donde quedaste.</div>
+  <div class="section-chips">
+    <span class="chip">✦ 5 secciones</span>
+    <span class="chip">🌿 38 florales</span>
+    <span class="chip">💾 Progreso guardado</span>
+    <span class="chip">⏱ Sin prisa</span>
+  </div>
+  <button class="btn btn-primary" onclick="startQuestionnaire()" style="font-size:15px;padding:1rem 2.5rem">Comenzar 🌿</button>
+  <div id="resume-wrap" style="display:none;margin-top:1rem">
+    <button class="btn btn-secondary" onclick="resumeQuestionnaire()">Continuar donde quedé →</button>
+  </div>
+</div>
+
+<!-- CUESTIONARIO -->
+<div id="screen-questionnaire" style="display:none">
+  <div class="section-nav" id="section-nav"></div>
+  <div id="section-content"></div>
+</div>
+
+<!-- COMPLETADO -->
+<div id="screen-complete" style="display:none">
+  <span class="complete-icon">🏆</span>
+  <div class="complete-title">¡Cuestionario completado!</div>
+  <div class="complete-sub">Gracias. Tu conocimiento ya está listo para darle voz a la app floral de habilia.</div>
+  <div class="summary-grid">
+    <div class="sum-card"><div class="sum-n" id="sum-sec">5</div><div class="sum-l">Secciones</div></div>
+    <div class="sum-card"><div class="sum-n" id="sum-preguntas">—</div><div class="sum-l">Respuestas</div></div>
+    <div class="sum-card"><div class="sum-n">38</div><div class="sum-l">Florales</div></div>
+  </div>
+  <button class="btn btn-primary" onclick="exportData()">📥 Descargar respuestas</button>
+  <div style="margin-top:10px"><button class="btn btn-secondary btn-sm" onclick="reviewAnswers()">Revisar respuestas</button></div>
+</div>
+
+</main>
+
+<script>
+// ══════════════════════════════════════
+// DATA
+// ══════════════════════════════════════
+const FLORALES = [
+  // GRUPO 1 - MIEDO
+  {id:'mimulus',nombre:'Mimulus',grupo:'Grupo 1 — Miedo'},
+  {id:'rock_rose',nombre:'Rock Rose',grupo:'Grupo 1 — Miedo'},
+  {id:'cherry_plum',nombre:'Cherry Plum',grupo:'Grupo 1 — Miedo'},
+  {id:'aspen',nombre:'Aspen',grupo:'Grupo 1 — Miedo'},
+  {id:'red_chestnut',nombre:'Red Chestnut',grupo:'Grupo 1 — Miedo'},
+  // GRUPO 2 - INCERTIDUMBRE
+  {id:'cerato',nombre:'Cerato',grupo:'Grupo 2 — Incertidumbre'},
+  {id:'scleranthus',nombre:'Scleranthus',grupo:'Grupo 2 — Incertidumbre'},
+  {id:'gentian',nombre:'Gentian',grupo:'Grupo 2 — Incertidumbre'},
+  {id:'gorse',nombre:'Gorse',grupo:'Grupo 2 — Incertidumbre'},
+  {id:'hornbeam',nombre:'Hornbeam',grupo:'Grupo 2 — Incertidumbre'},
+  {id:'wild_oat',nombre:'Wild Oat',grupo:'Grupo 2 — Incertidumbre'},
+  // GRUPO 3 - FALTA DE INTERÉS
+  {id:'clematis',nombre:'Clematis',grupo:'Grupo 3 — Falta de interés'},
+  {id:'honeysuckle',nombre:'Honeysuckle',grupo:'Grupo 3 — Falta de interés'},
+  {id:'wild_rose',nombre:'Wild Rose',grupo:'Grupo 3 — Falta de interés'},
+  {id:'olive',nombre:'Olive',grupo:'Grupo 3 — Falta de interés'},
+  {id:'white_chestnut',nombre:'White Chestnut',grupo:'Grupo 3 — Falta de interés'},
+  {id:'mustard',nombre:'Mustard',grupo:'Grupo 3 — Falta de interés'},
+  {id:'chestnut_bud',nombre:'Chestnut Bud',grupo:'Grupo 3 — Falta de interés'},
+  // GRUPO 4 - SOLEDAD
+  {id:'water_violet',nombre:'Water Violet',grupo:'Grupo 4 — Soledad'},
+  {id:'impatiens',nombre:'Impatiens',grupo:'Grupo 4 — Soledad'},
+  {id:'heather',nombre:'Heather',grupo:'Grupo 4 — Soledad'},
+  // GRUPO 5 - HIPERSENSIBILIDAD
+  {id:'agrimony',nombre:'Agrimony',grupo:'Grupo 5 — Hipersensibilidad'},
+  {id:'centaury',nombre:'Centaury',grupo:'Grupo 5 — Hipersensibilidad'},
+  {id:'walnut',nombre:'Walnut',grupo:'Grupo 5 — Hipersensibilidad'},
+  {id:'holly',nombre:'Holly',grupo:'Grupo 5 — Hipersensibilidad'},
+  // GRUPO 6 - DESÁNIMO
+  {id:'larch',nombre:'Larch',grupo:'Grupo 6 — Desánimo'},
+  {id:'pine',nombre:'Pine',grupo:'Grupo 6 — Desánimo'},
+  {id:'elm',nombre:'Elm',grupo:'Grupo 6 — Desánimo'},
+  {id:'sweet_chestnut',nombre:'Sweet Chestnut',grupo:'Grupo 6 — Desánimo'},
+  {id:'star_bethlehem',nombre:'Star of Bethlehem',grupo:'Grupo 6 — Desánimo'},
+  {id:'willow',nombre:'Willow',grupo:'Grupo 6 — Desánimo'},
+  {id:'oak',nombre:'Oak',grupo:'Grupo 6 — Desánimo'},
+  {id:'crab_apple',nombre:'Crab Apple',grupo:'Grupo 6 — Desánimo'},
+  // GRUPO 7 - PREOCUPACIÓN POR OTROS
+  {id:'chicory',nombre:'Chicory',grupo:'Grupo 7 — Preocupación por otros'},
+  {id:'vervain',nombre:'Vervain',grupo:'Grupo 7 — Preocupación por otros'},
+  {id:'vine',nombre:'Vine',grupo:'Grupo 7 — Preocupación por otros'},
+  {id:'beech',nombre:'Beech',grupo:'Grupo 7 — Preocupación por otros'},
+  {id:'rock_water',nombre:'Rock Water',grupo:'Grupo 7 — Preocupación por otros'},
+];
+
+const SECTIONS = [
+  {id:'practica', label:'Mi práctica', icon:'🌿'},
+  {id:'grupos', label:'7 Grupos', icon:'🌸'},
+  {id:'consulta', label:'Mi consulta', icon:'💬'},
+  {id:'combinaciones', label:'Fórmulas', icon:'🧪'},
+  {id:'florales', label:'38 Florales', icon:'🌼'},
+];
+
+// STATE
+let answers = {};
+let currentSection = 0;
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+function init(){
+  const saved = localStorage.getItem('bach-cuestionario');
+  if(saved){
+    answers = JSON.parse(saved);
+    const hasData = Object.keys(answers).length > 0;
+    if(hasData) document.getElementById('resume-wrap').style.display='block';
+  }
+}
+
+function startQuestionnaire(){
+  answers = {};
+  currentSection = 0;
+  showScreen('questionnaire');
+  renderSection(0);
+}
+
+function resumeQuestionnaire(){
+  showScreen('questionnaire');
+  // Find last answered section
+  const saved = localStorage.getItem('bach-cuestionario');
+  if(saved) answers = JSON.parse(saved);
+  // Go to first incomplete section
+  let targetSection = 0;
+  for(let i=0;i<SECTIONS.length;i++){
+    if(isSectionStarted(i)) targetSection = i;
+  }
+  currentSection = targetSection;
+  renderSection(currentSection);
+}
+
+function showScreen(name){
+  ['welcome','questionnaire','complete'].forEach(s=>{
+    document.getElementById('screen-'+s).style.display = s===name?'block':'none';
+  });
+}
+
+function save(){
+  localStorage.setItem('bach-cuestionario', JSON.stringify(answers));
+  updateProgress();
+  showSaved();
+}
+
+function showSaved(){
+  let badge = document.getElementById('saved-badge');
+  if(!badge){
+    badge = document.createElement('div');
+    badge.id = 'saved-badge';
+    badge.className = 'saved-badge';
+    badge.innerHTML = '✓ Guardado automáticamente';
+    badge.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:999;font-size:12px;color:#2d6a4f;background:#d8f3dc;padding:6px 16px;border-radius:20px;border:1px solid rgba(45,106,79,.2);box-shadow:0 2px 12px rgba(0,0,0,.1)';
+    document.body.appendChild(badge);
+  }
+  badge.classList.add('show');
+  setTimeout(()=>badge.classList.remove('show'), 2000);
+}
+
+function updateProgress(){
+  const total = 18 + 38; // 18 main questions + 38 florals
+  let answered = 0;
+  // Count main answers
+  for(let k in answers){
+    if(!k.startsWith('floral_') && answers[k] && answers[k].toString().trim()) answered++;
+  }
+  // Count florals
+  FLORALES.forEach(f=>{
+    const a=answers['floral_'+f.id];
+    if(a && (a.estado||a.siente||a.cambio)) answered+=0.33;
+  });
+  const pct = Math.min(100, Math.round((answered/total)*100));
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-text').textContent = pct+'%';
+}
+
+// ══════════════════════════════════════
+// SECTION NAV
+// ══════════════════════════════════════
+function renderSectionNav(){
+  const nav = document.getElementById('section-nav');
+  nav.innerHTML = SECTIONS.map((s,i)=>{
+    const done = isSectionDone(i);
+    const active = i === currentSection;
+    return `<button class="snav-btn ${active?'active':done?'done':''}" onclick="goSection(${i})">${s.icon} ${s.label}</button>`;
+  }).join('');
+}
+
+function isSectionStarted(i){
+  const keys = getSectionKeys(i);
+  return keys.some(k => answers[k] && answers[k].toString().trim());
+}
+
+function isSectionDone(i){
+  if(i===4){
+    const done = FLORALES.filter(f=>{
+      const a=answers['floral_'+f.id];
+      return a && (a.estado||a.siente||a.cambio);
+    }).length;
+    return done >= 30;
+  }
+  const keys = getSectionKeys(i);
+  return keys.length > 0 && keys.filter(k=>answers[k]&&answers[k].toString().trim()).length >= Math.ceil(keys.length*0.6);
+}
+
+function getSectionKeys(i){
+  const maps = [
+    ['practica_anos','practica_consulta','practica_descripcion'],
+    ['grupo_miedo','grupo_incertidumbre','grupo_interes','grupo_soledad','grupo_hipersensibilidad','grupo_desanimo','grupo_preocupacion'],
+    ['consulta_primeras','consulta_fisico','consulta_sin_interrogar','consulta_palabras_clave','consulta_imprescindibles'],
+    ['combo_cantidad','combo_juntos','combo_rescue','combo_formula1','combo_formula2'],
+    FLORALES.map(f=>'floral_'+f.id),
+  ];
+  return maps[i] || [];
+}
+
+function goSection(i){
+  currentSection = i;
+  renderSection(i);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════
+// RENDER SECTIONS
+// ══════════════════════════════════════
+function renderSection(i){
+  renderSectionNav();
+  const content = document.getElementById('section-content');
+  if(i===0) content.innerHTML = renderPractica();
+  else if(i===1) content.innerHTML = renderGrupos();
+  else if(i===2) content.innerHTML = renderConsulta();
+  else if(i===3) content.innerHTML = renderCombinaciones();
+  else if(i===4) content.innerHTML = renderFlorales();
+  attachListeners();
+  updateProgress();
+}
+
+function renderPractica(){
+  return `
+    <div class="section-header">
+      <div class="section-tag">Sección 1 de 5</div>
+      <div class="section-title">Tu práctica floral 🌿</div>
+      <div class="section-desc">Cuéntanos sobre tu experiencia. Solo 3 preguntas cortas.</div>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Pregunta 1</div>
+      <div class="q-text">¿Cuántos años llevas trabajando con los Remedios Florales de Bach? ¿Dónde te formaste?</div>
+      <textarea data-key="practica_anos" placeholder="Ej: 8 años, certificada en el Centro Bach de Inglaterra...">${answers['practica_anos']||''}</textarea>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Pregunta 2</div>
+      <div class="q-text">¿Cuál es el tipo de consulta más frecuente que recibes?</div>
+      <div class="options">
+        ${['Ansiedad y estrés','Duelo y pérdidas','Relaciones y vínculos','Crisis de vida / cambios','Niños y adolescentes','Varios por igual'].map(o=>`
+          <button class="opt ${answers['practica_consulta']===o?'selected':''}" data-key="practica_consulta" data-val="${o}" onclick="selectOpt(this)">${o}</button>
+        `).join('')}
+      </div>
+      <textarea data-key="practica_consulta_extra" placeholder="¿Quieres agregar algo más?" style="min-height:50px">${answers['practica_consulta_extra']||''}</textarea>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Pregunta 3</div>
+      <div class="q-text">¿Cómo describes los Remedios Florales de Bach a alguien que nunca ha escuchado de ellos?</div>
+      <div class="q-hint">Con tus propias palabras, como lo harías en consulta.</div>
+      <textarea data-key="practica_descripcion" placeholder="Son preparados de flores silvestres que actúan sobre los estados emocionales..." rows="4">${answers['practica_descripcion']||''}</textarea>
+    </div>
+    ${navButtons(0)}`;
+}
+
+function renderGrupos(){
+  const grupos = [
+    {key:'grupo_miedo',num:1,nombre:'Miedo',florales:'Mimulus, Rock Rose, Cherry Plum, Aspen, Red Chestnut',pregunta:'¿Cómo distingues entre los 5 tipos de miedo en consulta? ¿Qué preguntas haces para diferenciarlos?'},
+    {key:'grupo_incertidumbre',num:2,nombre:'Incertidumbre',florales:'Cerato, Scleranthus, Gentian, Gorse, Hornbeam, Wild Oat',pregunta:'¿Cómo detectas cuándo alguien necesita cada uno de estos florales?'},
+    {key:'grupo_interes',num:3,nombre:'Falta de interés en el presente',florales:'Clematis, Honeysuckle, Wild Rose, Olive, White Chestnut, Mustard, Chestnut Bud',pregunta:'¿Qué señales te indican cada uno de estos estados?'},
+    {key:'grupo_soledad',num:4,nombre:'Soledad',florales:'Water Violet, Impatiens, Heather',pregunta:'¿Cómo diferencias estos 3 tipos de soledad en una consulta?'},
+    {key:'grupo_hipersensibilidad',num:5,nombre:'Hipersensibilidad',florales:'Agrimony, Centaury, Walnut, Holly',pregunta:'¿Qué situaciones te llevan a elegir cada uno?'},
+    {key:'grupo_desanimo',num:6,nombre:'Desánimo y desesperación',florales:'Larch, Pine, Elm, Sweet Chestnut, Star of Bethlehem, Willow, Oak, Crab Apple',pregunta:'¿Cómo reconoces cada uno en una persona?'},
+    {key:'grupo_preocupacion',num:7,nombre:'Preocupación excesiva por otros',florales:'Chicory, Vervain, Vine, Beech, Rock Water',pregunta:'¿Cómo distingues estos perfiles tan distintos?'},
+  ];
+  return `
+    <div class="section-header">
+      <div class="section-tag">Sección 2 de 5</div>
+      <div class="section-title">Los 7 grupos florales 🌸</div>
+      <div class="section-desc">Describe con tus palabras cómo identificas cada grupo. No hay respuesta incorrecta.</div>
+    </div>
+    ${grupos.map(g=>`
+      <div class="q-card">
+        <div class="q-num">Grupo ${g.num} — ${g.nombre}</div>
+        <div class="q-text">${g.pregunta}</div>
+        <div class="q-hint">Florales: ${g.florales}</div>
+        <textarea data-key="${g.key}" placeholder="Escribe aquí cómo los identificas..." rows="4">${answers[g.key]||''}</textarea>
+      </div>
+    `).join('')}
+    ${navButtons(1)}`;
+}
+
+function renderConsulta(){
+  return `
+    <div class="section-header">
+      <div class="section-tag">Sección 3 de 5</div>
+      <div class="section-title">Tu metodología de consulta 💬</div>
+      <div class="section-desc">El tutor floral de la app seguirá tu estilo. Cuéntanos cómo trabajas.</div>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Pregunta 1</div>
+      <div class="q-text">¿Cuáles son las primeras 3-5 preguntas que le haces a alguien que llega por primera vez?</div>
+      <textarea data-key="consulta_primeras" placeholder="1. ¿Qué te trae hoy aquí?&#10;2. ¿Cómo te sientes en general?..." rows="5">${answers['consulta_primeras']||''}</textarea>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Pregunta 2</div>
+      <div class="q-text">¿Preguntas por sensaciones físicas? ¿Cómo las vinculas con los florales?</div>
+      <div class="options">
+        ${['Siempre, son muy reveladoras','A veces, según el caso','Raramente','No las considero'].map(o=>`
+          <button class="opt ${answers['consulta_fisico_nivel']===o?'selected':''}" data-key="consulta_fisico_nivel" data-val="${o}" onclick="selectOpt(this)">${o}</button>
+        `).join('')}
+      </div>
+      <textarea data-key="consulta_fisico" placeholder="Agrega detalles si quieres..." style="min-height:60px">${answers['consulta_fisico']||''}</textarea>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Pregunta 3</div>
+      <div class="q-text">¿Palabras o frases clave que te alertan a ciertos florales?</div>
+      <div class="q-hint">Ej: "no puedo parar de pensar" → White Chestnut / "me siento vacía" → Wild Rose</div>
+      <textarea data-key="consulta_palabras_clave" placeholder="Escribe los patrones de lenguaje que reconoces..." rows="5">${answers['consulta_palabras_clave']||''}</textarea>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Pregunta 4</div>
+      <div class="q-text">¿Hay preguntas que NUNCA faltarían en tu consulta?</div>
+      <textarea data-key="consulta_imprescindibles" placeholder="Las preguntas esenciales de tu práctica..." rows="4">${answers['consulta_imprescindibles']||''}</textarea>
+    </div>
+    ${navButtons(2)}`;
+}
+
+function renderCombinaciones(){
+  return `
+    <div class="section-header">
+      <div class="section-tag">Sección 4 de 5</div>
+      <div class="section-title">Fórmulas y combinaciones 🧪</div>
+      <div class="section-desc">Tu criterio para crear fórmulas personalizadas.</div>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Pregunta 1</div>
+      <div class="q-text">¿Cuántos florales combinas habitualmente en una fórmula?</div>
+      <div class="opt-grid">
+        ${['2-3 florales','4-5 florales','6-7 florales','Depende del caso'].map(o=>`
+          <button class="opt ${answers['combo_cantidad']===o?'selected':''}" data-key="combo_cantidad" data-val="${o}" onclick="selectOpt(this)">${o}</button>
+        `).join('')}
+      </div>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Pregunta 2</div>
+      <div class="q-text">¿Rescue Remedy lo usas como base o solo en situaciones específicas?</div>
+      <div class="options">
+        ${['Casi siempre es la base','Solo en crisis agudas','Solo cuando hay trauma reciente','No lo uso de forma rutinaria'].map(o=>`
+          <button class="opt ${answers['combo_rescue']===o?'selected':''}" data-key="combo_rescue" data-val="${o}" onclick="selectOpt(this)">${o}</button>
+        `).join('')}
+      </div>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Pregunta 3</div>
+      <div class="q-text">¿Hay florales que casi siempre van juntos? ¿Y alguna combinación que no recomendarías?</div>
+      <textarea data-key="combo_juntos" placeholder="Ej: Larch + Mimulus casi siempre juntos porque..." rows="4">${answers['combo_juntos']||''}</textarea>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Pregunta 4</div>
+      <div class="q-text">Describe una fórmula típica que preparas frecuentemente:</div>
+      <div class="q-hint">Estado emocional → florales elegidos → por qué</div>
+      <textarea data-key="combo_formula1" placeholder="Ej: Ansiedad laboral → Elm + Mimulus + White Chestnut porque..." rows="4">${answers['combo_formula1']||''}</textarea>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Pregunta 5 (opcional)</div>
+      <div class="q-text">¿Una segunda fórmula frecuente?</div>
+      <textarea data-key="combo_formula2" placeholder="Otro estado emocional frecuente en tu consulta..." rows="3">${answers['combo_formula2']||''}</textarea>
+    </div>
+    ${navButtons(3)}`;
+}
+
+function renderFlorales(){
+  const done = FLORALES.filter(f=>{
+    const a=answers['floral_'+f.id];
+    return a && (a.estado||a.siente||a.cambio);
+  }).length;
+  return `
+    <div class="section-header">
+      <div class="section-tag">Sección 5 de 5</div>
+      <div class="section-title">Los 38 Remedios 🌼</div>
+      <div class="section-desc">Para cada floral, describe con tus palabras. Solo escribe lo que ya sabes — sin presión. Puedes volver y completar cuando quieras.</div>
+    </div>
+    <div class="floral-progress">
+      <span style="font-size:13px;font-weight:600;color:var(--text2)">${done}/38 completados</span>
+      <div class="floral-prog-bar"><div class="floral-prog-fill" style="width:${Math.round(done/38*100)}%"></div></div>
+      <span style="font-size:12px;color:var(--text3)">${Math.round(done/38*100)}%</span>
+    </div>
+    ${FLORALES.map(f=>{
+      const a = answers['floral_'+f.id] || {};
+      const isDone = a.estado||a.siente||a.cambio;
+      return `
+        <div class="floral-card ${isDone?'floral-done':''}" id="floral-card-${f.id}">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between">
+            <div>
+              <div class="floral-name">${f.nombre} ${isDone?'<span class="done-check">✓</span>':''}</div>
+              <div class="floral-group">${f.grupo}</div>
+            </div>
+          </div>
+          <div class="floral-fields">
+            <div class="floral-field">
+              <label>Estado emocional que indica</label>
+              <textarea data-floral="${f.id}" data-field="estado" placeholder="¿Cuándo se recomienda este floral?" style="min-height:55px">${a.estado||''}</textarea>
+            </div>
+            <div class="floral-field">
+              <label>Cómo se siente quien lo necesita</label>
+              <textarea data-floral="${f.id}" data-field="siente" placeholder="Describe la experiencia interna..." style="min-height:55px">${a.siente||''}</textarea>
+            </div>
+            <div class="floral-field">
+              <label>Qué cambio o alivio produce</label>
+              <textarea data-floral="${f.id}" data-field="cambio" placeholder="El efecto positivo del floral..." style="min-height:55px">${a.cambio||''}</textarea>
+            </div>
+          </div>
+        </div>`;
+    }).join('')}
+    ${navButtons(4)}`;
+}
+
+function navButtons(sectionIdx){
+  const isLast = sectionIdx === 4;
+  const isFirst = sectionIdx === 0;
+  return `
+    <div class="nav-buttons">
+      ${!isFirst?`<button class="btn btn-secondary" onclick="goSection(${sectionIdx-1})">← Anterior</button>`:'<div></div>'}
+      ${isLast
+        ? `<button class="btn btn-primary" onclick="finishQuestionnaire()">Finalizar cuestionario 🌸</button>`
+        : `<button class="btn btn-primary" onclick="goSection(${sectionIdx+1})">Siguiente sección →</button>`
+      }
+    </div>`;
+}
+
+// ══════════════════════════════════════
+// LISTENERS
+// ══════════════════════════════════════
+function attachListeners(){
+  // Regular textareas
+  document.querySelectorAll('textarea[data-key]').forEach(el=>{
+    el.addEventListener('input', ()=>{
+      answers[el.dataset.key] = el.value;
+      save();
+    });
+  });
+  // Floral textareas
+  document.querySelectorAll('textarea[data-floral]').forEach(el=>{
+    el.addEventListener('input', ()=>{
+      const id = el.dataset.floral;
+      if(!answers['floral_'+id]) answers['floral_'+id] = {};
+      answers['floral_'+id][el.dataset.field] = el.value;
+      // Update card style
+      const a = answers['floral_'+id];
+      const card = document.getElementById('floral-card-'+id);
+      if(card){
+        const isDone = a.estado||a.siente||a.cambio;
+        card.classList.toggle('floral-done', !!isDone);
+      }
+      save();
+      // Update floral progress
+      const done = FLORALES.filter(f=>{const a2=answers['floral_'+f.id];return a2&&(a2.estado||a2.siente||a2.cambio);}).length;
+      const fillEl = document.querySelector('.floral-prog-fill');
+      const textEl = document.querySelector('.floral-progress span:first-child');
+      const pctEl = document.querySelector('.floral-progress span:last-child');
+      if(fillEl) fillEl.style.width = Math.round(done/38*100)+'%';
+      if(textEl) textEl.textContent = done+'/38 completados';
+      if(pctEl) pctEl.textContent = Math.round(done/38*100)+'%';
+    });
+  });
+}
+
+function selectOpt(btn){
+  const key = btn.dataset.key;
+  const val = btn.dataset.val;
+  // Deselect siblings
+  btn.closest('.options, .opt-grid').querySelectorAll('.opt').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers[key] = val;
+  save();
+}
+
+// ══════════════════════════════════════
+// FINISH
+// ══════════════════════════════════════
+function finishQuestionnaire(){
+  const answered = Object.keys(answers).filter(k=>!k.startsWith('floral_')&&answers[k]&&answers[k].toString().trim()).length;
+  document.getElementById('sum-preguntas').textContent = answered;
+  showScreen('complete');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function reviewAnswers(){
+  showScreen('questionnaire');
+  goSection(0);
+}
+
+function exportData(){
+  const data = JSON.stringify(answers, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'respuestas-bach-terapeuta.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// INIT
+init();
+</script>
+</body>
+</html>
