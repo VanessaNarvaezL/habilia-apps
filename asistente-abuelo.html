@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Mi Asistente — habilia</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;--bg2:#e4eaff;--card:#ffffff;
+  --azul:#2451b3;--azul2:#3d6fd4;--azul-light:#dce8ff;
+  --verde:#1a7a4a;--verde-light:#d4f0e4;
+  --rojo:#c0392b;--rojo-light:#fde8e6;
+  --naranja:#d4680a;--naranja-light:#fef0e0;
+  --gold:#c9880a;--gold-light:#fff3d0;
+  --text:#1a1a2e;--text2:#4a4a6a;--text3:#8888aa;
+  --shadow:0 4px 20px rgba(36,81,179,.12);
+  --shadow-big:0 8px 32px rgba(36,81,179,.18);
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 30% 0%,rgba(36,81,179,.07),transparent 60%);pointer-events:none}
+
+/* HEADER */
+#header{background:var(--azul);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 16px rgba(36,81,179,.3)}
+.header-logo{color:white;font-size:22px;font-weight:900;letter-spacing:.02em}
+.header-logo span{opacity:.7;font-weight:600}
+.header-time{color:rgba(255,255,255,.85);font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.mic-btn-header{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.4);color:white;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.mic-btn-header:hover,.mic-btn-header.active{background:rgba(255,255,255,.35);transform:scale(1.08)}
+.mic-btn-header.listening{background:#e74c3c;border-color:#e74c3c;animation:micPulse 1s infinite}
+@keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(231,76,60,.4)}50%{box-shadow:0 0 0 12px rgba(231,76,60,0)}}
+
+/* MAIN */
+#main{max-width:600px;margin:0 auto;padding:1.2rem 1rem 6rem}
+
+/* GREETING */
+.greeting-card{background:linear-gradient(135deg,var(--azul),var(--azul2));border-radius:20px;padding:1.4rem 1.6rem;margin-bottom:1.2rem;color:white;position:relative;overflow:hidden;box-shadow:var(--shadow-big)}
+.greeting-card::after{content:'☀️';position:absolute;right:1.2rem;top:1rem;font-size:40px;opacity:.3}
+.greeting-name{font-size:26px;font-weight:900;margin-bottom:.2rem}
+.greeting-sub{font-size:16px;opacity:.85;font-weight:600}
+.greeting-date{font-size:14px;opacity:.65;margin-top:.4rem}
+
+/* SCREENS */
+.screen{display:none;animation:fadeIn .3s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* BIG MENU */
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:1.2rem}
+.menu-btn{background:var(--card);border-radius:20px;padding:1.4rem 1rem;text-align:center;border:none;cursor:pointer;box-shadow:var(--shadow);transition:all .25s;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.menu-btn:hover,.menu-btn:active{transform:translateY(-3px);box-shadow:var(--shadow-big)}
+.menu-btn .btn-icon{font-size:44px;line-height:1}
+.menu-btn .btn-label{font-size:17px;font-weight:800;color:var(--text);line-height:1.2}
+.menu-btn .btn-sub{font-size:12px;color:var(--text3);font-weight:600}
+.menu-btn.azul{border-color:var(--azul-light);background:linear-gradient(135deg,#fff,var(--azul-light))}
+.menu-btn.verde{border-color:var(--verde-light);background:linear-gradient(135deg,#fff,var(--verde-light))}
+.menu-btn.naranja{border-color:var(--naranja-light);background:linear-gradient(135deg,#fff,var(--naranja-light))}
+.menu-btn.gold{border-color:var(--gold-light);background:linear-gradient(135deg,#fff,var(--gold-light))}
+.menu-btn.rojo{border-color:var(--rojo-light);background:linear-gradient(135deg,#fff,var(--rojo-light))}
+
+/* BACK BTN */
+.back-btn{display:flex;align-items:center;gap:8px;background:white;border:2px solid var(--azul-light);border-radius:30px;padding:.7rem 1.4rem;font-size:16px;font-weight:700;color:var(--azul);cursor:pointer;margin-bottom:1.2rem;box-shadow:var(--shadow)}
+
+/* SECTION TITLE */
+.section-title{font-size:24px;font-weight:900;color:var(--text);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+
+/* CHAT */
+#chat-messages{background:white;border-radius:20px;padding:1.2rem;min-height:300px;max-height:420px;overflow-y:auto;margin-bottom:1rem;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
+#chat-messages::-webkit-scrollbar{width:4px}
+#chat-messages::-webkit-scrollbar-thumb{background:var(--azul-light);border-radius:2px}
+.msg{max-width:85%;padding:12px 16px;border-radius:18px;font-size:17px;line-height:1.6;font-weight:600}
+.msg-ai{background:var(--azul-light);color:var(--text);border-radius:18px 18px 18px 4px;align-self:flex-start}
+.msg-user{background:var(--azul);color:white;border-radius:18px 18px 4px 18px;align-self:flex-end}
+.typing{display:flex;gap:5px;align-items:center;padding:12px 16px;background:var(--azul-light);border-radius:18px 18px 18px 4px;width:fit-content}
+.typing-dot{width:8px;height:8px;border-radius:50%;background:var(--azul);animation:typingBounce 1.2s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes typingBounce{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(-5px);opacity:1}}
+.chat-input-wrap{display:flex;gap:10px}
+#chat-input{flex:1;background:white;border:2px solid var(--azul-light);border-radius:16px;padding:14px 16px;font-size:16px;font-weight:600;color:var(--text);font-family:'Nunito',sans-serif;outline:none}
+#chat-input:focus{border-color:var(--azul)}
+.send-btn{width:52px;height:52px;border-radius:50%;background:var(--azul);border:none;color:white;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow)}
+.mic-btn-chat{width:52px;height:52px;border-radius:50%;background:var(--verde);border:none;color:white;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow);transition:all .2s}
+.mic-btn-chat.listening{background:#e74c3c;animation:micPulse 1s infinite}
+.voice-hint{text-align:center;font-size:14px;color:var(--text3);font-weight:600;margin-top:.5rem}
+
+/* AGENDA */
+.agenda-day{font-size:18px;font-weight:800;color:var(--azul);margin-bottom:.75rem}
+.reminder-card{background:white;border-radius:16px;padding:1.2rem 1.4rem;margin-bottom:.75rem;box-shadow:var(--shadow);display:flex;align-items:center;gap:1rem;border-left:5px solid var(--azul)}
+.reminder-card.meds{border-left-color:var(--verde)}
+.reminder-card.futbol{border-left-color:#e74c3c}
+.reminder-card.done{opacity:.5}
+.reminder-card.done .reminder-text{text-decoration:line-through}
+.reminder-icon{font-size:32px;flex-shrink:0}
+.reminder-time{font-size:13px;font-weight:700;color:var(--text3);margin-bottom:2px}
+.reminder-text{font-size:17px;font-weight:700;color:var(--text)}
+.reminder-check{width:38px;height:38px;border-radius:50%;border:2px solid var(--azul-light);background:white;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:auto;flex-shrink:0;transition:all .2s}
+.reminder-check.checked{background:var(--verde);border-color:var(--verde);color:white}
+.add-reminder{background:white;border:2px dashed var(--azul-light);border-radius:16px;padding:1.2rem;margin-bottom:.75rem;display:flex;gap:10px;align-items:center}
+.add-input{flex:1;border:none;outline:none;font-size:16px;font-weight:600;color:var(--text);font-family:'Nunito',sans-serif;background:transparent}
+.add-input::placeholder{color:var(--text3)}
+.add-time{width:90px;border:none;outline:none;font-size:14px;font-weight:700;color:var(--azul);font-family:'Nunito',sans-serif;background:transparent}
+.add-save{padding:.6rem 1rem;border-radius:20px;background:var(--azul);color:white;border:none;font-size:14px;font-weight:700;cursor:pointer}
+
+/* TUTORIALES */
+.tutorial-card{background:white;border-radius:20px;padding:1.4rem;margin-bottom:.75rem;box-shadow:var(--shadow);cursor:pointer;border:2px solid transparent;transition:all .2s}
+.tutorial-card:hover{border-color:var(--azul-light);transform:translateY(-2px)}
+.tut-icon{font-size:36px;margin-bottom:.5rem}
+.tut-title{font-size:19px;font-weight:800;color:var(--text);margin-bottom:.3rem}
+.tut-desc{font-size:14px;color:var(--text2);font-weight:600}
+.tut-steps{margin-top:1rem;display:none}
+.tut-steps.open{display:block}
+.step{background:var(--azul-light);border-radius:12px;padding:1rem 1.2rem;margin-bottom:.5rem;display:flex;gap:.75rem;align-items:flex-start}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--azul);color:white;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-text{font-size:16px;font-weight:600;color:var(--text);line-height:1.5}
+
+/* FUTBOL */
+.futbol-card{background:white;border-radius:16px;padding:1.2rem 1.4rem;margin-bottom:.75rem;box-shadow:var(--shadow)}
+.partido-teams{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+.partido-team{font-size:16px;font-weight:800;color:var(--text);text-align:center;flex:1}
+.partido-vs{font-size:13px;font-weight:700;color:var(--text3);padding:0 .5rem}
+.partido-score{font-size:28px;font-weight:900;color:var(--azul);text-align:center;padding:0 .5rem}
+.partido-info{font-size:13px;color:var(--text3);font-weight:600;text-align:center}
+.liga-tag{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:10px;display:inline-block;margin-bottom:.5rem}
+.liga-cl{background:#dce8ff;color:var(--azul)}
+.liga-int{background:#d4f0e4;color:var(--verde)}
+
+/* EMERGENCIAS */
+.emerg-card{background:var(--rojo);border-radius:20px;padding:1.4rem;margin-bottom:.75rem;display:flex;align-items:center;gap:1rem;cursor:pointer;box-shadow:0 4px 16px rgba(192,57,43,.3);transition:all .2s}
+.emerg-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(192,57,43,.4)}
+.emerg-icon{font-size:40px}
+.emerg-name{font-size:20px;font-weight:900;color:white}
+.emerg-num{font-size:28px;font-weight:900;color:rgba(255,255,255,.9);font-variant-numeric:tabular-nums}
+
+/* CLIMA */
+.clima-card{background:linear-gradient(135deg,#2980b9,#6dd5fa);border-radius:20px;padding:1.4rem;margin-bottom:1.2rem;color:white;display:flex;align-items:center;gap:1rem;box-shadow:var(--shadow-big)}
+.clima-icon{font-size:52px}
+.clima-temp{font-size:48px;font-weight:900;line-height:1}
+.clima-desc{font-size:18px;font-weight:700;opacity:.9}
+.clima-city{font-size:14px;opacity:.7;font-weight:600}
+
+/* BOTTOM NAV */
+#bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:2px solid var(--azul-light);display:flex;box-shadow:0 -4px 16px rgba(36,81,179,.1);z-index:100}
+.bnav-btn{flex:1;padding:.75rem .5rem;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:transparent;cursor:pointer;transition:all .2s}
+.bnav-btn.active .bnav-icon{color:var(--azul)}
+.bnav-btn.active .bnav-label{color:var(--azul);font-weight:800}
+.bnav-icon{font-size:26px;color:var(--text3)}
+.bnav-label{font-size:11px;font-weight:700;color:var(--text3)}
+
+/* VOICE STATUS */
+#voice-status{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(36,81,179,.95);color:white;padding:.75rem 1.8rem;border-radius:30px;font-size:15px;font-weight:700;display:none;z-index:200;box-shadow:0 4px 20px rgba(36,81,179,.4);white-space:nowrap}
+#voice-status.show{display:block}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div class="header-logo">HABIL<span>/IA</span></div>
+  <div class="header-time" id="clock">--:--</div>
+  <button class="mic-btn-header" id="mic-header" onclick="toggleVoice()" title="Hablar">🎙️</button>
+</div>
+
+<div id="main">
+
+  <!-- HOME -->
+  <div id="screen-home" class="screen active">
+    <div class="greeting-card">
+      <div class="greeting-name" id="greeting-name">¡Buenos días! 👋</div>
+      <div class="greeting-sub">¿En qué te ayudo hoy?</div>
+      <div class="greeting-date" id="greeting-date"></div>
+    </div>
+
+    <div class="menu-grid">
+      <button class="menu-btn azul" onclick="showScreen('chat')">
+        <span class="btn-icon">🤖</span>
+        <span class="btn-label">Hablar con mi Asistente</span>
+        <span class="btn-sub">Pregunta lo que quieras</span>
+      </button>
+      <button class="menu-btn verde" onclick="showScreen('agenda')">
+        <span class="btn-icon">📅</span>
+        <span class="btn-label">Mi Agenda del Día</span>
+        <span class="btn-sub">Recordatorios</span>
+      </button>
+      <button class="menu-btn gold" onclick="showScreen('tutoriales')">
+        <span class="btn-icon">📱</span>
+        <span class="btn-label">Aprender a usar el Celular</span>
+        <span class="btn-sub">Paso a paso</span>
+      </button>
+      <button class="menu-btn rojo" onclick="showScreen('futbol')">
+        <span class="btn-icon">⚽</span>
+        <span class="btn-label">Fútbol</span>
+        <span class="btn-sub">Partidos y noticias</span>
+      </button>
+      <button class="menu-btn naranja" onclick="showScreen('emergencias')">
+        <span class="btn-icon">🚨</span>
+        <span class="btn-label">Números de Emergencia</span>
+        <span class="btn-sub">Siempre disponibles</span>
+      </button>
+      <button class="menu-btn azul" onclick="showScreen('clima')">
+        <span class="btn-icon">🌤️</span>
+        <span class="btn-label">El Tiempo de Hoy</span>
+        <span class="btn-sub">¿Qué me pongo?</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- CHAT -->
+  <div id="screen-chat" class="screen">
+    <button class="back-btn" onclick="showScreen('home')">← Volver al inicio</button>
+    <div class="section-title">🤖 Mi Asistente</div>
+    <div id="chat-messages">
+      <div class="msg msg-ai">¡Hola! Soy tu asistente. Puedo contarte historias de vaqueros, explicarte cómo usar el celular, hablar de fútbol o ayudarte con lo que necesites. ¿Por dónde empezamos? 😊</div>
+    </div>
+    <div class="chat-input-wrap">
+      <button class="mic-btn-chat" id="mic-chat" onclick="toggleVoiceChat()">🎙️</button>
+      <input id="chat-input" placeholder="Escribe o usa el micrófono..." onkeydown="if(event.key==='Enter')sendChat()"/>
+      <button class="send-btn" onclick="sendChat()">→</button>
+    </div>
+    <div class="voice-hint">🎙️ Toca el botón verde para hablar</div>
+  </div>
+
+  <!-- AGENDA -->
+  <div id="screen-agenda" class="screen">
+    <button class="back-btn" onclick="showScreen('home')">← Volver al inicio</button>
+    <div class="section-title">📅 Mi Agenda</div>
+    <div class="agenda-day" id="agenda-day"></div>
+    <div id="reminders-list"></div>
+    <div class="add-reminder">
+      <span style="font-size:24px">➕</span>
+      <input class="add-input" id="new-reminder" placeholder="Agregar recordatorio..."/>
+      <input class="add-time" id="new-time" type="time"/>
+      <button class="add-save" onclick="addReminder()">Guardar</button>
+    </div>
+  </div>
+
+  <!-- TUTORIALES -->
+  <div id="screen-tutoriales" class="screen">
+    <button class="back-btn" onclick="showScreen('home')">← Volver al inicio</button>
+    <div class="section-title">📱 Aprender el Celular</div>
+    <div id="tutorials-list"></div>
+  </div>
+
+  <!-- FÚTBOL -->
+  <div id="screen-futbol" class="screen">
+    <button class="back-btn" onclick="showScreen('home')">← Volver al inicio</button>
+    <div class="section-title">⚽ Fútbol</div>
+    <div id="futbol-content"></div>
+  </div>
+
+  <!-- EMERGENCIAS -->
+  <div id="screen-emergencias" class="screen">
+    <button class="back-btn" onclick="showScreen('home')">← Volver al inicio</button>
+    <div class="section-title">🚨 Emergencias</div>
+    <p style="font-size:16px;color:var(--text2);font-weight:600;margin-bottom:1rem">Toca el número para llamar:</p>
+    <div id="emerg-list"></div>
+  </div>
+
+  <!-- CLIMA -->
+  <div id="screen-clima" class="screen">
+    <button class="back-btn" onclick="showScreen('home')">← Volver al inicio</button>
+    <div class="section-title">🌤️ El Tiempo</div>
+    <div id="clima-content"></div>
+  </div>
+
+</div>
+
+<div id="voice-status">🎙️ Escuchando...</div>
+
+<div id="bottom-nav">
+  <button class="bnav-btn active" onclick="showScreen('home')" id="bnav-home">
+    <span class="bnav-icon">🏠</span><span class="bnav-label">Inicio</span>
+  </button>
+  <button class="bnav-btn" onclick="showScreen('chat')" id="bnav-chat">
+    <span class="bnav-icon">🤖</span><span class="bnav-label">Asistente</span>
+  </button>
+  <button class="bnav-btn" onclick="showScreen('agenda')" id="bnav-agenda">
+    <span class="bnav-icon">📅</span><span class="bnav-label">Agenda</span>
+  </button>
+  <button class="bnav-btn" onclick="showScreen('futbol')" id="bnav-futbol">
+    <span class="bnav-icon">⚽</span><span class="bnav-label">Fútbol</span>
+  </button>
+  <button class="bnav-btn" onclick="showScreen('emergencias')" id="bnav-emergencias">
+    <span class="bnav-icon">🚨</span><span class="bnav-label">SOS</span>
+  </button>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// DATA
+// ══════════════════════════════════════
+const TUTORIALS = [
+  {icon:'💳',title:'Cómo pagar con tarjeta de débito',desc:'En el supermercado, farmacia o cualquier tienda',steps:[
+    'Cuando el cajero te diga el total, saca tu tarjeta',
+    'Pasa o acerca la tarjeta a la máquina (mira el símbolo de ondas 📶)',
+    'La máquina te pregunta: ¿Débito o Crédito? — elige DÉBITO',
+    'Te pedirá tu clave de 4 números — escríbela sin que nadie vea',
+    'Espera el mensaje "APROBADO" — ¡listo! Guarda tu tarjeta',
+    'Pide siempre el comprobante para guardarlo',
+  ]},
+  {icon:'📲',title:'Cómo hacer una transferencia',desc:'Enviar dinero desde tu celular',steps:[
+    'Abre la app de tu banco en el celular',
+    'Toca "Transferir" o "Enviar dinero"',
+    'Escribe el RUT de la persona a quien le enviarás',
+    'Escribe el monto que quieres enviar',
+    'Revisa bien que el nombre y el monto sean correctos',
+    'Confirma con tu clave o huella digital',
+    'Guarda el comprobante que te muestra la pantalla',
+  ]},
+  {icon:'📞',title:'Cómo hacer una videollamada',desc:'Ver a la familia aunque estén lejos',steps:[
+    'Abre WhatsApp en tu celular',
+    'Busca el nombre de la persona (tu hija, nieto, etc.)',
+    'Toca su nombre para abrir el chat',
+    'Arriba a la derecha verás una cámara 📹 — tócala',
+    'Espera que la otra persona conteste',
+    '¡Ya puedes verlos! Habla normal, como por teléfono',
+    'Para terminar, toca el botón rojo 🔴',
+  ]},
+  {icon:'🎵',title:'Cómo poner música en YouTube',desc:'Escucha Nueva Ola y tus canciones favoritas',steps:[
+    'Abre el navegador de tu celular (Chrome o Safari)',
+    'En la barra de arriba escribe: youtube.com',
+    'En el buscador escribe el nombre del artista — ej: "Sandro"',
+    'Toca la lupa 🔍 o la tecla "Buscar"',
+    'Aparecerán videos — toca el que quieras',
+    '¡La música empieza sola! Sube el volumen con los botones del costado',
+  ]},
+  {icon:'💊',title:'Cómo poner alarma para remedios',desc:'Para no olvidar tomar los medicamentos',steps:[
+    'Busca el reloj ⏰ en tu celular',
+    'Toca "Alarma" o el símbolo +',
+    'Pon la hora a la que debes tomar el remedio',
+    'En "Nombre" o "Etiqueta" escribe qué remedio es',
+    'Activa la alarma — aparecerá una campana',
+    'Cuando suene, toma tu remedio y apaga la alarma',
+  ]},
+  {icon:'🏦',title:'El nuevo sistema de pagos que viene',desc:'Qué cambiará y cómo prepararse',steps:[
+    'Los bancos del mundo están cambiando cómo envían el dinero',
+    'Esto se llama ISO 20022 — es como un nuevo idioma para el dinero',
+    'Los pagos serán más rápidos: en segundos en vez de días',
+    'Tu dinero estará más seguro y protegido que antes',
+    'No necesitas hacer nada especial — el banco lo actualizará solo',
+    'Consejo: aprende a usar la app de tu banco antes del cambio',
+    'Si tienes dudas, ve a tu sucursal — tienen la obligación de explicarte',
+  ]},
+];
+
+const REMINDERS_KEY = 'abuelo-reminders';
+let reminders = JSON.parse(localStorage.getItem(REMINDERS_KEY) || '[]');
+
+// Default reminders si no hay ninguno
+if(reminders.length === 0){
+  reminders = [
+    {id:1,time:'08:00',text:'Tomar los remedios del desayuno 💊',type:'meds',done:false},
+    {id:2,time:'13:00',text:'Almuerzo — recordar tomar agua 💧',type:'normal',done:false},
+    {id:3,time:'20:30',text:'Partido de La U esta noche ⚽',type:'futbol',done:false},
+    {id:4,time:'21:00',text:'Tomar remedios de la noche 💊',type:'meds',done:false},
+  ];
+  saveReminders();
+}
+
+const FUTBOL_DATA = {
+  campeonato:[
+    {local:'Universidad de Chile',visita:'Colo-Colo',fecha:'Sábado 31 Mayo',hora:'17:00',estado:'Próximo'},
+    {local:'U. de Chile',visita:'U. Española',fecha:'Dom 8 Jun',hora:'15:30',estado:'Próximo'},
+    {local:'Palestino',visita:'U. de Chile',fecha:'Mié 11 Jun',hora:'19:00',estado:'Próximo'},
+  ],
+  internacional:[
+    {local:'Real Madrid',visita:'Barcelona',fecha:'Sábado 31 Mayo',hora:'21:00',estado:'Próximo'},
+    {local:'Manchester City',visita:'Arsenal',fecha:'Domingo 1 Jun',hora:'16:30',estado:'Próximo'},
+    {local:'Bayern München',visita:'Borussia',fecha:'Sábado 7 Jun',hora:'17:30',estado:'Próximo'},
+  ],
+  noticias:[
+    '⚽ La U consiguió su 4° victoria seguida en el campeonato nacional',
+    '🏆 Chile clasifica a la siguiente ronda de la Copa América',
+    '⭐ Arturo Vidal anunció su retiro del fútbol profesional',
+    '🔵 Universidad de Chile refuerza el plantel con dos nuevas contrataciones',
+  ]
+};
+
+const EMERGENCIAS = [
+  {icon:'🚒',nombre:'Bomberos',numero:'132'},
+  {icon:'🚑',nombre:'Ambulancia SAMU',numero:'131'},
+  {icon:'👮',nombre:'Carabineros',numero:'133'},
+  {icon:'🏥',nombre:'Urgencia más cercana',numero:'600 360 7777'},
+  {icon:'⚡',nombre:'Emergencia Electricidad',numero:'600 360 9000'},
+  {icon:'💧',nombre:'Emergencia Agua',numero:'800 200 222'},
+];
+
+// ══════════════════════════════════════
+// CLOCK & GREETING
+// ══════════════════════════════════════
+function updateClock(){
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('clock').textContent = h+':'+m;
+  const hour = now.getHours();
+  const greet = hour<12?'¡Buenos días!':hour<19?'¡Buenas tardes!':'¡Buenas noches!';
+  document.getElementById('greeting-name').textContent = greet+' 👋';
+  const days = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const dateStr = `Hoy es ${days[now.getDay()]} ${now.getDate()} de ${months[now.getMonth()]} de ${now.getFullYear()}`;
+  document.getElementById('greeting-date').textContent = dateStr;
+  document.getElementById('agenda-day').textContent = `${days[now.getDay()].charAt(0).toUpperCase()+days[now.getDay()].slice(1)} ${now.getDate()} de ${months[now.getMonth()]}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
+  const nb = document.getElementById('bnav-'+name);
+  if(nb) nb.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(name==='agenda') renderReminders();
+  if(name==='tutoriales') renderTutorials();
+  if(name==='futbol') renderFutbol();
+  if(name==='emergencias') renderEmergencias();
+  if(name==='clima') renderClima();
+}
+
+// ══════════════════════════════════════
+// REMINDERS
+// ══════════════════════════════════════
+function saveReminders(){localStorage.setItem(REMINDERS_KEY, JSON.stringify(reminders));}
+
+function renderReminders(){
+  const list = document.getElementById('reminders-list');
+  if(!reminders.length){list.innerHTML='<div style="text-align:center;color:var(--text3);padding:2rem;font-size:18px;font-weight:700">No hay recordatorios hoy 🌟</div>';return;}
+  list.innerHTML = reminders.sort((a,b)=>a.time.localeCompare(b.time)).map(r=>`
+    <div class="reminder-card ${r.type} ${r.done?'done':''}">
+      <div class="reminder-icon">${r.type==='meds'?'💊':r.type==='futbol'?'⚽':'📌'}</div>
+      <div style="flex:1">
+        <div class="reminder-time">${r.time} hs</div>
+        <div class="reminder-text">${r.text}</div>
+      </div>
+      <button class="reminder-check ${r.done?'checked':''}" onclick="toggleReminder(${r.id})">${r.done?'✓':'○'}</button>
+    </div>`).join('');
+}
+
+function toggleReminder(id){
+  const r = reminders.find(r=>r.id===id);
+  if(r){r.done=!r.done;saveReminders();renderReminders();}
+}
+
+function addReminder(){
+  const text = document.getElementById('new-reminder').value.trim();
+  const time = document.getElementById('new-time').value;
+  if(!text) return;
+  const id = Date.now();
+  reminders.push({id,time:time||'12:00',text,type:'normal',done:false});
+  saveReminders();
+  document.getElementById('new-reminder').value='';
+  document.getElementById('new-time').value='';
+  renderReminders();
+  speak('Recordatorio guardado: '+text);
+}
+
+// ══════════════════════════════════════
+// TUTORIALS
+// ══════════════════════════════════════
+function renderTutorials(){
+  document.getElementById('tutorials-list').innerHTML = TUTORIALS.map((t,i)=>`
+    <div class="tutorial-card" onclick="toggleTutorial(${i})">
+      <div class="tut-icon">${t.icon}</div>
+      <div class="tut-title">${t.title}</div>
+      <div class="tut-desc">${t.desc}</div>
+      <div class="tut-steps" id="tut-${i}">
+        ${t.steps.map((s,si)=>`
+          <div class="step">
+            <div class="step-num">${si+1}</div>
+            <div class="step-text">${s}</div>
+          </div>`).join('')}
+        <button onclick="readTutorial(${i},event)" style="width:100%;padding:.85rem;border-radius:12px;background:var(--azul);color:white;border:none;font-size:16px;font-weight:800;cursor:pointer;margin-top:.5rem">🔊 Leerme los pasos en voz alta</button>
+      </div>
+    </div>`).join('');
+}
+
+function toggleTutorial(i){
+  const el = document.getElementById('tut-'+i);
+  el.classList.toggle('open');
+}
+
+function readTutorial(i, e){
+  e.stopPropagation();
+  const t = TUTORIALS[i];
+  const text = t.title + '. ' + t.steps.join('. Paso siguiente: ');
+  speak(text);
+}
+
+// ══════════════════════════════════════
+// FÚTBOL
+// ══════════════════════════════════════
+function renderFutbol(){
+  let html = '<div style="font-size:18px;font-weight:800;color:var(--azul);margin-bottom:.75rem">🇨🇱 Campeonato Nacional</div>';
+  FUTBOL_DATA.campeonato.forEach(p=>{
+    html += `<div class="futbol-card">
+      <span class="liga-tag liga-cl">Primera División Chile</span>
+      <div class="partido-teams">
+        <div class="partido-team">${p.local}</div>
+        <div class="partido-vs">vs</div>
+        <div class="partido-team">${p.visita}</div>
+      </div>
+      <div class="partido-info">${p.fecha} · ${p.hora} hrs · ${p.estado}</div>
+    </div>`;
+  });
+  html += '<div style="font-size:18px;font-weight:800;color:var(--verde);margin:.75rem 0">🌍 Internacional</div>';
+  FUTBOL_DATA.internacional.forEach(p=>{
+    html += `<div class="futbol-card">
+      <span class="liga-tag liga-int">Internacional</span>
+      <div class="partido-teams">
+        <div class="partido-team">${p.local}</div>
+        <div class="partido-vs">vs</div>
+        <div class="partido-team">${p.visita}</div>
+      </div>
+      <div class="partido-info">${p.fecha} · ${p.hora} hrs</div>
+    </div>`;
+  });
+  html += '<div style="font-size:18px;font-weight:800;color:var(--text);margin:.75rem 0">📰 Noticias</div>';
+  FUTBOL_DATA.noticias.forEach(n=>{
+    html += `<div style="background:white;border-radius:14px;padding:1rem 1.2rem;margin-bottom:.6rem;font-size:16px;font-weight:700;color:var(--text);box-shadow:var(--shadow)">${n}</div>`;
+  });
+  document.getElementById('futbol-content').innerHTML = html;
+}
+
+// ══════════════════════════════════════
+// EMERGENCIAS
+// ══════════════════════════════════════
+function renderEmergencias(){
+  document.getElementById('emerg-list').innerHTML = EMERGENCIAS.map(e=>`
+    <a href="tel:${e.numero}" class="emerg-card" style="text-decoration:none">
+      <div class="emerg-icon">${e.icon}</div>
+      <div>
+        <div class="emerg-name">${e.nombre}</div>
+        <div class="emerg-num">${e.numero}</div>
+      </div>
+    </a>`).join('');
+}
+
+// ══════════════════════════════════════
+// CLIMA
+// ══════════════════════════════════════
+function renderClima(){
+  // Clima simulado - en producción conectar a OpenWeather API
+  const climas = [
+    {icon:'☀️',temp:18,desc:'Soleado y agradable',consejo:'¡Buen día para salir! Lleva una chaqueta ligera por si refresca.'},
+    {icon:'⛅',temp:15,desc:'Parcialmente nublado',consejo:'Lleva una chaqueta, puede refrescar en la tarde.'},
+    {icon:'🌧️',temp:12,desc:'Con lluvia',consejo:'Lleva paraguas y abrigo hoy.'},
+  ];
+  const c = climas[Math.floor(Math.random()*climas.length)];
+  document.getElementById('clima-content').innerHTML = `
+    <div class="clima-card">
+      <div class="clima-icon">${c.icon}</div>
+      <div>
+        <div class="clima-temp">${c.temp}°C</div>
+        <div class="clima-desc">${c.desc}</div>
+        <div class="clima-city">Santiago, Chile</div>
+      </div>
+    </div>
+    <div style="background:white;border-radius:16px;padding:1.4rem;box-shadow:var(--shadow);font-size:18px;font-weight:700;color:var(--text);line-height:1.6">
+      👕 <strong>¿Qué me pongo?</strong><br><br>${c.consejo}
+    </div>`;
+}
+
+// ══════════════════════════════════════
+// CHAT CON IA
+// ══════════════════════════════════════
+let chatHistory = [{role:'assistant',content:'¡Hola! Soy tu asistente. Puedo contarte historias de vaqueros, explicarte cómo usar el celular, hablar de fútbol o ayudarte con lo que necesites. ¿Por dónde empezamos? 😊'}];
+let chatLoading = false;
+
+const SYSTEM = `Eres un asistente amable y paciente para adultos mayores en Chile. Tu nombre es "El Asistente". 
+
+PERSONALIDAD: Eres como un nieto cariñoso que tiene mucha paciencia. Nunca te apuras. Nunca dices que algo es difícil. Todo lo explicas con calma y cariño.
+
+CÓMO HABLAS: 
+- Frases cortas y claras. Nunca más de 4 oraciones seguidas.
+- Sin palabras técnicas. Si necesitas usar una, la explicas.
+- Siempre positivo y alentador.
+- Usas el "usted" con respeto.
+- Terminas con una pregunta simple o un ofrecimiento de ayuda.
+
+LO QUE PUEDES HACER:
+- Contar historias de vaqueros del viejo oeste (las inventas con detalle y emoción)
+- Explicar cómo usar el celular, pagar con tarjeta, hacer transferencias
+- Hablar de fútbol chileno, La U, campeonato nacional
+- Explicar el cambio del sistema financiero (ISO 20022) de forma muy simple, sin alarmar
+- Poner recordatorios y agenda
+- Dar consejos de salud simples
+- Hablar del clima
+- Recordar cómo hacer videollamadas
+
+IMPORTANTE: Responde SIEMPRE en español chileno. Nunca uses tecnicismos. Si alguien parece confundido, ofrece explicar de otra manera más simple.`;
+
+async function sendChat(){
+  const inp = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if(!text||chatLoading) return;
+  addChatMsg('user', text);
+  chatHistory.push({role:'user',content:text});
+  inp.value='';
+  chatLoading=true;
+  const typing = addTyping();
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:SYSTEM,messages:chatHistory.map(m=>({role:m.role,content:m.content}))})
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'No pude responder. ¿Lo intentamos de nuevo?';
+    typing.remove();
+    addChatMsg('ai', reply);
+    chatHistory.push({role:'assistant',content:reply});
+    speak(reply);
+  }catch{
+    typing.remove();
+    const err = 'Tuve un problema. ¿Me puede repetir lo que dijo?';
+    addChatMsg('ai', err);
+    speak(err);
+  }
+  chatLoading=false;
+}
+
+function addChatMsg(role, text){
+  const box = document.getElementById('chat-messages');
+  const d = document.createElement('div');
+  d.className = 'msg msg-'+role;
+  d.textContent = text;
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+  return d;
+}
+
+function addTyping(){
+  const box = document.getElementById('chat-messages');
+  const d = document.createElement('div');
+  d.className = 'typing';
+  d.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+  return d;
+}
+
+// ══════════════════════════════════════
+// VOZ
+// ══════════════════════════════════════
+let recognition = null;
+let isListening = false;
+let voiceTarget = 'chat'; // 'chat' o 'global'
+
+function speak(text){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'es-CL';u.rate = 0.88;u.volume = 1;u.pitch = 1;
+  const voices = window.speechSynthesis.getVoices();
+  const v = voices.find(v=>v.lang==='es-CL')||voices.find(v=>v.lang==='es-MX')||voices.find(v=>v.lang.startsWith('es'));
+  if(v) u.voice = v;
+  window.speechSynthesis.speak(u);
+}
+
+function initRecognition(){
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)) return null;
+  const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
+  const r = new SR();
+  r.lang='es-CL';r.continuous=false;r.interimResults=false;
+  r.onresult = e=>{
+    const text = e.results[0][0].transcript;
+    document.getElementById('chat-input').value = text;
+    sendChat();
+  };
+  r.onend = ()=>{
+    isListening=false;
+    document.getElementById('mic-header').classList.remove('listening');
+    document.getElementById('mic-chat').classList.remove('listening');
+    document.getElementById('voice-status').classList.remove('show');
+  };
+  r.onerror = ()=>r.onend();
+  return r;
+}
+
+function toggleVoice(){
+  if(!recognition) recognition = initRecognition();
+  if(!recognition){speak('Lo siento, su navegador no soporta el micrófono.');return;}
+  if(isListening){recognition.stop();}
+  else{
+    showScreen('chat');
+    startListening();
+  }
+}
+
+function toggleVoiceChat(){
+  if(!recognition) recognition = initRecognition();
+  if(!recognition){speak('Lo siento, su navegador no soporta el micrófono.');return;}
+  if(isListening) recognition.stop();
+  else startListening();
+}
+
+function startListening(){
+  isListening=true;
+  document.getElementById('mic-header').classList.add('listening');
+  document.getElementById('mic-chat').classList.add('listening');
+  document.getElementById('voice-status').classList.add('show');
+  recognition.start();
+}
+
+window.speechSynthesis && window.speechSynthesis.getVoices();
+setTimeout(()=>{speak('¡Hola! Bienvenido a su asistente. Toque el micrófono verde para hablar conmigo.');}, 1000);
+</script>
+</body>
+</html>
