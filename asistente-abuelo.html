@@ -594,29 +594,48 @@ LO QUE PUEDES HACER:
 
 IMPORTANTE: Responde SIEMPRE en español chileno. Nunca uses tecnicismos. Si alguien parece confundido, ofrece explicar de otra manera más simple.`;
 
+const API_KEY = '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';
+
 async function sendChat(){
   const inp = document.getElementById('chat-input');
   const text = inp.value.trim();
   if(!text||chatLoading) return;
   addChatMsg('user', text);
-  chatHistory.push({role:'user',content:text});
+  chatHistory.push({role:'user', content:text});
   inp.value='';
   chatLoading=true;
   const typing = addTyping();
   try{
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:SYSTEM,messages:chatHistory.map(m=>({role:m.role,content:m.content}))})
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 600,
+        system: SYSTEM,
+        messages: chatHistory
+      })
     });
+    if(!res.ok){
+      const errData = await res.json();
+      console.error('API error:', res.status, errData);
+      throw new Error(res.status);
+    }
     const data = await res.json();
     const reply = data.content?.[0]?.text || 'No pude responder. ¿Lo intentamos de nuevo?';
     typing.remove();
     addChatMsg('ai', reply);
-    chatHistory.push({role:'assistant',content:reply});
+    chatHistory.push({role:'assistant', content:reply});
     speak(reply);
-  }catch{
+  }catch(e){
+    console.error('Error:', e);
     typing.remove();
-    const err = 'Tuve un problema. ¿Me puede repetir lo que dijo?';
+    const err = 'Tuve un pequeño problema. ¿Me puede repetir lo que dijo?';
     addChatMsg('ai', err);
     speak(err);
   }
