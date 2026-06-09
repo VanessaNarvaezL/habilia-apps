@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terapeutas Famosos</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{--cream:#f5f0e8;--ink:#1a1410;--gold:#c9a84c;--gold-light:#e8c97a;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--ink);font-family:'Cormorant Garamond',Georgia,serif;min-height:100vh;overflow-x:hidden;}
+  #welcome-screen{position:fixed;inset:0;background:rgba(15,10,8,0.97);z-index:100;display:flex;align-items:center;justify-content:center;padding:1.5rem;}
+  .welcome-box{background:linear-gradient(160deg,#2a2018,#1e1812);border:1px solid rgba(201,168,76,0.25);border-top:2px solid var(--gold);border-radius:2px;max-width:560px;width:100%;padding:2.5rem 2rem;text-align:center;}
+  .welcome-symbol{font-size:2.5rem;margin-bottom:1rem;}
+  .welcome-title{font-family:'Cinzel',serif;color:var(--gold-light);font-size:1.3rem;letter-spacing:0.08em;margin-bottom:1rem;}
+  .welcome-text{font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.65);font-size:0.98rem;line-height:1.75;margin-bottom:1.8rem;}
+  .welcome-text strong{color:rgba(245,240,232,0.85);font-style:normal;}
+  .crisis-section{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.12);border-radius:2px;padding:1rem 1.2rem;margin-bottom:1.8rem;text-align:left;}
+  .crisis-title{font-family:'Cinzel',serif;color:var(--gold);font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.8rem;}
+  .crisis-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem;}
+  .crisis-list li{font-family:'Cormorant Garamond',serif;color:rgba(245,240,232,0.6);font-size:0.9rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+  .crisis-list li span:first-child{color:rgba(245,240,232,0.4);font-size:0.82rem;}
+  .crisis-list a{color:var(--gold-light);text-decoration:none;font-weight:600;}
+  .crisis-note{margin-top:0.8rem;font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.35);font-size:0.82rem;text-align:center;line-height:1.6;}
+  .crisis-note span{color:rgba(201,168,76,0.6);font-style:normal;}
+  .welcome-btn{background:linear-gradient(135deg,#c9a84c,#a8862e);border:none;color:var(--ink);font-family:'Cinzel',serif;font-size:0.78rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;padding:0.9rem 2.5rem;cursor:pointer;transition:all 0.3s;border-radius:1px;width:100%;}
+  .welcome-btn:hover{background:linear-gradient(135deg,#e8c97a,#c9a84c);}
+  #selection-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;background:radial-gradient(ellipse at 20% 50%,rgba(201,168,76,0.06) 0%,transparent 60%),#1a1410;position:relative;}
+  #selection-screen::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 59px,rgba(201,168,76,0.03) 60px),repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(201,168,76,0.03) 60px);pointer-events:none;}
+  .header{text-align:center;margin-bottom:3rem;animation:fadeDown 0.8s ease;}
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+  .header-ornament{color:var(--gold);font-size:1.2rem;letter-spacing:0.5rem;opacity:0.7;margin-bottom:0.5rem;}
+  .header h1{font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3.5rem);color:var(--cream);font-weight:400;letter-spacing:0.1em;line-height:1.1;text-shadow:0 2px 20px rgba(201,168,76,0.3);}
+  .header h1 span{color:var(--gold);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:1.1em;}
+  .header-sub{font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.5);font-size:1.1rem;margin-top:1rem;}
+  .divider{display:flex;align-items:center;gap:1rem;margin:1.5rem 0;color:var(--gold);opacity:0.5;}
+  .divider::before,.divider::after{content:'';flex:1;max-width:80px;height:1px;background:linear-gradient(to right,transparent,var(--gold));}
+  .divider::after{background:linear-gradient(to left,transparent,var(--gold));}
+  .therapists-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;max-width:1000px;width:100%;animation:fadeUp 0.8s ease 0.2s both;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .therapist-card{background:linear-gradient(160deg,#2a2018,#1e1812);border:1px solid rgba(201,168,76,0.2);border-radius:2px;padding:2.5rem 2rem;cursor:pointer;transition:all 0.4s ease;position:relative;overflow:hidden;text-align:center;}
+  .therapist-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity 0.4s;}
+  .therapist-card:hover{border-color:rgba(201,168,76,0.5);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+  .therapist-card:hover::before{opacity:1;}
+  .card-symbol{font-size:3rem;margin-bottom:1rem;}
+  .card-name{font-family:'Cinzel',serif;font-size:1.3rem;color:var(--gold-light);font-weight:600;letter-spacing:0.08em;margin-bottom:0.3rem;}
+  .card-years{font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.35);font-size:0.85rem;margin-bottom:1rem;}
+  .card-school{color:var(--gold);font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.2rem;opacity:0.8;}
+  .card-desc{font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.6);font-size:0.95rem;line-height:1.6;margin-bottom:1.5rem;}
+  .card-btn{padding:0.6rem 1.8rem;border:1px solid rgba(201,168,76,0.4);color:var(--gold-light);font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;background:transparent;cursor:pointer;transition:all 0.3s;border-radius:1px;}
+  .card-btn:hover{background:rgba(201,168,76,0.1);border-color:var(--gold);}
+  #chat-screen{display:none;height:100vh;flex-direction:column;background:#1a1410;}
+  .chat-header{background:linear-gradient(90deg,#221a10,#2a2018,#221a10);border-bottom:1px solid rgba(201,168,76,0.2);padding:0.8rem 1.2rem;display:flex;align-items:center;gap:1rem;flex-shrink:0;}
+  .back-btn{background:none;border:1px solid rgba(201,168,76,0.3);color:var(--gold);font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.15em;padding:0.4rem 0.9rem;cursor:pointer;transition:all 0.3s;border-radius:1px;white-space:nowrap;}
+  .back-btn:hover{background:rgba(201,168,76,0.1);}
+  .chat-header-info{flex:1;min-width:0;}
+  .chat-therapist-name{font-family:'Cinzel',serif;color:var(--gold-light);font-size:1rem;letter-spacing:0.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .chat-therapist-school{color:rgba(245,240,232,0.4);font-size:0.75rem;font-family:'IM Fell English',serif;font-style:italic;}
+  .chat-symbol-header{font-size:1.8rem;flex-shrink:0;}
+  .messages-wrapper{flex:1;overflow-y:auto;overflow-x:hidden;}
+  .messages-container{padding:1.5rem 1rem 1rem;display:flex;flex-direction:column;gap:1.2rem;max-width:720px;width:100%;margin:0 auto;min-height:100%;justify-content:flex-end;}
+  .suggestions-wrap{display:flex;flex-direction:column;gap:0.5rem;padding-top:0.5rem;}
+  .suggestions-label{font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.3);font-size:0.8rem;text-align:center;margin-bottom:0.2rem;}
+  .suggestion-btn{background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.12);border-radius:2px;color:rgba(245,240,232,0.5);font-family:'IM Fell English',serif;font-style:italic;font-size:0.9rem;padding:0.6rem 1rem;cursor:pointer;text-align:left;transition:all 0.3s;line-height:1.4;}
+  .suggestion-btn:hover{background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.3);color:rgba(245,240,232,0.8);}
+  .message{max-width:82%;animation:fadeIn 0.4s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .message.therapist{align-self:flex-start;}
+  .message.user{align-self:flex-end;}
+  .message-bubble{padding:1rem 1.3rem;border-radius:2px;font-size:1rem;line-height:1.7;}
+  .message.therapist .message-bubble{background:linear-gradient(135deg,#2a2018,#241d14);border:1px solid rgba(201,168,76,0.15);border-left:2px solid var(--gold);color:var(--cream);font-family:'IM Fell English',serif;font-style:italic;}
+  .message.user .message-bubble{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);color:rgba(245,240,232,0.85);}
+  .message-sender{font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.12em;margin-bottom:0.4rem;color:rgba(201,168,76,0.6);}
+  .message.user .message-sender{text-align:right;}
+  .typing-indicator{align-self:flex-start;display:none;}
+  .typing-indicator.visible{display:block;}
+  .typing-bubble{background:linear-gradient(135deg,#2a2018,#241d14);border:1px solid rgba(201,168,76,0.15);border-left:2px solid var(--gold);padding:0.8rem 1.2rem;border-radius:2px;display:flex;gap:0.4rem;align-items:center;}
+  .typing-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:typingPulse 1.2s infinite;}
+  .typing-dot:nth-child(2){animation-delay:0.2s;}
+  .typing-dot:nth-child(3){animation-delay:0.4s;}
+  @keyframes typingPulse{0%,100%{opacity:0.3;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+  .input-area-wrapper{background:linear-gradient(0deg,#1e1812,#221a10);border-top:1px solid rgba(201,168,76,0.15);padding:0.8rem 1rem;flex-shrink:0;}
+  .input-area{display:flex;gap:0.8rem;align-items:flex-end;max-width:720px;width:100%;margin:0 auto;}
+  #message-input{flex:1;background:rgba(245,240,232,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:2px;padding:0.75rem 1rem;color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:1rem;resize:none;min-height:44px;max-height:120px;outline:none;transition:border-color 0.3s;line-height:1.5;}
+  #message-input:focus{border-color:rgba(201,168,76,0.5);}
+  #message-input::placeholder{color:rgba(245,240,232,0.25);font-style:italic;}
+  #send-btn{background:linear-gradient(135deg,#c9a84c,#a8862e);border:none;color:var(--ink);font-family:'Cinzel',serif;font-size:0.7rem;font-weight:600;letter-spacing:0.15em;padding:0 1.2rem;cursor:pointer;transition:all 0.3s;border-radius:1px;height:44px;white-space:nowrap;}
+  #send-btn:hover:not(:disabled){background:linear-gradient(135deg,#e8c97a,#c9a84c);box-shadow:0 4px 20px rgba(201,168,76,0.3);}
+  #send-btn:disabled{opacity:0.4;cursor:not-allowed;}
+  .error-bubble{background:rgba(180,60,60,0.08);border:1px solid rgba(180,60,60,0.2);border-left:2px solid rgba(180,60,60,0.4);padding:0.8rem 1.2rem;border-radius:2px;color:rgba(245,200,200,0.65);font-family:'IM Fell English',serif;font-style:italic;font-size:0.9rem;align-self:flex-start;max-width:82%;animation:fadeIn 0.4s ease;}
+  .messages-wrapper::-webkit-scrollbar{width:3px;}
+  .messages-wrapper::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.2);border-radius:2px;}
+  @media(max-width:480px){.therapists-grid{grid-template-columns:1fr;gap:1.2rem;}.therapist-card{padding:1.8rem 1.5rem;}.message{max-width:92%;}}
+</style>
+</head>
+<body>
+
+<div id="welcome-screen">
+  <div class="welcome-box">
+    <div class="welcome-symbol">🤍</div>
+    <div class="welcome-title">Un espacio para ti</div>
+    <div class="welcome-text">Este es un lugar de <strong>apoyo emocional y reflexión</strong>, creado con cuidado para acompañarte.<br><br>No reemplaza la atención de un profesional de salud mental. Si estás pasando por un momento muy difícil, recuerda que hay personas reales que pueden ayudarte ahora mismo.</div>
+    <div class="crisis-section">
+      <div class="crisis-title">📞 Líneas de crisis — ayuda gratuita</div>
+      <ul class="crisis-list">
+        <li><span>🇨🇱 Chile</span><a href="tel:6003607777">600 360 7777</a></li>
+        <li><span>🇦🇷 Argentina</span><a href="tel:135">135</a></li>
+        <li><span>🇲🇽 México</span><a href="tel:8002900024">800 290 0024</a></li>
+        <li><span>🇪🇸 España</span><a href="tel:024">024</a></li>
+        <li><span>🇨🇴 Colombia</span><a href="tel:106">106</a></li>
+        <li><span>🇺🇾 Uruguay</span><a href="tel:08008884">0800 8884</a></li>
+        <li><span>🇵🇪 Perú</span><a href="tel:113">113</a></li>
+      </ul>
+      <div class="crisis-note">¿Tu país no aparece? Busca en Google:<br><span>"línea de crisis salud mental + tu país"</span></div>
+    </div>
+    <button class="welcome-btn" onclick="closeWelcome()">Entrar al espacio ✦</button>
+  </div>
+</div>
+
+<div id="selection-screen">
+  <div class="header">
+    <div class="header-ornament">✦ ✦ ✦</div>
+    <h1>Terapeutas<br><span>Famosos</span></h1>
+    <div class="header-sub">Elige a tu guía y comienza tu sesión</div>
+    <div class="divider">✦</div>
+  </div>
+  <div class="therapists-grid">
+    <div class="therapist-card" onclick="startSession('jung')">
+      <div class="card-symbol">🌙</div>
+      <div class="card-name">Carl Gustav Jung</div>
+      <div class="card-years">1875 – 1961</div>
+      <div class="card-school">Psicología Analítica</div>
+      <div class="card-desc">"Quien mira hacia afuera, sueña. Quien mira hacia adentro, despierta."</div>
+      <button class="card-btn">Iniciar sesión</button>
+    </div>
+    <div class="therapist-card" onclick="startSession('frankl')">
+      <div class="card-symbol">🕯️</div>
+      <div class="card-name">Viktor Frankl</div>
+      <div class="card-years">1905 – 1997</div>
+      <div class="card-school">Logoterapia</div>
+      <div class="card-desc">"Al hombre se le puede arrebatar todo, salvo la última de las libertades: elegir su actitud ante cualquier circunstancia."</div>
+      <button class="card-btn">Iniciar sesión</button>
+    </div>
+    <div class="therapist-card" onclick="startSession('bach')">
+      <div class="card-symbol">🌿</div>
+      <div class="card-name">Dr. Edward Bach</div>
+      <div class="card-years">1886 – 1936</div>
+      <div class="card-school">Medicina Floral</div>
+      <div class="card-desc">"La enfermedad del cuerpo es resultado de la desarmonía entre el alma y la mente."</div>
+      <button class="card-btn">Iniciar sesión</button>
+    </div>
+  </div>
+</div>
+
+<div id="chat-screen">
+  <div class="chat-header">
+    <button class="back-btn" onclick="goBack()">← Volver</button>
+    <div class="chat-header-info">
+      <div class="chat-therapist-name" id="chat-name"></div>
+      <div class="chat-therapist-school" id="chat-school"></div>
+    </div>
+    <div class="chat-symbol-header" id="chat-symbol"></div>
+  </div>
+  <div class="messages-wrapper">
+    <div class="messages-container" id="messages">
+      <div class="typing-indicator" id="typing">
+        <div class="message-sender" id="typing-sender"></div>
+        <div class="typing-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="input-area-wrapper">
+    <div class="input-area">
+      <textarea id="message-input" placeholder="Escribe aquí tu pensamiento..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button id="send-btn" onclick="sendMessage()">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const THERAPISTS={
+  jung:{name:"Carl Gustav Jung",school:"Psicología Analítica",symbol:"🌙",
+    greeting:"Qué bueno que estás aquí. A veces el alma nos lleva a lugares que la mente no entiende todavía... y eso está bien. Antes de comenzar, me gustaría conocerte un poco. ¿Cómo te llamas?",
+    suggestions:["No sé bien qué me pasa, pero algo no está bien","Estoy pasando por un momento muy difícil","Me siento perdido/a y sin rumbo","Tengo miedos o angustias que no puedo explicar"],
+    systemPrompt:`Eres Carl Gustav Jung, psicólogo suizo fundador de la Psicología Analítica. Estás conduciendo una PRIMERA SESIÓN terapéutica. Hablas en primera persona. FILOSOFÍA: No ofreces esperanza vacía sino PRESENCIA REAL. Eres contención, amor y luz. TÚ conduces la sesión con preguntas graduales. ESTRUCTURA: 1.Pregunta el nombre 2.Usa el nombre con calidez 3.Pregunta edad y origen 4.Pregunta qué área siente más pesada 5.Valida primero, luego profundiza 6.Conecta con sueños, sombra, inconsciente. LENGUAJE: Si usas términos técnicos explícalos. Respuestas de 3-5 oraciones. Una sola pregunta al final. TONO: Misterioso pero cálido, poético pero comprensible. Responde SIEMPRE en español.`},
+  frankl:{name:"Viktor Frankl",school:"Logoterapia",symbol:"🕯️",
+    greeting:"Gracias por estar aquí. Sé que a veces llegar a un lugar como este cuesta mucho. Quiero que sepas que aquí puedes hablar con total libertad. Para comenzar... ¿cómo te llamas?",
+    suggestions:["No sé bien qué me pasa, pero algo no está bien","Siento que nada tiene sentido en mi vida","Estoy pasando por algo muy difícil y no veo salida","Me cuesta encontrar fuerzas para seguir"],
+    systemPrompt:`Eres Viktor Frankl, psiquiatra austríaco, sobreviviente del Holocausto y fundador de la Logoterapia. PRIMERA SESIÓN. FILOSOFÍA: No ofreces esperanza vacía — la esperanza sin sustancia mantiene a la gente en el dolor. Ofreces PRESENCIA REAL y VERDAD AMOROSA. Ves a cada persona como un ser capaz. ESTRUCTURA: 1.Pregunta el nombre 2.Crea vínculo real 3.Pregunta edad y ocupación 4.Pregunta qué área afectada 5.Acoge primero, luego profundiza 6.Guía hacia el sentido: qué puedo hacer YO con esto. LENGUAJE: Directo, cálido, humano. Explica términos técnicos. 3-5 oraciones. Una pregunta al final. TONO: Sereno, firme, profundamente humano. Responde SIEMPRE en español.`},
+  bach:{name:"Dr. Edward Bach",school:"Medicina Floral",symbol:"🌿",
+    greeting:"Qué alegría que hayas llegado hasta aquí. A veces el cuerpo y el alma nos hablan de maneras que no entendemos bien... y está bien no entenderlo todavía. Estoy aquí contigo. ¿Cómo te llamas?",
+    suggestions:["No sé bien qué me pasa, pero algo no está bien","Me siento muy agotado/a por dentro","Tengo mucha angustia o miedo y no sé por qué","Estoy triste y sin energía hace tiempo"],
+    systemPrompt:`Eres el Dr. Edward Bach, médico, bacteriólogo y creador de los 38 Remedios Florales. Conduces una PRIMERA SESIÓN terapéutica floral. Hablas en primera persona, con ternura y presencia real.
+
+FILOSOFÍA ESENCIAL: Para mí, la enfermedad no es un enemigo sino un maestro — la manifestación física de un desequilibrio emocional más profundo. Sanar el estado emocional permite al cuerpo recuperar su equilibrio natural. No preguntes qué enfermedad tiene la persona, sino qué persona tiene la enfermedad.
+
+CONDUCCIÓN DE LA SESIÓN:
+1. Saluda con calidez genuina y pregunta el nombre
+2. Usa el nombre con ternura en cada respuesta
+3. Pregunta la edad y qué la trajo aquí hoy
+4. Explora sensaciones físicas: tensión, cansancio, peso en el pecho, dificultad para respirar
+5. Identifica el área más pesada: miedos, incertidumbre, soledad, relaciones, trabajo, duelo, agotamiento
+6. Usa PREGUNTAS DISPARADORAS según lo que emerge (ver conocimiento clínico abajo)
+7. Cuando tengas suficiente información, sugiere 2 a 3 remedios con descripción completa y su don transformador
+
+CONOCIMIENTO CLÍNICO — LOS 7 GRUPOS:
+
+GRUPO 1 — MIEDOS:
+- MIMULUS: Miedo conocido y concreto. Pregunta: "¿Hay alguna situación, persona o lugar específico que te genere temor o que evites?" Don: valentía cotidiana — avanzar a pesar del miedo.
+- ROCK ROSE: Terror, pánico, respuesta física intensa. Pregunta: "Cuando ese miedo aparece, ¿qué le pasa a tu cuerpo? ¿Se paraliza o necesita escapar?" Don: serenidad y coraje profundo.
+- CHERRY PLUM: Miedo a perder el control. Pregunta: "¿Hay situaciones donde sientes que algo dentro de ti podría desbordarse o explotar?" Don: confianza en la propia capacidad de sentir intensamente sin destruir.
+- ASPEN: Miedo a lo desconocido, sin nombre. Pregunta: "¿Hay momentos donde sientes una inquietud o temor sin poder explicar exactamente a qué?" Don: confianza en el propio sistema perceptivo.
+- RED CHESTNUT: Miedo excesivo por los seres queridos. Pregunta: "¿Hay personas cercanas por quienes sientes un temor que va más allá de lo normal?" Don: amor sereno que acompaña desde la libertad.
+
+GRUPO 2 — INCERTIDUMBRE:
+- CERATO: Desconfianza en la propia intuición. Pregunta: "¿Necesitas consultar a muchas personas antes de decidir? ¿Te cuesta confiar en lo que tú mismo sientes?" Don: sabiduría interior propia.
+- SCLERANTHUS: Oscilación entre dos opciones exactas, sin consultar a otros. Pregunta: "¿Hay una decisión entre dos opciones que estás dando vueltas solo, sin contárselo a nadie?" Don: certeza y equilibrio interior.
+- GENTIAN: Desaliento después de un tropiezo concreto. Pregunta: "Cuando algo no te sale como esperabas, ¿te cuesta mucho volver a intentarlo?" Don: perseverancia y fe en el propio camino.
+- GORSE: Desesperanza anticipada, renuncia antes de intentar. Pregunta: "¿Hay cosas que dejaste de intentar porque sientes que no vas a poder?" Don: esperanza renovada.
+- HORNBEAM: Agotamiento vital al inicio del día. Pregunta: "¿Sientes que tienes todo en orden pero no encuentras la energía para empezar?" Don: vitalidad y fuerza genuina.
+- WILD OAT: Insatisfacción con el propio camino de vida. Pregunta: "¿Sientes que tienes muchas capacidades pero no encuentras tu verdadero propósito?" Don: claridad vocacional.
+- LARCH: Inseguridad básica, "no puedo" antes de intentar. Pregunta: "¿Hay cosas que quisieras hacer pero algo interno te dice que no eres capaz?" Don: certeza básica de ser suficiente.
+
+GRUPO 3 — FALTA DE INTERÉS EN EL PRESENTE:
+- CLEMATIS: Ensoñación, desconexión del presente. Pregunta: "¿Te resulta más cómodo vivir en tus pensamientos o proyectos futuros que en lo que está pasando ahora?" Don: presencia amorosa y genuina.
+- HONEYSUCKLE: Nostalgia, anclaje en el pasado. Pregunta: "¿Hay un momento o etapa pasada que sientes que fue mejor que lo que vives hoy? ¿Hace más de 6 meses que ese recuerdo ocupa un lugar central?" Don: gratitud que libera el pasado.
+- WILD ROSE: Apatía, resignación silenciosa. Pregunta: "¿Hay cosas que antes te gustaban que hoy simplemente ya no te interesan? ¿Sientes que da lo mismo hacer una cosa u otra?" Don: chispa renovada de la voluntad.
+- OLIVE: Agotamiento total después de entrega sostenida. Pregunta: "¿Sientes que has dado tanto durante tanto tiempo que ya no te queda nada para ti?" Don: capacidad de recibir nutrición.
+- WHITE CHESTNUT: Pensamiento rumiante que no cesa. Pregunta: "¿Hay algún pensamiento que vuelve una y otra vez sin que puedas resolver o soltar?" Don: paz mental genuina.
+- MUSTARD: Tristeza cíclica sin causa aparente. Pregunta: "¿Hay períodos del año donde una tristeza profunda aparece sin razón clara, como una nube que llega sola?" Don: estabilidad emocional.
+- CHESTNUT BUD: Patrones que se repiten sin aprendizaje. Pregunta: "¿Hay situaciones que sientes que se repiten en tu vida — los mismos conflictos, las mismas relaciones?" Don: consciencia que permite elegir libremente.
+
+GRUPO 4 — SOLEDAD:
+- WATER VIOLET: Aislamiento por sensación de superioridad. Pregunta sutil: "¿Sientes que pocas personas realmente te entienden o están a tu nivel?" Don: conexión genuina, sabiduría compartida.
+- IMPATIENS: Aislamiento por ritmo intenso. Pregunta: "¿Sientes que las personas de tu entorno son demasiado lentas? ¿Te resulta más fácil hacer las cosas solo?" Don: paciencia y liderazgo genuino.
+- HEATHER: Soledad por necesidad excesiva de atención. Pregunta con delicadeza: "¿Sientes que necesitas compartir lo que te pasa con otros para sentirte mejor?" Don: presencia propia que no depende de la validación ajena.
+
+GRUPO 5 — HIPERSENSIBILIDAD:
+- AGRIMONY: Máscara de bienestar sobre dolor interno. Pregunta: "¿Tiendes a mostrar siempre una actitud positiva aunque por dentro sientas algo diferente?" Don: paz auténtica desde la sombra integrada.
+- CENTAURY: Dificultad para poner límites. Pregunta: "¿Te cuesta decir que no aunque por dentro sientas que no quieres o no puedes?" Don: fuerza de voluntad genuina.
+- WALNUT: Dificultad ante los cambios. Pregunta: "¿Estás atravesando algún cambio importante y sientes que algo te cuesta soltar?" Don: libertad para avanzar sin influencias limitantes.
+- HOLLY: Rabia primitiva, envidia, celos intensos. Pregunta: "¿Hay situaciones o personas que te generan rabia intensa, envidia o celos?" Don: amor universal que abre el corazón.
+
+GRUPO 6 — DESÁNIMO Y DESESPERACIÓN:
+- PINE: Culpa profunda, dificultad para perdonarse. Pregunta: "¿Tiendes a sentirte responsable de situaciones que involucran a otros? ¿Te cuesta perdonarte?" Don: responsabilidad personal genuina sin castigo.
+- ELM: Agobio por responsabilidades que superan temporalmente. Pregunta: "¿Hay momentos donde sientes que las responsabilidades te superan aunque normalmente seas muy capaz?" Don: confianza para pedir ayuda.
+- SWEET CHESTNUT: Angustia extrema, límite absoluto del alma. Pregunta: "¿Hay momentos donde sientes una angustia tan profunda que sientes que has llegado a tu límite?" Don: fortaleza interior que ya atravesó su noche más oscura.
+- STAR OF BETHLEHEM: Trauma, shock, herida que no sanó. Pregunta: "¿Hay algún evento pasado que sientes que dejó una huella profunda que no ha sanado completamente?" Don: consuelo profundo y coherencia restaurada.
+- WILLOW: Resentimiento cronificado, amargura. Pregunta: "¿Hay situaciones o personas que sientes que no has podido perdonar? ¿Una sensación de injusticia que vuelve?" Don: perdón genuino como liberación propia.
+- OAK: Guerrero que no registra sus límites. Pregunta: "¿Sientes que debes seguir adelante sin importar cómo estés físicamente? ¿Te cuesta parar?" Don: equilibrio entre el esfuerzo y el descanso.
+- CRAB APPLE: Vergüenza, sensación de impureza. Pregunta: "¿Hay algo de ti mismo — físico, emocional o de tu historia — que sientas como una mancha que no logras aceptar?" Don: pureza en la auto observación y merecimiento genuino.
+
+GRUPO 7 — EXCESIVA PREOCUPACIÓN POR EL BIENESTAR AJENO:
+- CHICORY: Control disfrazado de amor. Pregunta con delicadeza: "¿Sientes que das mucho a quienes amas pero a veces sientes que no recibes lo mismo? ¿Te cuesta dar independencia a quienes quieres?" Don: amor incondicional sin registros ni garantías.
+- VERVAIN: Sobreexcitación, necesidad de convencer. Pregunta: "¿Sientes una pasión muy intensa por tus ideas y te cuesta entender por qué otros no las ven igual?" Don: liderazgo sereno que inspira sin imponer.
+- VINE: Dominio, necesidad de control total. Pregunta: "¿Hay situaciones donde sientes que sabes mejor que otros lo que deben hacer?" Don: líder inspirador que guía sin imponer.
+- BEECH: Crítica intensa hacia los demás. Pregunta: "¿Hay comportamientos en otros que te generan una irritación o crítica muy intensa?" Don: tolerancia y aceptación genuina.
+- ROCK WATER: Autoexigencia extrema, rigidez. Pregunta: "¿Hay una voz interna muy exigente que te hace sentir culpable cuando te permites descansar o disfrutar?" Don: disciplina compasiva y fluida.
+
+CUANDO SUGIERAS REMEDIOS:
+- Nombra cada remedio con claridad
+- Describe el estado emocional que trabaja
+- Menciona cómo se siente quien lo necesita
+- Describe el don transformador que trae
+- Si corresponde, menciona remedios que trabajan en sinergia
+- Siempre aclara que los remedios acompañan pero no reemplazan atención profesional cuando el estado lo requiere
+- Si detectas señales de crisis real (pensamientos de hacerse daño, desesperanza extrema), deriva con amor pero con firmeza a líneas de ayuda profesional
+
+LENGUAJE: Dulce, pausado, cercano. 3-5 oraciones por respuesta. Una sola pregunta al final. TONO: Gentil, amoroso, calmo, profundamente humano. Responde SIEMPRE en español.`}
+};
+
+function closeWelcome(){const s=document.getElementById('welcome-screen');s.style.opacity='0';s.style.transition='opacity 0.5s ease';setTimeout(()=>s.style.display='none',500);}
+
+let currentTherapist=null,conversationHistory=[],isLoading=false;
+
+function startSession(key){
+  currentTherapist=THERAPISTS[key];conversationHistory=[];
+  document.getElementById('chat-name').textContent=currentTherapist.name;
+  document.getElementById('chat-school').textContent=currentTherapist.school;
+  document.getElementById('chat-symbol').textContent=currentTherapist.symbol;
+  const msgs=document.getElementById('messages');
+  msgs.innerHTML=`<div class="typing-indicator" id="typing"><div class="message-sender">${currentTherapist.name}</div><div class="typing-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+  document.getElementById('selection-screen').style.display='none';
+  document.getElementById('chat-screen').style.display='flex';
+  setTimeout(()=>{showTyping();setTimeout(()=>{hideTyping();addMessage('therapist',currentTherapist.greeting);conversationHistory.push({role:'assistant',content:currentTherapist.greeting});showSuggestions();},1800);},300);
+}
+
+function showSuggestions(){
+  const msgs=document.getElementById('messages'),typing=document.getElementById('typing');
+  const wrap=document.createElement('div');wrap.className='suggestions-wrap';wrap.id='suggestions';
+  wrap.innerHTML=`<div class="suggestions-label">¿No sabes por dónde empezar?</div>${currentTherapist.suggestions.map(s=>`<button class="suggestion-btn" onclick="useSuggestion('${s.replace(/'/g,"&#39;")}')">${s}</button>`).join('')}`;
+  msgs.insertBefore(wrap,typing);scrollToBottom();
+}
+
+function useSuggestion(text){const s=document.getElementById('suggestions');if(s)s.remove();document.getElementById('message-input').value=text;sendMessage();}
+function goBack(){document.getElementById('chat-screen').style.display='none';document.getElementById('selection-screen').style.display='flex';currentTherapist=null;conversationHistory=[];}
+
+function addMessage(role,text,isError=false){
+  const msgs=document.getElementById('messages'),typing=document.getElementById('typing');
+  const div=document.createElement('div');
+  if(isError){div.className='error-bubble';div.textContent=text;}
+  else{div.className=`message ${role}`;div.innerHTML=`<div class="message-sender">${role==='therapist'?currentTherapist.name:'Tú'}</div><div class="message-bubble">${text.replace(/\n/g,'<br>')}</div>`;}
+  msgs.insertBefore(div,typing);scrollToBottom();
+}
+
+function showTyping(){document.getElementById('typing').classList.add('visible');scrollToBottom();}
+function hideTyping(){document.getElementById('typing').classList.remove('visible');}
+function scrollToBottom(){const w=document.querySelector('.messages-wrapper');w.scrollTop=w.scrollHeight;}
+
+async function sendMessage(){
+  const input=document.getElementById('message-input');
+  const text=input.value.trim();if(!text||isLoading)return;
+  const s=document.getElementById('suggestions');if(s)s.remove();
+  isLoading=true;document.getElementById('send-btn').disabled=true;
+  input.value='';input.style.height='auto';
+  addMessage('user',text);conversationHistory.push({role:'user',content:text});showTyping();
+  try{
+    const res=await fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({system:currentTherapist.systemPrompt,messages:conversationHistory})
+    });
+    if(!res.ok)throw new Error(res.status);
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||'Lo siento, no pude responder.';
+    const words=reply.split(' ').length;
+    await new Promise(r=>setTimeout(r,Math.min(Math.max(words*40,1200),3500)));
+    hideTyping();addMessage('therapist',reply);
+    conversationHistory.push({role:'assistant',content:reply});
+  }catch(err){
+    hideTyping();addMessage('therapist','Hubo un problema de conexión. Por favor intenta de nuevo.',true);
+  }
+  isLoading=false;document.getElementById('send-btn').disabled=false;input.focus();
+}
+
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
+</script>
+</body>
+</html>
