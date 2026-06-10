@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="screen-orientation" content="portrait">
 <title>Teleprompter habilia</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:#000; color:#fff; font-family:Georgia,serif; overflow:hidden; height:100vh; touch-action:none; }
+  body { background:#000;
+  overflow-x:hidden; color:#fff; font-family:Georgia,serif; overflow:hidden; height:100vh; touch-action:none; }
 
   #controls {
     position:fixed; top:0; left:0; right:0; z-index:200;
@@ -445,6 +447,11 @@ function saveVideo() {
 
 function showControls() {
   document.getElementById('controls').classList.remove('hidden');
+}
+
+// ── Forzar orientación vertical ──
+if (screen.orientation && screen.orientation.lock) {
+  screen.orientation.lock('portrait').catch(() => {});
 }
 
 // ── Init ──
