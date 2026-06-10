@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teleprompter habilia</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; color: #fff; font-family: 'Georgia', serif; overflow: hidden; height: 100vh; }
+
+  #controls {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(0,0,0,0.95); padding: 10px 14px;
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    border-bottom: 1px solid #333;
+  }
+  button {
+    padding: 7px 14px; border: none; border-radius: 4px;
+    font-size: 0.85rem; cursor: pointer; font-weight: 600;
+  }
+  #btn-play { background: #c9a84c; color: #000; }
+  #btn-stop { background: #444; color: #fff; }
+  #btn-reset { background: #222; color: #c9a84c; border: 1px solid #c9a84c; }
+  #btn-camera { background: #1a3a1a; color: #7ec882; border: 1px solid #7ec882; }
+  #btn-camera.active { background: #7ec882; color: #000; }
+
+  .speed-wrap { display: flex; align-items: center; gap: 6px; color: #aaa; font-size: 0.8rem; }
+  input[type=range] { width: 80px; accent-color: #c9a84c; }
+  .size-wrap { display: flex; align-items: center; gap: 6px; color: #aaa; font-size: 0.8rem; }
+
+  #reel-select {
+    padding: 6px 10px; background: #222; color: #fff;
+    border: 1px solid #444; border-radius: 4px; font-size: 0.8rem; cursor: pointer;
+  }
+
+  /* Vista normal */
+  #scroll-area {
+    position: fixed; top: 68px; left: 0; right: 0; bottom: 0;
+    overflow: hidden; background: #000;
+  }
+
+  /* Vista con cámara */
+  #camera-view {
+    position: fixed; top: 68px; left: 0; right: 0; bottom: 0;
+    display: none; z-index: 1;
+  }
+  #camera-view video {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  #camera-overlay {
+    position: fixed; top: 68px; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.55);
+    display: none; z-index: 2;
+  }
+  #scroll-area-cam {
+    position: fixed; top: 68px; left: 0; right: 0; bottom: 0;
+    overflow: hidden; display: none; z-index: 3;
+  }
+
+  #text-block, #text-block-cam {
+    padding: 40px 8% 60vh;
+    font-size: 2.4rem;
+    line-height: 1.75;
+    color: #fff;
+    text-align: center;
+  }
+  #text-block-cam {
+    text-shadow: 0 2px 8px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7);
+    font-weight: 600;
+  }
+
+  .pause-mark {
+    display: inline-block; color: #c9a84c;
+    font-size: 1.4rem; margin: 0 6px; opacity: 0.7;
+  }
+  .highlight { color: #e8c97a; font-style: italic; }
+
+  #fade-top {
+    position: fixed; top: 68px; left: 0; right: 0; height: 80px;
+    background: linear-gradient(to bottom, #000, transparent);
+    pointer-events: none; z-index: 50;
+  }
+  #fade-top-cam {
+    position: fixed; top: 68px; left: 0; right: 0; height: 80px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+    pointer-events: none; z-index: 50; display: none;
+  }
+  #fade-bottom {
+    position: fixed; bottom: 0; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to top, #000, transparent);
+    pointer-events: none; z-index: 50;
+  }
+  #fade-bottom-cam {
+    position: fixed; bottom: 0; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    pointer-events: none; z-index: 50; display: none;
+  }
+  #cursor-line {
+    position: fixed; top: 50%; left: 5%; right: 5%; height: 3px;
+    background: rgba(201,168,76,0.4); pointer-events: none;
+    z-index: 60; border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div id="controls">
+  <select id="reel-select" onchange="loadReel()">
+    <option value="reel1">Reel 1 — Presentación</option>
+    <option value="reel2" selected>Reel 2 — Qué hace habilia</option>
+    <option value="reel3">Reel 3 — Por qué el precio</option>
+    <option value="reel4">Reel 4 — El problema no es el dinero</option>
+    <option value="reel5">Reel 5 — Tomo 1 de trading</option>
+  </select>
+  <button id="btn-play" onclick="startScroll()">▶ Iniciar</button>
+  <button id="btn-stop" onclick="pauseScroll()">⏸ Pausa</button>
+  <button id="btn-reset" onclick="resetScroll()">↺ Reiniciar</button>
+  <button id="btn-camera" onclick="toggleCamera()">📷 Cámara</button>
+  <div class="speed-wrap">
+    🐢 <input type="range" id="speed" min="0.3" max="3" step="0.1" value="1"> 🐇
+    <span id="speed-val">1.0x</span>
+  </div>
+  <div class="size-wrap">
+    A <input type="range" id="fontsize" min="1.4" max="4" step="0.1" value="2.4"> A
+  </div>
+</div>
+
+<div id="fade-top"></div>
+<div id="fade-top-cam"></div>
+<div id="cursor-line"></div>
+
+<div id="scroll-area">
+  <div id="text-block"></div>
+</div>
+
+<div id="camera-view"><video id="video" autoplay playsinline muted></video></div>
+<div id="camera-overlay"></div>
+<div id="scroll-area-cam">
+  <div id="text-block-cam"></div>
+</div>
+
+<div id="fade-bottom"></div>
+<div id="fade-bottom-cam"></div>
+
+<script>
+const REELS = {
+  reel1: `Si alguna vez sentiste que mereces más
+de lo que la vida te ha dado hasta ahora <span class="pause-mark">—</span>
+
+este espacio es para ti.
+
+<span class="pause-mark">...</span>
+
+Me llamo Vanessa, soy parte del equipo de habilia <span class="pause-mark">—</span>
+
+una plataforma chilena que nació con una sola idea:
+
+<span class="highlight">darte herramientas reales para que crezcas de verdad.</span>
+
+No teoría bonita. No motivación vacía.
+
+Cosas que puedes aplicar desde hoy.
+
+<span class="pause-mark">...</span>
+
+Tenemos apps, ebooks sobre finanzas y alimentación,
+
+y mucho más que viene en camino.
+
+Todo creado para personas con hambre de avanzar <span class="pause-mark">—</span>
+
+aunque por ahora el bolsillo esté apretado.
+
+<span class="pause-mark">...</span>
+
+Porque creemos que el conocimiento que te cambia la vida
+
+no debería estar reservado para los que ya llegaron.
+
+<span class="pause-mark">...</span>
+
+<span class="highlight">Bienvenida, bienvenido. Esto recién empieza.</span>`,
+
+  reel2: `habilia es una plataforma chilena de aprendizaje digital.
+
+Pero no del tipo que te vende un curso de 200 mil pesos
+
+y te deja solo con un PDF.
+
+<span class="pause-mark">...</span>
+
+Tenemos apps interactivas, ebooks prácticos
+
+y herramientas reales <span class="pause-mark">—</span>
+
+sobre finanzas, trading, bienestar
+
+y mucho más que viene en camino.
+
+<span class="pause-mark">...</span>
+
+Todo pensado para personas que quieren crecer de verdad <span class="pause-mark">—</span>
+
+no para los que ya llegaron.
+
+Por eso nuestros precios son accesibles desde el primer día.
+
+<span class="pause-mark">...</span>
+
+Porque creemos que el conocimiento que te cambia la perspectiva
+
+<span class="highlight">no debería tener precio de entrada.</span>
+
+<span class="pause-mark">...</span>
+
+El link está en el perfil.
+
+Entra, mira, y si algo te sirve <span class="pause-mark">—</span>
+
+<span class="highlight">es tuyo.</span>`,
+
+  reel3: `¿Sabías que la mayoría de los cursos de inversión
+
+cuestan entre 200 mil y un millón de pesos?
+
+<span class="pause-mark">...</span>
+
+Y el contenido muchas veces es el mismo
+
+que puedes encontrar gratis en internet.
+
+<span class="pause-mark">...</span>
+
+El precio alto no garantiza mejor conocimiento.
+
+<span class="highlight">Garantiza mejor marketing.</span>
+
+<span class="pause-mark">...</span>
+
+En habilia decidimos hacer lo contrario.
+
+Precios reales, para personas reales <span class="pause-mark">—</span>
+
+porque el conocimiento que te cambia la perspectiva
+
+no debería costar lo que no tienes.
+
+<span class="pause-mark">...</span>
+
+Ebooks desde $2.990.
+
+Apps con acceso de por vida desde $3.990.
+
+<span class="pause-mark">...</span>
+
+<span class="highlight">Premium no significa caro.
+
+Significa que no te va a decepcionar.</span>`,
+
+  reel4: `El problema no es que no tienes dinero.
+
+<span class="highlight">El problema es la relación que tienes con él.</span>
+
+<span class="pause-mark">...</span>
+
+Porque la mayoría de nosotros creció escuchando
+
+que el dinero es difícil, que no alcanza, que es para otros.
+
+Y eso se queda grabado más profundo de lo que creemos.
+
+<span class="pause-mark">...</span>
+
+No es falta de esfuerzo.
+
+Es que nadie nos enseñó a pensar diferente sobre la plata.
+
+<span class="pause-mark">...</span>
+
+Eso es exactamente lo que hacemos en habilia.
+
+No solo te enseñamos herramientas financieras <span class="pause-mark">—</span>
+
+te ayudamos a cambiar la forma en que piensas sobre el dinero.
+
+<span class="pause-mark">...</span>
+
+Porque antes de invertir un peso,
+
+tienes que entender qué sientes cuando lo tienes
+
+y qué sientes cuando no lo tienes.
+
+<span class="pause-mark">...</span>
+
+<span class="highlight">El link está en el perfil.</span>`,
+
+  reel5: `¿Sabías que el 90% de las personas que empiezan a hacer trading
+
+pierden dinero en los primeros 6 meses?
+
+<span class="pause-mark">...</span>
+
+No es porque sean malos.
+
+Es porque nadie les explicó
+
+cómo piensan realmente los mercados.
+
+<span class="pause-mark">...</span>
+
+El mercado no se mueve al azar.
+
+Se mueve con lógica institucional <span class="pause-mark">—</span>
+
+y cuando entiendes esa lógica,
+
+empiezas a ver cosas que antes eran invisibles.
+
+<span class="pause-mark">...</span>
+
+Eso es exactamente lo que enseña el Tomo 1 de trading de habilia.
+
+Cómo piensan los grandes jugadores del mercado <span class="pause-mark">—</span>
+
+y por qué el trader principiante casi siempre cae en sus trampas.
+
+<span class="pause-mark">...</span>
+
+Vale $2.990.
+
+Menos que un almuerzo.
+
+<span class="highlight">El link está en el perfil.</span>`
+};
+
+let scrollInterval = null;
+let currentY = 0;
+let currentYCam = 0;
+let isPlaying = false;
+let cameraOn = false;
+let stream = null;
+
+function loadReel() {
+  const key = document.getElementById('reel-select').value;
+  document.getElementById('text-block').innerHTML = REELS[key];
+  document.getElementById('text-block-cam').innerHTML = REELS[key];
+  resetScroll();
+}
+
+function startScroll() {
+  if (isPlaying) return;
+  isPlaying = true;
+  const speed = parseFloat(document.getElementById('speed').value);
+  scrollInterval = setInterval(() => {
+    currentY += speed;
+    currentYCam += speed;
+    document.getElementById('text-block').style.transform = `translateY(-${currentY}px)`;
+    document.getElementById('text-block-cam').style.transform = `translateY(-${currentYCam}px)`;
+  }, 16);
+}
+
+function pauseScroll() {
+  isPlaying = false;
+  clearInterval(scrollInterval);
+}
+
+function resetScroll() {
+  pauseScroll();
+  currentY = 0; currentYCam = 0;
+  document.getElementById('text-block').style.transform = 'translateY(0)';
+  document.getElementById('text-block-cam').style.transform = 'translateY(0)';
+}
+
+async function toggleCamera() {
+  const btn = document.getElementById('btn-camera');
+  if (!cameraOn) {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+      document.getElementById('video').srcObject = stream;
+      document.getElementById('camera-view').style.display = 'block';
+      document.getElementById('camera-overlay').style.display = 'block';
+      document.getElementById('scroll-area-cam').style.display = 'block';
+      document.getElementById('scroll-area').style.display = 'none';
+      document.getElementById('fade-top').style.display = 'none';
+      document.getElementById('fade-bottom').style.display = 'none';
+      document.getElementById('fade-top-cam').style.display = 'block';
+      document.getElementById('fade-bottom-cam').style.display = 'block';
+      btn.classList.add('active');
+      btn.textContent = '📷 Sin cámara';
+      cameraOn = true;
+    } catch(e) {
+      alert('No se pudo acceder a la cámara. Verifica los permisos.');
+    }
+  } else {
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    document.getElementById('camera-view').style.display = 'none';
+    document.getElementById('camera-overlay').style.display = 'none';
+    document.getElementById('scroll-area-cam').style.display = 'none';
+    document.getElementById('scroll-area').style.display = 'block';
+    document.getElementById('fade-top').style.display = 'block';
+    document.getElementById('fade-bottom').style.display = 'block';
+    document.getElementById('fade-top-cam').style.display = 'none';
+    document.getElementById('fade-bottom-cam').style.display = 'none';
+    btn.classList.remove('active');
+    btn.textContent = '📷 Cámara';
+    cameraOn = false;
+  }
+}
+
+document.getElementById('speed').addEventListener('input', function() {
+  document.getElementById('speed-val').textContent = parseFloat(this.value).toFixed(1) + 'x';
+  if (isPlaying) { pauseScroll(); startScroll(); }
+});
+
+document.getElementById('fontsize').addEventListener('input', function() {
+  document.getElementById('text-block').style.fontSize = this.value + 'rem';
+  document.getElementById('text-block-cam').style.fontSize = this.value + 'rem';
+});
+
+loadReel();
+</script>
+</body>
+</html>
