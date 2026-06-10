@@ -2,266 +2,269 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Teleprompter habilia</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #000; color: #fff; font-family: 'Georgia', serif; overflow: hidden; height: 100vh; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#000; color:#fff; font-family:Georgia,serif; overflow:hidden; height:100vh; touch-action:none; }
 
   #controls {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(0,0,0,0.95); padding: 10px 14px;
-    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
-    border-bottom: 1px solid #333;
-  }
-  button {
-    padding: 7px 14px; border: none; border-radius: 4px;
-    font-size: 0.85rem; cursor: pointer; font-weight: 600;
-  }
-  #btn-play { background: #c9a84c; color: #000; }
-  #btn-stop { background: #444; color: #fff; }
-  #btn-reset { background: #222; color: #c9a84c; border: 1px solid #c9a84c; }
-  #btn-camera { background: #1a3a1a; color: #7ec882; border: 1px solid #7ec882; }
-  #btn-camera.active { background: #7ec882; color: #000; }
-
-  .speed-wrap { display: flex; align-items: center; gap: 6px; color: #aaa; font-size: 0.8rem; }
-  input[type=range] { width: 80px; accent-color: #c9a84c; }
-  .size-wrap { display: flex; align-items: center; gap: 6px; color: #aaa; font-size: 0.8rem; }
-
-  #reel-select {
-    padding: 6px 10px; background: #222; color: #fff;
-    border: 1px solid #444; border-radius: 4px; font-size: 0.8rem; cursor: pointer;
+    position:fixed; top:0; left:0; right:0; z-index:200;
+    background:rgba(0,0,0,0.92); padding:8px 10px;
+    display:flex; gap:6px; align-items:center; flex-wrap:wrap;
+    border-bottom:1px solid #222;
   }
 
-  /* Vista normal */
-  #scroll-area {
-    position: fixed; top: 68px; left: 0; right: 0; bottom: 0;
-    overflow: hidden; background: #000;
+  select#reel-select {
+    flex:1; min-width:0; padding:7px 8px;
+    background:#1a1a1a; color:#fff; border:1px solid #444;
+    border-radius:6px; font-size:0.78rem; cursor:pointer;
   }
 
-  /* Vista con cámara */
-  #camera-view {
-    position: fixed; top: 68px; left: 0; right: 0; bottom: 0;
-    display: none; z-index: 1;
+  .btn {
+    padding:8px 12px; border:none; border-radius:6px;
+    font-size:0.8rem; font-weight:700; cursor:pointer;
+    white-space:nowrap; flex-shrink:0;
   }
-  #camera-view video {
-    width: 100%; height: 100%; object-fit: cover;
+  #btn-rec   { background:#c9a84c; color:#000; }
+  #btn-rec.recording { background:#e53e3e; color:#fff; animation:pulse 1s infinite; }
+  #btn-pause { background:#333; color:#fff; }
+  #btn-reset { background:#1a1a1a; color:#c9a84c; border:1px solid #c9a84c; }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+  .row2 {
+    width:100%; display:flex; gap:6px; align-items:center;
+    padding-top:4px;
   }
-  #camera-overlay {
-    position: fixed; top: 68px; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.55);
-    display: none; z-index: 2;
+  .lbl { color:#888; font-size:0.72rem; white-space:nowrap; }
+  input[type=range] { flex:1; accent-color:#c9a84c; height:4px; }
+
+  /* Cámara de fondo */
+  #cam-bg {
+    position:fixed; top:0; left:0; right:0; bottom:0; z-index:0;
+    background:#000;
   }
-  #scroll-area-cam {
-    position: fixed; top: 68px; left: 0; right: 0; bottom: 0;
-    overflow: hidden; display: none; z-index: 3;
+  #cam-bg video {
+    width:100%; height:100%; object-fit:cover;
+    transform:scaleX(-1); /* espejo */
+  }
+  #cam-overlay {
+    position:fixed; top:0; left:0; right:0; bottom:0;
+    background:rgba(0,0,0,0.52); z-index:1;
   }
 
-  #text-block, #text-block-cam {
-    padding: 40px 8% 60vh;
-    font-size: 2.4rem;
-    line-height: 1.75;
-    color: #fff;
-    text-align: center;
+  /* Scroll de texto */
+  #scroll-wrap {
+    position:fixed; top:0; left:0; right:0; bottom:0;
+    overflow:hidden; z-index:10;
   }
-  #text-block-cam {
-    text-shadow: 0 2px 8px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7);
-    font-weight: 600;
+  #text-block {
+    padding:55vh 6% 60vh;
+    font-size:2.2rem; line-height:1.8;
+    text-align:center; color:#fff;
+    text-shadow:0 2px 12px rgba(0,0,0,0.95), 0 0 30px rgba(0,0,0,0.8);
+    font-weight:600;
+    will-change:transform;
   }
 
-  .pause-mark {
-    display: inline-block; color: #c9a84c;
-    font-size: 1.4rem; margin: 0 6px; opacity: 0.7;
-  }
-  .highlight { color: #e8c97a; font-style: italic; }
+  .pm  { color:#c9a84c; font-size:1.3rem; margin:0 4px; opacity:0.75; }
+  .hl  { color:#f0d878; font-style:italic; }
 
-  #fade-top {
-    position: fixed; top: 68px; left: 0; right: 0; height: 80px;
-    background: linear-gradient(to bottom, #000, transparent);
-    pointer-events: none; z-index: 50;
+  /* Línea de lectura */
+  #line {
+    position:fixed; top:50%; left:4%; right:4%; height:2px;
+    background:rgba(201,168,76,0.35); z-index:20; border-radius:2px;
+    pointer-events:none;
   }
-  #fade-top-cam {
-    position: fixed; top: 68px; left: 0; right: 0; height: 80px;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
-    pointer-events: none; z-index: 50; display: none;
+
+  /* Fade top/bottom */
+  #ft {
+    position:fixed; top:0; left:0; right:0; height:90px;
+    background:linear-gradient(to bottom,rgba(0,0,0,0.85),transparent);
+    z-index:15; pointer-events:none;
   }
-  #fade-bottom {
-    position: fixed; bottom: 0; left: 0; right: 0; height: 120px;
-    background: linear-gradient(to top, #000, transparent);
-    pointer-events: none; z-index: 50;
+  #fb {
+    position:fixed; bottom:0; left:0; right:0; height:110px;
+    background:linear-gradient(to top,rgba(0,0,0,0.85),transparent);
+    z-index:15; pointer-events:none;
   }
-  #fade-bottom-cam {
-    position: fixed; bottom: 0; left: 0; right: 0; height: 120px;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    pointer-events: none; z-index: 50; display: none;
+
+  /* REC badge */
+  #rec-badge {
+    position:fixed; top:8px; right:10px; z-index:300;
+    background:#e53e3e; color:#fff; font-size:0.7rem; font-weight:700;
+    padding:3px 8px; border-radius:20px; display:none;
+    animation:pulse 1s infinite;
   }
-  #cursor-line {
-    position: fixed; top: 50%; left: 5%; right: 5%; height: 3px;
-    background: rgba(201,168,76,0.4); pointer-events: none;
-    z-index: 60; border-radius: 2px;
+
+  /* Controles ocultos mientras graba */
+  #controls.hidden { opacity:0; pointer-events:none; transition:opacity 0.4s; }
+  #controls { transition:opacity 0.4s; }
+
+  /* Botón mostrar controles mientras graba */
+  #show-ctrl {
+    position:fixed; bottom:16px; left:50%; transform:translateX(-50%);
+    z-index:300; background:rgba(0,0,0,0.7); color:#c9a84c;
+    border:1px solid #c9a84c; border-radius:20px;
+    padding:6px 18px; font-size:0.78rem; cursor:pointer;
+    display:none;
   }
 </style>
 </head>
 <body>
 
+<div id="cam-bg"><video id="video" autoplay playsinline muted></video></div>
+<div id="cam-overlay"></div>
+
+<div id="ft"></div>
+<div id="line"></div>
+<div id="scroll-wrap"><div id="text-block"></div></div>
+<div id="fb"></div>
+
+<div id="rec-badge">● REC</div>
+<button id="show-ctrl" onclick="showControls()">Mostrar controles</button>
+
 <div id="controls">
   <select id="reel-select" onchange="loadReel()">
-    <option value="reel1">Reel 1 — Presentación</option>
-    <option value="reel2" selected>Reel 2 — Qué hace habilia</option>
-    <option value="reel3">Reel 3 — Por qué el precio</option>
-    <option value="reel4">Reel 4 — El problema no es el dinero</option>
-    <option value="reel5">Reel 5 — Tomo 1 de trading</option>
+    <option value="r1">Reel 1 — Presentación</option>
+    <option value="r2" selected>Reel 2 — Qué hace habilia</option>
+    <option value="r3">Reel 3 — Por qué el precio</option>
+    <option value="r4">Reel 4 — El problema no es el dinero</option>
+    <option value="r5">Reel 5 — Tomo 1 de trading</option>
   </select>
-  <button id="btn-play" onclick="startScroll()">▶ Iniciar</button>
-  <button id="btn-stop" onclick="pauseScroll()">⏸ Pausa</button>
-  <button id="btn-reset" onclick="resetScroll()">↺ Reiniciar</button>
-  <button id="btn-camera" onclick="toggleCamera()">📷 Cámara</button>
-  <div class="speed-wrap">
-    🐢 <input type="range" id="speed" min="0.3" max="3" step="0.1" value="1"> 🐇
-    <span id="speed-val">1.0x</span>
+  <button class="btn" id="btn-rec" onclick="toggleRec()">⏺ Grabar</button>
+  <button class="btn" id="btn-pause" onclick="togglePause()">⏸ Pausa</button>
+  <button class="btn" id="btn-reset" onclick="resetAll()">↺</button>
+  <div class="row2">
+    <span class="lbl">🐢</span>
+    <input type="range" id="spd" min="0.2" max="3" step="0.05" value="0.9" oninput="updateSpeed()">
+    <span class="lbl">🐇 <span id="spd-val">0.9x</span></span>
+    <span class="lbl" style="margin-left:8px">A</span>
+    <input type="range" id="fsz" min="1.2" max="3.8" step="0.1" value="2.2" oninput="updateFont()">
+    <span class="lbl">A</span>
   </div>
-  <div class="size-wrap">
-    A <input type="range" id="fontsize" min="1.4" max="4" step="0.1" value="2.4"> A
-  </div>
 </div>
-
-<div id="fade-top"></div>
-<div id="fade-top-cam"></div>
-<div id="cursor-line"></div>
-
-<div id="scroll-area">
-  <div id="text-block"></div>
-</div>
-
-<div id="camera-view"><video id="video" autoplay playsinline muted></video></div>
-<div id="camera-overlay"></div>
-<div id="scroll-area-cam">
-  <div id="text-block-cam"></div>
-</div>
-
-<div id="fade-bottom"></div>
-<div id="fade-bottom-cam"></div>
 
 <script>
 const REELS = {
-  reel1: `Si alguna vez sentiste que mereces más
-de lo que la vida te ha dado hasta ahora <span class="pause-mark">—</span>
+r1:`Si alguna vez sentiste que mereces más
+de lo que la vida te ha dado hasta ahora <span class="pm">—</span>
 
 este espacio es para ti.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
-Me llamo Vanessa, soy parte del equipo de habilia <span class="pause-mark">—</span>
+Me llamo Vanessa, soy parte del equipo de habilia <span class="pm">—</span>
 
 una plataforma chilena que nació con una sola idea:
 
-<span class="highlight">darte herramientas reales para que crezcas de verdad.</span>
+<span class="hl">darte herramientas reales para que crezcas de verdad.</span>
 
 No teoría bonita. No motivación vacía.
 
 Cosas que puedes aplicar desde hoy.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 Tenemos apps, ebooks sobre finanzas y alimentación,
 
 y mucho más que viene en camino.
 
-Todo creado para personas con hambre de avanzar <span class="pause-mark">—</span>
+Todo creado para personas con hambre de avanzar <span class="pm">—</span>
 
 aunque por ahora el bolsillo esté apretado.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 Porque creemos que el conocimiento que te cambia la vida
 
 no debería estar reservado para los que ya llegaron.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
-<span class="highlight">Bienvenida, bienvenido. Esto recién empieza.</span>`,
+<span class="hl">Bienvenida, bienvenido. Esto recién empieza.</span>`,
 
-  reel2: `habilia es una plataforma chilena de aprendizaje digital.
+r2:`habilia es una plataforma chilena de aprendizaje digital.
 
 Pero no del tipo que te vende un curso de 200 mil pesos
 
 y te deja solo con un PDF.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 Tenemos apps interactivas, ebooks prácticos
 
-y herramientas reales <span class="pause-mark">—</span>
+y herramientas reales <span class="pm">—</span>
 
 sobre finanzas, trading, bienestar
 
 y mucho más que viene en camino.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
-Todo pensado para personas que quieren crecer de verdad <span class="pause-mark">—</span>
+Todo pensado para personas que quieren crecer de verdad <span class="pm">—</span>
 
 no para los que ya llegaron.
 
 Por eso nuestros precios son accesibles desde el primer día.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 Porque creemos que el conocimiento que te cambia la perspectiva
 
-<span class="highlight">no debería tener precio de entrada.</span>
+<span class="hl">no debería tener precio de entrada.</span>
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 El link está en el perfil.
 
-Entra, mira, y si algo te sirve <span class="pause-mark">—</span>
+Entra, mira, y si algo te sirve <span class="pm">—</span>
 
-<span class="highlight">es tuyo.</span>`,
+<span class="hl">es tuyo.</span>`,
 
-  reel3: `¿Sabías que la mayoría de los cursos de inversión
+r3:`¿Sabías que la mayoría de los cursos de inversión
 
 cuestan entre 200 mil y un millón de pesos?
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 Y el contenido muchas veces es el mismo
 
 que puedes encontrar gratis en internet.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 El precio alto no garantiza mejor conocimiento.
 
-<span class="highlight">Garantiza mejor marketing.</span>
+<span class="hl">Garantiza mejor marketing.</span>
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 En habilia decidimos hacer lo contrario.
 
-Precios reales, para personas reales <span class="pause-mark">—</span>
+Precios reales, para personas reales <span class="pm">—</span>
 
 porque el conocimiento que te cambia la perspectiva
 
 no debería costar lo que no tienes.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 Ebooks desde $2.990.
 
 Apps con acceso de por vida desde $3.990.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
-<span class="highlight">Premium no significa caro.
-
+<span class="hl">Premium no significa caro.
 Significa que no te va a decepcionar.</span>`,
 
-  reel4: `El problema no es que no tienes dinero.
+r4:`El problema no es que no tienes dinero.
 
-<span class="highlight">El problema es la relación que tienes con él.</span>
+<span class="hl">El problema es la relación que tienes con él.</span>
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 Porque la mayoría de nosotros creció escuchando
 
@@ -269,21 +272,21 @@ que el dinero es difícil, que no alcanza, que es para otros.
 
 Y eso se queda grabado más profundo de lo que creemos.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 No es falta de esfuerzo.
 
 Es que nadie nos enseñó a pensar diferente sobre la plata.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 Eso es exactamente lo que hacemos en habilia.
 
-No solo te enseñamos herramientas financieras <span class="pause-mark">—</span>
+No solo te enseñamos herramientas financieras <span class="pm">—</span>
 
 te ayudamos a cambiar la forma en que piensas sobre el dinero.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 Porque antes de invertir un peso,
 
@@ -291,15 +294,15 @@ tienes que entender qué sientes cuando lo tienes
 
 y qué sientes cuando no lo tienes.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
-<span class="highlight">El link está en el perfil.</span>`,
+<span class="hl">El link está en el perfil.</span>`,
 
-  reel5: `¿Sabías que el 90% de las personas que empiezan a hacer trading
+r5:`¿Sabías que el 90% de las personas que empiezan a hacer trading
 
 pierden dinero en los primeros 6 meses?
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 No es porque sean malos.
 
@@ -307,118 +310,147 @@ Es porque nadie les explicó
 
 cómo piensan realmente los mercados.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 El mercado no se mueve al azar.
 
-Se mueve con lógica institucional <span class="pause-mark">—</span>
+Se mueve con lógica institucional <span class="pm">—</span>
 
 y cuando entiendes esa lógica,
 
 empiezas a ver cosas que antes eran invisibles.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
 Eso es exactamente lo que enseña el Tomo 1 de trading de habilia.
 
-Cómo piensan los grandes jugadores del mercado <span class="pause-mark">—</span>
+Cómo piensan los grandes jugadores del mercado <span class="pm">—</span>
 
 y por qué el trader principiante casi siempre cae en sus trampas.
 
-<span class="pause-mark">...</span>
+<span class="pm">...</span>
 
-Vale $2.990.
+Vale $2.990. Menos que un almuerzo.
 
-Menos que un almuerzo.
-
-<span class="highlight">El link está en el perfil.</span>`
+<span class="hl">El link está en el perfil.</span>`
 };
 
-let scrollInterval = null;
-let currentY = 0;
-let currentYCam = 0;
-let isPlaying = false;
-let cameraOn = false;
-let stream = null;
+// ── Estado ──
+let y = 0, spd = 0.9, raf = null, paused = false;
+let mediaRecorder = null, chunks = [], recording = false;
+let camStream = null;
 
-function loadReel() {
-  const key = document.getElementById('reel-select').value;
-  document.getElementById('text-block').innerHTML = REELS[key];
-  document.getElementById('text-block-cam').innerHTML = REELS[key];
-  resetScroll();
-}
-
-function startScroll() {
-  if (isPlaying) return;
-  isPlaying = true;
-  const speed = parseFloat(document.getElementById('speed').value);
-  scrollInterval = setInterval(() => {
-    currentY += speed;
-    currentYCam += speed;
-    document.getElementById('text-block').style.transform = `translateY(-${currentY}px)`;
-    document.getElementById('text-block-cam').style.transform = `translateY(-${currentYCam}px)`;
-  }, 16);
-}
-
-function pauseScroll() {
-  isPlaying = false;
-  clearInterval(scrollInterval);
-}
-
-function resetScroll() {
-  pauseScroll();
-  currentY = 0; currentYCam = 0;
-  document.getElementById('text-block').style.transform = 'translateY(0)';
-  document.getElementById('text-block-cam').style.transform = 'translateY(0)';
-}
-
-async function toggleCamera() {
-  const btn = document.getElementById('btn-camera');
-  if (!cameraOn) {
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
-      document.getElementById('video').srcObject = stream;
-      document.getElementById('camera-view').style.display = 'block';
-      document.getElementById('camera-overlay').style.display = 'block';
-      document.getElementById('scroll-area-cam').style.display = 'block';
-      document.getElementById('scroll-area').style.display = 'none';
-      document.getElementById('fade-top').style.display = 'none';
-      document.getElementById('fade-bottom').style.display = 'none';
-      document.getElementById('fade-top-cam').style.display = 'block';
-      document.getElementById('fade-bottom-cam').style.display = 'block';
-      btn.classList.add('active');
-      btn.textContent = '📷 Sin cámara';
-      cameraOn = true;
-    } catch(e) {
-      alert('No se pudo acceder a la cámara. Verifica los permisos.');
-    }
-  } else {
-    if (stream) stream.getTracks().forEach(t => t.stop());
-    document.getElementById('camera-view').style.display = 'none';
-    document.getElementById('camera-overlay').style.display = 'none';
-    document.getElementById('scroll-area-cam').style.display = 'none';
-    document.getElementById('scroll-area').style.display = 'block';
-    document.getElementById('fade-top').style.display = 'block';
-    document.getElementById('fade-bottom').style.display = 'block';
-    document.getElementById('fade-top-cam').style.display = 'none';
-    document.getElementById('fade-bottom-cam').style.display = 'none';
-    btn.classList.remove('active');
-    btn.textContent = '📷 Cámara';
-    cameraOn = false;
+// ── Cámara ──
+async function startCam() {
+  try {
+    camStream = await navigator.mediaDevices.getUserMedia({
+      video:{ facingMode:'user', width:{ideal:1080}, height:{ideal:1920} },
+      audio:true
+    });
+    document.getElementById('video').srcObject = camStream;
+  } catch(e) {
+    console.warn('Cámara no disponible:', e);
   }
 }
 
-document.getElementById('speed').addEventListener('input', function() {
-  document.getElementById('speed-val').textContent = parseFloat(this.value).toFixed(1) + 'x';
-  if (isPlaying) { pauseScroll(); startScroll(); }
-});
+// ── Texto ──
+function loadReel() {
+  const k = document.getElementById('reel-select').value;
+  document.getElementById('text-block').innerHTML = REELS[k];
+  resetAll();
+}
 
-document.getElementById('fontsize').addEventListener('input', function() {
-  document.getElementById('text-block').style.fontSize = this.value + 'rem';
-  document.getElementById('text-block-cam').style.fontSize = this.value + 'rem';
-});
+// ── Scroll ──
+function tick() {
+  if (!paused) {
+    y += spd;
+    document.getElementById('text-block').style.transform = `translateY(-${y}px)`;
+  }
+  raf = requestAnimationFrame(tick);
+}
 
+function togglePause() {
+  paused = !paused;
+  document.getElementById('btn-pause').textContent = paused ? '▶ Continuar' : '⏸ Pausa';
+}
+
+function resetAll() {
+  paused = true;
+  y = 0;
+  document.getElementById('text-block').style.transform = 'translateY(0)';
+  document.getElementById('btn-pause').textContent = '⏸ Pausa';
+  if (!recording) paused = false;
+}
+
+function updateSpeed() {
+  spd = parseFloat(document.getElementById('spd').value);
+  document.getElementById('spd-val').textContent = spd.toFixed(1) + 'x';
+}
+
+function updateFont() {
+  const v = document.getElementById('fsz').value;
+  document.getElementById('text-block').style.fontSize = v + 'rem';
+}
+
+// ── Grabación ──
+async function toggleRec() {
+  if (!recording) {
+    // Iniciar
+    if (!camStream) { alert('La cámara no está disponible.'); return; }
+    chunks = [];
+    // Combinar cámara + audio
+    const stream = new MediaStream([
+      ...camStream.getVideoTracks(),
+      ...camStream.getAudioTracks()
+    ]);
+    const opts = MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')
+      ? { mimeType:'video/webm;codecs=vp9,opus' }
+      : MediaRecorder.isTypeSupported('video/webm')
+      ? { mimeType:'video/webm' } : {};
+    mediaRecorder = new MediaRecorder(stream, opts);
+    mediaRecorder.ondataavailable = e => { if(e.data.size>0) chunks.push(e.data); };
+    mediaRecorder.onstop = saveVideo;
+    mediaRecorder.start(100);
+    recording = true;
+    paused = false;
+    // UI
+    document.getElementById('btn-rec').textContent = '⏹ Detener y guardar';
+    document.getElementById('btn-rec').classList.add('recording');
+    document.getElementById('rec-badge').style.display = 'block';
+    document.getElementById('controls').classList.add('hidden');
+    document.getElementById('show-ctrl').style.display = 'block';
+  } else {
+    // Detener
+    mediaRecorder.stop();
+    recording = false;
+    paused = true;
+    document.getElementById('btn-rec').textContent = '⏺ Grabar';
+    document.getElementById('btn-rec').classList.remove('recording');
+    document.getElementById('rec-badge').style.display = 'none';
+    document.getElementById('controls').classList.remove('hidden');
+    document.getElementById('show-ctrl').style.display = 'none';
+  }
+}
+
+function saveVideo() {
+  const blob = new Blob(chunks, { type: chunks[0]?.type || 'video/webm' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const reel = document.getElementById('reel-select').options[document.getElementById('reel-select').selectedIndex].text;
+  a.href     = url;
+  a.download = `habilia-${reel.replace(/[^a-z0-9]/gi,'_')}.webm`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+function showControls() {
+  document.getElementById('controls').classList.remove('hidden');
+}
+
+// ── Init ──
 loadReel();
+startCam();
+requestAnimationFrame(tick);
 </script>
 </body>
 </html>
