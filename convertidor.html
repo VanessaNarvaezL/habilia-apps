@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Convertidor habilia — webm a mp4</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,Segoe UI,Roboto,sans-serif; }
+  body {
+    background:#0e1a0f; color:#f2ede4; min-height:100vh;
+    display:flex; flex-direction:column; align-items:center;
+    padding:24px 16px; text-align:center;
+  }
+  h1 { font-family:Georgia,serif; font-size:1.4rem; margin-bottom:6px; color:#e8c96a; }
+  p.sub { color:#8a9e8c; font-size:0.85rem; margin-bottom:24px; }
+
+  #drop {
+    width:100%; max-width:380px; border:2px dashed #4a7c4e;
+    border-radius:14px; padding:32px 16px; cursor:pointer;
+    transition:0.2s; background:#152018;
+  }
+  #drop.over { background:#1e2e20; border-color:#7ec882; }
+  #drop p { color:#a8e6ac; font-size:0.95rem; }
+  input[type=file] { display:none; }
+
+  #status { margin-top:18px; font-size:0.9rem; color:#c9a84c; min-height:24px; }
+
+  #preview {
+    width:100%; max-width:300px; margin-top:18px;
+    border-radius:10px; display:none; background:#000;
+  }
+
+  #download {
+    display:none; margin-top:18px; padding:12px 28px;
+    background:#c9a84c; color:#0e1a0f; border:none;
+    border-radius:8px; font-weight:700; font-size:0.95rem;
+    cursor:pointer; text-decoration:none;
+  }
+
+  #orient-options {
+    display:none; margin-top:14px; gap:10px; justify-content:center;
+  }
+  #orient-options button {
+    padding:8px 16px; border-radius:8px; border:1px solid #4a7c4e;
+    background:#152018; color:#f2ede4; font-size:0.85rem; cursor:pointer;
+  }
+  #orient-options button.active { background:#7ec882; color:#0e1a0f; border-color:#7ec882; }
+
+  .progress-bar {
+    width:100%; max-width:380px; height:6px; background:#2d4a2f;
+    border-radius:4px; margin-top:14px; overflow:hidden; display:none;
+  }
+  .progress-fill { height:100%; background:#c9a84c; width:0%; transition:width 0.2s; }
+</style>
+</head>
+<body>
+
+<h1>Convertidor habilia</h1>
+<p class="sub">Convierte tus videos .webm a .mp4 listos para CapCut y reels</p>
+
+<div id="drop" onclick="document.getElementById('file').click()">
+  <p>📹 Toca aquí para elegir tu video<br><span style="color:#4a7c4e;font-size:0.8rem;">(.webm desde el teleprompter)</span></p>
+</div>
+<input type="file" id="file" accept="video/*">
+
+<div id="orient-options">
+  <button class="active" data-o="portrait">📱 Vertical 9:16</button>
+  <button data-o="original">↔ Mantener original</button>
+</div>
+
+<video id="preview" controls></video>
+
+<div class="progress-bar" id="bar"><div class="progress-fill" id="fill"></div></div>
+<div id="status"></div>
+<a id="download" download="habilia-reel.mp4">⬇ Descargar MP4</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mp4-muxer/3.0.0/mp4-muxer.min.js"></script>
+<script>
+const fileInput = document.getElementById('file');
+const drop = document.getElementById('drop');
+const preview = document.getElementById('preview');
+const statusEl = document.getElementById('status');
+const downloadBtn = document.getElementById('download');
+const orientWrap = document.getElementById('orient-options');
+const bar = document.getElementById('bar');
+const fill = document.getElementById('fill');
+
+let orientation = 'portrait';
+let selectedFile = null;
+
+orientWrap.addEventListener('click', e => {
+  if (e.target.tagName !== 'BUTTON') return;
+  [...orientWrap.children].forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  orientation = e.target.dataset.o;
+  if (selectedFile) convert(selectedFile);
+});
+
+fileInput.addEventListener('change', e => {
+  if (e.target.files[0]) handleFile(e.target.files[0]);
+});
+
+drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
+drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+drop.addEventListener('drop', e => {
+  e.preventDefault(); drop.classList.remove('over');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+
+function handleFile(file) {
+  selectedFile = file;
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = 'block';
+  orientWrap.style.display = 'flex';
+  downloadBtn.style.display = 'none';
+  convert(file);
+}
+
+async function convert(file) {
+  statusEl.textContent = 'Cargando video...';
+  bar.style.display = 'block';
+  fill.style.width = '5%';
+  downloadBtn.style.display = 'none';
+
+  const videoURL = URL.createObjectURL(file);
+  const videoEl = document.createElement('video');
+  videoEl.src = videoURL;
+  videoEl.muted = true;
+  await new Promise(r => videoEl.onloadedmetadata = r);
+
+  const srcW = videoEl.videoWidth;
+  const srcH = videoEl.videoHeight;
+  let outW, outH;
+
+  if (orientation === 'portrait') {
+    outW = 1080; outH = 1920;
+  } else {
+    outW = srcW; outH = srcH;
+  }
+
+  statusEl.textContent = `Procesando ${srcW}x${srcH} → ${outW}x${outH}...`;
+
+  // Canvas para dibujar cada frame con recorte/centrado
+  const canvas = document.createElement('canvas');
+  canvas.width = outW;
+  canvas.height = outH;
+  const ctx = canvas.getContext('2d');
+
+  // Calcular cómo dibujar el video centrado tipo "cover"
+  function drawFrame() {
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, outW, outH);
+    const srcRatio = srcW / srcH;
+    const outRatio = outW / outH;
+    let dw, dh, dx, dy;
+    if (srcRatio > outRatio) {
+      dh = outH; dw = srcH * outRatio * (srcW/srcH) / 1; dw = outH * srcRatio;
+      dx = (outW - dw) / 2; dy = 0;
+    } else {
+      dw = outW; dh = outW / srcRatio;
+      dx = 0; dy = (outH - dh) / 2;
+    }
+    ctx.drawImage(videoEl, dx, dy, dw, dh);
+  }
+
+  // Setup de captura del canvas como stream
+  const canvasStream = canvas.captureStream(30);
+
+  // Audio del video original
+  let audioTrack = null;
+  try {
+    const audioCtx = new AudioContext();
+    const src = audioCtx.createMediaElementSource(videoEl);
+    const dest = audioCtx.createMediaStreamDestination();
+    src.connect(dest);
+    src.connect(audioCtx.destination);
+    audioTrack = dest.stream.getAudioTracks()[0];
+    if (audioTrack) canvasStream.addTrack(audioTrack);
+    videoEl.muted = false;
+    videoEl.volume = 0; // evitar doble audio audible mientras se procesa
+  } catch(e) { console.warn('Audio no disponible:', e); }
+
+  const mimeType = MediaRecorder.isTypeSupported('video/mp4;codecs=avc1')
+    ? 'video/mp4;codecs=avc1'
+    : MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')
+    ? 'video/webm;codecs=vp9,opus' : 'video/webm';
+
+  const recorder = new MediaRecorder(canvasStream, { mimeType, videoBitsPerSecond: 8_000_000 });
+  const chunks = [];
+  recorder.ondataavailable = e => { if (e.data.size>0) chunks.push(e.data); };
+
+  const finished = new Promise(resolve => {
+    recorder.onstop = () => resolve();
+  });
+
+  videoEl.currentTime = 0;
+  recorder.start(100);
+
+  videoEl.play();
+
+  let raf;
+  function loop() {
+    drawFrame();
+    if (!videoEl.ended && !videoEl.paused) {
+      fill.style.width = Math.min(95, (videoEl.currentTime / videoEl.duration) * 100) + '%';
+      raf = requestAnimationFrame(loop);
+    }
+  }
+  loop();
+
+  videoEl.onended = () => {
+    cancelAnimationFrame(raf);
+    recorder.stop();
+  };
+
+  await finished;
+
+  fill.style.width = '100%';
+  const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+  const blob = new Blob(chunks, { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  downloadBtn.href = url;
+  downloadBtn.download = `habilia-reel.${ext}`;
+  downloadBtn.style.display = 'inline-block';
+  statusEl.textContent = ext === 'mp4'
+    ? '✅ Listo — descarga tu MP4'
+    : '✅ Listo (formato webm — Android suele aceptarlo igual en CapCut)';
+}
+</script>
+</body>
+</html>
