@@ -1,7 +1,7 @@
 HABIL/IA Studio
 Graba mejor desde el inicio.
 HABIL/IA Studio es una aplicación web para preparar y grabar contenido educativo y profesional antes de editarlo en CapCut u otra plataforma. Combina guion, teleprompter, formato correcto y descarga de video y audio en un solo flujo simple, pensado para personas no técnicas.
-Una herramienta de habilia — Humanos primero. Inteligencia después.
+Una herramienta de HABIL/IA — Humanos primero. Inteligencia después.
 
 El problema que resuelve
 La mayoría de las herramientas se concentran en la edición. Pero el mayor problema de quien crea contenido educativo ocurre antes: grabar sin guion, en el formato equivocado, en tomas largas imposibles de editar, y con archivos desordenados.
@@ -14,7 +14,7 @@ Creadores de cursos online
 Terapeutas y coaches
 Emprendedores y negocios locales
 Equipos que producen contenido de forma regular
-Usuarios del ecosistema habilia, NLconsultorIA y ESESlab
+Usuarios del ecosistema HABIL/IA, NLConsultorIA y E/SESLAB
 
 Modos disponibles
 Video. Grábate explicando frente a cámara con el guion avanzando en pantalla. Formato vertical (9:16) u horizontal (16:9), filtros simples y descarga de video y audio por separado.
@@ -28,7 +28,7 @@ Formato garantizado: vertical 9:16 u horizontal 16:9
 Cuenta regresiva antes de grabar
 Descarga de video y descarga del audio por separado, con nombre de archivo personalizable
 Guiones guardados en el dispositivo, reutilizables entre sesiones
-Carga de guion desde archivo .txt o .md
+Carga de guion desde archivo .txt o .md (v1.2, en desarrollo)
 Filtros simples (Natural, Cálido, Profesional, Contraste suave) con ajustes finos de brillo, contraste y saturación
 Pausa y reanudación de grabación en los navegadores que lo permiten
 Avisos honestos: la app informa el formato real obtenido y desactiva o advierte lo que el navegador no soporta
@@ -48,7 +48,7 @@ Cómo se usa
 
 Abrir la app en el navegador (Chrome o Safari actualizados).
 Elegir un modo: Video, Solo Audio o Por Bloques.
-Escribir, pegar o cargar el guion (.txt / .md).
+Escribir o pegar el guion.
 Configurar cámara, micrófono, formato y filtro.
 Grabar con el teleprompter en pantalla.
 Revisar la toma.
@@ -58,7 +58,7 @@ En el modo Por Bloques se recomienda descargar cada bloque apenas se aprueba, pa
 Tecnología
 Un solo archivo HTML, sin librerías externas ni dependencias. Construido sobre APIs nativas del navegador (getUserMedia, MediaRecorder, Canvas, FileReader, localStorage). Diseño claro editorial, mobile-first.
 Versiones y roadmap
-VersiónEstadoContenidov1.0PublicadaMVP: tres modos, teleprompter, grabación, descargasv1.1Publicada · MVP funcional aprobadoRediseño claro editorial premiumv1.2PublicadaCarga de guion desde archivo .txt / .md
+VersiónEstadoContenidov1.0PublicadaMVP: tres modos, teleprompter, grabación, descargasv1.1Publicada — MVP funcional aprobadoRediseño claro editorial premiumv1.2En desarrolloCarga de guion desde archivo .txt / .md
 Próximos pasos (sin orden comprometido):
 
 Descarga de todos los bloques en un solo ZIP
@@ -69,6 +69,6 @@ Carga de PDF/Word como guion
 Integración futura con HABIL/IA Edu
 
 Nota de marca
-HABIL/IA Studio no reemplaza la edición profesional. Resuelve la etapa anterior: grabar con más orden, claridad y seguridad. Como todo en habilia, la tecnología está al servicio de la persona — no al revés.
+HABIL/IA Studio no reemplaza la edición profesional. Resuelve la etapa anterior: grabar con más orden, claridad y seguridad. Como todo en HABIL/IA, la tecnología está al servicio de la persona — no al revés.
 
-© habilia · Hecho en Chile
+© HABIL/IA · Hecho en Chile
