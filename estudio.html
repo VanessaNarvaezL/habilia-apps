@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>HABIL/IA Studio — Graba mejor desde el inicio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════════════════════
+   HABIL/IA Studio v1.1 — Rediseño "Claro editorial premium"
+   Preparación luminosa · Grabación oscura ("se apagan las luces")
+   Motor funcional intacto respecto a v1.0
+   ════════════════════════════════════════════════════════════ */
+:root{
+  /* Luz — pantallas de preparación y revisión */
+  --marfil:#FAF7F0;
+  --panel:#FFFFFF;
+  --tinta:#142219;        /* verde bosque profundo, casi negro */
+  --gris:#6E6A60;         /* texto secundario cálido */
+  --arena:#E7E1D4;        /* líneas y bordes finos */
+  --arena-suave:#F1EDE3;  /* superficies sutiles */
+  --verde:#1E4D38;        /* botón principal */
+  --verde-hover:#173D2C;
+  --oro:#B8954A;          /* microacento */
+  --ok:#2E7D4F;
+  --error:#A8442F;
+  /* Oscuridad — el estudio */
+  --estudio:#0D0E0C;
+  --estudio-velo:rgba(8,9,7,0.55);
+  --estudio-texto:#F4F0E6;
+  --oro-estudio:#C9A85C;
+  --rojo:#C8503C;
+  --radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:var(--marfil);color:var(--tinta);
+  font-family:'Outfit',-apple-system,sans-serif;font-weight:300;
+  font-size:16px;line-height:1.6;
+  overscroll-behavior:none;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-weight:500}
+.serif{font-family:'Playfair Display',Georgia,serif}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--oro);outline-offset:2px}
+svg.ic{display:inline-block;vertical-align:-3px;flex-shrink:0}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
+}
+
+/* ── Pantallas ── */
+.screen{display:none;min-height:100dvh;flex-direction:column}
+.screen.active{display:flex}
+.shell{width:100%;max-width:600px;margin:0 auto;padding:20px 22px 44px;flex:1;display:flex;flex-direction:column}
+
+/* ── Barra superior (pantallas claras) ── */
+.topbar{display:flex;align-items:center;gap:14px;padding:18px 22px 10px;max-width:600px;margin:0 auto;width:100%}
+.back{
+  background:none;border:1px solid var(--arena);color:var(--gris);
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;transition:border-color .15s;
+}
+.back:hover{border-color:var(--gris)}
+.crumb{font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gris)}
+.crumb b{color:var(--tinta);font-weight:500}
+.steps{height:1px;background:var(--arena);margin:6px 22px 0;max-width:556px;position:relative}
+@media(min-width:601px){.steps{margin:6px auto 0;width:556px}}
+.steps i{position:absolute;left:0;top:-0.5px;height:2px;background:var(--oro);transition:width .4s}
+
+/* ── Inicio: landing editorial ── */
+#s-home .shell{padding-top:7vh;padding-bottom:7vh}
+.wordmark{
+  font-family:'Playfair Display';font-weight:600;font-size:1.25rem;
+  letter-spacing:0.01em;color:var(--tinta);
+}
+.wordmark .ia{color:var(--oro);font-style:italic}
+.wordmark small{
+  font-family:'Outfit';font-weight:500;font-size:0.62rem;
+  letter-spacing:0.32em;text-transform:uppercase;color:var(--gris);
+  margin-left:10px;vertical-align:2px;
+}
+.hero{margin:9vh 0 7vh}
+.hero h1{
+  font-family:'Playfair Display';font-weight:500;
+  font-size:clamp(2.1rem, 7.5vw, 3rem);line-height:1.18;
+  letter-spacing:-0.01em;color:var(--tinta);max-width:480px;
+}
+.hero h1 em{font-style:italic;color:var(--verde)}
+.hero p{color:var(--gris);font-size:1rem;margin-top:16px;max-width:430px;font-weight:300}
+.hero .filo{width:42px;height:2px;background:var(--oro);margin-top:26px}
+
+.modos{border-top:1px solid var(--arena)}
+.modo{
+  display:flex;align-items:center;gap:18px;width:100%;text-align:left;
+  background:none;border:none;border-bottom:1px solid var(--arena);
+  padding:24px 4px;color:var(--tinta);transition:padding .2s;
+}
+.modo:hover{padding-left:10px}
+.modo:hover .flecha{color:var(--oro)}
+.modo .ic{color:var(--verde)}
+.modo .cuerpo{flex:1;min-width:0}
+.modo h2{font-size:1.06rem;font-weight:500;letter-spacing:0.01em}
+.modo p{font-size:0.86rem;color:var(--gris);font-weight:300;margin-top:2px}
+.modo .flecha{color:var(--arena);transition:color .2s;flex-shrink:0}
+.pie-home{margin-top:auto;padding-top:40px;font-size:0.74rem;color:var(--gris);font-weight:300}
+.pie-home b{color:var(--oro);font-weight:500}
+
+@media(min-width:720px){
+  #s-home .shell{max-width:640px}
+  .modo{padding:28px 6px}
+}
+
+/* ── Tipografía de sección ── */
+.titulo{font-family:'Playfair Display';font-weight:500;font-size:1.55rem;color:var(--tinta);margin:14px 0 6px;letter-spacing:-0.01em}
+.bajada{color:var(--gris);font-size:0.9rem;margin-bottom:22px;font-weight:300}
+
+/* ── Controles base ── */
+.campo{
+  width:100%;background:var(--panel);border:1px solid var(--arena);color:var(--tinta);
+  border-radius:10px;padding:13px 15px;font-size:0.95rem;font-family:'Outfit';font-weight:300;
+  transition:border-color .15s;
+}
+.campo:focus{border-color:var(--verde);outline:none}
+.campo::placeholder{color:#B5B0A4}
+textarea.campo{min-height:36vh;resize:vertical;line-height:1.75}
+select.campo{
+  appearance:none;font-weight:400;
+  background-image:linear-gradient(45deg,transparent 50%,var(--gris) 50%),linear-gradient(135deg,var(--gris) 50%,transparent 50%);
+  background-position:calc(100% - 19px) 55%,calc(100% - 14px) 55%;
+  background-size:5px 5px;background-repeat:no-repeat;padding-right:38px;
+}
+label.lab{display:block;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gris);margin:20px 0 8px;font-weight:500}
+
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  width:100%;padding:15px;border:none;border-radius:10px;
+  font-size:0.95rem;font-weight:500;letter-spacing:0.01em;transition:background .15s,border-color .15s;
+}
+.btn-oro{background:var(--verde);color:var(--marfil)}        /* principal = verde bosque */
+.btn-oro:hover{background:var(--verde-hover)}
+.btn-oro:disabled{opacity:0.35;cursor:default}
+.btn-borde{background:transparent;color:var(--verde);border:1px solid var(--verde)}
+.btn-borde:hover{background:rgba(30,77,56,0.05)}
+.btn-suave{background:var(--panel);color:var(--tinta);border:1px solid var(--arena)}
+.btn-suave:hover{border-color:var(--gris)}
+.btn-mini{width:auto;display:inline-flex;padding:10px 16px;font-size:0.84rem;border-radius:9px}
+.fila{display:flex;gap:10px}
+.fila .btn{flex:1}
+.empuja{margin-top:auto;padding-top:26px}
+
+.aviso{
+  background:var(--panel);border:1px solid var(--arena);border-left:2px solid var(--oro);
+  border-radius:8px;padding:12px 15px;font-size:0.83rem;color:var(--tinta);
+  margin:14px 0;line-height:1.55;font-weight:300;
+}
+.aviso b{font-weight:500}
+.aviso.ok{border-left-color:var(--ok);color:var(--ok)}
+.aviso.error{border-left-color:var(--error);color:var(--error)}
+
+/* ── Guiones guardados ── */
+.guardados{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.guardados select{flex:1}
+.minirow{display:flex;gap:8px;margin-top:10px}
+.minirow input{flex:1}
+.cuenta{font-size:0.74rem;color:var(--gris);text-align:right;margin-top:8px;font-weight:300}
+
+/* ── Configuración ── */
+.preview-marco{
+  width:100%;background:var(--estudio);border-radius:var(--radius);overflow:hidden;
+  border:1px solid var(--arena);display:flex;align-items:center;justify-content:center;
+  margin-bottom:18px;position:relative;
+}
+.preview-marco.v916{aspect-ratio:9/16;max-height:44vh;margin-left:auto;margin-right:auto;width:auto;min-width:190px}
+.preview-marco.v169{aspect-ratio:16/9}
+.preview-marco canvas{width:100%;height:100%;display:block}
+canvas.espejo{transform:scaleX(-1)}
+
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{
+  padding:9px 16px;border-radius:50px;border:1px solid var(--arena);
+  background:var(--panel);color:var(--gris);font-size:0.84rem;font-weight:400;transition:all .15s;
+}
+.pill:hover{border-color:var(--gris)}
+.pill.on{background:var(--tinta);color:var(--marfil);border-color:var(--tinta);font-weight:500}
+
+details.finos{margin-top:12px;border:1px solid var(--arena);border-radius:10px;background:var(--panel)}
+details.finos summary{
+  padding:14px 16px;font-size:0.86rem;color:var(--tinta);cursor:pointer;list-style:none;font-weight:400;
+}
+details.finos summary::-webkit-details-marker{display:none}
+details.finos summary::after{content:'+';float:right;color:var(--oro);font-weight:400}
+details.finos[open] summary::after{content:'–'}
+details.finos .inner{padding:2px 16px 16px;border-top:1px solid var(--arena-suave)}
+.slider-row{display:flex;align-items:center;gap:12px;margin:14px 0}
+.slider-row span{font-size:0.78rem;color:var(--gris);width:76px;flex-shrink:0}
+.slider-row output{font-size:0.74rem;color:var(--oro);width:36px;text-align:right;font-weight:500}
+input[type=range]{flex:1;accent-color:var(--verde);height:3px}
+
+.abtn{
+  background:var(--panel);border:1px solid var(--arena);color:var(--tinta);
+  border-radius:8px;padding:9px 14px;font-size:0.8rem;font-weight:400;
+  display:inline-flex;align-items:center;gap:7px;transition:border-color .15s;
+}
+.abtn:hover{border-color:var(--gris)}
+.abtn.dorado{color:var(--marfil);background:var(--verde);border-color:var(--verde);font-weight:500}
+.abtn.dorado:hover{background:var(--verde-hover)}
+.abtn.icono{padding:9px 12px;color:var(--gris)}
+
+/* ════════ EL ESTUDIO (pantallas de grabación — oscuras) ════════ */
+#s-record,#s-record-audio{background:var(--estudio)}
+.rec-stage{position:fixed;inset:0;background:var(--estudio);display:flex;align-items:center;justify-content:center}
+.rec-stage canvas{max-width:100%;max-height:100%;object-fit:contain}
+.rec-scrim{position:fixed;inset:0;background:var(--estudio-velo);pointer-events:none}
+.rec-scrim.audio{background:radial-gradient(ellipse at 50% 115%, #181a14 0%, var(--estudio) 72%)}
+
+.prompter-wrap{position:fixed;inset:0;overflow:hidden;z-index:10}
+.prompter-text{
+  padding:46vh 7% 58vh;text-align:center;
+  font-family:'Outfit';font-weight:500;font-size:2.1rem;line-height:1.75;
+  color:var(--estudio-texto);text-shadow:0 2px 16px rgba(0,0,0,0.9);
+  white-space:pre-wrap;will-change:transform;
+}
+.linea-guia{position:fixed;top:44%;left:6%;right:6%;height:1px;z-index:12;
+  background:linear-gradient(90deg,transparent,rgba(201,168,92,0.5),transparent);pointer-events:none}
+.fade-t{position:fixed;top:0;left:0;right:0;height:14vh;z-index:11;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(10,11,9,0.92),transparent)}
+.fade-b{position:fixed;bottom:0;left:0;right:0;height:22vh;z-index:11;pointer-events:none;
+  background:linear-gradient(to top,rgba(10,11,9,0.94),transparent)}
+
+.rec-top{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;align-items:center;
+  justify-content:space-between;padding:14px 16px;padding-top:max(14px, env(safe-area-inset-top))}
+.rec-badge{
+  color:#fff;font-size:0.68rem;font-weight:600;letter-spacing:0.14em;
+  background:var(--rojo);padding:5px 12px 5px 22px;border-radius:30px;display:none;position:relative;
+}
+.rec-badge::before{
+  content:'';position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  width:6px;height:6px;border-radius:50%;background:#fff;animation:pulso 1.1s infinite;
+}
+.rec-badge.on{display:inline-block}
+.rec-badge.pausada{background:#7A6530}
+.rec-badge.pausada::before{animation:none}
+@keyframes pulso{0%,100%{opacity:1}50%{opacity:0.35}}
+.rec-timer{font-variant-numeric:tabular-nums;font-size:0.92rem;font-weight:400;color:var(--estudio-texto);
+  background:rgba(255,255,255,0.07);padding:5px 13px;border-radius:30px;border:1px solid rgba(255,255,255,0.1)}
+.rec-salir{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.14);color:#cfcbc0;
+  width:34px;height:34px;border-radius:50%;font-size:0.9rem}
+
+.estado-texto{position:fixed;top:48%;left:0;right:0;text-align:center;z-index:25;pointer-events:none}
+.estado-texto span{background:rgba(10,11,9,0.78);color:var(--oro-estudio);font-size:0.78rem;
+  padding:7px 17px;border-radius:30px;border:1px solid rgba(201,168,92,0.35);
+  opacity:0;transition:opacity .3s;font-weight:400}
+.estado-texto span.ver{opacity:1}
+
+.rec-bottom{position:fixed;bottom:0;left:0;right:0;z-index:30;
+  padding:12px 16px;padding-bottom:max(16px, env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;gap:10px}
+.rec-ajustes{display:none;background:rgba(14,15,13,0.92);border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px;padding:6px 16px 10px;backdrop-filter:blur(6px)}
+.rec-ajustes.ver{display:block}
+.rec-ajustes .slider-row span{color:#9a968b}
+.rec-ajustes input[type=range]{accent-color:var(--oro-estudio)}
+.rec-ajustes output{color:var(--oro-estudio)}
+.rec-ajustes label.lab{color:#9a968b}
+.rec-ajustes .campo{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);color:var(--estudio-texto)}
+.rec-botones{display:flex;gap:10px;justify-content:center;align-items:center}
+.rbtn{border:none;border-radius:50px;font-weight:500;font-size:0.92rem;padding:14px 24px;flex-shrink:0;transition:opacity .15s}
+.rbtn:active{opacity:0.85}
+.rbtn-grabar{
+  background:var(--estudio-texto);color:var(--tinta);padding:15px 32px 15px 26px;font-size:0.98rem;font-weight:600;
+  display:inline-flex;align-items:center;gap:10px;
+}
+.rbtn-grabar::before{content:'';width:9px;height:9px;border-radius:50%;background:var(--rojo)}
+.rbtn-stop{background:var(--rojo);color:#fff;font-weight:600;padding:15px 32px}
+.rbtn-stop::before{content:'';width:9px;height:9px;border-radius:2px;background:#fff;display:inline-block;margin-right:9px}
+.rbtn-pausa{background:rgba(255,255,255,0.1);color:var(--estudio-texto);border:1px solid rgba(255,255,255,0.22)}
+.rbtn-aa{background:rgba(255,255,255,0.07);color:var(--oro-estudio);border:1px solid rgba(201,168,92,0.45);
+  width:48px;height:48px;border-radius:50%;padding:0;font-size:0.92rem;font-weight:500}
+
+.cuenta-regresiva{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
+  background:rgba(8,9,7,0.8)}
+.cuenta-regresiva.ver{display:flex}
+.cuenta-regresiva b{font-family:'Playfair Display';font-weight:500;font-size:6.5rem;color:var(--estudio-texto);
+  text-shadow:0 0 70px rgba(201,168,92,0.35)}
+
+.medidor{position:fixed;bottom:36vh;left:50%;transform:translateX(-50%);z-index:25;
+  width:170px;text-align:center;pointer-events:none}
+.medidor .barra{height:4px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden}
+.medidor .barra i{display:block;height:100%;width:0%;background:var(--oro-estudio);border-radius:4px;transition:width .08s linear}
+.medidor small{font-size:0.64rem;color:#8d897e;letter-spacing:0.16em;text-transform:uppercase;font-weight:400}
+
+/* ── Revisión (clara) ── */
+.panel-rev{background:var(--panel);border:1px solid var(--arena);border-radius:var(--radius);padding:16px;margin-bottom:6px}
+.revisar-media{width:100%;border-radius:8px;background:var(--estudio);display:block}
+video.revisar-media{max-height:44vh;object-fit:contain}
+audio.revisar-media{background:var(--arena-suave)}
+
+/* ── Bloques ── */
+.bloque{
+  background:var(--panel);border:1px solid var(--arena);border-radius:var(--radius);
+  padding:18px;margin-bottom:12px;
+}
+.bloque .cab{display:flex;align-items:baseline;gap:12px}
+.bloque .num{font-family:'Playfair Display';font-size:1.15rem;color:var(--oro);min-width:30px;font-weight:500}
+.bloque .nom{font-weight:500;font-size:1rem;flex:1;color:var(--tinta)}
+.chip{font-size:0.64rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
+  padding:4px 10px;border-radius:30px;white-space:nowrap}
+.chip.pend{background:var(--arena-suave);color:var(--gris)}
+.chip.grab{background:rgba(184,149,74,0.12);color:#8A6E33}
+.chip.desc{background:rgba(46,125,79,0.1);color:var(--ok)}
+.bloque .vista{font-size:0.82rem;color:var(--gris);margin:8px 0 14px;font-weight:300;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bloque .acciones{display:flex;gap:7px;flex-wrap:wrap}
+
+/* ── Permisos / error ── */
+#s-perm .shell{justify-content:center;text-align:center;align-items:center}
+#s-perm .ic-grande{color:var(--verde);margin-bottom:18px}
+</style>
+</head>
+<body>
+
+<!-- Íconos SVG reutilizables -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="i-video"><rect x="2.5" y="6.5" width="13" height="11" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 11 21.5 7.5v9L15.5 13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></g>
+    <g id="i-mic"><rect x="9" y="2.5" width="6" height="11.5" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5M8.5 21.5h7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+    <g id="i-bloques"><rect x="3.5" y="3.5" width="17" height="4.6" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="9.7" width="17" height="4.6" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="15.9" width="11" height="4.6" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.6"/></g>
+    <g id="i-flecha"><path d="M4.5 12h15M14 6.5l5.5 5.5L14 17.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g id="i-volver"><path d="M19.5 12h-15M10 6.5 4.5 12l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g id="i-desc"><path d="M12 3.5v12M7 11l5 5 5-5M4.5 20h15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g id="i-trash"><path d="M4.5 6.5h15M9.5 6.5V4h5v2.5M6.5 6.5 7.5 20h9l1-13.5M10 10.5v6M14 10.5v6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></g>
+    <g id="i-girar"><path d="M4.5 12a7.5 7.5 0 0 1 13-5M19.5 12a7.5 7.5 0 0 1-13 5M17.5 3.5V7H14M6.5 20.5V17H10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g id="i-doc"><path d="M6.5 3.5h8L18.5 8v12.5h-12zM14 3.5V8h4.5M9 12.5h6M9 16h6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g id="i-mas"><path d="M12 5.5v13M5.5 12h13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+  </defs>
+</svg>
+
+<!-- ════════ INICIO — landing editorial ════════ -->
+<section class="screen active" id="s-home">
+  <div class="shell">
+    <div class="wordmark">habil<span class="ia">/ia</span><small>Studio</small></div>
+
+    <div class="hero">
+      <h1>Graba mejor <em>desde el inicio.</em></h1>
+      <p>Guion, orden, formato correcto y archivos listos para editar. Todo lo que pasa antes de CapCut, resuelto.</p>
+      <div class="filo"></div>
+    </div>
+
+    <div class="modos">
+      <button class="modo" onclick="App.irGuion('video')">
+        <svg class="ic" width="26" height="26" viewBox="0 0 24 24"><use href="#i-video"/></svg>
+        <span class="cuerpo">
+          <h2>Video</h2>
+          <p>Grábate explicando frente a cámara, con teleprompter, en vertical u horizontal.</p>
+        </span>
+        <svg class="ic flecha" width="20" height="20" viewBox="0 0 24 24"><use href="#i-flecha"/></svg>
+      </button>
+      <button class="modo" onclick="App.irGuion('audio')">
+        <svg class="ic" width="26" height="26" viewBox="0 0 24 24"><use href="#i-mic"/></svg>
+        <span class="cuerpo">
+          <h2>Solo audio</h2>
+          <p>Narra con el guion en pantalla. Ideal para voz sobre láminas, imágenes o video.</p>
+        </span>
+        <svg class="ic flecha" width="20" height="20" viewBox="0 0 24 24"><use href="#i-flecha"/></svg>
+      </button>
+      <button class="modo" onclick="App.irBloques()">
+        <svg class="ic" width="26" height="26" viewBox="0 0 24 24"><use href="#i-bloques"/></svg>
+        <span class="cuerpo">
+          <h2>Por bloques</h2>
+          <p>Divide tu clase o curso en partes y graba cada una por separado, ya numeradas.</p>
+        </span>
+        <svg class="ic flecha" width="20" height="20" viewBox="0 0 24 24"><use href="#i-flecha"/></svg>
+      </button>
+    </div>
+
+    <p class="pie-home"><b>Humanos primero. Inteligencia después.</b> &nbsp;·&nbsp; Tus grabaciones nunca salen de tu dispositivo.</p>
+  </div>
+</section>
+
+<!-- ════════ GUION (video y audio) ════════ -->
+<section class="screen" id="s-guion">
+  <div class="topbar">
+    <button class="back" onclick="App.irHome()" aria-label="Volver">
+      <svg class="ic" width="18" height="18" viewBox="0 0 24 24"><use href="#i-volver"/></svg>
+    </button>
+    <span class="crumb"><b>Paso 1</b> · Tu guion</span>
+  </div>
+  <div class="steps"><i style="width:25%"></i></div>
+  <div class="shell">
+    <h2 class="titulo">Escribe o pega tu guion</h2>
+    <p class="bajada">Deja líneas en blanco para marcar pausas. El texto avanzará solo mientras grabas.</p>
+
+    <div class="guardados">
+      <select class="campo" id="sel-guiones" onchange="Guiones.cargar()">
+        <option value="">Mis guiones guardados…</option>
+      </select>
+      <button class="abtn icono" onclick="Guiones.borrar()" title="Eliminar guion seleccionado" aria-label="Eliminar guion seleccionado">
+        <svg class="ic" width="17" height="17" viewBox="0 0 24 24"><use href="#i-trash"/></svg>
+      </button>
+    </div>
+
+    <textarea class="campo" id="txt-guion" placeholder="Hola, soy… y hoy quiero explicarte…" oninput="App.guionCambio()"></textarea>
+    <div class="cuenta" id="cuenta-palabras"></div>
+
+    <div class="minirow" id="fila-guardar" style="display:none">
+      <input class="campo" id="inp-nombre-guion" placeholder="Nombre del guion" maxlength="50">
+      <button class="btn btn-oro btn-mini" onclick="Guiones.confirmarGuardar()">Guardar</button>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="abtn" onclick="Guiones.mostrarGuardar()">
+        <svg class="ic" width="15" height="15" viewBox="0 0 24 24"><use href="#i-mas"/></svg>
+        Guardar este guion
+      </button>
+      <button class="abtn" onclick="Guiones.cargarArchivo()">
+        <svg class="ic" width="15" height="15" viewBox="0 0 24 24"><use href="#i-doc"/></svg>
+        Cargar desde archivo
+      </button>
+      <input type="file" id="inp-archivo-guion" accept=".txt,.md,text/plain,text/markdown" style="display:none" onchange="Guiones.archivoSeleccionado(this)">
+    </div>
+    <div id="aviso-archivo"></div>
+
+    <div class="empuja">
+      <button class="btn btn-oro" id="btn-guion-sig" onclick="App.guionListo()" disabled>Continuar</button>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CONFIGURAR (modo video y bloques) ════════ -->
+<section class="screen" id="s-config">
+  <div class="topbar">
+    <button class="back" onclick="App.volverDeConfig()" aria-label="Volver">
+      <svg class="ic" width="18" height="18" viewBox="0 0 24 24"><use href="#i-volver"/></svg>
+    </button>
+    <span class="crumb"><b>Paso 2</b> · Cámara y formato</span>
+  </div>
+  <div class="steps"><i style="width:50%"></i></div>
+  <div class="shell">
+    <div class="preview-marco v916" id="marco-preview">
+      <canvas id="canvas" width="720" height="1280"></canvas>
+    </div>
+    <div id="aviso-config"></div>
+
+    <label class="lab">Formato</label>
+    <div class="pills">
+      <button class="pill on" id="pill-916" onclick="Cam.setFormato('916')">Vertical 9:16</button>
+      <button class="pill" id="pill-169" onclick="Cam.setFormato('169')">Horizontal 16:9</button>
+    </div>
+    <p style="font-size:0.76rem;color:var(--gris);margin-top:8px;font-weight:300" id="hint-formato"></p>
+
+    <label class="lab">Filtro</label>
+    <div class="pills" id="pills-filtro">
+      <button class="pill on" data-f="none" onclick="Cam.setFiltro('none',this)">Sin filtro</button>
+      <button class="pill" data-f="natural" onclick="Cam.setFiltro('natural',this)">Natural</button>
+      <button class="pill" data-f="calido" onclick="Cam.setFiltro('calido',this)">Cálido</button>
+      <button class="pill" data-f="pro" onclick="Cam.setFiltro('pro',this)">Profesional</button>
+      <button class="pill" data-f="suave" onclick="Cam.setFiltro('suave',this)">Contraste suave</button>
+    </div>
+    <div id="aviso-filtro"></div>
+
+    <details class="finos">
+      <summary>Ajustes finos — brillo, contraste y saturación</summary>
+      <div class="inner">
+        <div class="slider-row"><span>Brillo</span><input type="range" id="sl-bri" min="0.75" max="1.25" step="0.01" value="1" oninput="Cam.slider()"><output id="o-bri">1.00</output></div>
+        <div class="slider-row"><span>Contraste</span><input type="range" id="sl-con" min="0.75" max="1.25" step="0.01" value="1" oninput="Cam.slider()"><output id="o-con">1.00</output></div>
+        <div class="slider-row"><span>Saturación</span><input type="range" id="sl-sat" min="0.75" max="1.25" step="0.01" value="1" oninput="Cam.slider()"><output id="o-sat">1.00</output></div>
+        <button class="abtn" style="margin-top:4px" onclick="Cam.resetSliders()">Restablecer</button>
+      </div>
+    </details>
+
+    <details class="finos" style="margin-top:10px">
+      <summary>Cámara y micrófono</summary>
+      <div class="inner">
+        <button class="abtn" style="margin:12px 0 4px" onclick="Cam.girar()">
+          <svg class="ic" width="16" height="16" viewBox="0 0 24 24"><use href="#i-girar"/></svg>
+          Girar cámara frontal / trasera
+        </button>
+        <label class="lab" style="margin-top:14px">Cámara</label>
+        <select class="campo" id="sel-cam" onchange="Cam.cambiarDispositivo()"></select>
+        <label class="lab">Micrófono</label>
+        <select class="campo" id="sel-mic" onchange="Cam.cambiarDispositivo()"></select>
+      </div>
+    </details>
+
+    <div class="empuja">
+      <button class="btn btn-oro" onclick="App.irGrabarVideo()">Entrar al estudio</button>
+      <p style="text-align:center;font-size:0.74rem;color:var(--gris);margin-top:10px;font-weight:300">Al continuar se apagan las luces: pantalla oscura para grabar mejor.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ GRABAR VIDEO — el estudio ════════ -->
+<section class="screen" id="s-record">
+  <div class="rec-stage"><canvas id="canvas-rec-vista"></canvas></div>
+  <div class="rec-scrim"></div>
+  <div class="fade-t"></div><div class="linea-guia"></div>
+  <div class="prompter-wrap" id="pw-video" onclick="Prompter.toque()">
+    <div class="prompter-text" id="pt-video"></div>
+  </div>
+  <div class="fade-b"></div>
+
+  <div class="rec-top">
+    <button class="rec-salir" onclick="Rec.salir()" aria-label="Salir">✕</button>
+    <span class="rec-timer" id="timer-v">00:00</span>
+    <span class="rec-badge" id="badge-v">REC</span>
+  </div>
+
+  <div class="estado-texto"><span id="estado-v"></span></div>
+
+  <div class="rec-bottom">
+    <div class="rec-ajustes" id="ajustes-v">
+      <div class="slider-row"><span>Velocidad</span><input type="range" id="sl-vel-v" min="0.4" max="3" step="0.05" value="1" oninput="Prompter.setVel(this.value,'v')"><output id="o-vel-v">1.0x</output></div>
+      <div class="slider-row"><span>Tamaño</span><input type="range" id="sl-tam-v" min="1.3" max="3.4" step="0.1" value="2.1" oninput="Prompter.setTam(this.value)"><output id="o-tam-v">2.1</output></div>
+    </div>
+    <div class="rec-botones">
+      <button class="rbtn rbtn-aa" onclick="Rec.toggleAjustes()" aria-label="Ajustes de texto">Aa</button>
+      <button class="rbtn rbtn-grabar" id="btn-rec-v" onclick="Rec.principal()">Grabar</button>
+      <button class="rbtn rbtn-pausa" id="btn-pausa-v" onclick="Rec.pausa()" style="display:none">Pausa</button>
+    </div>
+  </div>
+
+  <div class="cuenta-regresiva" id="cr-v"><b>3</b></div>
+</section>
+
+<!-- ════════ GRABAR SOLO AUDIO — el estudio ════════ -->
+<section class="screen" id="s-record-audio">
+  <div class="rec-scrim audio"></div>
+  <div class="fade-t"></div><div class="linea-guia"></div>
+  <div class="prompter-wrap" id="pw-audio" onclick="Prompter.toque()">
+    <div class="prompter-text" id="pt-audio"></div>
+  </div>
+  <div class="fade-b"></div>
+
+  <div class="rec-top">
+    <button class="rec-salir" onclick="Rec.salir()" aria-label="Salir">✕</button>
+    <span class="rec-timer" id="timer-a">00:00</span>
+    <span class="rec-badge" id="badge-a">REC</span>
+  </div>
+
+  <div class="medidor">
+    <div class="barra"><i id="nivel-mic"></i></div>
+    <small>Nivel de micrófono</small>
+  </div>
+
+  <div class="estado-texto"><span id="estado-a"></span></div>
+
+  <div class="rec-bottom">
+    <div class="rec-ajustes" id="ajustes-a">
+      <div class="slider-row"><span>Velocidad</span><input type="range" id="sl-vel-a" min="0.4" max="3" step="0.05" value="1" oninput="Prompter.setVel(this.value,'a')"><output id="o-vel-a">1.0x</output></div>
+      <div class="slider-row"><span>Tamaño</span><input type="range" id="sl-tam-a" min="1.3" max="3.4" step="0.1" value="2.1" oninput="Prompter.setTam(this.value)"><output id="o-tam-a">2.1</output></div>
+      <label class="lab" style="margin-top:8px">Micrófono</label>
+      <select class="campo" id="sel-mic-a" onchange="Rec.cambiarMicAudio()"></select>
+    </div>
+    <div class="rec-botones">
+      <button class="rbtn rbtn-aa" onclick="Rec.toggleAjustes()" aria-label="Ajustes">Aa</button>
+      <button class="rbtn rbtn-grabar" id="btn-rec-a" onclick="Rec.principal()">Grabar</button>
+      <button class="rbtn rbtn-pausa" id="btn-pausa-a" onclick="Rec.pausa()" style="display:none">Pausa</button>
+    </div>
+  </div>
+
+  <div class="cuenta-regresiva" id="cr-a"><b>3</b></div>
+</section>
+
+<!-- ════════ REVISAR Y DESCARGAR ════════ -->
+<section class="screen" id="s-review">
+  <div class="topbar">
+    <button class="back" onclick="App.revisarVolver()" aria-label="Volver">
+      <svg class="ic" width="18" height="18" viewBox="0 0 24 24"><use href="#i-volver"/></svg>
+    </button>
+    <span class="crumb"><b>Último paso</b> · Revisa y descarga</span>
+  </div>
+  <div class="steps"><i style="width:100%"></i></div>
+  <div class="shell">
+    <h2 class="titulo" id="rev-titulo">Tu grabación</h2>
+    <p class="bajada" id="rev-bajada"></p>
+
+    <div class="panel-rev">
+      <video class="revisar-media" id="rev-video" controls playsinline style="display:none"></video>
+      <audio class="revisar-media" id="rev-audio" controls style="display:none"></audio>
+
+      <label class="lab">Nombre del archivo</label>
+      <input class="campo" id="inp-nombre-archivo" maxlength="60">
+
+      <div id="rev-formato"></div>
+
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
+        <button class="btn btn-oro" id="btn-desc-video" onclick="App.descargarVideo()">
+          <svg class="ic" width="17" height="17" viewBox="0 0 24 24"><use href="#i-desc"/></svg>
+          Descargar video
+        </button>
+        <button class="btn btn-borde" id="btn-desc-audio" onclick="App.descargarAudio()">
+          <svg class="ic" width="17" height="17" viewBox="0 0 24 24"><use href="#i-desc"/></svg>
+          Descargar solo el audio
+        </button>
+      </div>
+      <div id="rev-ok"></div>
+    </div>
+
+    <div class="empuja">
+      <div class="fila">
+        <button class="btn btn-suave" onclick="App.regrabar()">Grabar de nuevo</button>
+        <button class="btn btn-suave" id="btn-rev-fin" onclick="App.revisarFin()">Terminar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ BLOQUES: LISTA ════════ -->
+<section class="screen" id="s-blocks">
+  <div class="topbar">
+    <button class="back" onclick="App.irHome()" aria-label="Volver">
+      <svg class="ic" width="18" height="18" viewBox="0 0 24 24"><use href="#i-volver"/></svg>
+    </button>
+    <span class="crumb"><b>Por bloques</b> · Tu estructura</span>
+  </div>
+  <div class="shell">
+    <h2 class="titulo">Bloques de tu contenido</h2>
+    <p class="bajada">Graba cada parte por separado. Los archivos salen numerados y en orden, listos para unir en tu editor.</p>
+
+    <div class="aviso">Consejo: descarga cada bloque apenas lo apruebes. Las grabaciones viven en la memoria del teléfono y se pierden si cierras la página.</div>
+
+    <div id="lista-bloques"></div>
+
+    <button class="btn btn-suave" onclick="Bloques.agregar()">
+      <svg class="ic" width="16" height="16" viewBox="0 0 24 24"><use href="#i-mas"/></svg>
+      Agregar bloque
+    </button>
+
+    <div class="empuja">
+      <button class="btn btn-borde" onclick="Bloques.descargarGuion()">
+        <svg class="ic" width="17" height="17" viewBox="0 0 24 24"><use href="#i-doc"/></svg>
+        Descargar guion completo (.txt)
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ BLOQUES: EDITAR ════════ -->
+<section class="screen" id="s-block-edit">
+  <div class="topbar">
+    <button class="back" onclick="App.mostrar('s-blocks')" aria-label="Volver">
+      <svg class="ic" width="18" height="18" viewBox="0 0 24 24"><use href="#i-volver"/></svg>
+    </button>
+    <span class="crumb"><b>Bloque</b> · Editar</span>
+  </div>
+  <div class="shell">
+    <label class="lab" style="margin-top:6px">Título del bloque</label>
+    <input class="campo" id="be-titulo" maxlength="60">
+    <label class="lab">Guion de este bloque</label>
+    <textarea class="campo" id="be-texto" style="min-height:34vh" placeholder="Lo que dirás en esta parte…"></textarea>
+    <div class="empuja">
+      <button class="btn btn-oro" onclick="Bloques.guardarEdicion()">Guardar bloque</button>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ PERMISOS / ERRORES ════════ -->
+<section class="screen" id="s-perm">
+  <div class="shell">
+    <div class="ic-grande" id="perm-ic"></div>
+    <h2 class="titulo" id="perm-titulo">Necesitamos tu cámara</h2>
+    <p class="bajada" id="perm-texto" style="max-width:380px"></p>
+    <div class="fila" style="width:100%;max-width:380px;margin-top:10px">
+      <button class="btn btn-oro" onclick="App.reintentarPermiso()">Reintentar</button>
+      <button class="btn btn-suave" onclick="App.irHome()">Volver al inicio</button>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   HABIL/IA Studio v1.1 — motor funcional idéntico a v1.0
+   Cambios de esta versión: solo capa visual y textos de interfaz.
+   Módulos: ESTADO · GUIONES · CÁMARA/COMPOSITOR · PROMPTER ·
+            GRABADOR · BLOQUES · APP (navegación)
+   ════════════════════════════════════════════════════════════ */
+
+/* ───────────────── ESTADO GLOBAL ───────────────── */
+const S = {
+  modo: null,            // 'video' | 'audio' | 'bloques'
+  guion: '',
+  formato: '916',        // '916' | '169'
+  filtro: 'none',
+  bri: 1, con: 1, sat: 1,
+  facing: 'user',        // 'user' | 'environment'
+  espejo: true,
+  camId: '', micId: '',
+  bloqueActivo: null,
+  videoBlob: null, videoMime: '',
+  audioBlob: null, audioMime: '',
+  vDesc: false, aDesc: false,
+};
+
+const $ = id => document.getElementById(id);
+
+/* Íconos SVG para contenido generado por JS */
+const SVG_CAM = '<svg width="44" height="44" viewBox="0 0 24 24"><use href="#i-video"/></svg>';
+const SVG_MIC = '<svg width="44" height="44" viewBox="0 0 24 24"><use href="#i-mic"/></svg>';
+
+/* Detección de capacidades — honesta, una sola vez */
+const CAP = (() => {
+  const c = {};
+  c.mediaRecorder = typeof MediaRecorder !== 'undefined';
+  c.getUserMedia = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  c.pausa = c.mediaRecorder && typeof MediaRecorder.prototype.pause === 'function';
+  // ¿El canvas soporta filtros? (Si no, el filtro se ve en pantalla pero NO queda grabado)
+  try {
+    const t = document.createElement('canvas').getContext('2d');
+    t.filter = 'brightness(1.1)';
+    c.filtroGrabado = (t.filter === 'brightness(1.1)');
+  } catch(e){ c.filtroGrabado = false; }
+  return c;
+})();
+
+function pickMime(lista){
+  if (!CAP.mediaRecorder) return '';
+  for (const m of lista) if (MediaRecorder.isTypeSupported(m)) return m;
+  return '';
+}
+const MIME_VIDEO = pickMime(['video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm']);
+const MIME_AUDIO = pickMime(['audio/mp4','audio/webm;codecs=opus','audio/webm']);
+
+function ext(mime){
+  if (!mime) return 'webm';
+  if (mime.startsWith('video/mp4')) return 'mp4';
+  if (mime.startsWith('audio/mp4')) return 'm4a';
+  return 'webm';
+}
+function slug(t){
+  return (t||'archivo').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60) || 'archivo';
+}
+function descargarBlob(blob, nombre){
+  const a = document.createElement('a');
+  const u = URL.createObjectURL(blob);
+  a.href = u; a.download = nombre;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 5000);
+}
+function fmtTiempo(ms){
+  const s = Math.floor(ms/1000);
+  return String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+}
+
+/* ───────────────── GUIONES (localStorage) ───────────────── */
+const Guiones = {
+  KEY: 'hs_guiones_v1',
+  lista(){ try { return JSON.parse(localStorage.getItem(this.KEY)) || []; } catch(e){ return []; } },
+  persistir(l){ try { localStorage.setItem(this.KEY, JSON.stringify(l)); } catch(e){} },
+
+  init(){
+    if (localStorage.getItem(this.KEY) === null) this.persistir(PRECARGADOS);
+    this.render();
+  },
+  render(){
+    const sel = $('sel-guiones');
+    sel.innerHTML = '<option value="">Mis guiones guardados…</option>';
+    this.lista().forEach((g,i) => {
+      const o = document.createElement('option');
+      o.value = i; o.textContent = g.nombre;
+      sel.appendChild(o);
+    });
+  },
+  cargar(){
+    const i = $('sel-guiones').value;
+    if (i === '') return;
+    $('txt-guion').value = this.lista()[i].texto;
+    App.guionCambio();
+  },
+  mostrarGuardar(){
+    $('fila-guardar').style.display = 'flex';
+    $('inp-nombre-guion').focus();
+  },
+  confirmarGuardar(){
+    const nombre = $('inp-nombre-guion').value.trim();
+    const texto = $('txt-guion').value.trim();
+    if (!nombre || !texto) return;
+    const l = this.lista();
+    l.push({nombre, texto});
+    this.persistir(l); this.render();
+    $('sel-guiones').value = l.length - 1;
+    $('fila-guardar').style.display = 'none';
+    $('inp-nombre-guion').value = '';
+  },
+  borrar(){
+    const i = $('sel-guiones').value;
+    if (i === '') return;
+    const l = this.lista();
+    if (!confirm(`¿Eliminar el guion "${l[i].nombre}"?`)) return;
+    l.splice(i,1); this.persistir(l); this.render();
+  },
+
+  /* ── Cargar guion desde archivo .txt o .md ──
+     Todo ocurre en el navegador con FileReader: el archivo nunca se sube
+     a ningún servidor. PDF y Word quedan para una versión futura
+     (HABIL/IA Edu / Convertidor).                                        */
+  cargarArchivo(){
+    $('inp-archivo-guion').click();
+  },
+  archivoSeleccionado(input){
+    const aviso = $('aviso-archivo');
+    aviso.innerHTML = '';
+    const file = input.files && input.files[0];
+    input.value = '';   // permite volver a elegir el mismo archivo después
+    if (!file) return;
+
+    const nombre = (file.name || '').toLowerCase();
+    if (!nombre.endsWith('.txt') && !nombre.endsWith('.md')){
+      aviso.innerHTML = '<div class="aviso error">Solo se aceptan archivos <b>.txt</b> o <b>.md</b>. PDF y Word llegan en una versión futura.</div>';
+      return;
+    }
+    if (file.size > 300 * 1024){
+      aviso.innerHTML = '<div class="aviso error">El archivo es muy grande para un guion (máx. 300 KB). Copia y pega solo el texto que vas a leer.</div>';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const texto = (reader.result || '').replace(/\r\n/g, '\n').trim();
+      if (!texto){
+        aviso.innerHTML = '<div class="aviso error">El archivo está vacío o no se pudo leer como texto.</div>';
+        return;
+      }
+      const ta = $('txt-guion');
+      if (ta.value.trim() && !confirm('Ya hay un guion escrito. ¿Reemplazarlo con el contenido del archivo?')) return;
+      ta.value = texto;
+      App.guionCambio();   // actualiza contador de palabras y habilita Continuar
+      aviso.innerHTML = `<div class="aviso ok">Guion cargado desde <b>${file.name}</b>. Revísalo antes de continuar.</div>`;
+    };
+    reader.onerror = () => {
+      aviso.innerHTML = '<div class="aviso error">No se pudo leer el archivo. Verifica que sea un .txt o .md normal e intenta de nuevo.</div>';
+    };
+    reader.readAsText(file, 'UTF-8');
+  }
+};
+
+/* ───────────────── CÁMARA + COMPOSITOR (canvas) ─────────────────
+   El canvas hace dos cosas a la vez:
+   1. Garantiza el formato exacto (9:16 o 16:9) recortando la imagen.
+   2. Aplica el filtro EN la grabación, si el navegador lo soporta.
+   Lo que ves en pantalla es exactamente lo que queda grabado.       */
+const Cam = {
+  stream: null,
+  video: document.createElement('video'),
+  canvas: null, ctx: null,
+
+  init(){
+    this.canvas = $('canvas');
+    this.ctx = this.canvas.getContext('2d', { alpha:false });
+    this.video.playsInline = true;
+    this.video.muted = true;
+  },
+
+  async abrir(){
+    this.cerrar();
+    const v = { width:{ideal:1920}, height:{ideal:1080} };
+    if (S.camId) v.deviceId = { exact: S.camId };
+    else v.facingMode = S.facing;
+    const a = S.micId ? { deviceId:{ exact:S.micId } } : true;
+    this.stream = await navigator.mediaDevices.getUserMedia({ video:v, audio:a });
+    this.video.srcObject = this.stream;
+    await this.video.play();
+    this.actualizarEspejo();
+    await this.listarDispositivos();
+  },
+
+  cerrar(){
+    if (this.stream){ this.stream.getTracks().forEach(t => t.stop()); this.stream = null; }
+  },
+
+  async listarDispositivos(){
+    try {
+      const devs = await navigator.mediaDevices.enumerateDevices();
+      const llenar = (sel, tipo, actual) => {
+        sel.innerHTML = '';
+        devs.filter(d => d.kind === tipo).forEach((d,i) => {
+          const o = document.createElement('option');
+          o.value = d.deviceId;
+          o.textContent = d.label || (tipo==='videoinput' ? `Cámara ${i+1}` : `Micrófono ${i+1}`);
+          sel.appendChild(o);
+        });
+        if (actual) sel.value = actual;
+      };
+      llenar($('sel-cam'), 'videoinput', S.camId);
+      llenar($('sel-mic'), 'audioinput', S.micId);
+      llenar($('sel-mic-a'), 'audioinput', S.micId);
+      const vt = this.stream && this.stream.getVideoTracks()[0];
+      if (vt && vt.getSettings && vt.getSettings().deviceId) $('sel-cam').value = vt.getSettings().deviceId;
+    } catch(e){ /* sin permisos aún */ }
+  },
+
+  async cambiarDispositivo(){
+    S.camId = $('sel-cam').value;
+    S.micId = $('sel-mic').value;
+    try { await this.abrir(); } catch(e){ App.errorPermiso(e, 'video'); }
+  },
+
+  async girar(){
+    S.facing = (S.facing === 'user') ? 'environment' : 'user';
+    S.camId = '';
+    try { await this.abrir(); } catch(e){
+      S.facing = (S.facing === 'user') ? 'environment' : 'user';
+      try { await this.abrir(); } catch(e2){ App.errorPermiso(e2, 'video'); }
+    }
+  },
+
+  actualizarEspejo(){
+    // El preview de cámara frontal se ve espejado (como un espejo real),
+    // pero la grabación queda al derecho — igual que las apps profesionales.
+    let frontal = (S.facing === 'user');
+    const vt = this.stream && this.stream.getVideoTracks()[0];
+    if (vt){
+      const st = vt.getSettings ? vt.getSettings() : {};
+      if (st.facingMode) frontal = (st.facingMode === 'user');
+      else if (vt.label && /back|rear|tras|environment/i.test(vt.label)) frontal = false;
+    }
+    S.espejo = frontal;
+    this.canvas.classList.toggle('espejo', frontal);
+    $('canvas-rec-vista').classList.toggle('espejo', frontal);
+  },
+
+  setFormato(f){
+    S.formato = f;
+    $('pill-916').classList.toggle('on', f==='916');
+    $('pill-169').classList.toggle('on', f==='169');
+    const marco = $('marco-preview');
+    marco.classList.toggle('v916', f==='916');
+    marco.classList.toggle('v169', f==='169');
+    if (f === '916'){ this.canvas.width = 720;  this.canvas.height = 1280; }
+    else            { this.canvas.width = 1280; this.canvas.height = 720;  }
+    $('hint-formato').textContent = (f==='169' && window.innerHeight > window.innerWidth)
+      ? 'Consejo: para 16:9 gira tu teléfono en horizontal al grabar — se aprovecha mejor la cámara.'
+      : '';
+  },
+
+  setFiltro(f, btn){
+    S.filtro = f;
+    document.querySelectorAll('#pills-filtro .pill').forEach(p => p.classList.remove('on'));
+    btn.classList.add('on');
+    this.avisoFiltro();
+  },
+  slider(){
+    S.bri = parseFloat($('sl-bri').value);
+    S.con = parseFloat($('sl-con').value);
+    S.sat = parseFloat($('sl-sat').value);
+    $('o-bri').textContent = S.bri.toFixed(2);
+    $('o-con').textContent = S.con.toFixed(2);
+    $('o-sat').textContent = S.sat.toFixed(2);
+    this.avisoFiltro();
+  },
+  resetSliders(){
+    ['sl-bri','sl-con','sl-sat'].forEach(id => $(id).value = 1);
+    this.slider();
+  },
+  hayAjuste(){
+    return S.filtro !== 'none' || S.bri !== 1 || S.con !== 1 || S.sat !== 1;
+  },
+  avisoFiltro(){
+    const el = $('aviso-filtro');
+    if (!CAP.filtroGrabado && this.hayAjuste()){
+      el.innerHTML = '<div class="aviso">En este navegador el filtro se ve en pantalla, pero <b>no queda grabado</b> en el video. El video sale sin filtro. En Chrome (computador o Android) sí queda grabado.</div>';
+    } else el.innerHTML = '';
+  },
+
+  filtroCSS(){
+    const PRE = {
+      none:'', natural:'brightness(1.03) contrast(1.02) saturate(1.05)',
+      calido:'brightness(1.04) saturate(1.12) sepia(0.12)',
+      pro:'contrast(1.08) saturate(0.95) brightness(1.02)',
+      suave:'contrast(1.06) brightness(1.03)'
+    };
+    const base = PRE[S.filtro] || '';
+    const adj = (S.bri!==1||S.con!==1||S.sat!==1) ? ` brightness(${S.bri}) contrast(${S.con}) saturate(${S.sat})` : '';
+    return (base + adj).trim();
+  },
+
+  /* Dibuja un frame: recorte tipo "cover" al formato elegido + filtro */
+  drawFrame(){
+    const v = this.video;
+    if (!v.videoWidth) return;
+    const ctx = this.ctx, cw = this.canvas.width, ch = this.canvas.height;
+    const f = this.filtroCSS();
+    if (CAP.filtroGrabado) ctx.filter = f || 'none';
+    if (!CAP.filtroGrabado){
+      const css = f || 'none';
+      if (this.canvas.style.filter !== css) this.canvas.style.filter = css;
+      const vista = $('canvas-rec-vista');
+      if (vista.style.filter !== css) vista.style.filter = css;
+    }
+    const sr = v.videoWidth / v.videoHeight, or_ = cw / ch;
+    let sw, sh, sx, sy;
+    if (sr > or_){ sh = v.videoHeight; sw = sh * or_; sx = (v.videoWidth - sw)/2; sy = 0; }
+    else         { sw = v.videoWidth;  sh = sw / or_; sx = 0; sy = (v.videoHeight - sh)/2; }
+    ctx.drawImage(v, sx, sy, sw, sh, 0, 0, cw, ch);
+    const vista = $('canvas-rec-vista');
+    if (vista.width !== cw || vista.height !== ch){ vista.width = cw; vista.height = ch; }
+    const vctx = vista.getContext('2d');
+    vctx.drawImage(this.canvas, 0, 0);
+  }
+};
+
+/* ───────────────── PROMPTER (scroll basado en tiempo) ─────────────────
+   El texto avanza en píxeles POR SEGUNDO, no por frame: corre igual en
+   pantallas de 60Hz y de 120Hz.                                          */
+const Prompter = {
+  wrap: null, texto: null,
+  y: 0, vel: 1, pxBase: 55,   // 1.0x = 55 px/seg
+  activo: false, pausado: true,
+
+  usar(cual){ // 'v' o 'a'
+    this.wrap = $(cual === 'v' ? 'pw-video' : 'pw-audio');
+    this.texto = $(cual === 'v' ? 'pt-video' : 'pt-audio');
+    this.texto.textContent = S.guion;
+    this.reset();
+  },
+  reset(){
+    this.y = 0; this.pausado = true; this.activo = false;
+    if (this.texto) this.texto.style.transform = 'translateY(0)';
+  },
+  iniciar(){ this.activo = true; this.pausado = false; },
+  toque(){
+    if (!this.activo) return;
+    this.pausado = !this.pausado;
+    Rec.flash(this.pausado ? 'Texto en pausa — toca para continuar' : '');
+  },
+  setVel(v, cual){
+    this.vel = parseFloat(v);
+    $('o-vel-' + cual).textContent = this.vel.toFixed(1) + 'x';
+    $('sl-vel-' + (cual === 'v' ? 'a' : 'v')).value = v;
+    $('o-vel-' + (cual === 'v' ? 'a' : 'v')).textContent = this.vel.toFixed(1) + 'x';
+  },
+  setTam(v){
+    document.querySelectorAll('.prompter-text').forEach(t => t.style.fontSize = v + 'rem');
+    $('o-tam-v').textContent = parseFloat(v).toFixed(1);
+    $('o-tam-a').textContent = parseFloat(v).toFixed(1);
+    $('sl-tam-v').value = v; $('sl-tam-a').value = v;
+  },
+  tick(dt){
+    if (!this.activo || this.pausado || !this.texto) return;
+    this.y += this.pxBase * this.vel * dt;
+    const fin = this.texto.offsetHeight - window.innerHeight * 0.46;
+    if (this.y >= fin){ this.y = fin; this.pausado = true; }
+    this.texto.style.transform = `translateY(${-this.y}px)`;
+  }
+};
+
+/* ───────────────── BUCLE MAESTRO ─────────────────
+   Un solo requestAnimationFrame para todo: dibujo de cámara,
+   avance del prompter y medidor de micrófono.                  */
+let _lastT = null;
+function loop(t){
+  if (_lastT === null) _lastT = t;
+  const dt = Math.min((t - _lastT) / 1000, 0.1);
+  _lastT = t;
+  if (Cam.stream) Cam.drawFrame();
+  Prompter.tick(dt);
+  Rec.tickNivel();
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* ───────────────── GRABADOR ─────────────────
+   Modo video: graba el canvas (formato + filtro garantizados) con el
+   audio del micrófono, Y EN PARALELO un segundo grabador de solo-audio.
+   Así la descarga de "solo audio" es un archivo real, no una promesa.   */
+const Rec = {
+  tipo: null,            // 'video' | 'audio'
+  vRec: null, aRec: null,
+  vChunks: [], aChunks: [],
+  grabando: false, enPausa: false,
+  t0: 0, acumulado: 0, timerInt: null,
+  pendientes: 0,
+  wakeLock: null,
+  audioStream: null,
+  analyser: null, nivelData: null,
+
+  ui(){ return this.tipo === 'video'
+    ? { badge:$('badge-v'), timer:$('timer-v'), rec:$('btn-rec-v'), pausa:$('btn-pausa-v'), cr:$('cr-v'), estado:$('estado-v'), aj:$('ajustes-v') }
+    : { badge:$('badge-a'), timer:$('timer-a'), rec:$('btn-rec-a'), pausa:$('btn-pausa-a'), cr:$('cr-a'), estado:$('estado-a'), aj:$('ajustes-a') }; },
+
+  flash(msg, fijo){
+    const e = this.ui().estado;
+    e.textContent = msg;
+    e.classList.toggle('ver', !!msg);
+    clearTimeout(this._flashT);
+    if (msg && !fijo) this._flashT = setTimeout(() => e.classList.remove('ver'), 2200);
+  },
+  toggleAjustes(){ this.ui().aj.classList.toggle('ver'); },
+
+  /* Botón principal: grabar / detener */
+  async principal(){
+    if (!this.grabando) await this.iniciar();
+    else this.detener();
+  },
+
+  async iniciar(){
+    if (!CAP.mediaRecorder){
+      this.flash('Este navegador no puede grabar. Prueba con Chrome o Safari actualizados.', true);
+      return;
+    }
+    const ui = this.ui();
+    // Cuenta regresiva 3·2·1
+    ui.rec.disabled = true;
+    for (const n of [3,2,1]){
+      ui.cr.querySelector('b').textContent = n;
+      ui.cr.classList.add('ver');
+      await new Promise(r => setTimeout(r, 850));
+    }
+    ui.cr.classList.remove('ver');
+    ui.rec.disabled = false;
+
+    this.vChunks = []; this.aChunks = [];
+    S.videoBlob = null; S.audioBlob = null;
+    this.pendientes = 0;
+
+    try {
+      if (this.tipo === 'video'){
+        const audioTracks = Cam.stream.getAudioTracks();
+        // Video: canvas (formato+filtro) + micrófono
+        const vStream = new MediaStream([
+          ...Cam.canvas.captureStream(30).getVideoTracks(),
+          ...audioTracks
+        ]);
+        this.vRec = new MediaRecorder(vStream, MIME_VIDEO ? { mimeType:MIME_VIDEO, videoBitsPerSecond:6_000_000 } : { videoBitsPerSecond:6_000_000 });
+        this.vRec.ondataavailable = e => { if (e.data.size) this.vChunks.push(e.data); };
+        this.vRec.onstop = () => this.unoListo();
+        this.pendientes++;
+        // Audio en paralelo (pista clonada para no interferir)
+        if (audioTracks[0]){
+          const aStream = new MediaStream([audioTracks[0].clone()]);
+          this.aRec = new MediaRecorder(aStream, MIME_AUDIO ? { mimeType:MIME_AUDIO } : {});
+          this.aRec.ondataavailable = e => { if (e.data.size) this.aChunks.push(e.data); };
+          this.aRec.onstop = () => { aStream.getTracks().forEach(t=>t.stop()); this.unoListo(); };
+          this.pendientes++;
+        }
+        this.vRec.start(250);
+        if (this.aRec) this.aRec.start(250);
+      } else {
+        // Solo audio
+        this.aRec = new MediaRecorder(this.audioStream, MIME_AUDIO ? { mimeType:MIME_AUDIO } : {});
+        this.aRec.ondataavailable = e => { if (e.data.size) this.aChunks.push(e.data); };
+        this.aRec.onstop = () => this.unoListo();
+        this.pendientes = 1;
+        this.aRec.start(250);
+      }
+    } catch(err){
+      this.flash('No se pudo iniciar la grabación: ' + err.message, true);
+      return;
+    }
+
+    this.grabando = true; this.enPausa = false;
+    this.t0 = Date.now(); this.acumulado = 0;
+    this.timerInt = setInterval(() => {
+      if (!this.enPausa) this.ui().timer.textContent = fmtTiempo(this.acumulado + (Date.now() - this.t0));
+      // Aviso suave de memoria a los 8 minutos
+      const total = this.acumulado + (this.enPausa ? 0 : Date.now() - this.t0);
+      if (total > 8*60*1000 && !this._aviso8){
+        this._aviso8 = true;
+        this.flash('Llevas más de 8 min — en celulares conviene cortar aquí y grabar otra toma.');
+      }
+    }, 300);
+
+    // Mantener la pantalla encendida mientras grabas (si el navegador lo permite)
+    try { this.wakeLock = await navigator.wakeLock.request('screen'); } catch(e){}
+
+    Prompter.iniciar();
+    const u = this.ui();
+    u.badge.classList.add('on'); u.badge.classList.remove('pausada'); u.badge.textContent = 'REC';
+    u.rec.textContent = 'Detener';
+    u.rec.classList.remove('rbtn-grabar'); u.rec.classList.add('rbtn-stop');
+    if (CAP.pausa) u.pausa.style.display = 'inline-block';
+    u.aj.classList.remove('ver');
+    this.flash('Toca el texto para pausar la lectura');
+  },
+
+  pausa(){
+    if (!this.grabando || !CAP.pausa) return;
+    const u = this.ui();
+    if (!this.enPausa){
+      try { if (this.vRec && this.vRec.state==='recording') this.vRec.pause(); } catch(e){}
+      try { if (this.aRec && this.aRec.state==='recording') this.aRec.pause(); } catch(e){}
+      this.enPausa = true;
+      this.acumulado += Date.now() - this.t0;
+      Prompter.pausado = true;
+      u.pausa.textContent = 'Seguir'; u.badge.textContent = 'PAUSA'; u.badge.classList.add('pausada');
+    } else {
+      try { if (this.vRec && this.vRec.state==='paused') this.vRec.resume(); } catch(e){}
+      try { if (this.aRec && this.aRec.state==='paused') this.aRec.resume(); } catch(e){}
+      this.enPausa = false;
+      this.t0 = Date.now();
+      Prompter.pausado = false;
+      u.pausa.textContent = 'Pausa'; u.badge.textContent = 'REC'; u.badge.classList.remove('pausada');
+    }
+  },
+
+  detener(){
+    if (!this.grabando) return;
+    this.grabando = false;
+    clearInterval(this.timerInt);
+    if (this.wakeLock){ try { this.wakeLock.release(); } catch(e){} this.wakeLock = null; }
+    try { if (this.vRec && this.vRec.state !== 'inactive') this.vRec.stop(); } catch(e){ this.unoListo(); }
+    try { if (this.aRec && this.aRec.state !== 'inactive') this.aRec.stop(); } catch(e){ this.unoListo(); }
+  },
+
+  unoListo(){
+    this.pendientes--;
+    if (this.pendientes > 0) return;
+    if (this.vChunks.length){
+      S.videoMime = this.vChunks[0].type || MIME_VIDEO || 'video/webm';
+      S.videoBlob = new Blob(this.vChunks, { type:S.videoMime });
+    }
+    if (this.aChunks.length){
+      S.audioMime = this.aChunks[0].type || MIME_AUDIO || 'audio/webm';
+      S.audioBlob = new Blob(this.aChunks, { type:S.audioMime });
+    }
+    S.vDesc = false; S.aDesc = false;
+    this._aviso8 = false;
+    this.resetUI();
+    App.irRevisar();
+  },
+
+  resetUI(){
+    ['v','a'].forEach(c => {
+      const badge = $('badge-'+c), rec = $('btn-rec-'+c), pausa = $('btn-pausa-'+c);
+      badge.classList.remove('on','pausada');
+      rec.textContent = 'Grabar';
+      rec.classList.add('rbtn-grabar'); rec.classList.remove('rbtn-stop');
+      pausa.style.display = 'none'; pausa.textContent = 'Pausa';
+      $('timer-'+c).textContent = '00:00';
+      $('estado-'+c).classList.remove('ver');
+    });
+    this.enPausa = false;
+    Prompter.reset();
+  },
+
+  salir(){
+    if (this.grabando){
+      if (!confirm('Estás grabando. ¿Salir y descartar esta toma?')) return;
+      this.grabando = false;
+      clearInterval(this.timerInt);
+      this.pendientes = -999;
+      try { if (this.vRec && this.vRec.state!=='inactive') this.vRec.stop(); } catch(e){}
+      try { if (this.aRec && this.aRec.state!=='inactive') this.aRec.stop(); } catch(e){}
+      if (this.wakeLock){ try { this.wakeLock.release(); } catch(e){} this.wakeLock = null; }
+    }
+    this.resetUI();
+    if (this.tipo === 'video'){
+      if (S.modo === 'bloques') App.mostrar('s-blocks');
+      else App.mostrar('s-config');
+    } else {
+      this.cerrarAudio();
+      App.mostrar('s-guion');
+    }
+  },
+
+  /* ── Modo solo audio: stream + medidor de nivel ── */
+  async abrirAudio(){
+    this.cerrarAudio();
+    const a = S.micId ? { deviceId:{ exact:S.micId } } : true;
+    this.audioStream = await navigator.mediaDevices.getUserMedia({ audio:a });
+    try {
+      const actx = new (window.AudioContext || window.webkitAudioContext)();
+      const src = actx.createMediaStreamSource(this.audioStream);
+      this.analyser = actx.createAnalyser();
+      this.analyser.fftSize = 256;
+      this.nivelData = new Uint8Array(this.analyser.frequencyBinCount);
+      src.connect(this.analyser);   // solo medir — no se reproduce
+      this._actx = actx;
+    } catch(e){ this.analyser = null; }
+    try {
+      const devs = await navigator.mediaDevices.enumerateDevices();
+      const sel = $('sel-mic-a'); sel.innerHTML = '';
+      devs.filter(d=>d.kind==='audioinput').forEach((d,i)=>{
+        const o=document.createElement('option');
+        o.value=d.deviceId; o.textContent=d.label||`Micrófono ${i+1}`;
+        sel.appendChild(o);
+      });
+      if (S.micId) sel.value = S.micId;
+    } catch(e){}
+  },
+  cerrarAudio(){
+    if (this.audioStream){ this.audioStream.getTracks().forEach(t=>t.stop()); this.audioStream = null; }
+    if (this._actx){ try{ this._actx.close(); }catch(e){} this._actx = null; }
+    this.analyser = null;
+  },
+  async cambiarMicAudio(){
+    if (this.grabando) return;
+    S.micId = $('sel-mic-a').value;
+    try { await this.abrirAudio(); } catch(e){ App.errorPermiso(e, 'audio'); }
+  },
+  tickNivel(){
+    if (!this.analyser || this.tipo !== 'audio') return;
+    this.analyser.getByteTimeDomainData(this.nivelData);
+    let max = 0;
+    for (let i=0;i<this.nivelData.length;i++) max = Math.max(max, Math.abs(this.nivelData[i]-128));
+    $('nivel-mic').style.width = Math.min(100, (max/128)*240) + '%';
+  }
+};
+
+/* ───────────────── BLOQUES ───────────────── */
+const Bloques = {
+  KEY: 'hs_bloques_v1',
+  items: [],
+  editIdx: null,
+
+  PLANTILLA: [
+    { titulo:'Introducción', texto:'' },
+    { titulo:'Concepto principal', texto:'' },
+    { titulo:'Ejemplo', texto:'' },
+    { titulo:'Cierre', texto:'' },
+    { titulo:'Llamado a la acción', texto:'' },
+  ],
+
+  init(){
+    try {
+      const g = JSON.parse(localStorage.getItem(this.KEY));
+      this.items = Array.isArray(g) && g.length ? g : structuredClone(this.PLANTILLA);
+    } catch(e){ this.items = structuredClone(this.PLANTILLA); }
+    this.items.forEach(b => { b.estado = 'pend'; b.videoBlob = null; b.audioBlob = null; });
+  },
+  persistir(){
+    try {
+      localStorage.setItem(this.KEY, JSON.stringify(this.items.map(b => ({ titulo:b.titulo, texto:b.texto }))));
+    } catch(e){}
+  },
+
+  render(){
+    const cont = $('lista-bloques');
+    cont.innerHTML = '';
+    this.items.forEach((b,i) => {
+      const div = document.createElement('div');
+      div.className = 'bloque';
+      const chip = b.estado === 'desc' ? '<span class="chip desc">Descargado</span>'
+                 : b.estado === 'grab' ? '<span class="chip grab">Grabado · sin descargar</span>'
+                 : '<span class="chip pend">Pendiente</span>';
+      const vista = b.texto ? b.texto : 'Sin guion todavía — toca Editar para escribirlo.';
+      div.innerHTML = `
+        <div class="cab">
+          <span class="num">${String(i+1).padStart(2,'0')}</span>
+          <span class="nom"></span>
+          ${chip}
+        </div>
+        <p class="vista"></p>
+        <div class="acciones">
+          <button class="abtn dorado" onclick="Bloques.grabar(${i})">${b.estado==='pend' ? 'Grabar' : 'Regrabar'}</button>
+          ${b.estado!=='pend' ? `<button class="abtn" onclick="Bloques.revisar(${i})">Ver y descargar</button>` : ''}
+          <button class="abtn" onclick="Bloques.editar(${i})">Editar</button>
+          <button class="abtn icono" onclick="Bloques.mover(${i},-1)" aria-label="Subir bloque">↑</button>
+          <button class="abtn icono" onclick="Bloques.mover(${i},1)" aria-label="Bajar bloque">↓</button>
+          <button class="abtn icono" onclick="Bloques.eliminar(${i})" aria-label="Eliminar bloque">✕</button>
+        </div>`;
+      div.querySelector('.nom').textContent = b.titulo;
+      div.querySelector('.vista').textContent = vista;
+      cont.appendChild(div);
+    });
+  },
+
+  agregar(){
+    this.items.push({ titulo:'Nuevo bloque', texto:'', estado:'pend', videoBlob:null, audioBlob:null });
+    this.persistir(); this.render();
+    this.editar(this.items.length - 1);
+  },
+  editar(i){
+    this.editIdx = i;
+    $('be-titulo').value = this.items[i].titulo;
+    $('be-texto').value = this.items[i].texto;
+    App.mostrar('s-block-edit');
+  },
+  guardarEdicion(){
+    const b = this.items[this.editIdx];
+    b.titulo = $('be-titulo').value.trim() || 'Bloque';
+    b.texto = $('be-texto').value;
+    this.persistir(); this.render();
+    App.mostrar('s-blocks');
+  },
+  mover(i, d){
+    const j = i + d;
+    if (j < 0 || j >= this.items.length) return;
+    [this.items[i], this.items[j]] = [this.items[j], this.items[i]];
+    this.persistir(); this.render();
+  },
+  eliminar(i){
+    const b = this.items[i];
+    if (b.estado === 'grab' && !confirm(`El bloque "${b.titulo}" tiene una grabación sin descargar. ¿Eliminarlo igual?`)) return;
+    if (b.estado === 'pend' && b.texto && !confirm(`¿Eliminar el bloque "${b.titulo}"?`)) return;
+    this.items.splice(i,1);
+    this.persistir(); this.render();
+  },
+
+  grabar(i){
+    const b = this.items[i];
+    if (!b.texto.trim()){ this.editar(i); return; }
+    if (b.estado === 'grab' && !confirm('Este bloque tiene una grabación sin descargar que se perderá. ¿Regrabar?')) return;
+    S.bloqueActivo = i;
+    S.guion = b.texto;
+    const sinDesc = this.items.filter(x => x.estado === 'grab').length;
+    App.irConfigOBGrabar(sinDesc >= 2);
+  },
+
+  revisar(i){
+    const b = this.items[i];
+    S.bloqueActivo = i;
+    S.videoBlob = b.videoBlob; S.videoMime = b.videoMime;
+    S.audioBlob = b.audioBlob; S.audioMime = b.audioMime;
+    S.vDesc = (b.estado === 'desc'); S.aDesc = S.vDesc;
+    App.irRevisar(true);
+  },
+
+  asignarResultado(){
+    const b = this.items[S.bloqueActivo];
+    b.videoBlob = S.videoBlob; b.videoMime = S.videoMime;
+    b.audioBlob = S.audioBlob; b.audioMime = S.audioMime;
+    b.estado = 'grab';
+    this.render();
+  },
+  marcarDescargado(){
+    if (S.bloqueActivo === null) return;
+    this.items[S.bloqueActivo].estado = 'desc';
+    this.render();
+  },
+  nombreArchivo(){
+    const i = S.bloqueActivo;
+    return String(i+1).padStart(2,'0') + '-' + slug(this.items[i].titulo);
+  },
+  hayPendientesDeDescarga(){
+    return this.items.some(b => b.estado === 'grab');
+  },
+
+  descargarGuion(){
+    const lineas = ['HABIL/IA Studio — Guion por bloques', '', ''];
+    this.items.forEach((b,i) => {
+      lineas.push(`${String(i+1).padStart(2,'0')} · ${b.titulo.toUpperCase()}`);
+      lineas.push('─'.repeat(34));
+      lineas.push(b.texto || '(sin guion)');
+      lineas.push(''); lineas.push('');
+    });
+    descargarBlob(new Blob([lineas.join('\n')], { type:'text/plain;charset=utf-8' }), 'guion-habilia.txt');
+  }
+};
+
+/* ───────────────── APP (navegación y flujo) ───────────────── */
+const App = {
+  configHecha: false,
+
+  mostrar(id){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    $(id).classList.add('active');
+    window.scrollTo(0,0);
+  },
+
+  irHome(){
+    Cam.cerrar(); Rec.cerrarAudio();
+    this.configHecha = false;
+    S.bloqueActivo = null;
+    this.mostrar('s-home');
+  },
+
+  /* ── Paso 1: guion (video y audio) ── */
+  irGuion(modo){
+    S.modo = modo;
+    S.bloqueActivo = null;
+    this.guionCambio();
+    this.mostrar('s-guion');
+  },
+  guionCambio(){
+    const t = $('txt-guion').value;
+    const palabras = t.trim() ? t.trim().split(/\s+/).length : 0;
+    $('cuenta-palabras').textContent = palabras
+      ? `${palabras} palabras · ~${Math.max(1, Math.round(palabras/140))} min hablando a ritmo normal`
+      : '';
+    $('btn-guion-sig').disabled = !t.trim();
+  },
+  async guionListo(){
+    S.guion = $('txt-guion').value;
+    if (S.modo === 'video') await this.irConfig();
+    else await this.irGrabarAudio();
+  },
+
+  /* ── Paso 2 (video): configurar ── */
+  async irConfig(){
+    this.mostrar('s-config');
+    Cam.setFormato(S.formato);
+    $('aviso-config').innerHTML = '';
+    try {
+      if (!Cam.stream) await Cam.abrir();
+    } catch(e){ this.errorPermiso(e, 'video'); }
+  },
+  volverDeConfig(){
+    if (S.modo === 'bloques'){ Cam.cerrar(); this.configHecha = false; this.mostrar('s-blocks'); }
+    else this.mostrar('s-guion');
+  },
+
+  /* ── Paso 3 (video): grabar ── */
+  irGrabarVideo(){
+    if (!Cam.stream){ this.errorPermiso({name:'NotFoundError'}, 'video'); return; }
+    this.configHecha = true;
+    Rec.tipo = 'video';
+    Prompter.usar('v');
+    Rec.flash('');
+    this.mostrar('s-record');
+    if (!CAP.filtroGrabado && Cam.hayAjuste())
+      Rec.flash('El filtro se ve en pantalla pero no queda grabado en este navegador');
+  },
+
+  /* ── Modo audio: grabar ── */
+  async irGrabarAudio(){
+    Rec.tipo = 'audio';
+    Prompter.usar('a');
+    this.mostrar('s-record-audio');
+    try { await Rec.abrirAudio(); }
+    catch(e){ this.errorPermiso(e, 'audio'); }
+  },
+
+  /* ── Bloques ── */
+  irBloques(){
+    S.modo = 'bloques';
+    Bloques.render();
+    this.mostrar('s-blocks');
+  },
+  irConfigOBGrabar(avisarMemoria){
+    if (avisarMemoria) alert('Tienes 2 o más bloques grabados sin descargar. Descárgalos antes de seguir grabando — así no arriesgas perderlos si el teléfono se queda sin memoria.');
+    if (this.configHecha && Cam.stream){
+      this.irGrabarVideo();
+    } else {
+      this.irConfig();
+    }
+  },
+
+  /* ── Revisar ── */
+  irRevisar(soloVer){
+    const v = $('rev-video'), a = $('rev-audio');
+    v.style.display = 'none'; a.style.display = 'none';
+    if (v.src){ URL.revokeObjectURL(v.src); v.removeAttribute('src'); }
+    if (a.src){ URL.revokeObjectURL(a.src); a.removeAttribute('src'); }
+    $('rev-ok').innerHTML = '';
+
+    const esBloque = (S.modo === 'bloques' && S.bloqueActivo !== null);
+    if (esBloque && !soloVer) Bloques.asignarResultado();
+
+    if (S.videoBlob){
+      v.src = URL.createObjectURL(S.videoBlob);
+      v.style.display = 'block';
+      $('btn-desc-video').style.display = 'flex';
+    } else {
+      $('btn-desc-video').style.display = 'none';
+    }
+    if (S.audioBlob){
+      if (!S.videoBlob){ a.src = URL.createObjectURL(S.audioBlob); a.style.display = 'block'; }
+      $('btn-desc-audio').style.display = 'flex';
+    } else {
+      $('btn-desc-audio').style.display = 'none';
+    }
+
+    if (esBloque){
+      const b = Bloques.items[S.bloqueActivo];
+      $('rev-titulo').textContent = `Bloque ${String(S.bloqueActivo+1).padStart(2,'0')} — ${b.titulo}`;
+      $('rev-bajada').textContent = 'Revisa la toma. Si te gusta, descárgala ahora — no la dejes en memoria.';
+      $('inp-nombre-archivo').value = Bloques.nombreArchivo();
+      $('btn-rev-fin').textContent = 'Volver a bloques';
+    } else {
+      $('rev-titulo').textContent = S.videoBlob ? 'Tu video' : 'Tu narración';
+      $('rev-bajada').textContent = 'Escúchalo o míralo antes de descargar. Aquí también puedes bajar el audio por separado.';
+      $('inp-nombre-archivo').value = S.videoBlob ? 'habilia-video' : 'habilia-narracion';
+      $('btn-rev-fin').textContent = 'Terminar';
+    }
+
+    // Información honesta del formato obtenido
+    const f = $('rev-formato');
+    if (S.videoBlob){
+      const e = ext(S.videoMime);
+      f.innerHTML = e === 'mp4'
+        ? '<div class="aviso ok">Tu navegador grabó en <b>MP4</b> — compatible con CapCut y todas las plataformas.</div>'
+        : '<div class="aviso">Tu navegador grabó en <b>WebM</b>. CapCut en computador lo acepta sin problema. Si CapCut en tu celular no lo importa, grábate desde Safari en iPhone (sale MP4) — la conversión automática llega en la próxima versión.</div>';
+    } else if (S.audioBlob){
+      f.innerHTML = `<div class="aviso ok">Audio grabado en formato .${ext(S.audioMime)}, listo para usar sobre láminas o video.</div>`;
+    } else {
+      f.innerHTML = '<div class="aviso error">No se generó ninguna grabación. Vuelve a intentarlo — si persiste, prueba en Chrome actualizado.</div>';
+    }
+  },
+
+  descargarVideo(){
+    if (!S.videoBlob) return;
+    const nombre = slug($('inp-nombre-archivo').value) + '.' + ext(S.videoMime);
+    descargarBlob(S.videoBlob, nombre);
+    S.vDesc = true;
+    if (S.modo === 'bloques') Bloques.marcarDescargado();
+    $('rev-ok').innerHTML = `<div class="aviso ok">Video descargado como <b>${nombre}</b></div>`;
+  },
+  descargarAudio(){
+    if (!S.audioBlob) return;
+    const nombre = slug($('inp-nombre-archivo').value) + '-audio.' + ext(S.audioMime);
+    descargarBlob(S.audioBlob, nombre);
+    S.aDesc = true;
+    $('rev-ok').innerHTML = `<div class="aviso ok">Audio descargado como <b>${nombre}</b></div>`;
+  },
+
+  regrabar(){
+    if ((S.videoBlob || S.audioBlob) && !S.vDesc && !S.aDesc){
+      if (!confirm('Esta toma no se ha descargado y se perderá. ¿Grabar de nuevo?')) return;
+    }
+    if (S.modo === 'audio'){ this.irGrabarAudio(); }
+    else { this.irGrabarVideo(); }
+  },
+  revisarVolver(){ this.revisarFin(); },
+  revisarFin(){
+    if (S.modo === 'bloques'){ this.mostrar('s-blocks'); }
+    else {
+      Cam.cerrar(); Rec.cerrarAudio();
+      this.irHome();
+    }
+  },
+
+  /* ── Permisos ── */
+  _permTipo: 'video',
+  errorPermiso(e, tipo){
+    this._permTipo = tipo;
+    const esVideo = tipo === 'video';
+    $('perm-ic').innerHTML = esVideo ? SVG_CAM : SVG_MIC;
+    $('perm-titulo').textContent = esVideo ? 'No pudimos usar tu cámara' : 'No pudimos usar tu micrófono';
+    let msg;
+    if (e && (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError')){
+      msg = 'El permiso está bloqueado. Toca el ícono de candado junto a la dirección de la página, permite ' +
+            (esVideo ? 'la cámara y el micrófono' : 'el micrófono') + ', y vuelve a intentar.';
+    } else if (e && e.name === 'NotFoundError'){
+      msg = esVideo ? 'No encontramos una cámara en este dispositivo.' : 'No encontramos un micrófono en este dispositivo.';
+    } else if (e && e.name === 'NotReadableError'){
+      msg = 'Otra app está usando la cámara o el micrófono. Ciérrala y vuelve a intentar.';
+    } else {
+      msg = 'Ocurrió un problema al acceder al dispositivo. Cierra otras apps que usen la cámara y reintenta.';
+    }
+    $('perm-texto').textContent = msg;
+    this.mostrar('s-perm');
+  },
+  async reintentarPermiso(){
+    try {
+      if (this._permTipo === 'video'){ await Cam.abrir(); this.irConfig(); }
+      else { await this.irGrabarAudio(); }
+    } catch(e){ this.errorPermiso(e, this._permTipo); }
+  },
+};
+
+/* ───────────────── GUIONES PRECARGADOS (reels habilia) ───────────────── */
+const PRECARGADOS = [
+{ nombre:'Reel 1 — Presentación', texto:
+`Si alguna vez sentiste que mereces más
+de lo que la vida te ha dado hasta ahora —
+
+este espacio es para ti.
+
+…
+
+Me llamo Vanessa, soy parte del equipo de habilia —
+
+una plataforma chilena que nació con una sola idea:
+
+darte herramientas reales para que crezcas de verdad.
+
+No teoría bonita. No motivación vacía.
+
+Cosas que puedes aplicar desde hoy.
+
+…
+
+Tenemos apps, ebooks sobre finanzas y alimentación,
+
+y mucho más que viene en camino.
+
+Todo creado para personas con hambre de avanzar —
+
+aunque por ahora el bolsillo esté apretado.
+
+…
+
+Porque creemos que el conocimiento que te cambia la vida
+
+no debería estar reservado para los que ya llegaron.
+
+…
+
+Bienvenida, bienvenido. Esto recién empieza.` },
+
+{ nombre:'Reel 2 — Qué hace habilia', texto:
+`habilia es una plataforma chilena de aprendizaje digital.
+
+Pero no del tipo que te vende un curso de 200 mil pesos
+
+y te deja solo con un PDF.
+
+…
+
+Tenemos apps interactivas, ebooks prácticos
+
+y herramientas reales —
+
+sobre finanzas, trading, bienestar
+
+y mucho más que viene en camino.
+
+…
+
+Todo pensado para personas que quieren crecer de verdad —
+
+no para los que ya llegaron.
+
+Por eso nuestros precios son accesibles desde el primer día.
+
+…
+
+Porque creemos que el conocimiento que te cambia la perspectiva
+
+no debería tener precio de entrada.
+
+…
+
+El link está en el perfil.
+
+Entra, mira, y si algo te sirve —
+
+es tuyo.` },
+
+{ nombre:'Reel 3 — Por qué el precio', texto:
+`¿Sabías que la mayoría de los cursos de inversión
+
+cuestan entre 200 mil y un millón de pesos?
+
+…
+
+Y el contenido muchas veces es el mismo
+
+que puedes encontrar gratis en internet.
+
+…
+
+El precio alto no garantiza mejor conocimiento.
+
+Garantiza mejor marketing.
+
+…
+
+En habilia decidimos hacer lo contrario.
+
+Precios reales, para personas reales —
+
+porque el conocimiento que te cambia la perspectiva
+
+no debería costar lo que no tienes.
+
+…
+
+Ebooks desde $2.990.
+
+Apps con acceso de por vida desde $3.990.
+
+…
+
+Premium no significa caro.
+Significa que no te va a decepcionar.` },
+
+{ nombre:'Reel 4 — El problema no es el dinero', texto:
+`El problema no es que no tienes dinero.
+
+El problema es la relación que tienes con él.
+
+…
+
+Porque la mayoría de nosotros creció escuchando
+
+que el dinero es difícil, que no alcanza, que es para otros.
+
+Y eso se queda grabado más profundo de lo que creemos.
+
+…
+
+No es falta de esfuerzo.
+
+Es que nadie nos enseñó a pensar diferente sobre la plata.
+
+…
+
+Eso es exactamente lo que hacemos en habilia.
+
+No solo te enseñamos herramientas financieras —
+
+te ayudamos a cambiar la forma en que piensas sobre el dinero.
+
+…
+
+Porque antes de invertir un peso,
+
+tienes que entender qué sientes cuando lo tienes
+
+y qué sientes cuando no lo tienes.
+
+…
+
+El link está en el perfil.` },
+
+{ nombre:'Reel 5 — Tomo 1 de trading', texto:
+`¿Sabías que el 90% de las personas que empiezan a hacer trading
+
+pierden dinero en los primeros 6 meses?
+
+…
+
+No es porque sean malos.
+
+Es porque nadie les explicó
+
+cómo piensan realmente los mercados.
+
+…
+
+El mercado no se mueve al azar.
+
+Se mueve con lógica institucional —
+
+y cuando entiendes esa lógica,
+
+empiezas a ver cosas que antes eran invisibles.
+
+…
+
+Eso es exactamente lo que enseña el Tomo 1 de trading de habilia.
+
+Cómo piensan los grandes jugadores del mercado —
+
+y por qué el trader principiante casi siempre cae en sus trampas.
+
+…
+
+Vale $2.990. Menos que un almuerzo.
+
+El link está en el perfil.` },
+];
+
+/* ───────────────── ARRANQUE ───────────────── */
+Cam.init();
+Guiones.init();
+Bloques.init();
+
+// Aviso del navegador si hay grabaciones sin descargar
+window.addEventListener('beforeunload', (e) => {
+  const hayAlgo = (S.videoBlob && !S.vDesc) || (S.audioBlob && !S.aDesc) || Bloques.hayPendientesDeDescarga();
+  if (hayAlgo){ e.preventDefault(); e.returnValue = ''; }
+});
+
+// Si el navegador directamente no puede grabar, decirlo de frente en el inicio
+if (!CAP.mediaRecorder || !CAP.getUserMedia){
+  const p = document.createElement('div');
+  p.className = 'aviso error';
+  p.style.margin = '20px 0 0';
+  p.textContent = 'Este navegador no soporta grabación. Abre HABIL/IA Studio en Chrome o Safari actualizados.';
+  document.querySelector('.hero').after(p);
+}
+</script>
+</body>
+</html>
