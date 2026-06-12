@@ -41,7 +41,7 @@ HABIL/IA Studio **no es un editor de video**. No tiene stickers, música, transi
 - Cuenta regresiva antes de grabar
 - Descarga de video y descarga del audio por separado, con nombre de archivo personalizable
 - Guiones guardados en el dispositivo, reutilizables entre sesiones
-- Carga de guion desde archivo `.txt` o `.md` *(v1.2, en desarrollo)*
+- Carga de guion desde archivo `.txt` o `.md` 
 - Filtros simples (Natural, Cálido, Profesional, Contraste suave) con ajustes finos de brillo, contraste y saturación
 - Pausa y reanudación de grabación en los navegadores que lo permiten
 - Avisos honestos: la app informa el formato real obtenido y desactiva o advierte lo que el navegador no soporta
@@ -81,7 +81,7 @@ Un solo archivo HTML, sin librerías externas ni dependencias. Construido sobre 
 |---------|--------|-----------|
 | v1.0 | Publicada | MVP: tres modos, teleprompter, grabación, descargas |
 | v1.1 | Publicada — MVP funcional aprobado | Rediseño claro editorial premium |
-| v1.2 | En desarrollo | Carga de guion desde archivo `.txt` / `.md` |
+| v1.2 |  Carga de guion desde archivo `.txt` / `.md` |
 
 **Próximos pasos (sin orden comprometido):**
 
