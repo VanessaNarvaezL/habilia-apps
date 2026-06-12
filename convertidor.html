@@ -37,6 +37,20 @@
   }
   #download { background:#7ec882; }
 
+  /* ── PARCHE ENCUADRE: control de modo (Video completo / Rellenar pantalla) ── */
+  #modo-encaje {
+    display:none; margin-top:18px; width:100%; max-width:380px;
+    gap:8px; flex-wrap:wrap; justify-content:center;
+  }
+  .modo-btn {
+    flex:1; min-width:150px; padding:10px 12px;
+    background:#152018; color:#8a9e8c; border:1px solid #2d4a2f;
+    border-radius:8px; font-size:0.8rem; cursor:pointer;
+  }
+  .modo-btn.activo {
+    border-color:#c9a84c; color:#e8c96a; font-weight:700;
+  }
+
   .progress-bar {
     width:100%; max-width:380px; height:6px; background:#2d4a2f;
     border-radius:4px; margin-top:14px; overflow:hidden; display:none;
@@ -58,13 +72,21 @@
 
 <video id="preview" controls playsinline></video>
 
+<!-- ── PARCHE ENCUADRE: selector de modo. "Video completo" es el modo por defecto
+     (muestra todo el video con franjas si hace falta). "Rellenar pantalla" es el
+     comportamiento antiguo (llena el 9:16 recortando bordes). ── -->
+<div id="modo-encaje">
+  <button class="modo-btn activo" id="modo-contain" onclick="setModoEncaje('contain')">Video completo (recomendado)</button>
+  <button class="modo-btn" id="modo-cover" onclick="setModoEncaje('cover')">Rellenar pantalla (recorta bordes)</button>
+</div>
+
 <button id="convert-btn" onclick="startConvert()">🔄 Convertir a vertical 9:16</button>
 
 <div class="progress-bar" id="bar"><div class="progress-fill" id="fill"></div></div>
 <div id="status"></div>
 <a id="download" download="habilia-reel.webm">⬇ Descargar video</a>
 
-<p class="note">Si el video sale muy pesado o tarda mucho, prueba con clips más cortos (uno por frase) — es más fácil de procesar y luego los unes en CapCut.</p>
+<p class="note">"Video completo" muestra todo el video, con franjas negras si el original es horizontal. "Rellenar pantalla" llena el formato vertical recortando los bordes. Si el video sale muy pesado o tarda mucho, prueba con clips más cortos (uno por frase) — es más fácil de procesar y luego los unes en CapCut.</p>
 
 <script>
 const fileInput = document.getElementById('file');
@@ -78,6 +100,17 @@ const fill = document.getElementById('fill');
 
 let selectedFile = null;
 
+/* ── PARCHE ENCUADRE: estado del modo de encaje.
+   'contain' = video completo dentro del 9:16 (por defecto).
+   'cover'   = comportamiento antiguo: llenar el 9:16 recortando bordes. ── */
+let modoEncaje = 'contain';
+
+function setModoEncaje(m) {
+  modoEncaje = m;
+  document.getElementById('modo-contain').classList.toggle('activo', m === 'contain');
+  document.getElementById('modo-cover').classList.toggle('activo', m === 'cover');
+}
+
 fileInput.addEventListener('change', e => {
   if (e.target.files[0]) handleFile(e.target.files[0]);
 });
@@ -87,6 +120,7 @@ function handleFile(file) {
   preview.src = URL.createObjectURL(file);
   preview.style.display = 'block';
   convertBtn.style.display = 'block';
+  document.getElementById('modo-encaje').style.display = 'flex'; /* PARCHE ENCUADRE: mostrar selector junto al botón Convertir */
   downloadBtn.style.display = 'none';
   statusEl.textContent = '';
   bar.style.display = 'none';
@@ -130,19 +164,29 @@ function convert(file) {
       canvas.height = outH;
       const ctx = canvas.getContext('2d', { alpha:false });
 
+      /* ── PARCHE ENCUADRE: drawFrame ahora soporta dos modos.
+         contain: el video completo cabe dentro del 9:16 (la dimensión que sobra
+                  queda como franjas negras — el fondo negro ya se pinta abajo).
+         cover:   matemática original — el video llena el 9:16 y lo que sobra
+                  se recorta por los bordes.
+         En ambos casos el video queda centrado. ── */
       function drawFrame() {
         ctx.fillStyle = '#000';
         ctx.fillRect(0,0,outW,outH);
         const srcRatio = srcW / srcH;
         const outRatio = outW / outH;
-        let dw, dh, dx, dy;
-        if (srcRatio > outRatio) {
-          dh = outH; dw = outH * srcRatio;
-          dx = (outW - dw) / 2; dy = 0;
+        let dw, dh;
+        if (modoEncaje === 'contain') {
+          // Video completo: encajar por la dimensión limitante
+          if (srcRatio > outRatio) { dw = outW; dh = outW / srcRatio; }
+          else                     { dh = outH; dw = outH * srcRatio; }
         } else {
-          dw = outW; dh = outW / srcRatio;
-          dx = 0; dy = (outH - dh) / 2;
+          // Rellenar pantalla (comportamiento antiguo)
+          if (srcRatio > outRatio) { dh = outH; dw = outH * srcRatio; }
+          else                     { dw = outW; dh = outW / srcRatio; }
         }
+        const dx = (outW - dw) / 2;
+        const dy = (outH - dh) / 2;
         ctx.drawImage(videoEl, dx, dy, dw, dh);
       }
 
