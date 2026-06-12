@@ -2,251 +2,805 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Convertidor habilia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Convertidor HABIL/IA — Tus archivos, en el formato que necesitas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,Segoe UI,Roboto,sans-serif; }
-  body {
-    background:#0e1a0f; color:#f2ede4; min-height:100vh;
-    display:flex; flex-direction:column; align-items:center;
-    padding:24px 16px; text-align:center;
-  }
-  h1 { font-family:Georgia,serif; font-size:1.4rem; margin-bottom:6px; color:#e8c96a; }
-  p.sub { color:#8a9e8c; font-size:0.85rem; margin-bottom:24px; max-width:380px; }
+/* ════════════════════════════════════════════════════════════
+   Convertidor HABIL/IA v1.0 — Fase 1
+   Arquitectura modular: cascarón + módulos (Imagen, Video, Audio,
+   Documentos) + motores (MotorImagen, MotorAudio).
+   Fase 2 (FFmpeg.wasm: MP4, MP3, M4A) documentada como bloqueo
+   honesto — sin botones falsos.
+   Diseño: claro editorial premium (familia HABIL/IA Studio).
+   Privacidad: todo ocurre en el dispositivo del usuario.
+   ════════════════════════════════════════════════════════════ */
+:root{
+  --marfil:#FAF7F0;
+  --panel:#FFFFFF;
+  --tinta:#142219;
+  --gris:#6E6A60;
+  --arena:#E7E1D4;
+  --arena-suave:#F1EDE3;
+  --verde:#1E4D38;
+  --verde-hover:#173D2C;
+  --oro:#B8954A;
+  --ok:#2E7D4F;
+  --error:#A8442F;
+  --radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:var(--marfil);color:var(--tinta);
+  font-family:'Outfit',-apple-system,sans-serif;font-weight:300;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-weight:500}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--oro);outline-offset:2px}
+svg.ic{display:inline-block;vertical-align:-3px;flex-shrink:0}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
+}
 
-  #drop {
-    width:100%; max-width:380px; border:2px dashed #4a7c4e;
-    border-radius:14px; padding:32px 16px; cursor:pointer;
-    background:#152018;
-  }
-  #drop p { color:#a8e6ac; font-size:0.95rem; }
-  input[type=file] { display:none; }
+.screen{display:none;min-height:100dvh;flex-direction:column}
+.screen.active{display:flex}
+.shell{width:100%;max-width:600px;margin:0 auto;padding:20px 22px 44px;flex:1;display:flex;flex-direction:column}
 
-  #status { margin-top:18px; font-size:0.9rem; color:#c9a84c; min-height:24px; }
+/* ── Barra superior ── */
+.topbar{display:flex;align-items:center;gap:14px;padding:18px 22px 10px;max-width:600px;margin:0 auto;width:100%}
+.back{
+  background:none;border:1px solid var(--arena);color:var(--gris);
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;transition:border-color .15s;
+}
+.back:hover{border-color:var(--gris)}
+.crumb{font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gris)}
+.crumb b{color:var(--tinta);font-weight:500}
 
-  #preview {
-    width:100%; max-width:280px; margin-top:18px;
-    border-radius:10px; display:none; background:#000; max-height:50vh;
-  }
+/* ── Inicio ── */
+#s-home .shell{padding-top:7vh;padding-bottom:7vh}
+.wordmark{
+  font-family:'Playfair Display';font-weight:600;font-size:1.25rem;color:var(--tinta);
+}
+.wordmark .ia{color:var(--oro);font-style:italic}
+.wordmark small{
+  font-family:'Outfit';font-weight:500;font-size:0.62rem;
+  letter-spacing:0.32em;text-transform:uppercase;color:var(--gris);
+  margin-left:10px;vertical-align:2px;
+}
+.hero{margin:8vh 0 6vh}
+.hero h1{
+  font-family:'Playfair Display';font-weight:500;
+  font-size:clamp(2rem, 7vw, 2.8rem);line-height:1.2;
+  letter-spacing:-0.01em;max-width:500px;
+}
+.hero h1 em{font-style:italic;color:var(--verde)}
+.hero p{color:var(--gris);font-size:1rem;margin-top:14px;max-width:440px}
+.hero .filo{width:42px;height:2px;background:var(--oro);margin-top:24px}
 
-  #convert-btn, #download {
-    display:none; margin-top:18px; padding:13px 28px;
-    background:#c9a84c; color:#0e1a0f; border:none;
-    border-radius:8px; font-weight:700; font-size:0.95rem;
-    cursor:pointer; text-decoration:none; width:100%; max-width:280px;
-  }
-  #download { background:#7ec882; }
+.modulos{border-top:1px solid var(--arena)}
+.modulo{
+  display:flex;align-items:center;gap:18px;width:100%;text-align:left;
+  background:none;border:none;border-bottom:1px solid var(--arena);
+  padding:23px 4px;color:var(--tinta);transition:padding .2s;
+}
+.modulo:not(.pronto):hover{padding-left:10px}
+.modulo:not(.pronto):hover .flecha{color:var(--oro)}
+.modulo .ic{color:var(--verde)}
+.modulo .cuerpo{flex:1;min-width:0}
+.modulo h2{font-size:1.05rem;font-weight:500}
+.modulo p{font-size:0.85rem;color:var(--gris);margin-top:2px}
+.modulo .flecha{color:var(--arena);transition:color .2s;flex-shrink:0}
+.modulo.pronto{cursor:default;opacity:0.55}
+.chip{
+  font-size:0.6rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;
+  padding:4px 10px;border-radius:30px;white-space:nowrap;flex-shrink:0;
+  background:var(--arena-suave);color:var(--gris);
+}
+.chip.fase{background:rgba(184,149,74,0.12);color:#8A6E33}
+.pie{margin-top:auto;padding-top:38px;font-size:0.74rem;color:var(--gris)}
+.pie b{color:var(--oro);font-weight:500}
 
-  /* ── PARCHE ENCUADRE: control de modo (Video completo / Rellenar pantalla) ── */
-  #modo-encaje {
-    display:none; margin-top:18px; width:100%; max-width:380px;
-    gap:8px; flex-wrap:wrap; justify-content:center;
-  }
-  .modo-btn {
-    flex:1; min-width:150px; padding:10px 12px;
-    background:#152018; color:#8a9e8c; border:1px solid #2d4a2f;
-    border-radius:8px; font-size:0.8rem; cursor:pointer;
-  }
-  .modo-btn.activo {
-    border-color:#c9a84c; color:#e8c96a; font-weight:700;
-  }
+/* ── Tipos ── */
+.titulo{font-family:'Playfair Display';font-weight:500;font-size:1.5rem;margin:14px 0 6px;letter-spacing:-0.01em}
+.bajada{color:var(--gris);font-size:0.9rem;margin-bottom:20px}
+label.lab{display:block;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gris);margin:20px 0 8px;font-weight:500}
 
-  .progress-bar {
-    width:100%; max-width:380px; height:6px; background:#2d4a2f;
-    border-radius:4px; margin-top:14px; overflow:hidden; display:none;
-  }
-  .progress-fill { height:100%; background:#c9a84c; width:0%; transition:width 0.2s; }
+/* ── Zona de carga ── */
+.zona{
+  background:var(--panel);border:1px solid var(--arena);border-radius:var(--radius);
+  padding:36px 20px;text-align:center;cursor:pointer;transition:border-color .15s;
+}
+.zona:hover,.zona.arrastrando{border-color:var(--verde)}
+.zona .ic{color:var(--verde);margin-bottom:10px}
+.zona p{font-size:0.95rem;font-weight:400}
+.zona small{display:block;color:var(--gris);font-size:0.78rem;margin-top:4px}
+input[type=file]{display:none}
 
-  .note { color:#5a7a5e; font-size:0.75rem; margin-top:14px; max-width:340px; }
+/* ── Info de archivo ── */
+.ficha{
+  background:var(--panel);border:1px solid var(--arena);border-radius:var(--radius);
+  padding:16px;display:none;
+}
+.ficha.ver{display:block}
+.ficha .nombre{font-weight:500;font-size:0.95rem;word-break:break-all}
+.ficha .meta{color:var(--gris);font-size:0.8rem;margin-top:2px}
+.ficha .media{margin-top:12px;width:100%;border-radius:8px;background:#0D0E0C;display:block}
+.ficha img.media{max-height:36vh;object-fit:contain}
+.ficha video.media{max-height:36vh}
+.ficha audio.media{background:var(--arena-suave)}
+.cambiar{
+  background:none;border:none;color:var(--verde);font-size:0.8rem;font-weight:500;
+  text-decoration:underline;margin-top:10px;padding:0;
+}
+
+/* ── Pills de destino ── */
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{
+  padding:9px 16px;border-radius:50px;border:1px solid var(--arena);
+  background:var(--panel);color:var(--gris);font-size:0.84rem;font-weight:400;transition:all .15s;
+}
+.pill:hover{border-color:var(--gris)}
+.pill.on{background:var(--tinta);color:var(--marfil);border-color:var(--tinta);font-weight:500}
+.pill:disabled{opacity:0.45;cursor:not-allowed}
+.nota-bloqueo{font-size:0.78rem;color:var(--gris);margin-top:10px;line-height:1.5}
+.nota-bloqueo b{color:#8A6E33;font-weight:500}
+
+/* ── Slider calidad ── */
+.calidad{display:none;margin-top:14px;background:var(--panel);border:1px solid var(--arena);border-radius:10px;padding:12px 16px}
+.calidad.ver{display:block}
+.slider-row{display:flex;align-items:center;gap:12px}
+.slider-row span{font-size:0.78rem;color:var(--gris);flex-shrink:0}
+.slider-row output{font-size:0.74rem;color:var(--oro);width:40px;text-align:right;font-weight:500}
+input[type=range]{flex:1;accent-color:var(--verde);height:3px}
+
+/* ── Botones ── */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  width:100%;padding:15px;border:none;border-radius:10px;
+  font-size:0.95rem;font-weight:500;transition:background .15s,border-color .15s;
+}
+.btn-verde{background:var(--verde);color:var(--marfil)}
+.btn-verde:hover{background:var(--verde-hover)}
+.btn-verde:disabled{opacity:0.35;cursor:default}
+.btn-borde{background:transparent;color:var(--verde);border:1px solid var(--verde)}
+.btn-borde:hover{background:rgba(30,77,56,0.05)}
+.btn-suave{background:var(--panel);color:var(--tinta);border:1px solid var(--arena)}
+.btn-suave:hover{border-color:var(--gris)}
+.fila{display:flex;gap:10px}
+.fila .btn{flex:1}
+.empuja{margin-top:auto;padding-top:24px}
+
+/* ── Avisos ── */
+.aviso{
+  background:var(--panel);border:1px solid var(--arena);border-left:2px solid var(--oro);
+  border-radius:8px;padding:12px 15px;font-size:0.83rem;margin:14px 0;line-height:1.55;
+}
+.aviso b{font-weight:500}
+.aviso.ok{border-left-color:var(--ok);color:var(--ok)}
+.aviso.error{border-left-color:var(--error);color:var(--error)}
+
+/* ── Progreso (indeterminado, honesto: no inventa porcentajes) ── */
+.progreso{display:none;margin-top:16px}
+.progreso.ver{display:block}
+.progreso .pista{height:3px;background:var(--arena);border-radius:3px;overflow:hidden;position:relative}
+.progreso .pista i{
+  position:absolute;top:0;left:-40%;width:40%;height:100%;
+  background:var(--oro);border-radius:3px;animation:correr 1.2s infinite ease-in-out;
+}
+@keyframes correr{0%{left:-40%}100%{left:100%}}
+.progreso .texto{font-size:0.8rem;color:var(--gris);margin-top:8px;text-align:center}
+
+/* ── Resultado ── */
+.campo{
+  width:100%;background:var(--panel);border:1px solid var(--arena);color:var(--tinta);
+  border-radius:10px;padding:13px 15px;font-size:0.95rem;font-family:'Outfit';
+  transition:border-color .15s;
+}
+.campo:focus{border-color:var(--verde);outline:none}
+.panel-res{background:var(--panel);border:1px solid var(--arena);border-radius:var(--radius);padding:16px}
+.panel-res .media{width:100%;border-radius:8px;display:block;background:#0D0E0C}
+.panel-res img.media{max-height:40vh;object-fit:contain}
+.panel-res audio.media{background:var(--arena-suave)}
 </style>
 </head>
 <body>
 
-<h1>Convertidor habilia</h1>
-<p class="sub">Convierte tus videos a vertical 9:16, listos para CapCut y reels</p>
+<!-- Íconos SVG -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="i-imagen"><rect x="3" y="4.5" width="18" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="10" r="1.7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 17.5 9 12.5l4 3.5 3.5-3 4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></g>
+    <g id="i-video"><rect x="2.5" y="6.5" width="13" height="11" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 11 21.5 7.5v9L15.5 13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></g>
+    <g id="i-audio"><path d="M4 10v4M8 7v10M12 4.5v15M16 8v8M20 10.5v3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></g>
+    <g id="i-doc"><path d="M6.5 3.5h8L18.5 8v12.5h-12zM14 3.5V8h4.5M9 12.5h6M9 16h6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g id="i-flecha"><path d="M4.5 12h15M14 6.5l5.5 5.5L14 17.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g id="i-volver"><path d="M19.5 12h-15M10 6.5 4.5 12l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g id="i-desc"><path d="M12 3.5v12M7 11l5 5 5-5M4.5 20h15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g id="i-subir"><path d="M12 16.5v-12M7 9l5-5 5 5M4.5 20h15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+  </defs>
+</svg>
 
-<div id="drop" onclick="document.getElementById('file').click()">
-  <p>📹 Toca aquí para elegir tu video</p>
-</div>
-<input type="file" id="file" accept="video/*">
+<!-- ════════ INICIO ════════ -->
+<section class="screen active" id="s-home">
+  <div class="shell">
+    <div class="wordmark">habil<span class="ia">/ia</span><small>Convertidor</small></div>
 
-<video id="preview" controls playsinline></video>
+    <div class="hero">
+      <h1>Tus archivos, <em>en el formato que necesitas.</em></h1>
+      <p>Convierte video, audio e imágenes a formatos que abren en CapCut, redes y cualquier plataforma. Sin subir nada a internet.</p>
+      <div class="filo"></div>
+    </div>
 
-<!-- ── PARCHE ENCUADRE: selector de modo. "Video completo" es el modo por defecto
-     (muestra todo el video con franjas si hace falta). "Rellenar pantalla" es el
-     comportamiento antiguo (llena el 9:16 recortando bordes). ── -->
-<div id="modo-encaje">
-  <button class="modo-btn activo" id="modo-contain" onclick="setModoEncaje('contain')">Video completo (recomendado)</button>
-  <button class="modo-btn" id="modo-cover" onclick="setModoEncaje('cover')">Rellenar pantalla (recorta bordes)</button>
-</div>
+    <div class="modulos">
+      <button class="modulo" onclick="App.abrirModulo('imagen')">
+        <svg class="ic" width="26" height="26" viewBox="0 0 24 24"><use href="#i-imagen"/></svg>
+        <span class="cuerpo">
+          <h2>Imagen</h2>
+          <p>Convierte entre JPG, PNG y WebP.</p>
+        </span>
+        <svg class="ic flecha" width="20" height="20" viewBox="0 0 24 24"><use href="#i-flecha"/></svg>
+      </button>
+      <button class="modulo" onclick="App.abrirModulo('video')">
+        <svg class="ic" width="26" height="26" viewBox="0 0 24 24"><use href="#i-video"/></svg>
+        <span class="cuerpo">
+          <h2>Video</h2>
+          <p>Extrae el audio de tus videos en WAV. MP4 llega en Fase 2.</p>
+        </span>
+        <svg class="ic flecha" width="20" height="20" viewBox="0 0 24 24"><use href="#i-flecha"/></svg>
+      </button>
+      <button class="modulo" onclick="App.abrirModulo('audio')">
+        <svg class="ic" width="26" height="26" viewBox="0 0 24 24"><use href="#i-audio"/></svg>
+        <span class="cuerpo">
+          <h2>Audio</h2>
+          <p>Convierte tu audio a WAV. MP3 y M4A llegan en Fase 2.</p>
+        </span>
+        <svg class="ic flecha" width="20" height="20" viewBox="0 0 24 24"><use href="#i-flecha"/></svg>
+      </button>
+      <div class="modulo pronto" aria-disabled="true">
+        <svg class="ic" width="26" height="26" viewBox="0 0 24 24"><use href="#i-doc"/></svg>
+        <span class="cuerpo">
+          <h2>Documentos</h2>
+          <p>PDF, Word y más conversiones de documentos.</p>
+        </span>
+        <span class="chip">Próximamente</span>
+      </div>
+    </div>
 
-<button id="convert-btn" onclick="startConvert()">🔄 Convertir a vertical 9:16</button>
+    <p class="pie"><b>Humanos primero. Inteligencia después.</b> &nbsp;·&nbsp; Tus archivos nunca salen de tu dispositivo.</p>
+  </div>
+</section>
 
-<div class="progress-bar" id="bar"><div class="progress-fill" id="fill"></div></div>
-<div id="status"></div>
-<a id="download" download="habilia-reel.webm">⬇ Descargar video</a>
+<!-- ════════ MÓDULO (compartida por Imagen, Video y Audio) ════════ -->
+<section class="screen" id="s-modulo">
+  <div class="topbar">
+    <button class="back" onclick="App.irHome()" aria-label="Volver">
+      <svg class="ic" width="18" height="18" viewBox="0 0 24 24"><use href="#i-volver"/></svg>
+    </button>
+    <span class="crumb"><b id="crumb-modulo">Módulo</b> · Convertir</span>
+  </div>
+  <div class="shell">
+    <h2 class="titulo" id="mod-titulo"></h2>
+    <p class="bajada" id="mod-bajada"></p>
 
-<p class="note">"Video completo" muestra todo el video, con franjas negras si el original es horizontal. "Rellenar pantalla" llena el formato vertical recortando los bordes. Si el video sale muy pesado o tarda mucho, prueba con clips más cortos (uno por frase) — es más fácil de procesar y luego los unes en CapCut.</p>
+    <div class="zona" id="zona" onclick="document.getElementById('inp-archivo').click()">
+      <svg class="ic" width="30" height="30" viewBox="0 0 24 24"><use href="#i-subir"/></svg>
+      <p>Toca para elegir tu archivo</p>
+      <small id="zona-tipos"></small>
+    </div>
+    <input type="file" id="inp-archivo" onchange="App.archivoElegido(this)">
+
+    <div class="ficha" id="ficha">
+      <div class="nombre" id="ficha-nombre"></div>
+      <div class="meta" id="ficha-meta"></div>
+      <img class="media" id="ficha-img" alt="Vista previa" style="display:none">
+      <video class="media" id="ficha-video" controls playsinline style="display:none"></video>
+      <audio class="media" id="ficha-audio" controls style="display:none"></audio>
+      <button class="cambiar" onclick="document.getElementById('inp-archivo').click()">Elegir otro archivo</button>
+    </div>
+
+    <div id="zona-aviso"></div>
+
+    <div id="bloque-destino" style="display:none">
+      <label class="lab">Convertir a</label>
+      <div class="pills" id="pills-destino"></div>
+      <p class="nota-bloqueo" id="nota-bloqueo"></p>
+
+      <div class="calidad" id="bloque-calidad">
+        <div class="slider-row">
+          <span>Calidad</span>
+          <input type="range" id="sl-calidad" min="0.5" max="1" step="0.05" value="0.85" oninput="App.calidadCambio()">
+          <output id="o-calidad">85%</output>
+        </div>
+      </div>
+    </div>
+
+    <div class="progreso" id="progreso">
+      <div class="pista"><i></i></div>
+      <p class="texto" id="progreso-texto">Procesando…</p>
+    </div>
+
+    <div class="empuja">
+      <button class="btn btn-verde" id="btn-convertir" onclick="App.convertir()" disabled>Convertir</button>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ RESULTADO ════════ -->
+<section class="screen" id="s-resultado">
+  <div class="topbar">
+    <button class="back" onclick="App.volverAlModulo()" aria-label="Volver">
+      <svg class="ic" width="18" height="18" viewBox="0 0 24 24"><use href="#i-volver"/></svg>
+    </button>
+    <span class="crumb"><b>Listo</b> · Revisa y descarga</span>
+  </div>
+  <div class="shell">
+    <h2 class="titulo">Tu archivo convertido</h2>
+    <p class="bajada" id="res-detalle"></p>
+
+    <div class="panel-res">
+      <img class="media" id="res-img" alt="Resultado" style="display:none">
+      <audio class="media" id="res-audio" controls style="display:none"></audio>
+
+      <label class="lab">Nombre del archivo</label>
+      <input class="campo" id="inp-nombre" maxlength="80">
+
+      <div id="res-nota"></div>
+
+      <button class="btn btn-verde" style="margin-top:14px" onclick="App.descargar()">
+        <svg class="ic" width="17" height="17" viewBox="0 0 24 24"><use href="#i-desc"/></svg>
+        Descargar
+      </button>
+      <div id="res-ok"></div>
+    </div>
+
+    <div class="empuja">
+      <div class="fila">
+        <button class="btn btn-suave" onclick="App.volverAlModulo()">Convertir otro archivo</button>
+        <button class="btn btn-suave" onclick="App.irHome()">Inicio</button>
+      </div>
+    </div>
+  </div>
+</section>
 
 <script>
-const fileInput = document.getElementById('file');
-const drop = document.getElementById('drop');
-const preview = document.getElementById('preview');
-const statusEl = document.getElementById('status');
-const downloadBtn = document.getElementById('download');
-const convertBtn = document.getElementById('convert-btn');
-const bar = document.getElementById('bar');
-const fill = document.getElementById('fill');
+/* ════════════════════════════════════════════════════════════
+   Convertidor HABIL/IA v1.0 — Fase 1
+   Cascarón modular. Motores Fase 1: MotorImagen (canvas nativo)
+   y MotorAudio (WebAudio → WAV). Sin librerías externas.
+   Fase 2 (MotorFFmpeg: MP4/MP3/M4A) se enchufa aquí sin
+   reconstruir la app: se agrega el motor y se desbloquean
+   destinos en MODULOS.
+   ════════════════════════════════════════════════════════════ */
 
-let selectedFile = null;
+const $ = id => document.getElementById(id);
 
-/* ── PARCHE ENCUADRE: estado del modo de encaje.
-   'contain' = video completo dentro del 9:16 (por defecto).
-   'cover'   = comportamiento antiguo: llenar el 9:16 recortando bordes. ── */
-let modoEncaje = 'contain';
+/* ── Detección honesta de capacidades ── */
+const CAP = (() => {
+  const c = {};
+  try { c.webp = document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0; }
+  catch(e){ c.webp = false; }
+  c.audio = !!(window.AudioContext || window.webkitAudioContext);
+  return c;
+})();
 
-function setModoEncaje(m) {
-  modoEncaje = m;
-  document.getElementById('modo-contain').classList.toggle('activo', m === 'contain');
-  document.getElementById('modo-cover').classList.toggle('activo', m === 'cover');
+/* ── Definición de módulos (la app nace modular) ──
+   disponible:false + motivo => el destino se muestra deshabilitado
+   con explicación, nunca como botón falso.                        */
+const MODULOS = {
+  imagen: {
+    nombre: 'Imagen',
+    bajada: 'Convierte tu imagen entre JPG, PNG y WebP. Instantáneo y en tu dispositivo.',
+    acepta: 'image/*',
+    tipos: 'JPG, PNG, WebP, GIF o BMP',
+    valida: f => f.type.startsWith('image/'),
+    destinos: [
+      { id:'jpg',  label:'JPG',  mime:'image/jpeg', ext:'jpg',  calidad:true,  disponible:true },
+      { id:'png',  label:'PNG',  mime:'image/png',  ext:'png',  calidad:false, disponible:true },
+      { id:'webp', label:'WebP', mime:'image/webp', ext:'webp', calidad:true,
+        disponible: CAP.webp,
+        motivo: 'Este navegador no genera WebP (pasa en Safari). En Chrome sí está disponible.' },
+    ],
+    notaBloqueo: 'Imágenes a PDF llega en la <b>Fase 3</b>. Las fotos HEIC de iPhone están en el roadmap.',
+    motor: 'imagen',
+  },
+  video: {
+    nombre: 'Video',
+    bajada: 'Por ahora: extrae el audio de tu video en WAV, listo para editar.',
+    acepta: 'video/*',
+    tipos: 'MP4, WebM o MOV',
+    valida: f => f.type.startsWith('video/'),
+    destinos: [
+      { id:'wav', label:'Solo el audio (WAV)', mime:'audio/wav', ext:'wav', calidad:false, disponible:true },
+    ],
+    notaBloqueo: 'Convertir a <b>MP4 compatible con CapCut</b> llega en la <b>Fase 2</b>, con el motor avanzado de conversión. Mientras tanto: si grabas en iPhone/Safari, tu video ya sale en MP4.',
+    motor: 'audio',
+  },
+  audio: {
+    nombre: 'Audio',
+    bajada: 'Convierte tu audio a WAV, el formato universal para editar.',
+    acepta: 'audio/*',
+    tipos: 'MP3, M4A, WebM, OGG o WAV',
+    valida: f => f.type.startsWith('audio/'),
+    destinos: [
+      { id:'wav', label:'WAV', mime:'audio/wav', ext:'wav', calidad:false, disponible:true },
+    ],
+    notaBloqueo: '<b>MP3</b> y <b>M4A</b> llegan en la <b>Fase 2</b>, con el motor avanzado de conversión.',
+    motor: 'audio',
+  },
+};
+
+/* ── Estado ── */
+const S = {
+  modulo: null,        // clave en MODULOS
+  archivo: null,
+  destino: null,       // objeto destino elegido
+  calidad: 0.85,
+  resultado: null,     // Blob
+  resultadoInfo: '',   // texto descriptivo (peso, duración)
+  resultadoDesc: false,
+};
+
+/* ── Utilidades ── */
+function mb(bytes){ return (bytes / (1024*1024)).toFixed(1).replace('.', ',') + ' MB'; }
+function mmss(seg){
+  const s = Math.round(seg);
+  return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+}
+function baseNombre(n){
+  return (n || 'archivo').replace(/\.[^.]+$/, '').slice(0, 70);
+}
+function slugNombre(n){
+  return (n||'archivo').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-zA-Z0-9 _-]/g,'').trim().replace(/\s+/g,'-') || 'archivo';
+}
+function descargarBlob(blob, nombre){
+  const a = document.createElement('a');
+  const u = URL.createObjectURL(blob);
+  a.href = u; a.download = nombre;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 5000);
 }
 
-fileInput.addEventListener('change', e => {
-  if (e.target.files[0]) handleFile(e.target.files[0]);
+/* ════════ MOTOR IMAGEN (canvas nativo) ════════ */
+const MotorImagen = {
+  async convertir(file, destino, calidad){
+    // Decodificar la imagen
+    let bmp;
+    try {
+      bmp = await createImageBitmap(file);
+    } catch(e){
+      // Fallback para navegadores sin createImageBitmap sobre este tipo
+      bmp = await new Promise((res, rej) => {
+        const img = new Image();
+        img.onload = () => res(img);
+        img.onerror = () => rej(new Error('decode'));
+        img.src = URL.createObjectURL(file);
+      });
+    }
+    const w = bmp.width || bmp.naturalWidth;
+    const h = bmp.height || bmp.naturalHeight;
+    if (!w || !h) throw new Error('decode');
+
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    // JPG no soporta transparencia: fondo blanco para no perder contenido en negro
+    if (destino.id === 'jpg'){
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, w, h);
+    }
+    ctx.drawImage(bmp, 0, 0);
+    if (bmp.close) bmp.close();
+
+    const blob = await new Promise(res =>
+      canvas.toBlob(res, destino.mime, destino.calidad ? calidad : undefined)
+    );
+    if (!blob) throw new Error('encode');
+    return { blob, info: `${w}×${h} px · ${mb(blob.size)}` };
+  }
+};
+
+/* ════════ MOTOR AUDIO (WebAudio → WAV, sin librerías) ════════ */
+const MotorAudio = {
+  LIMITE: 200 * 1024 * 1024, // 200 MB de entrada: sobre eso, la memoria del navegador peligra
+
+  async convertir(file){
+    if (!CAP.audio) throw new Error('sin-audiocontext');
+    if (file.size > this.LIMITE) throw new Error('muy-grande');
+
+    const datos = await file.arrayBuffer();
+    const actx = new (window.AudioContext || window.webkitAudioContext)();
+    let audio;
+    try {
+      audio = await actx.decodeAudioData(datos);
+    } catch(e){
+      throw new Error('decode-audio');
+    } finally {
+      try { actx.close(); } catch(e){}
+    }
+    const blob = this.codificarWAV(audio);
+    return { blob, info: `${mmss(audio.duration)} min · ${mb(blob.size)} · WAV 16-bit` };
+  },
+
+  /* WAV PCM 16-bit estándar, hasta 2 canales, sample rate original */
+  codificarWAV(ab){
+    const numCh = Math.min(2, ab.numberOfChannels);
+    const sr = ab.sampleRate;
+    const len = ab.length;
+    const blockAlign = numCh * 2;
+    const dataSize = len * blockAlign;
+    const buffer = new ArrayBuffer(44 + dataSize);
+    const dv = new DataView(buffer);
+    let p = 0;
+    const ws = s => { for (let i = 0; i < s.length; i++) dv.setUint8(p++, s.charCodeAt(i)); };
+
+    ws('RIFF'); dv.setUint32(p, 36 + dataSize, true); p += 4; ws('WAVE');
+    ws('fmt '); dv.setUint32(p, 16, true); p += 4;
+    dv.setUint16(p, 1, true); p += 2;            // PCM
+    dv.setUint16(p, numCh, true); p += 2;
+    dv.setUint32(p, sr, true); p += 4;
+    dv.setUint32(p, sr * blockAlign, true); p += 4;
+    dv.setUint16(p, blockAlign, true); p += 2;
+    dv.setUint16(p, 16, true); p += 2;           // 16 bits
+    ws('data'); dv.setUint32(p, dataSize, true); p += 4;
+
+    const canales = [];
+    for (let c = 0; c < numCh; c++) canales.push(ab.getChannelData(c));
+    for (let i = 0; i < len; i++){
+      for (let c = 0; c < numCh; c++){
+        let s = Math.max(-1, Math.min(1, canales[c][i]));
+        dv.setInt16(p, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+        p += 2;
+      }
+    }
+    return new Blob([buffer], { type:'audio/wav' });
+  }
+};
+
+/* ════════ APP (cascarón: navegación y flujo compartido) ════════ */
+const App = {
+
+  irHome(){
+    this.limpiarArchivo();
+    S.modulo = null;
+    this.mostrar('s-home');
+  },
+
+  mostrar(id){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    $(id).classList.add('active');
+    window.scrollTo(0, 0);
+  },
+
+  abrirModulo(clave){
+    S.modulo = clave;
+    const m = MODULOS[clave];
+    this.limpiarArchivo();
+    $('crumb-modulo').textContent = m.nombre;
+    $('mod-titulo').textContent = m.nombre;
+    $('mod-bajada').textContent = m.bajada;
+    $('zona-tipos').textContent = m.tipos;
+    $('inp-archivo').accept = m.acepta;
+    $('nota-bloqueo').innerHTML = m.notaBloqueo;
+    this.mostrar('s-modulo');
+  },
+
+  limpiarArchivo(){
+    S.archivo = null; S.destino = null; S.resultado = null; S.resultadoDesc = false;
+    $('inp-archivo').value = '';
+    $('ficha').classList.remove('ver');
+    ['ficha-img','ficha-video','ficha-audio'].forEach(id => {
+      const el = $(id);
+      if (el.src){ URL.revokeObjectURL(el.src); el.removeAttribute('src'); }
+      el.style.display = 'none';
+    });
+    $('zona').style.display = 'block';
+    $('bloque-destino').style.display = 'none';
+    $('zona-aviso').innerHTML = '';
+    $('btn-convertir').disabled = true;
+    $('progreso').classList.remove('ver');
+  },
+
+  archivoElegido(input){
+    const f = input.files && input.files[0];
+    if (!f) return;
+    const m = MODULOS[S.modulo];
+    $('zona-aviso').innerHTML = '';
+
+    // Validación honesta de tipo, con redirección al módulo correcto
+    if (!m.valida(f)){
+      let pista = '';
+      if (f.type.startsWith('video/')) pista = ' Parece un video: prueba en el módulo Video.';
+      else if (f.type.startsWith('audio/')) pista = ' Parece un audio: prueba en el módulo Audio.';
+      else if (f.type.startsWith('image/')) pista = ' Parece una imagen: prueba en el módulo Imagen.';
+      else if (/\.heic$|\.heif$/i.test(f.name)) pista = ' Las fotos HEIC de iPhone aún no son compatibles: expórtala como JPG desde tu galería.';
+      $('zona-aviso').innerHTML = `<div class="aviso error">Este archivo no es del tipo que convierte este módulo.${pista}</div>`;
+      input.value = '';
+      return;
+    }
+
+    S.archivo = f;
+    S.resultado = null;
+
+    // Ficha del archivo
+    $('ficha-nombre').textContent = f.name;
+    $('ficha-meta').textContent = `${mb(f.size)} · ${f.type || 'tipo desconocido'}`;
+    const url = URL.createObjectURL(f);
+    if (f.type.startsWith('image/')){ $('ficha-img').src = url; $('ficha-img').style.display = 'block'; }
+    else if (f.type.startsWith('video/')){ $('ficha-video').src = url; $('ficha-video').style.display = 'block'; }
+    else { $('ficha-audio').src = url; $('ficha-audio').style.display = 'block'; }
+    $('zona').style.display = 'none';
+    $('ficha').classList.add('ver');
+
+    // Aviso de memoria para archivos grandes de audio/video
+    if (m.motor === 'audio' && f.size > 80 * 1024 * 1024){
+      $('zona-aviso').innerHTML = '<div class="aviso">Archivo grande: la extracción de audio ocupa bastante memoria. En celular puede fallar — en computador va mejor.</div>';
+    }
+
+    this.renderDestinos();
+    $('bloque-destino').style.display = 'block';
+  },
+
+  renderDestinos(){
+    const m = MODULOS[S.modulo];
+    const cont = $('pills-destino');
+    cont.innerHTML = '';
+    /* MICROFIX v1.0.1: las notas dinámicas de destinos no disponibles viven
+       FUERA de #pills-destino, así que el innerHTML='' no las limpia.
+       Se eliminan aquí todas las anteriores antes de cada render, para que
+       no queden huérfanas al cambiar de módulo o de archivo. */
+    document.querySelectorAll('#bloque-destino .nota-dinamica').forEach(e => e.remove());
+    let primero = null;
+
+    m.destinos.forEach(d => {
+      const b = document.createElement('button');
+      b.className = 'pill';
+      b.textContent = d.label;
+      if (!d.disponible){
+        b.disabled = true;
+        b.title = d.motivo || '';
+      } else {
+        b.onclick = () => this.elegirDestino(d, b);
+        if (!primero) primero = { d, b };
+      }
+      cont.appendChild(b);
+    });
+
+    // Mostrar el motivo de los destinos no disponibles, con honestidad.
+    // MICROFIX v1.0.1: la nota lleva la clase 'nota-dinamica' para que el
+    // render siguiente la encuentre y la elimine (ver inicio de esta función).
+    const noDisp = m.destinos.filter(d => !d.disponible && d.motivo);
+    if (noDisp.length){
+      const extra = document.createElement('p');
+      extra.className = 'nota-bloqueo nota-dinamica';
+      extra.textContent = noDisp.map(d => d.label + ': ' + d.motivo).join(' ');
+      cont.after(extra);
+    }
+
+    if (primero) this.elegirDestino(primero.d, primero.b);
+  },
+
+  elegirDestino(d, btn){
+    S.destino = d;
+    document.querySelectorAll('#pills-destino .pill').forEach(p => p.classList.remove('on'));
+    btn.classList.add('on');
+    $('bloque-calidad').classList.toggle('ver', !!d.calidad);
+    $('btn-convertir').disabled = false;
+    $('btn-convertir').textContent = 'Convertir a ' + d.label;
+  },
+
+  calidadCambio(){
+    S.calidad = parseFloat($('sl-calidad').value);
+    $('o-calidad').textContent = Math.round(S.calidad * 100) + '%';
+  },
+
+  async convertir(){
+    if (!S.archivo || !S.destino) return;
+    const m = MODULOS[S.modulo];
+    const btn = $('btn-convertir');
+    btn.disabled = true;
+    $('zona-aviso').innerHTML = '';
+    $('progreso').classList.add('ver');
+    $('progreso-texto').textContent = m.motor === 'audio'
+      ? 'Decodificando el audio… puede tardar unos segundos con archivos largos.'
+      : 'Convirtiendo la imagen…';
+
+    try {
+      let r;
+      if (m.motor === 'imagen') r = await MotorImagen.convertir(S.archivo, S.destino, S.calidad);
+      else r = await MotorAudio.convertir(S.archivo);
+      S.resultado = r.blob;
+      S.resultadoInfo = r.info;
+      S.resultadoDesc = false;
+      this.irResultado();
+    } catch(err){
+      $('zona-aviso').innerHTML = `<div class="aviso error">${this.mensajeError(err)}</div>`;
+    } finally {
+      $('progreso').classList.remove('ver');
+      btn.disabled = false;
+    }
+  },
+
+  mensajeError(err){
+    const e = (err && err.message) || '';
+    if (e === 'muy-grande')
+      return 'El archivo supera los 200 MB y la conversión en el navegador podría fallar por memoria. Prueba con un clip más corto, o espera la versión Pro para archivos grandes.';
+    if (e === 'decode-audio')
+      return 'No pudimos leer el audio de este archivo en este navegador. Prueba en Chrome de computador — y si el archivo viene de otra app, verifica que se reproduzca normalmente.';
+    if (e === 'sin-audiocontext')
+      return 'Este navegador no soporta el procesamiento de audio. Prueba con Chrome o Safari actualizados.';
+    if (e === 'decode')
+      return 'No pudimos leer esta imagen. Si es una foto HEIC de iPhone, expórtala primero como JPG desde tu galería.';
+    if (e === 'encode')
+      return 'El navegador no pudo generar el formato elegido. Prueba con otro formato de destino.';
+    return 'Algo salió mal durante la conversión. Intenta de nuevo; si persiste, prueba en Chrome de computador.';
+  },
+
+  irResultado(){
+    const img = $('res-img'), aud = $('res-audio');
+    [img, aud].forEach(el => { if (el.src){ URL.revokeObjectURL(el.src); el.removeAttribute('src'); } el.style.display = 'none'; });
+
+    const url = URL.createObjectURL(S.resultado);
+    if (S.destino.mime.startsWith('image/')){ img.src = url; img.style.display = 'block'; }
+    else { aud.src = url; aud.style.display = 'block'; }
+
+    $('res-detalle').textContent = S.resultadoInfo;
+    $('inp-nombre').value = slugNombre(baseNombre(S.archivo.name)) + '.' + S.destino.ext;
+
+    // Notas honestas según el resultado
+    let nota = '';
+    if (S.destino.id === 'wav')
+      nota = '<div class="aviso">El WAV no se comprime: pesa ~10 MB por minuto. Es ideal para editar; para compartir liviano, el MP3 llega en la Fase 2.</div>';
+    if (S.destino.id === 'jpg' && S.archivo.type === 'image/png')
+      nota = '<div class="aviso">El JPG no soporta transparencia: las zonas transparentes del PNG quedaron con fondo blanco.</div>';
+    $('res-nota').innerHTML = nota;
+    $('res-ok').innerHTML = '';
+
+    this.mostrar('s-resultado');
+  },
+
+  descargar(){
+    if (!S.resultado) return;
+    let nombre = $('inp-nombre').value.trim() || ('archivo.' + S.destino.ext);
+    if (!nombre.toLowerCase().endsWith('.' + S.destino.ext)) nombre += '.' + S.destino.ext;
+    descargarBlob(S.resultado, nombre);
+    S.resultadoDesc = true;
+    $('res-ok').innerHTML = `<div class="aviso ok">Descargado como <b>${nombre}</b></div>`;
+  },
+
+  volverAlModulo(){
+    this.abrirModulo(S.modulo);
+  },
+};
+
+/* ── Arrastrar y soltar (escritorio) ── */
+const zona = $('zona');
+['dragover','dragenter'].forEach(ev => zona.addEventListener(ev, e => {
+  e.preventDefault(); zona.classList.add('arrastrando');
+}));
+['dragleave','drop'].forEach(ev => zona.addEventListener(ev, e => {
+  e.preventDefault(); zona.classList.remove('arrastrando');
+}));
+zona.addEventListener('drop', e => {
+  const f = e.dataTransfer.files && e.dataTransfer.files[0];
+  if (!f) return;
+  const dt = new DataTransfer();
+  dt.items.add(f);
+  $('inp-archivo').files = dt.files;
+  App.archivoElegido($('inp-archivo'));
 });
 
-function handleFile(file) {
-  selectedFile = file;
-  preview.src = URL.createObjectURL(file);
-  preview.style.display = 'block';
-  convertBtn.style.display = 'block';
-  document.getElementById('modo-encaje').style.display = 'flex'; /* PARCHE ENCUADRE: mostrar selector junto al botón Convertir */
-  downloadBtn.style.display = 'none';
-  statusEl.textContent = '';
-  bar.style.display = 'none';
-  fill.style.width = '0%';
-}
-
-async function startConvert() {
-  convertBtn.disabled = true;
-  convertBtn.textContent = 'Procesando...';
-  statusEl.textContent = 'Cargando video...';
-  bar.style.display = 'block';
-  fill.style.width = '5%';
-
-  try {
-    await convert(selectedFile);
-  } catch(err) {
-    statusEl.textContent = '⚠️ Error: ' + err.message + '. Prueba con un clip más corto.';
-  }
-
-  convertBtn.disabled = false;
-  convertBtn.textContent = '🔄 Convertir a vertical 9:16';
-}
-
-function convert(file) {
-  return new Promise((resolve, reject) => {
-    const videoEl = document.createElement('video');
-    videoEl.src = URL.createObjectURL(file);
-    videoEl.muted = false;
-    videoEl.playsInline = true;
-
-    videoEl.onloadedmetadata = async () => {
-      const srcW = videoEl.videoWidth;
-      const srcH = videoEl.videoHeight;
-
-      // Salida vertical 9:16, tamaño moderado para no saturar memoria
-      const outW = 720;
-      const outH = 1280;
-
-      const canvas = document.createElement('canvas');
-      canvas.width = outW;
-      canvas.height = outH;
-      const ctx = canvas.getContext('2d', { alpha:false });
-
-      /* ── PARCHE ENCUADRE: drawFrame ahora soporta dos modos.
-         contain: el video completo cabe dentro del 9:16 (la dimensión que sobra
-                  queda como franjas negras — el fondo negro ya se pinta abajo).
-         cover:   matemática original — el video llena el 9:16 y lo que sobra
-                  se recorta por los bordes.
-         En ambos casos el video queda centrado. ── */
-      function drawFrame() {
-        ctx.fillStyle = '#000';
-        ctx.fillRect(0,0,outW,outH);
-        const srcRatio = srcW / srcH;
-        const outRatio = outW / outH;
-        let dw, dh;
-        if (modoEncaje === 'contain') {
-          // Video completo: encajar por la dimensión limitante
-          if (srcRatio > outRatio) { dw = outW; dh = outW / srcRatio; }
-          else                     { dh = outH; dw = outH * srcRatio; }
-        } else {
-          // Rellenar pantalla (comportamiento antiguo)
-          if (srcRatio > outRatio) { dh = outH; dw = outH * srcRatio; }
-          else                     { dw = outW; dh = outW / srcRatio; }
-        }
-        const dx = (outW - dw) / 2;
-        const dy = (outH - dh) / 2;
-        ctx.drawImage(videoEl, dx, dy, dw, dh);
-      }
-
-      const canvasStream = canvas.captureStream(30);
-
-      // Audio
-      try {
-        const audioCtx = new AudioContext();
-        const src = audioCtx.createMediaElementSource(videoEl);
-        const dest = audioCtx.createMediaStreamDestination();
-        src.connect(dest);
-        const at = dest.stream.getAudioTracks()[0];
-        if (at) canvasStream.addTrack(at);
-      } catch(e) { console.warn('audio', e); }
-
-      const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')
-        ? 'video/webm;codecs=vp8,opus'
-        : 'video/webm';
-
-      const recorder = new MediaRecorder(canvasStream, { mimeType, videoBitsPerSecond: 4_000_000 });
-      const chunks = [];
-      recorder.ondataavailable = e => { if (e.data.size>0) chunks.push(e.data); };
-
-      recorder.onstop = () => {
-        fill.style.width = '100%';
-        const blob = new Blob(chunks, { type: mimeType });
-        const url = URL.createObjectURL(blob);
-        downloadBtn.href = url;
-        downloadBtn.download = 'habilia-reel.webm';
-        downloadBtn.style.display = 'block';
-        statusEl.textContent = '✅ Listo — descarga tu video vertical';
-        resolve();
-      };
-
-      videoEl.currentTime = 0;
-      recorder.start(200);
-      videoEl.muted = false;
-      videoEl.volume = 1;
-
-      let raf;
-      function loop() {
-        if (videoEl.ended || videoEl.paused) return;
-        drawFrame();
-        fill.style.width = Math.min(95, (videoEl.currentTime / videoEl.duration) * 100) + '%';
-        raf = requestAnimationFrame(loop);
-      }
-
-      videoEl.onplay = () => { statusEl.textContent = 'Convirtiendo...'; loop(); };
-      videoEl.onended = () => { recorder.stop(); };
-      videoEl.onerror = () => reject(new Error('No se pudo leer el video'));
-
-      try {
-        await videoEl.play();
-      } catch(e) {
-        reject(new Error('No se pudo reproducir el video para procesarlo'));
-      }
-    };
-
-    videoEl.onerror = () => reject(new Error('Formato de video no soportado'));
-  });
+/* ── Aviso global si el navegador no puede trabajar ── */
+if (!window.FileReader || !document.createElement('canvas').getContext){
+  const p = document.createElement('div');
+  p.className = 'aviso error';
+  p.style.margin = '20px 0 0';
+  p.textContent = 'Este navegador no soporta la conversión de archivos. Abre el Convertidor en Chrome o Safari actualizados.';
+  document.querySelector('.hero').after(p);
 }
 </script>
 </body>
