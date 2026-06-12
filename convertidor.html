@@ -390,13 +390,19 @@ const CAP = (() => {
 /* ── Definición de módulos (la app nace modular) ──
    disponible:false + motivo => el destino se muestra deshabilitado
    con explicación, nunca como botón falso.                        */
+/* MICROFIX v1.0.2: el módulo Imagen valida por lista blanca, no por image/*.
+   Los iPhone reportan HEIC como image/heic y antes pasaban la validación
+   para fallar recién en el motor. HEIC queda en roadmap, no en Fase 1. */
+const IMAGEN_TIPOS_OK = ['image/jpeg','image/png','image/webp','image/gif','image/bmp'];
+
 const MODULOS = {
   imagen: {
     nombre: 'Imagen',
     bajada: 'Convierte tu imagen entre JPG, PNG y WebP. Instantáneo y en tu dispositivo.',
-    acepta: 'image/*',
-    tipos: 'JPG, PNG, WebP, GIF o BMP',
-    valida: f => f.type.startsWith('image/'),
+    acepta: '.jpg,.jpeg,.png,.webp,.gif,.bmp,image/jpeg,image/png,image/webp,image/gif,image/bmp',
+    tipos: 'JPG, PNG, WebP, GIF o BMP. HEIC aún no.',
+    valida: f => IMAGEN_TIPOS_OK.includes(f.type) ||
+      (/\.(jpe?g|png|webp|gif|bmp)$/i.test(f.name) && (!f.type || f.type.startsWith('image/'))),
     destinos: [
       { id:'jpg',  label:'JPG',  mime:'image/jpeg', ext:'jpg',  calidad:true,  disponible:true },
       { id:'png',  label:'PNG',  mime:'image/png',  ext:'png',  calidad:false, disponible:true },
@@ -611,13 +617,22 @@ const App = {
     const m = MODULOS[S.modulo];
     $('zona-aviso').innerHTML = '';
 
-    // Validación honesta de tipo, con redirección al módulo correcto
+    // Validación honesta de tipo, con redirección al módulo correcto.
+    // MICROFIX v1.0.2: HEIC/HEIF se detecta PRIMERO (por extensión y por MIME),
+    // en cualquier módulo, con mensaje claro y sin mostrar destinos.
     if (!m.valida(f)){
+      const esHeic = /\.(heic|heif)$/i.test(f.name) || f.type === 'image/heic' || f.type === 'image/heif';
+      if (esHeic){
+        $('zona-aviso').innerHTML = '<div class="aviso error">Las fotos HEIC de iPhone aún no son compatibles en esta versión. Para convertirla, primero expórtala como JPG desde tu galería o ajustes de cámara.</div>';
+        input.value = '';
+        return;
+      }
       let pista = '';
-      if (f.type.startsWith('video/')) pista = ' Parece un video: prueba en el módulo Video.';
+      if (S.modulo === 'imagen' && f.type.startsWith('image/'))
+        pista = ` Este tipo de imagen (${f.type}) aún no es compatible: usa JPG, PNG, WebP, GIF o BMP.`;
+      else if (f.type.startsWith('video/')) pista = ' Parece un video: prueba en el módulo Video.';
       else if (f.type.startsWith('audio/')) pista = ' Parece un audio: prueba en el módulo Audio.';
       else if (f.type.startsWith('image/')) pista = ' Parece una imagen: prueba en el módulo Imagen.';
-      else if (/\.heic$|\.heif$/i.test(f.name)) pista = ' Las fotos HEIC de iPhone aún no son compatibles: expórtala como JPG desde tu galería.';
       $('zona-aviso').innerHTML = `<div class="aviso error">Este archivo no es del tipo que convierte este módulo.${pista}</div>`;
       input.value = '';
       return;
