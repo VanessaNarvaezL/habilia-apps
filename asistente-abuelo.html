@@ -495,7 +495,8 @@ function readTutorial(i, e){
 // FÚTBOL
 // ══════════════════════════════════════
 function renderFutbol(){
-  let html = '<div style="font-size:18px;font-weight:800;color:var(--azul);margin-bottom:.75rem">🇨🇱 Campeonato Nacional</div>';
+  let html = '<div style="background:#FFF6E5;border:2px solid #E0A800;border-radius:14px;padding:.9rem 1.1rem;margin-bottom:1rem;font-size:15px;font-weight:700;color:#5a4a1a">⚠️ Contenido de ejemplo. Estos partidos no se actualizan solos y pueden no ser los de hoy.</div>';
+  html += '<div style="font-size:18px;font-weight:800;color:var(--azul);margin-bottom:.75rem">🇨🇱 Campeonato Nacional</div>';
   FUTBOL_DATA.campeonato.forEach(p=>{
     html += `<div class="futbol-card">
       <span class="liga-tag liga-cl">Primera División Chile</span>
@@ -544,24 +545,11 @@ function renderEmergencias(){
 // CLIMA
 // ══════════════════════════════════════
 function renderClima(){
-  // Clima simulado - en producción conectar a OpenWeather API
-  const climas = [
-    {icon:'☀️',temp:18,desc:'Soleado y agradable',consejo:'¡Buen día para salir! Lleva una chaqueta ligera por si refresca.'},
-    {icon:'⛅',temp:15,desc:'Parcialmente nublado',consejo:'Lleva una chaqueta, puede refrescar en la tarde.'},
-    {icon:'🌧️',temp:12,desc:'Con lluvia',consejo:'Lleva paraguas y abrigo hoy.'},
-  ];
-  const c = climas[Math.floor(Math.random()*climas.length)];
+  // Clima aún NO conectado a datos reales. No mostramos un clima inventado.
   document.getElementById('clima-content').innerHTML = `
-    <div class="clima-card">
-      <div class="clima-icon">${c.icon}</div>
-      <div>
-        <div class="clima-temp">${c.temp}°C</div>
-        <div class="clima-desc">${c.desc}</div>
-        <div class="clima-city">Santiago, Chile</div>
-      </div>
-    </div>
-    <div style="background:white;border-radius:16px;padding:1.4rem;box-shadow:var(--shadow);font-size:18px;font-weight:700;color:var(--text);line-height:1.6">
-      👕 <strong>¿Qué me pongo?</strong><br><br>${c.consejo}
+    <div style="background:white;border-radius:16px;padding:1.6rem;box-shadow:var(--shadow);font-size:18px;font-weight:700;color:var(--text);line-height:1.6;text-align:center">
+      🌤️ Esta sección todavía no muestra el clima real de hoy.<br><br>
+      <span style="font-weight:600;color:var(--text2)">Pronto la conectaremos al tiempo de verdad. Por ahora, para saber cómo está el día, lo mejor es mirar por la ventana o preguntarle a un familiar.</span>
     </div>`;
 }
 
@@ -594,7 +582,6 @@ LO QUE PUEDES HACER:
 
 IMPORTANTE: Responde SIEMPRE en español chileno. Nunca uses tecnicismos. Si alguien parece confundido, ofrece explicar de otra manera más simple.`;
 
-const API_KEY = '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';
 
 async function sendChat(){
   const inp = document.getElementById('chat-input');
@@ -606,27 +593,19 @@ async function sendChat(){
   chatLoading=true;
   const typing = addTyping();
   try{
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 600,
         system: SYSTEM,
         messages: chatHistory
       })
     });
+    const data = await res.json();
     if(!res.ok){
-      const errData = await res.json();
-      console.error('API error:', res.status, errData);
+      console.error('Error /api/chat:', res.status, data);
       throw new Error(res.status);
     }
-    const data = await res.json();
     const reply = data.content?.[0]?.text || 'No pude responder. ¿Lo intentamos de nuevo?';
     typing.remove();
     addChatMsg('ai', reply);
