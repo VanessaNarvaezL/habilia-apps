@@ -648,10 +648,34 @@ let recognition = null;
 let isListening = false;
 let voiceTarget = 'chat'; // 'chat' o 'global'
 
+function cleanTextForSpeech(text){
+  if(!text) return '';
+  let t = String(text);
+  // Enlaces markdown [texto](url) -> deja solo el texto
+  t = t.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1');
+  // Quita emojis y pictogramas (banderas, símbolos, flechas, variation selectors)
+  t = t.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2300}-\u{23FF}\u{2B00}-\u{2BFF}\u{FE00}-\u{FE0F}\u{1F1E6}-\u{1F1FF}\u{200D}\u{20E3}]/gu, ' ');
+  // Quita marcadores de markdown y símbolos que el lector pronuncia raro
+  t = t.replace(/[*_~`#>|<•▪◦«»^]/g, ' ');
+  // Rayas largas -> pausa simple (coma)
+  t = t.replace(/[—–]/g, ', ');
+  // Saltos de línea: dobles -> punto, simples -> espacio
+  t = t.replace(/\n{2,}/g, '. ');
+  t = t.replace(/\n/g, ' ');
+  // Limpia espacios y puntuación repetida
+  t = t.replace(/\s{2,}/g, ' ');
+  t = t.replace(/\s+([,.;:!?])/g, '$1');
+  t = t.replace(/([,;:])\s*\./g, '.');
+  t = t.replace(/([,.;:])\1+/g, '$1');
+  return t.trim();
+}
+
 function speak(text){
   if(!('speechSynthesis' in window)) return;
+  const clean = cleanTextForSpeech(text);
+  if(!clean) return;
   window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
+  const u = new SpeechSynthesisUtterance(clean);
   u.lang = 'es-CL';u.rate = 0.88;u.volume = 1;u.pitch = 1;
   const voices = window.speechSynthesis.getVoices();
   const v = voices.find(v=>v.lang==='es-CL') || voices.find(v=>v.lang==='es-MX'&&v.name.toLowerCase().includes('google')) || voices.find(v=>v.lang==='es-MX') || voices.find(v=>v.lang==='es-US') || voices.find(v=>v.lang.startsWith('es')&&!v.lang.includes('-ES')&&v.name.toLowerCase().includes('google')) || voices.find(v=>v.lang.startsWith('es')&&!v.lang.includes('-ES'));
