@@ -3,43 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Mi Asistente — habilia</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<title>Mi Acompañante — HABIL/IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f0f4ff;--bg2:#e4eaff;--card:#ffffff;
-  --azul:#2451b3;--azul2:#3d6fd4;--azul-light:#dce8ff;
-  --verde:#1a7a4a;--verde-light:#d4f0e4;
-  --rojo:#c0392b;--rojo-light:#fde8e6;
-  --naranja:#d4680a;--naranja-light:#fef0e0;
-  --gold:#c9880a;--gold-light:#fff3d0;
-  --text:#1a1a2e;--text2:#4a4a6a;--text3:#8888aa;
-  --shadow:0 4px 20px rgba(36,81,179,.12);
-  --shadow-big:0 8px 32px rgba(36,81,179,.18);
+  --bg:#FBF6EC;--bg2:#F3EBDA;--card:#FFFFFF;
+  --verde:#1E5A41;--verde-d:#16442F;--verde-light:#E7F0EA;
+  --oro:#A6802F;--oro-d:#8A6A22;--oro-light:#F6EFDD;
+  --ayuda:#B5482A;--ayuda-d:#933A20;--ayuda-light:#F7E9E3;
+  --text:#2A2620;--text2:#5A5044;--text3:#8A7E68;
+  --linea:#E6DCC8;
+  --shadow:0 2px 14px rgba(42,38,32,.08);
+  --shadow-big:0 6px 24px rgba(42,38,32,.12);
+  --serif:'Playfair Display',Georgia,'Times New Roman',serif;
+  --sans:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
 }
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 30% 0%,rgba(36,81,179,.07),transparent 60%);pointer-events:none}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:18px;line-height:1.5}
+.ic{width:32px;height:32px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 
 /* HEADER */
-#header{background:var(--azul);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 16px rgba(36,81,179,.3)}
-.header-logo{color:white;font-size:22px;font-weight:900;letter-spacing:.02em}
-.header-logo span{opacity:.7;font-weight:600}
-.header-time{color:rgba(255,255,255,.85);font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
-.mic-btn-header{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.4);color:white;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
-.mic-btn-header:hover,.mic-btn-header.active{background:rgba(255,255,255,.35);transform:scale(1.08)}
-.mic-btn-header.listening{background:#e74c3c;border-color:#e74c3c;animation:micPulse 1s infinite}
-@keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(231,76,60,.4)}50%{box-shadow:0 0 0 12px rgba(231,76,60,0)}}
+#header{background:var(--verde);padding:1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(30,90,65,.25)}
+.header-logo{color:#FBF6EC;font-family:var(--serif);font-size:22px;font-weight:600;line-height:1.1}
+.header-logo span{display:block;font-family:var(--sans);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.75;font-weight:500}
+.header-time{color:rgba(251,246,236,.9);font-size:19px;font-weight:600;font-variant-numeric:tabular-nums}
+.mic-btn-header{width:48px;height:48px;border-radius:50%;background:rgba(251,246,236,.16);border:1.5px solid rgba(251,246,236,.4);color:#FBF6EC;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.mic-btn-header .ic{width:24px;height:24px}
+.mic-btn-header:hover,.mic-btn-header.active{background:rgba(251,246,236,.3)}
+.mic-btn-header.listening{background:var(--ayuda);border-color:var(--ayuda);animation:micPulse 1s infinite}
+@keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(181,72,42,.4)}50%{box-shadow:0 0 0 12px rgba(181,72,42,0)}}
 
 /* MAIN */
-#main{max-width:600px;margin:0 auto;padding:1.2rem 1rem 6rem}
+#main{max-width:600px;margin:0 auto;padding:1.3rem 1.1rem 6.5rem}
 
 /* GREETING */
-.greeting-card{background:linear-gradient(135deg,var(--azul),var(--azul2));border-radius:20px;padding:1.4rem 1.6rem;margin-bottom:1.2rem;color:white;position:relative;overflow:hidden;box-shadow:var(--shadow-big)}
-.greeting-card::after{content:'☀️';position:absolute;right:1.2rem;top:1rem;font-size:40px;opacity:.3}
-.greeting-name{font-size:26px;font-weight:900;margin-bottom:.2rem}
-.greeting-sub{font-size:16px;opacity:.85;font-weight:600}
-.greeting-date{font-size:14px;opacity:.65;margin-top:.4rem}
+.greeting-card{background:var(--card);border:1px solid var(--linea);border-radius:20px;padding:1.5rem 1.6rem;margin-bottom:1.3rem;box-shadow:var(--shadow)}
+.greeting-name{font-family:var(--serif);font-size:30px;font-weight:600;color:var(--text);line-height:1.15;margin-bottom:.35rem}
+.greeting-sub{font-size:17px;color:var(--text2);font-weight:400}
+.greeting-date{font-size:15px;color:var(--text3);margin-top:.5rem;font-weight:500}
+
+/* HELP BUTTON */
+.help-btn{width:100%;background:var(--ayuda);color:#FFF6F1;border:none;border-radius:18px;padding:1.25rem;font-family:var(--sans);font-size:22px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer;box-shadow:0 4px 16px rgba(181,72,42,.28);margin-bottom:1.3rem}
+.help-btn:active{transform:scale(.99)}
+.help-btn .ic{width:28px;height:28px;stroke-width:2.2}
 
 /* SCREENS */
 .screen{display:none;animation:fadeIn .3s ease}
@@ -47,118 +55,174 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 /* BIG MENU */
-.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:1.2rem}
-.menu-btn{background:var(--card);border-radius:20px;padding:1.4rem 1rem;text-align:center;border:none;cursor:pointer;box-shadow:var(--shadow);transition:all .25s;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:.5rem}
-.menu-btn:hover,.menu-btn:active{transform:translateY(-3px);box-shadow:var(--shadow-big)}
-.menu-btn .btn-icon{font-size:44px;line-height:1}
-.menu-btn .btn-label{font-size:17px;font-weight:800;color:var(--text);line-height:1.2}
-.menu-btn .btn-sub{font-size:12px;color:var(--text3);font-weight:600}
-.menu-btn.azul{border-color:var(--azul-light);background:linear-gradient(135deg,#fff,var(--azul-light))}
-.menu-btn.verde{border-color:var(--verde-light);background:linear-gradient(135deg,#fff,var(--verde-light))}
-.menu-btn.naranja{border-color:var(--naranja-light);background:linear-gradient(135deg,#fff,var(--naranja-light))}
-.menu-btn.gold{border-color:var(--gold-light);background:linear-gradient(135deg,#fff,var(--gold-light))}
-.menu-btn.rojo{border-color:var(--rojo-light);background:linear-gradient(135deg,#fff,var(--rojo-light))}
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:1.1rem}
+.menu-btn{position:relative;background:var(--card);border-radius:18px;padding:1.5rem 1rem;text-align:center;cursor:pointer;box-shadow:var(--shadow);transition:all .2s;border:1.5px solid var(--linea);display:flex;flex-direction:column;align-items:center;gap:.6rem;min-height:140px;justify-content:center}
+.menu-btn:hover,.menu-btn:active{transform:translateY(-2px);box-shadow:var(--shadow-big);border-color:var(--verde)}
+.menu-btn .ic{width:40px;height:40px;color:var(--verde)}
+.menu-btn.oro .ic{color:var(--oro)}
+.menu-btn .btn-label{font-size:18px;font-weight:600;color:var(--text);line-height:1.2}
+.menu-btn .btn-sub{font-size:13px;color:var(--text3);font-weight:400}
+.badge-soon{position:absolute;top:10px;right:10px;background:var(--oro-light);color:var(--oro-d);font-size:11px;font-weight:600;letter-spacing:.04em;padding:3px 9px;border-radius:999px;text-transform:uppercase}
+
+/* SECONDARY LINK */
+.secondary-link{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:transparent;border:1.5px solid var(--linea);border-radius:16px;padding:1rem;font-size:16px;font-weight:500;color:var(--text2);cursor:pointer}
+.secondary-link .ic{width:22px;height:22px;color:var(--text3)}
 
 /* BACK BTN */
-.back-btn{display:flex;align-items:center;gap:8px;background:white;border:2px solid var(--azul-light);border-radius:30px;padding:.7rem 1.4rem;font-size:16px;font-weight:700;color:var(--azul);cursor:pointer;margin-bottom:1.2rem;box-shadow:var(--shadow)}
+.back-btn{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--linea);border-radius:30px;padding:.7rem 1.3rem;font-size:16px;font-weight:600;color:var(--verde);cursor:pointer;margin-bottom:1.2rem;box-shadow:var(--shadow)}
+.back-btn .ic{width:20px;height:20px}
 
 /* SECTION TITLE */
-.section-title{font-size:24px;font-weight:900;color:var(--text);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.section-title{font-family:var(--serif);font-size:25px;font-weight:600;color:var(--text);margin-bottom:1.1rem;display:flex;align-items:center;gap:.6rem}
+.section-title .ic{width:28px;height:28px;color:var(--verde)}
 
 /* CHAT */
-#chat-messages{background:white;border-radius:20px;padding:1.2rem;min-height:300px;max-height:420px;overflow-y:auto;margin-bottom:1rem;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
+#chat-messages{background:var(--card);border:1px solid var(--linea);border-radius:20px;padding:1.2rem;min-height:300px;max-height:440px;overflow-y:auto;margin-bottom:1rem;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
 #chat-messages::-webkit-scrollbar{width:4px}
-#chat-messages::-webkit-scrollbar-thumb{background:var(--azul-light);border-radius:2px}
-.msg{max-width:85%;padding:12px 16px;border-radius:18px;font-size:17px;line-height:1.6;font-weight:600}
-.msg-ai{background:var(--azul-light);color:var(--text);border-radius:18px 18px 18px 4px;align-self:flex-start}
-.msg-user{background:var(--azul);color:white;border-radius:18px 18px 4px 18px;align-self:flex-end}
-.typing{display:flex;gap:5px;align-items:center;padding:12px 16px;background:var(--azul-light);border-radius:18px 18px 18px 4px;width:fit-content}
-.typing-dot{width:8px;height:8px;border-radius:50%;background:var(--azul);animation:typingBounce 1.2s infinite}
+#chat-messages::-webkit-scrollbar-thumb{background:var(--verde-light);border-radius:2px}
+.msg{max-width:85%;padding:13px 17px;border-radius:18px;font-size:18px;line-height:1.55;font-weight:400}
+.msg-ai{background:var(--verde-light);color:var(--text);border-radius:18px 18px 18px 4px;align-self:flex-start}
+.msg-user{background:var(--verde);color:#FBF6EC;border-radius:18px 18px 4px 18px;align-self:flex-end}
+.typing{display:flex;gap:5px;align-items:center;padding:12px 16px;background:var(--verde-light);border-radius:18px 18px 18px 4px;width:fit-content}
+.typing-dot{width:8px;height:8px;border-radius:50%;background:var(--verde);animation:typingBounce 1.2s infinite}
 .typing-dot:nth-child(2){animation-delay:.2s}
 .typing-dot:nth-child(3){animation-delay:.4s}
 @keyframes typingBounce{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(-5px);opacity:1}}
 .chat-input-wrap{display:flex;gap:10px}
-#chat-input{flex:1;background:white;border:2px solid var(--azul-light);border-radius:16px;padding:14px 16px;font-size:16px;font-weight:600;color:var(--text);font-family:'Nunito',sans-serif;outline:none}
-#chat-input:focus{border-color:var(--azul)}
-.send-btn{width:52px;height:52px;border-radius:50%;background:var(--azul);border:none;color:white;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow)}
-.mic-btn-chat{width:52px;height:52px;border-radius:50%;background:var(--verde);border:none;color:white;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow);transition:all .2s}
-.mic-btn-chat.listening{background:#e74c3c;animation:micPulse 1s infinite}
-.voice-hint{text-align:center;font-size:14px;color:var(--text3);font-weight:600;margin-top:.5rem}
+#chat-input{flex:1;background:var(--card);border:1.5px solid var(--linea);border-radius:16px;padding:15px 16px;font-size:17px;font-weight:400;color:var(--text);font-family:var(--sans);outline:none}
+#chat-input:focus{border-color:var(--verde)}
+.send-btn{width:54px;height:54px;border-radius:50%;background:var(--verde);border:none;color:#FBF6EC;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow)}
+.send-btn .ic{width:24px;height:24px;color:#FBF6EC}
+.mic-btn-chat{width:54px;height:54px;border-radius:50%;background:var(--oro);border:none;color:#FBF6EC;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow);transition:all .2s}
+.mic-btn-chat .ic{width:24px;height:24px;color:#FBF6EC}
+.mic-btn-chat.listening{background:var(--ayuda);animation:micPulse 1s infinite}
+.voice-hint{text-align:center;font-size:15px;color:var(--text3);font-weight:500;margin-top:.6rem}
 
 /* AGENDA */
-.agenda-day{font-size:18px;font-weight:800;color:var(--azul);margin-bottom:.75rem}
-.reminder-card{background:white;border-radius:16px;padding:1.2rem 1.4rem;margin-bottom:.75rem;box-shadow:var(--shadow);display:flex;align-items:center;gap:1rem;border-left:5px solid var(--azul)}
-.reminder-card.meds{border-left-color:var(--verde)}
-.reminder-card.futbol{border-left-color:#e74c3c}
+.agenda-day{font-size:18px;font-weight:600;color:var(--verde);margin-bottom:.75rem}
+.reminder-card{background:var(--card);border:1px solid var(--linea);border-radius:16px;padding:1.1rem 1.3rem;margin-bottom:.75rem;box-shadow:var(--shadow);display:flex;align-items:center;gap:1rem;border-left:5px solid var(--verde)}
+.reminder-card.meds{border-left-color:var(--oro)}
+.reminder-card.futbol{border-left-color:var(--text3)}
 .reminder-card.done{opacity:.5}
 .reminder-card.done .reminder-text{text-decoration:line-through}
-.reminder-icon{font-size:32px;flex-shrink:0}
-.reminder-time{font-size:13px;font-weight:700;color:var(--text3);margin-bottom:2px}
-.reminder-text{font-size:17px;font-weight:700;color:var(--text)}
-.reminder-check{width:38px;height:38px;border-radius:50%;border:2px solid var(--azul-light);background:white;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:auto;flex-shrink:0;transition:all .2s}
-.reminder-check.checked{background:var(--verde);border-color:var(--verde);color:white}
-.add-reminder{background:white;border:2px dashed var(--azul-light);border-radius:16px;padding:1.2rem;margin-bottom:.75rem;display:flex;gap:10px;align-items:center}
-.add-input{flex:1;border:none;outline:none;font-size:16px;font-weight:600;color:var(--text);font-family:'Nunito',sans-serif;background:transparent}
+.reminder-icon{font-size:30px;flex-shrink:0}
+.reminder-time{font-size:13px;font-weight:600;color:var(--text3);margin-bottom:2px}
+.reminder-text{font-size:18px;font-weight:500;color:var(--text)}
+.reminder-check{width:40px;height:40px;border-radius:50%;border:2px solid var(--linea);background:var(--card);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:auto;flex-shrink:0;transition:all .2s;color:var(--verde)}
+.reminder-check.checked{background:var(--verde);border-color:var(--verde);color:#FBF6EC}
+.add-reminder{background:var(--card);border:1.5px dashed var(--linea);border-radius:16px;padding:1.1rem;margin-bottom:.75rem;display:flex;gap:10px;align-items:center}
+.add-reminder .ic{width:24px;height:24px;color:var(--verde)}
+.add-input{flex:1;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);font-family:var(--sans);background:transparent}
 .add-input::placeholder{color:var(--text3)}
-.add-time{width:90px;border:none;outline:none;font-size:14px;font-weight:700;color:var(--azul);font-family:'Nunito',sans-serif;background:transparent}
-.add-save{padding:.6rem 1rem;border-radius:20px;background:var(--azul);color:white;border:none;font-size:14px;font-weight:700;cursor:pointer}
+.add-time{width:90px;border:none;outline:none;font-size:14px;font-weight:600;color:var(--verde);font-family:var(--sans);background:transparent}
+.add-save{padding:.65rem 1.1rem;border-radius:20px;background:var(--verde);color:#FBF6EC;border:none;font-size:15px;font-weight:600;cursor:pointer}
 
 /* TUTORIALES */
-.tutorial-card{background:white;border-radius:20px;padding:1.4rem;margin-bottom:.75rem;box-shadow:var(--shadow);cursor:pointer;border:2px solid transparent;transition:all .2s}
-.tutorial-card:hover{border-color:var(--azul-light);transform:translateY(-2px)}
-.tut-icon{font-size:36px;margin-bottom:.5rem}
-.tut-title{font-size:19px;font-weight:800;color:var(--text);margin-bottom:.3rem}
-.tut-desc{font-size:14px;color:var(--text2);font-weight:600}
+.tutorial-card{background:var(--card);border:1px solid var(--linea);border-radius:18px;padding:1.3rem;margin-bottom:.75rem;box-shadow:var(--shadow);cursor:pointer;transition:all .2s}
+.tutorial-card:hover{border-color:var(--verde);transform:translateY(-2px)}
+.tut-icon{font-size:34px;margin-bottom:.5rem}
+.tut-title{font-size:19px;font-weight:600;color:var(--text);margin-bottom:.3rem}
+.tut-desc{font-size:15px;color:var(--text2);font-weight:400}
 .tut-steps{margin-top:1rem;display:none}
 .tut-steps.open{display:block}
-.step{background:var(--azul-light);border-radius:12px;padding:1rem 1.2rem;margin-bottom:.5rem;display:flex;gap:.75rem;align-items:flex-start}
-.step-num{width:32px;height:32px;border-radius:50%;background:var(--azul);color:white;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.step-text{font-size:16px;font-weight:600;color:var(--text);line-height:1.5}
+.step{background:var(--verde-light);border-radius:12px;padding:1rem 1.2rem;margin-bottom:.5rem;display:flex;gap:.75rem;align-items:flex-start}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--verde);color:#FBF6EC;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-text{font-size:16px;font-weight:400;color:var(--text);line-height:1.5}
 
-/* FUTBOL */
-.futbol-card{background:white;border-radius:16px;padding:1.2rem 1.4rem;margin-bottom:.75rem;box-shadow:var(--shadow)}
+/* FUTBOL (latente, fuera del menu principal) */
+.futbol-card{background:var(--card);border:1px solid var(--linea);border-radius:16px;padding:1.1rem 1.3rem;margin-bottom:.75rem;box-shadow:var(--shadow)}
 .partido-teams{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
-.partido-team{font-size:16px;font-weight:800;color:var(--text);text-align:center;flex:1}
-.partido-vs{font-size:13px;font-weight:700;color:var(--text3);padding:0 .5rem}
-.partido-score{font-size:28px;font-weight:900;color:var(--azul);text-align:center;padding:0 .5rem}
-.partido-info{font-size:13px;color:var(--text3);font-weight:600;text-align:center}
-.liga-tag{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:10px;display:inline-block;margin-bottom:.5rem}
-.liga-cl{background:#dce8ff;color:var(--azul)}
-.liga-int{background:#d4f0e4;color:var(--verde)}
+.partido-team{font-size:16px;font-weight:600;color:var(--text);text-align:center;flex:1}
+.partido-vs{font-size:13px;font-weight:500;color:var(--text3);padding:0 .5rem}
+.partido-score{font-size:28px;font-weight:600;color:var(--verde);text-align:center;padding:0 .5rem}
+.partido-info{font-size:13px;color:var(--text3);font-weight:400;text-align:center}
+.liga-tag{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:10px;display:inline-block;margin-bottom:.5rem}
+.liga-cl{background:var(--verde-light);color:var(--verde)}
+.liga-int{background:var(--oro-light);color:var(--oro-d)}
 
-/* EMERGENCIAS */
-.emerg-card{background:var(--rojo);border-radius:20px;padding:1.4rem;margin-bottom:.75rem;display:flex;align-items:center;gap:1rem;cursor:pointer;box-shadow:0 4px 16px rgba(192,57,43,.3);transition:all .2s}
-.emerg-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(192,57,43,.4)}
-.emerg-icon{font-size:40px}
-.emerg-name{font-size:20px;font-weight:900;color:white}
-.emerg-num{font-size:28px;font-weight:900;color:rgba(255,255,255,.9);font-variant-numeric:tabular-nums}
+/* AYUDA / EMERGENCIAS */
+.emerg-card{background:var(--card);border:1px solid var(--linea);border-left:5px solid var(--ayuda);border-radius:16px;padding:1.2rem 1.3rem;margin-bottom:.75rem;display:flex;align-items:center;gap:1rem;cursor:pointer;box-shadow:var(--shadow);transition:all .2s}
+.emerg-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-big)}
+.emerg-icon{font-size:34px}
+.emerg-name{font-size:19px;font-weight:600;color:var(--text)}
+.emerg-num{font-size:26px;font-weight:600;color:var(--ayuda);font-variant-numeric:tabular-nums}
 
-/* CLIMA */
-.clima-card{background:linear-gradient(135deg,#2980b9,#6dd5fa);border-radius:20px;padding:1.4rem;margin-bottom:1.2rem;color:white;display:flex;align-items:center;gap:1rem;box-shadow:var(--shadow-big)}
-.clima-icon{font-size:52px}
-.clima-temp{font-size:48px;font-weight:900;line-height:1}
-.clima-desc{font-size:18px;font-weight:700;opacity:.9}
-.clima-city{font-size:14px;opacity:.7;font-weight:600}
+/* CLIMA (latente, fuera del menu principal) */
+.clima-card{background:var(--verde-light);border-radius:20px;padding:1.4rem;margin-bottom:1.2rem;color:var(--text);display:flex;align-items:center;gap:1rem;box-shadow:var(--shadow)}
+.clima-icon{font-size:48px}
+.clima-temp{font-size:46px;font-weight:600;line-height:1}
+.clima-desc{font-size:18px;font-weight:500}
+.clima-city{font-size:14px;color:var(--text3);font-weight:500}
+
+/* PRONTO */
+.pronto-box{background:var(--card);border:1px solid var(--linea);border-radius:20px;padding:2.2rem 1.6rem;text-align:center;box-shadow:var(--shadow)}
+.pronto-box .ic{width:48px;height:48px;color:var(--oro);margin:0 auto 1rem}
+.pronto-title{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--text);margin-bottom:.6rem}
+.pronto-text{font-size:17px;color:var(--text2);line-height:1.55}
 
 /* BOTTOM NAV */
-#bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:2px solid var(--azul-light);display:flex;box-shadow:0 -4px 16px rgba(36,81,179,.1);z-index:100}
-.bnav-btn{flex:1;padding:.75rem .5rem;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:transparent;cursor:pointer;transition:all .2s}
-.bnav-btn.active .bnav-icon{color:var(--azul)}
-.bnav-btn.active .bnav-label{color:var(--azul);font-weight:800}
-.bnav-icon{font-size:26px;color:var(--text3)}
-.bnav-label{font-size:11px;font-weight:700;color:var(--text3)}
+#bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--linea);display:flex;box-shadow:0 -2px 12px rgba(42,38,32,.06);z-index:100}
+.bnav-btn{flex:1;padding:.7rem .5rem .8rem;display:flex;flex-direction:column;align-items:center;gap:4px;border:none;background:transparent;cursor:pointer;transition:all .2s}
+.bnav-btn .ic{width:26px;height:26px;color:var(--text3)}
+.bnav-btn.active .ic{color:var(--verde)}
+.bnav-btn.active .bnav-label{color:var(--verde);font-weight:600}
+.bnav-label{font-size:12px;font-weight:500;color:var(--text3)}
 
 /* VOICE STATUS */
-#voice-status{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(36,81,179,.95);color:white;padding:.75rem 1.8rem;border-radius:30px;font-size:15px;font-weight:700;display:none;z-index:200;box-shadow:0 4px 20px rgba(36,81,179,.4);white-space:nowrap}
-#voice-status.show{display:block}
+#voice-status{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--verde);color:#FBF6EC;padding:.7rem 1.6rem;border-radius:30px;font-size:15px;font-weight:600;display:none;z-index:200;box-shadow:var(--shadow-big);white-space:nowrap;align-items:center;gap:8px}
+#voice-status.show{display:flex}
+#voice-status .ic{width:18px;height:18px}
+
+/* AYUDA RAPIDA + CONFIG FAMILIAR (Parche 2) */
+.notice-box{background:var(--oro-light);border:1px solid #E8D9B0;border-radius:14px;padding:1rem 1.15rem;margin-bottom:1.2rem;font-size:15px;line-height:1.5;color:var(--text2)}
+.notice-box strong{color:var(--text);font-weight:600}
+.loc-toggle{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--linea);border-radius:14px;padding:1rem 1.1rem;margin-bottom:1.3rem;cursor:pointer}
+.loc-toggle>.ic{width:24px;height:24px;color:var(--oro);flex-shrink:0}
+.loc-toggle-text{flex:1;font-size:16px;font-weight:500;color:var(--text);line-height:1.3}
+.loc-check{width:30px;height:30px;border-radius:8px;border:2px solid var(--linea);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:transparent}
+.loc-check .ic{width:20px;height:20px}
+.loc-toggle.on .loc-check{background:var(--verde);border-color:var(--verde);color:#FBF6EC}
+.contact-card{background:var(--card);border:1px solid var(--linea);border-radius:18px;padding:1.2rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.contact-head{display:flex;align-items:center;gap:12px;margin-bottom:.9rem}
+.contact-avatar{width:48px;height:48px;border-radius:50%;background:var(--verde-light);color:var(--verde);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.contact-avatar .ic{width:26px;height:26px}
+.contact-name{font-size:19px;font-weight:600;color:var(--text);line-height:1.2}
+.contact-rel{font-size:14px;color:var(--text3);font-weight:500}
+.action-row{display:flex;flex-direction:column;gap:10px}
+.action-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:none;border-radius:14px;padding:15px;font-family:var(--sans);font-size:18px;font-weight:600;cursor:pointer}
+.action-btn .ic{width:24px;height:24px}
+.action-call{background:var(--verde);color:#FBF6EC}
+.action-wa{background:var(--card);color:var(--verde);border:1.5px solid var(--verde)}
+.action-emergency{background:var(--ayuda);color:#FFF6F1}
+.action-btn:active{transform:scale(.99)}
+.empty-contacts{background:var(--card);border:1.5px dashed var(--linea);border-radius:16px;padding:1.5rem;text-align:center;margin-bottom:1rem}
+.empty-contacts p{font-size:16px;color:var(--text2);margin-bottom:1rem;line-height:1.5}
+.emerg-block{margin-top:1.6rem;padding-top:1.3rem;border-top:1px solid var(--linea)}
+.emerg-block-title{font-family:var(--serif);font-size:21px;font-weight:600;color:var(--text);margin-bottom:.9rem}
+.emerg-line{display:flex;align-items:center;justify-content:space-between;text-decoration:none;background:var(--card);border:1px solid var(--linea);border-radius:12px;padding:.9rem 1.1rem;margin-bottom:8px}
+.emerg-line .el-name{font-size:16px;font-weight:500;color:var(--text)}
+.emerg-line .el-num{font-size:20px;font-weight:600;color:var(--ayuda);font-variant-numeric:tabular-nums}
+.config-link{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:transparent;border:1.5px solid var(--linea);border-radius:14px;padding:1rem;font-size:16px;font-weight:500;color:var(--text2);cursor:pointer;margin-top:1.3rem}
+.config-link .ic{width:20px;height:20px;color:var(--text3)}
+.config-group{background:var(--card);border:1px solid var(--linea);border-radius:18px;padding:1.2rem;margin-bottom:1.1rem;box-shadow:var(--shadow)}
+.config-group-title{font-size:17px;font-weight:600;color:var(--verde);margin-bottom:.9rem}
+.config-field{margin-bottom:1rem}
+.config-field:last-child{margin-bottom:0}
+.config-label{display:block;font-size:14px;font-weight:500;color:var(--text2);margin-bottom:.35rem}
+.config-input{width:100%;background:var(--bg);border:1.5px solid var(--linea);border-radius:12px;padding:13px 14px;font-size:17px;font-family:var(--sans);color:var(--text);outline:none}
+.config-input:focus{border-color:var(--verde);background:var(--card)}
+.config-hint{font-size:13px;color:var(--text3);margin-top:.35rem;line-height:1.4}
+.config-save{width:100%;background:var(--verde);color:#FBF6EC;border:none;border-radius:14px;padding:16px;font-size:18px;font-weight:600;cursor:pointer;margin-top:.3rem}
+.config-saved{text-align:center;color:var(--verde);font-weight:600;font-size:15px;margin-top:.8rem;opacity:0;transition:opacity .3s}
+.config-saved.show{opacity:1}
 </style>
 </head>
 <body>
 
 <div id="header">
-  <div class="header-logo">HABIL<span>/IA</span></div>
+  <div class="header-logo">Mi Acompañante<span>HABIL/IA</span></div>
   <div class="header-time" id="clock">--:--</div>
-  <button class="mic-btn-header" id="mic-header" onclick="toggleVoice()" title="Hablar">🎙️</button>
+  <button class="mic-btn-header" id="mic-header" onclick="toggleVoice()" title="Hablar" aria-label="Hablar"><svg class="ic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="21"/></svg></button>
 </div>
 
 <div id="main">
@@ -166,68 +230,64 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <!-- HOME -->
   <div id="screen-home" class="screen active">
     <div class="greeting-card">
-      <div class="greeting-name" id="greeting-name">¡Buenos días! 👋</div>
-      <div class="greeting-sub">¿En qué te ayudo hoy?</div>
+      <div class="greeting-name" id="greeting-name">Buenas tardes</div>
+      <div class="greeting-sub">Estoy aquí para acompañarlo.</div>
       <div class="greeting-date" id="greeting-date"></div>
     </div>
 
+    <button class="help-btn" onclick="showScreen('emergencias')"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.4"/><line x1="5.6" y1="5.6" x2="9.6" y2="9.6"/><line x1="14.4" y1="14.4" x2="18.4" y2="18.4"/><line x1="18.4" y1="5.6" x2="14.4" y2="9.6"/><line x1="5.6" y1="18.4" x2="9.6" y2="14.4"/></svg>Necesito ayuda</button>
+
     <div class="menu-grid">
-      <button class="menu-btn azul" onclick="showScreen('chat')">
-        <span class="btn-icon">🤖</span>
-        <span class="btn-label">Hablar con mi Asistente</span>
-        <span class="btn-sub">Pregunta lo que quieras</span>
+      <button class="menu-btn" onclick="showScreen('chat')">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"/></svg>
+        <span class="btn-label">Conversar</span>
+        <span class="btn-sub">con mi acompañante</span>
       </button>
-      <button class="menu-btn verde" onclick="showScreen('agenda')">
-        <span class="btn-icon">📅</span>
-        <span class="btn-label">Mi Agenda del Día</span>
+      <button class="menu-btn" onclick="showScreen('agenda')">
+        <svg class="ic" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><line x1="3.5" y1="9" x2="20.5" y2="9"/><line x1="8" y1="2.5" x2="8" y2="6"/><line x1="16" y1="2.5" x2="16" y2="6"/></svg>
+        <span class="btn-label">Mi agenda</span>
         <span class="btn-sub">Recordatorios</span>
       </button>
-      <button class="menu-btn gold" onclick="showScreen('tutoriales')">
-        <span class="btn-icon">📱</span>
-        <span class="btn-label">Aprender a usar el Celular</span>
-        <span class="btn-sub">Paso a paso</span>
+      <button class="menu-btn oro" onclick="goPronto('Mis medicamentos')">
+        <span class="badge-soon">Pronto</span>
+        <svg class="ic" viewBox="0 0 24 24"><rect x="2.5" y="8.5" width="19" height="7" rx="3.5"/><line x1="12" y1="8.6" x2="12" y2="15.4"/></svg>
+        <span class="btn-label">Mis medicamentos</span>
+        <span class="btn-sub">Próximamente</span>
       </button>
-      <button class="menu-btn rojo" onclick="showScreen('futbol')">
-        <span class="btn-icon">⚽</span>
-        <span class="btn-label">Fútbol</span>
-        <span class="btn-sub">Partidos y noticias</span>
-      </button>
-      <button class="menu-btn naranja" onclick="showScreen('emergencias')">
-        <span class="btn-icon">🚨</span>
-        <span class="btn-label">Números de Emergencia</span>
-        <span class="btn-sub">Siempre disponibles</span>
-      </button>
-      <button class="menu-btn azul" onclick="showScreen('clima')">
-        <span class="btn-icon">🌤️</span>
-        <span class="btn-label">El Tiempo de Hoy</span>
-        <span class="btn-sub">¿Qué me pongo?</span>
+      <button class="menu-btn oro" onclick="goPronto('Mis historias')">
+        <span class="badge-soon">Pronto</span>
+        <svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h6v16H6a2 2 0 0 0-2 2z"/><path d="M20 5a2 2 0 0 0-2-2h-6v16h6a2 2 0 0 1 2 2z"/></svg>
+        <span class="btn-label">Mis historias</span>
+        <span class="btn-sub">Próximamente</span>
       </button>
     </div>
+
+    <button class="secondary-link" onclick="showScreen('tutoriales')"><svg class="ic" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><line x1="10.5" y1="18.5" x2="13.5" y2="18.5"/></svg>Aprender a usar el celular</button>
   </div>
 
   <!-- CHAT -->
   <div id="screen-chat" class="screen">
-    <button class="back-btn" onclick="showScreen('home')">← Volver al inicio</button>
-    <div class="section-title">🤖 Mi Asistente</div>
+    <button class="back-btn" onclick="showScreen('home')"><svg class="ic" viewBox="0 0 24 24"><line x1="20" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Volver al inicio</button>
+    <div class="section-title"><svg class="ic" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"/></svg>Conversar</div>
     <div id="chat-messages">
-      <div class="msg msg-ai">¡Hola! Soy tu asistente. Puedo contarte historias de vaqueros, explicarte cómo usar el celular, hablar de fútbol o ayudarte con lo que necesites. ¿Por dónde empezamos? 😊</div>
+      <div class="msg msg-ai">Hola, soy su acompañante. Puedo conversar con usted, escucharlo y ayudarle con lo que necesite. ¿De qué le gustaría hablar?</div>
     </div>
     <div class="chat-input-wrap">
-      <button class="mic-btn-chat" id="mic-chat" onclick="toggleVoiceChat()">🎙️</button>
-      <input id="chat-input" placeholder="Escribe o usa el micrófono..." onkeydown="if(event.key==='Enter')sendChat()"/>
-      <button class="send-btn" onclick="sendChat()">→</button>
+      <button class="mic-btn-chat" id="mic-chat" onclick="toggleVoiceChat()" aria-label="Hablar"><svg class="ic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="21"/></svg></button>
+      <input id="chat-input" placeholder="Escriba o use el micrófono..." onkeydown="if(event.key==='Enter')sendChat()"/>
+      <button class="send-btn" onclick="sendChat()" aria-label="Enviar"><svg class="ic" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
     </div>
-    <div class="voice-hint">🎙️ Toca el botón verde para hablar</div>
+    <div class="voice-hint">Toque el botón dorado para hablar</div>
   </div>
 
   <!-- AGENDA -->
   <div id="screen-agenda" class="screen">
-    <button class="back-btn" onclick="showScreen('home')">← Volver al inicio</button>
-    <div class="section-title">📅 Mi Agenda</div>
+    <button class="back-btn" onclick="showScreen('home')"><svg class="ic" viewBox="0 0 24 24"><line x1="20" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Volver al inicio</button>
+    <div class="section-title"><svg class="ic" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><line x1="3.5" y1="9" x2="20.5" y2="9"/><line x1="8" y1="2.5" x2="8" y2="6"/><line x1="16" y1="2.5" x2="16" y2="6"/></svg>Mi agenda</div>
     <div class="agenda-day" id="agenda-day"></div>
     <div id="reminders-list"></div>
     <div class="add-reminder">
-      <span style="font-size:24px">➕</span>
+      <svg class="ic" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       <input class="add-input" id="new-reminder" placeholder="Agregar recordatorio..."/>
       <input class="add-time" id="new-time" type="time"/>
       <button class="add-save" onclick="addReminder()">Guardar</button>
@@ -236,8 +296,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
   <!-- TUTORIALES -->
   <div id="screen-tutoriales" class="screen">
-    <button class="back-btn" onclick="showScreen('home')">← Volver al inicio</button>
-    <div class="section-title">📱 Aprender el Celular</div>
+    <button class="back-btn" onclick="showScreen('home')"><svg class="ic" viewBox="0 0 24 24"><line x1="20" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Volver al inicio</button>
+    <div class="section-title"><svg class="ic" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><line x1="10.5" y1="18.5" x2="13.5" y2="18.5"/></svg>Aprender el celular</div>
     <div id="tutorials-list"></div>
   </div>
 
@@ -248,12 +308,69 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div id="futbol-content"></div>
   </div>
 
-  <!-- EMERGENCIAS -->
+  <!-- EMERGENCIAS / AYUDA -->
+  <!-- AYUDA RAPIDA -->
   <div id="screen-emergencias" class="screen">
-    <button class="back-btn" onclick="showScreen('home')">← Volver al inicio</button>
-    <div class="section-title">🚨 Emergencias</div>
-    <p style="font-size:16px;color:var(--text2);font-weight:600;margin-bottom:1rem">Toca el número para llamar:</p>
-    <div id="emerg-list"></div>
+    <button class="back-btn" onclick="showScreen('home')"><svg class="ic" viewBox="0 0 24 24"><line x1="20" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Volver al inicio</button>
+    <div class="section-title"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.4"/><line x1="5.6" y1="5.6" x2="9.6" y2="9.6"/><line x1="14.4" y1="14.4" x2="18.4" y2="18.4"/><line x1="18.4" y1="5.6" x2="14.4" y2="9.6"/><line x1="5.6" y1="18.4" x2="9.6" y2="14.4"/></svg>Ayuda rápida</div>
+    <div class="notice-box"><strong>Esta app ayuda a pedir apoyo, pero no reemplaza las llamadas de emergencia ni el cuidado de una persona.</strong> Los mensajes de WhatsApp no se envían solos: usted debe tocar "Enviar".</div>
+    <div class="loc-toggle" id="loc-toggle" onclick="toggleUbicacion()"><svg class="ic" viewBox="0 0 24 24"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><div class="loc-toggle-text">Incluir mi ubicación en el aviso de WhatsApp</div><div class="loc-check"><svg class="ic" viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></div></div>
+    <div id="ayuda-contacts"></div>
+    <div class="emerg-block">
+      <div class="emerg-block-title">Emergencias</div>
+      <a href="tel:131" class="action-btn action-emergency" style="text-decoration:none;margin-bottom:10px"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.4"/><line x1="5.6" y1="5.6" x2="9.6" y2="9.6"/><line x1="14.4" y1="14.4" x2="18.4" y2="18.4"/><line x1="18.4" y1="5.6" x2="14.4" y2="9.6"/><line x1="5.6" y1="18.4" x2="9.6" y2="14.4"/></svg>Llamar a emergencias · SAMU 131</a>
+      <div id="emerg-list"></div>
+    </div>
+    <button class="config-link" onclick="showScreen('config')"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Configurar contactos de la familia</button>
+  </div>
+
+  <!-- CONFIGURACION FAMILIAR -->
+  <div id="screen-config" class="screen">
+    <button class="back-btn" onclick="showScreen('emergencias')"><svg class="ic" viewBox="0 0 24 24"><line x1="20" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Volver a Ayuda</button>
+    <div class="section-title"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Configuración familiar</div>
+    <div class="notice-box">Esta sección es para un familiar. Los datos se guardan <strong>solo en este teléfono</strong> y no se envían a ningún servidor. Si se borran los datos del teléfono, se perderán.</div>
+
+    <div class="config-group">
+      <div class="config-group-title">La persona que usa la app</div>
+      <div class="config-field"><label class="config-label">Nombre</label><input class="config-input" id="cf-usuario" placeholder="Ej: Manuel"></div>
+    </div>
+
+    <div class="config-group">
+      <div class="config-group-title">Familiar principal</div>
+      <div class="config-field"><label class="config-label">Nombre</label><input class="config-input" id="cf-principal-nombre" placeholder="Ej: María"></div>
+      <div class="config-field"><label class="config-label">Relación</label><input class="config-input" id="cf-principal-relacion" placeholder="Ej: Hija"></div>
+      <div class="config-field"><label class="config-label">Teléfono</label><input class="config-input" id="cf-principal-telefono" type="tel" placeholder="Para llamar"></div>
+      <div class="config-field"><label class="config-label">WhatsApp (opcional)</label><input class="config-input" id="cf-principal-whatsapp" type="tel" placeholder="Con código de país"><div class="config-hint">Escriba el número con código de país. En Chile, por ejemplo: 56912345678.</div></div>
+    </div>
+
+    <div class="config-group">
+      <div class="config-group-title">Familiar secundario</div>
+      <div class="config-field"><label class="config-label">Nombre</label><input class="config-input" id="cf-secundario-nombre" placeholder="Ej: Pedro"></div>
+      <div class="config-field"><label class="config-label">Relación</label><input class="config-input" id="cf-secundario-relacion" placeholder="Ej: Hijo"></div>
+      <div class="config-field"><label class="config-label">Teléfono</label><input class="config-input" id="cf-secundario-telefono" type="tel" placeholder="Para llamar"></div>
+      <div class="config-field"><label class="config-label">WhatsApp (opcional)</label><input class="config-input" id="cf-secundario-whatsapp" type="tel" placeholder="Con código de país"><div class="config-hint">En Chile, por ejemplo: 56912345678.</div></div>
+    </div>
+
+    <div class="config-group">
+      <div class="config-group-title">Vecino o cuidador</div>
+      <div class="config-field"><label class="config-label">Nombre</label><input class="config-input" id="cf-cuidador-nombre" placeholder="Ej: Don José"></div>
+      <div class="config-field"><label class="config-label">Relación</label><input class="config-input" id="cf-cuidador-relacion" placeholder="Ej: Vecino"></div>
+      <div class="config-field"><label class="config-label">Teléfono</label><input class="config-input" id="cf-cuidador-telefono" type="tel" placeholder="Para llamar"></div>
+      <div class="config-field"><label class="config-label">WhatsApp (opcional)</label><input class="config-input" id="cf-cuidador-whatsapp" type="tel" placeholder="Con código de país"><div class="config-hint">En Chile, por ejemplo: 56912345678.</div></div>
+    </div>
+
+    <button class="config-save" onclick="guardarContactos()">Guardar contactos</button>
+    <div class="config-saved" id="config-saved">Contactos guardados</div>
+  </div>
+
+  <!-- PRONTO (marcador honesto, secciones en preparación) -->
+  <div id="screen-pronto" class="screen">
+    <button class="back-btn" onclick="showScreen('home')"><svg class="ic" viewBox="0 0 24 24"><line x1="20" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Volver al inicio</button>
+    <div class="pronto-box">
+      <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
+      <div class="pronto-title" id="pronto-title">Muy pronto</div>
+      <div class="pronto-text">Estamos preparando esta sección con calma para que quede clara y útil. Muy pronto va a poder usarla.</div>
+    </div>
   </div>
 
   <!-- CLIMA -->
@@ -265,23 +382,20 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 </div>
 
-<div id="voice-status">🎙️ Escuchando...</div>
+<div id="voice-status"><svg class="ic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="21"/></svg>Escuchando...</div>
 
 <div id="bottom-nav">
   <button class="bnav-btn active" onclick="showScreen('home')" id="bnav-home">
-    <span class="bnav-icon">🏠</span><span class="bnav-label">Inicio</span>
+    <svg class="ic" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5"/></svg><span class="bnav-label">Inicio</span>
   </button>
   <button class="bnav-btn" onclick="showScreen('chat')" id="bnav-chat">
-    <span class="bnav-icon">🤖</span><span class="bnav-label">Asistente</span>
+    <svg class="ic" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"/></svg><span class="bnav-label">Conversar</span>
   </button>
   <button class="bnav-btn" onclick="showScreen('agenda')" id="bnav-agenda">
-    <span class="bnav-icon">📅</span><span class="bnav-label">Agenda</span>
-  </button>
-  <button class="bnav-btn" onclick="showScreen('futbol')" id="bnav-futbol">
-    <span class="bnav-icon">⚽</span><span class="bnav-label">Fútbol</span>
+    <svg class="ic" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><line x1="3.5" y1="9" x2="20.5" y2="9"/><line x1="8" y1="2.5" x2="8" y2="6"/><line x1="16" y1="2.5" x2="16" y2="6"/></svg><span class="bnav-label">Agenda</span>
   </button>
   <button class="bnav-btn" onclick="showScreen('emergencias')" id="bnav-emergencias">
-    <span class="bnav-icon">🚨</span><span class="bnav-label">SOS</span>
+    <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.4"/><line x1="5.6" y1="5.6" x2="9.6" y2="9.6"/><line x1="14.4" y1="14.4" x2="18.4" y2="18.4"/><line x1="18.4" y1="5.6" x2="14.4" y2="9.6"/><line x1="5.6" y1="18.4" x2="9.6" y2="14.4"/></svg><span class="bnav-label">Ayuda</span>
   </button>
 </div>
 
@@ -351,7 +465,7 @@ if(reminders.length === 0){
   reminders = [
     {id:1,time:'08:00',text:'Tomar los remedios del desayuno 💊',type:'meds',done:false},
     {id:2,time:'13:00',text:'Almuerzo — recordar tomar agua 💧',type:'normal',done:false},
-    {id:3,time:'20:30',text:'Partido de La U esta noche ⚽',type:'futbol',done:false},
+    {id:3,time:'20:30',text:'Llamar a la familia o enviar un saludo',type:'normal',done:false},
     {id:4,time:'21:00',text:'Tomar remedios de la noche 💊',type:'meds',done:false},
   ];
   saveReminders();
@@ -377,13 +491,21 @@ const FUTBOL_DATA = {
 };
 
 const EMERGENCIAS = [
-  {icon:'🚒',nombre:'Bomberos',numero:'132'},
-  {icon:'🚑',nombre:'Ambulancia SAMU',numero:'131'},
-  {icon:'👮',nombre:'Carabineros',numero:'133'},
-  {icon:'🏥',nombre:'Urgencia más cercana',numero:'600 360 7777'},
-  {icon:'⚡',nombre:'Emergencia Electricidad',numero:'600 360 9000'},
-  {icon:'💧',nombre:'Emergencia Agua',numero:'800 200 222'},
+  {nombre:'Bomberos',numero:'132'},
+  {nombre:'Carabineros',numero:'133'},
+  {nombre:'Salud Responde',numero:'600 360 7777'},
 ];
+
+// Contactos de la familia (Parche 2) — se guardan SOLO en este dispositivo
+const CONTACTS_KEY = 'miacompanante-contactos';
+const CONTACTS_DEFAULT = {
+  usuario:{nombre:''},
+  principal:{nombre:'',relacion:'',telefono:'',whatsapp:''},
+  secundario:{nombre:'',relacion:'',telefono:'',whatsapp:''},
+  cuidador:{nombre:'',relacion:'',telefono:'',whatsapp:''}
+};
+let contactos = Object.assign({}, CONTACTS_DEFAULT, JSON.parse(localStorage.getItem(CONTACTS_KEY) || '{}'));
+let incluirUbicacion = false;
 
 // ══════════════════════════════════════
 // CLOCK & GREETING
@@ -395,7 +517,7 @@ function updateClock(){
   document.getElementById('clock').textContent = h+':'+m;
   const hour = now.getHours();
   const greet = hour<12?'¡Buenos días!':hour<19?'¡Buenas tardes!':'¡Buenas noches!';
-  document.getElementById('greeting-name').textContent = greet+' 👋';
+  document.getElementById('greeting-name').textContent = greet;
   const days = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
   const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
   const dateStr = `Hoy es ${days[now.getDay()]} ${now.getDate()} de ${months[now.getMonth()]} de ${now.getFullYear()}`;
@@ -418,8 +540,14 @@ function showScreen(name){
   if(name==='agenda') renderReminders();
   if(name==='tutoriales') renderTutorials();
   if(name==='futbol') renderFutbol();
-  if(name==='emergencias') renderEmergencias();
+  if(name==='emergencias') renderAyuda();
+  if(name==='config') renderConfig();
   if(name==='clima') renderClima();
+}
+
+function goPronto(label){
+  document.getElementById('pronto-title').textContent = label;
+  showScreen('pronto');
 }
 
 // ══════════════════════════════════════
@@ -474,7 +602,7 @@ function renderTutorials(){
             <div class="step-num">${si+1}</div>
             <div class="step-text">${s}</div>
           </div>`).join('')}
-        <button onclick="readTutorial(${i},event)" style="width:100%;padding:.85rem;border-radius:12px;background:var(--azul);color:white;border:none;font-size:16px;font-weight:800;cursor:pointer;margin-top:.5rem">🔊 Leerme los pasos en voz alta</button>
+        <button onclick="readTutorial(${i},event)" style="width:100%;padding:.85rem;border-radius:12px;background:var(--verde);color:white;border:none;font-size:16px;font-weight:800;cursor:pointer;margin-top:.5rem">🔊 Leerme los pasos en voz alta</button>
       </div>
     </div>`).join('');
 }
@@ -496,7 +624,7 @@ function readTutorial(i, e){
 // ══════════════════════════════════════
 function renderFutbol(){
   let html = '<div style="background:#FFF6E5;border:2px solid #E0A800;border-radius:14px;padding:.9rem 1.1rem;margin-bottom:1rem;font-size:15px;font-weight:700;color:#5a4a1a">⚠️ Contenido de ejemplo. Estos partidos no se actualizan solos y pueden no ser los de hoy.</div>';
-  html += '<div style="font-size:18px;font-weight:800;color:var(--azul);margin-bottom:.75rem">🇨🇱 Campeonato Nacional</div>';
+  html += '<div style="font-size:18px;font-weight:800;color:var(--verde);margin-bottom:.75rem">🇨🇱 Campeonato Nacional</div>';
   FUTBOL_DATA.campeonato.forEach(p=>{
     html += `<div class="futbol-card">
       <span class="liga-tag liga-cl">Primera División Chile</span>
@@ -530,15 +658,113 @@ function renderFutbol(){
 // ══════════════════════════════════════
 // EMERGENCIAS
 // ══════════════════════════════════════
-function renderEmergencias(){
-  document.getElementById('emerg-list').innerHTML = EMERGENCIAS.map(e=>`
-    <a href="tel:${e.numero}" class="emerg-card" style="text-decoration:none">
-      <div class="emerg-icon">${e.icon}</div>
-      <div>
-        <div class="emerg-name">${e.nombre}</div>
-        <div class="emerg-num">${e.numero}</div>
-      </div>
-    </a>`).join('');
+const IC = {
+  phone:`<svg class="ic" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6A2 2 0 0 1 22 16.9z"/></svg>`,
+  wa:`<svg class="ic" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"/></svg>`,
+  user:`<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0 1 16 0"/></svg>`,
+  edit:`<svg class="ic" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>`
+};
+
+const ROLES = [['principal','Familiar principal'],['secundario','Familiar secundario'],['cuidador','Vecino o cuidador']];
+
+function renderAyuda(){
+  let cards = ROLES.map(function(pair){
+    var r=pair[0], def=pair[1], c=contactos[r]||{};
+    if(!c.nombre && !c.telefono && !c.whatsapp) return '';
+    var titulo = c.nombre || def;
+    var rel = c.relacion || def;
+    var acts='';
+    if(c.telefono) acts += '<a href="tel:'+c.telefono+'" class="action-btn action-call" style="text-decoration:none">'+IC.phone+'Llamar a '+(c.nombre||rel)+'</a>';
+    if(c.whatsapp) acts += '<button class="action-btn action-wa" onclick="avisarWhatsApp(\''+r+'\')">'+IC.wa+'Avisar por WhatsApp</button>';
+    if(!acts) acts = '<div class="contact-rel">Sin teléfono configurado</div>';
+    return '<div class="contact-card"><div class="contact-head"><div class="contact-avatar">'+IC.user+'</div><div><div class="contact-name">'+titulo+'</div><div class="contact-rel">'+rel+'</div></div></div><div class="action-row">'+acts+'</div></div>';
+  }).join('');
+  if(!cards.trim()){
+    cards = '<div class="empty-contacts"><p>Todavía no hay contactos de la familia configurados. Pídale a un familiar que los agregue.</p><button class="config-link" onclick="showScreen(\'config\')">'+IC.edit+'Configurar contactos</button></div>';
+  }
+  document.getElementById('ayuda-contacts').innerHTML = cards;
+  document.getElementById('emerg-list').innerHTML = EMERGENCIAS.map(function(e){
+    return '<a href="tel:'+e.numero.replace(/\s/g,'')+'" class="emerg-line"><span class="el-name">'+e.nombre+'</span><span class="el-num">'+e.numero+'</span></a>';
+  }).join('');
+}
+
+function renderConfig(){
+  document.getElementById('cf-usuario').value = (contactos.usuario&&contactos.usuario.nombre)||'';
+  ROLES.forEach(function(pair){
+    var r=pair[0], c=contactos[r]||{};
+    document.getElementById('cf-'+r+'-nombre').value = c.nombre||'';
+    document.getElementById('cf-'+r+'-relacion').value = c.relacion||'';
+    document.getElementById('cf-'+r+'-telefono').value = c.telefono||'';
+    document.getElementById('cf-'+r+'-whatsapp').value = c.whatsapp||'';
+  });
+}
+
+function cfVal(id){ var el=document.getElementById(id); return el?(el.value||'').trim():''; }
+
+function guardarContactos(){
+  contactos.usuario = {nombre: cfVal('cf-usuario')};
+  ROLES.forEach(function(pair){
+    var r=pair[0];
+    contactos[r] = {
+      nombre: cfVal('cf-'+r+'-nombre'),
+      relacion: cfVal('cf-'+r+'-relacion'),
+      telefono: cfVal('cf-'+r+'-telefono'),
+      whatsapp: cfVal('cf-'+r+'-whatsapp')
+    };
+  });
+  localStorage.setItem(CONTACTS_KEY, JSON.stringify(contactos));
+  var s=document.getElementById('config-saved');
+  s.classList.add('show');
+  setTimeout(function(){s.classList.remove('show');}, 2500);
+  renderAyuda();
+}
+
+function toggleUbicacion(){
+  incluirUbicacion = !incluirUbicacion;
+  document.getElementById('loc-toggle').classList.toggle('on', incluirUbicacion);
+}
+
+function sanitizeWa(n){
+  var d = (''+n).replace(/[^0-9]/g,'');
+  if(d.length===9 && d.charAt(0)==='9') d = '56'+d; // celular chileno sin código de país
+  return d;
+}
+
+function buildMensaje(c){
+  var hola = c.nombre ? ('Hola '+c.nombre+'. ') : 'Hola. ';
+  var yo = (contactos.usuario && contactos.usuario.nombre) ? ('Soy '+contactos.usuario.nombre+'. ') : '';
+  return hola + yo + 'Necesito un poco de ayuda. ¿Me puede llamar o pasar a verme cuando pueda? Muchas gracias.';
+}
+
+function abrirWa(num, text){
+  window.location.href = 'https://wa.me/'+num+'?text='+encodeURIComponent(text);
+}
+
+function avisarWhatsApp(role){
+  var c = contactos[role];
+  if(!c || !c.whatsapp){ alert('Este contacto no tiene WhatsApp configurado.'); return; }
+  var num = sanitizeWa(c.whatsapp);
+  var base = buildMensaje(c);
+  if(incluirUbicacion){
+    if(!navigator.geolocation){
+      alert('Este teléfono no permite compartir la ubicación. Enviaremos el mensaje sin ella.');
+      abrirWa(num, base);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      function(pos){
+        var loc = ' Mi ubicación: https://maps.google.com/?q='+pos.coords.latitude.toFixed(5)+','+pos.coords.longitude.toFixed(5);
+        abrirWa(num, base+loc);
+      },
+      function(){
+        alert('No pudimos obtener su ubicación. Enviaremos el mensaje sin ella.');
+        abrirWa(num, base);
+      },
+      {timeout:8000, maximumAge:60000}
+    );
+  } else {
+    abrirWa(num, base);
+  }
 }
 
 // ══════════════════════════════════════
@@ -559,28 +785,26 @@ function renderClima(){
 let chatHistory = [];
 let chatLoading = false;
 
-const SYSTEM = `Eres un asistente amable y paciente para adultos mayores en Chile. Tu nombre es "El Asistente". 
+const SYSTEM = `Eres "Mi Acompañante", un acompañante cálido y paciente para una persona mayor en Chile. No eres un asistente virtual ni un robot: eres una compañía amable, como un nieto cariñoso que tiene todo el tiempo del mundo.
 
-PERSONALIDAD: Eres como un nieto cariñoso que tiene mucha paciencia. Nunca te apuras. Nunca dices que algo es difícil. Todo lo explicas con calma y cariño.
+PERSONALIDAD: Nunca te apuras. Nunca dices que algo es difícil. Escuchas con calma y cariño, y haces sentir a la persona acompañada y tranquila.
 
-CÓMO HABLAS: 
+CÓMO HABLAS:
+- Trato de usted, siempre con respeto.
 - Frases cortas y claras. Nunca más de 4 oraciones seguidas.
-- Sin palabras técnicas. Si necesitas usar una, la explicas.
-- Siempre positivo y alentador.
-- Usas el "usted" con respeto.
-- Terminas con una pregunta simple o un ofrecimiento de ayuda.
+- Español chileno, cálido y sencillo. Sin palabras técnicas; si usas una, la explicas.
+- Tono paciente y alentador. Terminas con una pregunta simple o un ofrecimiento de ayuda.
 
-LO QUE PUEDES HACER:
-- Contar historias de vaqueros del viejo oeste (las inventas con detalle y emoción)
-- Explicar cómo usar el celular, pagar con tarjeta, hacer transferencias
-- Hablar de fútbol chileno, La U, campeonato nacional
-- Explicar el cambio del sistema financiero (ISO 20022) de forma muy simple, sin alarmar
-- Poner recordatorios y agenda
-- Dar consejos de salud simples
-- Hablar del clima
-- Recordar cómo hacer videollamadas
+EN QUÉ ACOMPAÑAS:
+- Conversar y hacer compañía: escuchar, charlar, preguntar cómo se siente.
+- Ayudar a usar el celular paso a paso (llamadas, WhatsApp, videollamadas, pagos).
+- Apoyar con la agenda y recordatorios simples del día.
+- Acompañar cuando necesita ayuda, recordándole con calma que puede llamar a su familia o a emergencias.
+- Si la persona lo pide, le puedes contar una historia o conversar sobre lo que le gusta. Solo si ella lo pide.
 
-IMPORTANTE: Responde SIEMPRE en español chileno. Nunca uses tecnicismos. Si alguien parece confundido, ofrece explicar de otra manera más simple.`;
+CUIDADO: No das diagnósticos médicos ni indicas medicamentos ni dosis. Si la persona menciona dolor fuerte, mareo, confusión, falta de aire o una caída, con cariño le sugieres avisar a un familiar o llamar a emergencias.
+
+IMPORTANTE: Responde SIEMPRE en español chileno, con calma y cariño. Si la persona parece confundida, ofrece explicarlo de otra manera más simple.`;
 
 
 async function sendChat(){
@@ -729,7 +953,8 @@ function startListening(){
 }
 
 window.speechSynthesis && window.speechSynthesis.getVoices();
-setTimeout(()=>{speak('¡Hola! Bienvenido a su asistente. Toque el micrófono verde para hablar conmigo.');}, 1000);
+// Bienvenida por voz automática desactivada: la app no habla sola al abrir.
+// La voz se usa solo cuando tiene sentido (respuesta del chat, micrófono).
 </script>
 </body>
 </html>
