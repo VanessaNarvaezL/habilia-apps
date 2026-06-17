@@ -354,11 +354,11 @@ let completed=new Set(), totalXP=0;
 let activeModule=null, activeLesson=null;
 let curLessonTab='teoria';
 let quizAnswers={}, quizDone=false;
-let chatMessages=[{role:'assistant',content:'Hola, soy tu tutor especializado en criptomonedas e ISO 20022. Puedo explicarte blockchain, DeFi, por qué XRP y XLM son diferentes a Bitcoin, cómo funciona el estándar ISO 20022, o cualquier concepto del mundo cripto. ¿Por dónde empezamos?'}];
+let chatMessages=[{role:'assistant',content:'Hola, soy tu tutor de Cripto Academy. Puedo explicarte blockchain, DeFi, en qué se diferencian proyectos como XRP o XLM, o cómo funciona el estándar ISO 20022. Una aclaración antes de partir: esto es contenido educativo, no asesoría financiera — no te diré qué comprar ni qué va a subir. ¿Por dónde empezamos?'}];
 let chatLoading=false;
 let simCapital=10000, simPortfolio={}, simHistory=[];
 
-const SUGGESTIONS=['¿Por qué XRP es diferente al Bitcoin?','Explícame ISO 20022 como si tuviera 10 años','¿Qué criptos están adoptando los bancos?','¿Qué es DeFi y cómo funciona?','¿Es seguro invertir en cripto?'];
+const SUGGESTIONS=['¿Por qué XRP es diferente al Bitcoin?','Explícame ISO 20022 como si tuviera 10 años','¿Por qué se relaciona ISO 20022 con algunas criptos?','¿Qué es DeFi y cómo funciona?','¿Es seguro invertir en cripto?'];
 
 // ═══════════════════════════════════════════
 // ACADEMY
@@ -665,7 +665,22 @@ function runSimulation(){
 // ═══════════════════════════════════════════
 // TUTOR
 // ═══════════════════════════════════════════
-const TUTOR_SYS=`Eres un tutor experto en criptomonedas, blockchain y el estándar financiero ISO 20022. Tienes conocimiento profundo de: Bitcoin, Ethereum, XRP (Ripple), XLM (Stellar), HBAR (Hedera), ALGO (Algorand), DeFi, staking, tokenización de activos, y cómo el estándar ISO 20022 está transformando el sistema financiero global con Swift. Tu estilo es claro, pedagógico y apasionante. Explicas conceptos complejos de forma simple. Respondes siempre en español. NUNCA das consejos de inversión específicos ni predices precios. Enseñas conceptos, tecnología y lógica del ecosistema cripto.`;
+const TUTOR_SYS=`Eres un tutor educativo de criptomonedas, blockchain, DeFi y el estándar de mensajería financiera ISO 20022, dentro de Cripto Academy de HABIL/IA. Tu rol es enseñar y aclarar, nunca aconsejar inversiones.
+
+Tu estilo es claro, cercano, pedagógico y prudente. Explicas conceptos complejos de forma simple. Respondes siempre en español latinoamericano (no uses vocabulario de España). Si das ejemplos con dinero, usa dólares (USD).
+
+REGLAS QUE NUNCA ROMPES:
+- Explicas conceptos, tecnología y cómo funcionan las cosas. Eso es lo tuyo.
+- Siempre que hables de cualquier activo o estrategia, aclaras los riesgos.
+- Dejas claro, cuando corresponda, que esto es contenido educativo y NO es asesoría financiera.
+- NO recomiendas comprar ni vender ninguna criptomoneda. Nunca dices "compra XRP", "invierte en HBAR", "deberías comprar", ni nada equivalente.
+- NO predices precios ni dices que una cripto "va a subir", "va a bajar" o "es una oportunidad".
+- NO presentas ninguna cripto como ganadora segura ni como buena inversión.
+- NO tratas ISO 20022 como una garantía de adopción ni de revalorización. ISO 20022 es un estándar de mensajería entre instituciones financieras, no un sello que apruebe criptomonedas. La idea de "criptos ISO 20022 ganadoras" es una narrativa popular pero debatida.
+- Cualquier mención a proyectos concretos (XRP, XLM, HBAR, ALGO, IOTA, etc.) es solo educativa: aclaras que son afirmaciones a verificar con fuentes independientes, no hechos cerrados ni respaldos.
+- Si alguien te pide directamente qué comprar, qué va a subir, o qué le conviene, declinas con amabilidad, explicas por qué no puedes dar eso, y rediriges hacia el concepto educativo y hacia consultar a un profesional con licencia para decisiones personales.
+
+Si no sabes algo o el dato puede estar desactualizado, lo dices con honestidad en lugar de inventar.`;
 
 function renderChat(){
   const box=document.getElementById('chat-box');box.innerHTML='';
@@ -694,11 +709,21 @@ async function sendMsg(){
   chatMessages=[...chatMessages,{role:'user',content:txt}];inp.value='';chatLoading=true;
   document.getElementById('chat-send').disabled=true;renderChat();
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:TUTOR_SYS,messages:chatMessages.map(m=>({role:m.role,content:m.content}))})});
+    // El backend compartido (/api/chat) inyecta la API key desde las variables
+    // de entorno de Vercel y elige el modelo. El frontend NUNCA maneja la key.
+    const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({system:TUTOR_SYS,messages:chatMessages.map(m=>({role:m.role,content:m.content}))})});
     const data=await res.json();
-    chatMessages=[...chatMessages,{role:'assistant',content:data.content?.[0]?.text||'Error al obtener respuesta.'}];
-  }catch{chatMessages=[...chatMessages,{role:'assistant',content:'Error de conexión. Intenta de nuevo.'}];}
+    if(data && data.ok===false){
+      // El backend devolvió un error real y categorizado, con mensaje claro para el usuario.
+      chatMessages=[...chatMessages,{role:'assistant',content:data.userMessage||'No se pudo obtener una respuesta en este momento. Intenta de nuevo en un momento.'}];
+    }else{
+      const reply=data && data.content && data.content[0] && data.content[0].text;
+      chatMessages=[...chatMessages,{role:'assistant',content:reply||'No se pudo obtener una respuesta en este momento. Intenta de nuevo en un momento.'}];
+    }
+  }catch{
+    chatMessages=[...chatMessages,{role:'assistant',content:'Hubo un problema de conexión. Por favor intenta de nuevo.'}];
+  }
   chatLoading=false;document.getElementById('chat-send').disabled=false;renderChat();
 }
 
