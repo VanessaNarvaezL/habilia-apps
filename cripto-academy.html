@@ -157,12 +157,18 @@ button{font-family:'Syne',sans-serif}
 
 <div id="main">
 
+  <!-- DISCLAIMER GLOBAL -->
+  <div style="display:flex;align-items:flex-start;gap:10px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:10px;padding:11px 14px;margin-bottom:16px">
+    <span style="color:var(--gold);font-size:14px;line-height:1.4;flex-shrink:0">⚠</span>
+    <span style="font-size:11px;line-height:1.6;color:var(--muted)">Contenido educativo. No es asesoría financiera. Las criptomonedas son activos de alto riesgo y puedes perder parte o todo tu capital.</span>
+  </div>
+
   <!-- ACADEMY -->
   <div id="tab-academy">
     <div class="hero">
       <div class="hero-tag">NUEVA ECONOMÍA DIGITAL</div>
       <h2>El mundo cripto va<br>mucho más allá del Bitcoin.</h2>
-      <p>Aprende desde blockchain hasta el estándar ISO 20022 que está rediseñando el sistema financiero global — y por qué importa saber qué criptomonedas forman parte de él.</p>
+      <p>Aprende desde cómo funciona blockchain hasta qué es el estándar de mensajería financiera ISO 20022 — con una mirada educativa y crítica, sin promesas de rentabilidad.</p>
       <div class="hero-chips">
         <div class="chip g">⛓ Blockchain</div>
         <div class="chip b">🏦 ISO 20022</div>
@@ -210,7 +216,11 @@ button{font-family:'Syne',sans-serif}
   <!-- SIMULATOR -->
   <div id="tab-simulator" style="display:none">
     <div class="sec-title">Simulador de Portafolio</div>
-    <div class="sec-sub">Practica cómo distribuir tu inversión cripto con capital ficticio</div>
+    <div class="sec-sub">Practica cómo se distribuye una cartera de ejemplo usando capital ficticio</div>
+    <div style="display:flex;align-items:flex-start;gap:10px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:10px;padding:11px 14px;margin-bottom:16px">
+      <span style="color:var(--gold);font-size:14px;line-height:1.4;flex-shrink:0">⚠</span>
+      <span style="font-size:11px;line-height:1.6;color:var(--muted)">Este simulador usa capital ficticio y resultados ilustrativos. No predice precios ni representa el mercado real.</span>
+    </div>
     <div id="sim-content"></div>
   </div>
 
@@ -251,42 +261,42 @@ const MODULES = [
     content:[
       {h:"¿Qué es un blockchain?",b:"Un blockchain es una base de datos distribuida que guarda información en bloques encadenados y sellados criptográficamente. Nadie puede alterar un bloque sin alterar todos los siguientes — lo que hace al sistema prácticamente inalterable. Imagínalo como un libro contable que miles de computadoras tienen en simultáneo, y que nadie puede borrar ni falsificar."},
       {h:"¿Por qué es revolucionario?",b:"Antes de blockchain, necesitabas un intermediario de confianza para cualquier transacción: un banco, un notario, una empresa. Blockchain elimina ese intermediario. Dos personas pueden intercambiar valor directamente, sin que ninguna empresa controle la transacción. Esto no es solo sobre dinero — es sobre contratos, identidades, votos, títulos de propiedad."},
-      {h:"Descentralización: el concepto clave",b:"Una red centralizada tiene un punto de fallo: si el servidor cae, todo cae. Una red descentralizada tiene miles de nodos — si 100 caen, la red sigue funcionando. Bitcoin lleva funcionando más de 15 años sin parar ni una sola vez. Ningún banco del mundo puede decir lo mismo."},
+      {h:"Descentralización: el concepto clave",b:"Una red centralizada tiene un punto de fallo: si el servidor cae, todo cae. Una red descentralizada tiene miles de nodos — si 100 caen, la red sigue funcionando. Bitcoin lleva funcionando más de 15 años de forma continua, y esa resiliencia es una de las propiedades más estudiadas de este tipo de redes."},
       {h:"Consenso: cómo se ponen de acuerdo sin conocerse",b:"En blockchain, computadoras de todo el mundo validan transacciones sin conocerse entre sí. Los mecanismos de consenso (Proof of Work, Proof of Stake) son las reglas del juego que evitan el fraude. Si quieres gastar la misma moneda dos veces, la red lo detecta y rechaza la segunda transacción automáticamente."},
     ]
   },
   {
     id:2, tag:"CRIPTOMONEDAS", icon:"💎", color:"#4da6ff",
     title:"El ecosistema cripto: más allá del Bitcoin",
-    subtitle:"Altcoins, tokens, utilidad real y casos de uso",
+    subtitle:"Altcoins, tokens, casos de uso declarados y diferencias técnicas",
     lessons:[
       {id:"2a",title:"Bitcoin: el oro digital y sus límites",xp:150,mins:12},
       {id:"2b",title:"Ethereum y los contratos inteligentes",xp:170,mins:14},
-      {id:"2c",title:"Altcoins con utilidad real: XRP, XLM, HBAR, ALGO",xp:200,mins:16},
+      {id:"2c",title:"Proyectos cripto con casos de uso declarados: XRP, XLM, HBAR, ALGO",xp:200,mins:16},
       {id:"2d",title:"Tokens vs Monedas: la diferencia crucial",xp:140,mins:11},
     ],
     content:[
-      {h:"Bitcoin: el pionero y sus límites",b:"Bitcoin fue la primera criptomoneda (2009) y sigue siendo la más conocida. Funciona como reserva de valor — el 'oro digital'. Pero tiene limitaciones importantes: procesa solo 7 transacciones por segundo (Visa procesa 24,000), sus comisiones pueden ser altísimas, y su huella energética es enorme. Bitcoin abrió la puerta, pero no es la solución para el sistema financiero global."},
+      {h:"Bitcoin: el pionero y sus límites",b:"Bitcoin fue la primera criptomoneda (2009) y sigue siendo la más conocida. Suele describirse como reserva de valor o 'oro digital'. Pero tiene limitaciones importantes: procesa solo 7 transacciones por segundo (Visa procesa decenas de miles), sus comisiones pueden subir bastante, y su consumo energético es alto. Bitcoin abrió la puerta, pero no fue diseñado para resolver por sí solo las necesidades del sistema financiero global."},
       {h:"Ethereum: la computadora mundial",b:"Ethereum (2015) introdujo los contratos inteligentes — código que se ejecuta automáticamente cuando se cumplen condiciones, sin intermediarios. Esto hizo posible DeFi, NFTs, DAOs, y miles de aplicaciones descentralizadas. Si Bitcoin es el oro, Ethereum es el petróleo que hace funcionar la máquina. Aun así, sigue teniendo problemas de escalabilidad y comisiones variables."},
-      {h:"Las criptos que el sistema financiero está adoptando",b:"XRP (Ripple): diseñado para pagos internacionales bancarios. Liquida en 3-5 segundos vs 3-5 días de los bancos tradicionales.\nXLM (Stellar): enfocado en inclusión financiera, pagos entre países en desarrollo.\nHBAR (Hedera): usado por Google, IBM, Boeing. Red empresarial de alta velocidad.\nALGO (Algorand): blockchain de alta velocidad adoptada por bancos centrales de varios países.\nEstas 4 son las más alineadas con el estándar ISO 20022."},
-      {h:"La diferencia entre moneda y token",b:"Una moneda (BTC, ETH, XRP) opera en su propia blockchain. Un token vive sobre otra blockchain — como USDC que vive sobre Ethereum. Los tokens pueden representar acciones, deuda, derechos de voto, activos del mundo real. La tokenización de activos reales (inmuebles, acciones, bonos) es uno de los desarrollos más importantes de los próximos años."},
+      {h:"Proyectos que suelen mencionarse en pagos e interoperabilidad",b:"Algunos proyectos aparecen seguido en conversaciones sobre pagos internacionales, interoperabilidad e infraestructura financiera, casi siempre por los casos de uso que declaran sus propios equipos:\nXRP (Ripple): se presenta para pagos internacionales.\nXLM (Stellar): se enfoca en inclusión financiera y pagos entre países.\nHBAR (Hedera): se orienta a usos empresariales de alta velocidad.\nALGO (Algorand): se promociona como blockchain de alta velocidad.\nImportante: que un proyecto declare estos usos no significa que vaya a ser adoptado por bancos, ni que sea una buena inversión, ni que su precio vaya a subir. Son afirmaciones que conviene mirar con criterio y contrastar con fuentes independientes."},
+      {h:"La diferencia entre moneda y token",b:"Una moneda (BTC, ETH, XRP) opera en su propia blockchain. Un token vive sobre otra blockchain — como USDC que vive sobre Ethereum. Los tokens pueden representar acciones, deuda, derechos de voto o activos del mundo real. La tokenización de activos reales (inmuebles, acciones, bonos) es uno de los temas más discutidos hoy, aunque en la práctica está en etapas tempranas y con regulación todavía en desarrollo."},
     ]
   },
   {
     id:3, tag:"ISO 20022", icon:"🏦", color:"#ffaa00",
-    title:"ISO 20022: El estándar que reescribe las finanzas",
-    subtitle:"Por qué los bancos centrales y Swift lo están adoptando ahora",
+    title:"ISO 20022: el nuevo estándar de mensajería financiera",
+    subtitle:"Qué es, qué problema resuelve y por qué su relación con las criptos es debatida",
     lessons:[
       {id:"3a",title:"¿Qué es ISO 20022 y por qué existe?",xp:220,mins:15},
       {id:"3b",title:"Swift y la migración global al nuevo estándar",xp:250,mins:18},
-      {id:"3c",title:"Qué criptomonedas están alineadas y por qué",xp:280,mins:20},
-      {id:"3d",title:"El futuro: CBDCs y la nueva arquitectura financiera",xp:260,mins:18},
+      {id:"3c",title:"Cripto e ISO 20022: qué se afirma y qué está en debate",xp:280,mins:20},
+      {id:"3d",title:"CBDCs y posibles cambios en la arquitectura financiera",xp:260,mins:18},
     ],
     content:[
-      {h:"¿Qué es ISO 20022?",b:"ISO 20022 es el nuevo estándar internacional para mensajes de pagos financieros. Reemplaza a sistemas legacy como SWIFT MT que llevan 50 años sin actualizarse. La diferencia clave: los mensajes antiguos son como telegramas — poco datos, formato rígido. ISO 20022 es como un formulario estructurado con datos ricos: quién envía, quién recibe, propósito del pago, referencias, todo detallado y machine-readable."},
-      {h:"¿Por qué importa tanto?",b:"Hoy en día, enviar dinero internacionalmente puede tomar 3-5 días, costar hasta 10% en comisiones, y los bancos no pueden ver la información completa de la transacción. ISO 20022 permite liquidación en segundos, trazabilidad completa, cumplimiento automático de regulaciones anti-lavado, e interoperabilidad entre todos los sistemas financieros del mundo. Es la infraestructura del dinero del futuro."},
-      {h:"Swift y la adopción global",b:"Swift (el sistema que conecta a más de 11,000 bancos en 200 países) comenzó su migración a ISO 20022 en 2023 con deadline en 2025. Esto significa que prácticamente todo el sistema bancario global se está migrando al mismo tiempo. Las criptomonedas que hablen el mismo idioma — que sean compatibles con ISO 20022 — tienen ventaja enorme para ser adoptadas por bancos y gobiernos."},
-      {h:"La conexión cripto-ISO 20022",b:"No todas las criptomonedas pueden integrarse con el sistema bancario. Las que están diseñadas para ello son:\n• XRP: Ripple trabaja directamente con bancos desde 2012. Ya tiene partnerships con 300+ instituciones.\n• XLM: Stellar fue co-fundado por el creador original de Ripple. Enfocado en pagos transfronterizos.\n• HBAR: Hedera usa un ledger distribuido (no exactamente blockchain) de altísima velocidad.\n• ALGO: Algorand es usada por la Fundación de Comercio Internacional de la ONU.\n• IOTA: diseñada para machine-to-machine payments en IoT."},
+      {h:"¿Qué es ISO 20022?",b:"ISO 20022 es un estándar internacional para los mensajes de pago entre instituciones financieras. Reemplaza a formatos antiguos como SWIFT MT, que llevan décadas en uso. La diferencia clave: los mensajes antiguos son como telegramas — pocos datos, formato rígido. ISO 20022 es como un formulario estructurado con datos ricos: quién envía, quién recibe, propósito del pago, referencias, todo detallado y legible por máquinas. En el fondo, es una forma estandarizada de que los sistemas financieros 'hablen el mismo idioma'."},
+      {h:"¿Por qué importa?",b:"Hoy, enviar dinero internacionalmente puede tomar varios días, costar comisiones altas, y los bancos no siempre ven la información completa de la transacción. ISO 20022 apunta a permitir liquidación más rápida, trazabilidad, cumplimiento de regulaciones e interoperabilidad entre sistemas. Es importante entender qué es y qué no es: es un cambio de infraestructura técnica en la mensajería bancaria, no una promesa sobre ninguna criptomoneda ni sobre ningún precio."},
+      {h:"Swift y la migración global",b:"Swift (la red que conecta a más de 11.000 bancos en 200 países) inició su migración a ISO 20022. Esto significa que gran parte del sistema bancario está actualizando la forma en que envía sus mensajes de pago.\n\nPunto clave para no confundirse: ISO 20022 es un estándar de mensajería entre instituciones financieras. No es un sello que apruebe ni respalde criptomonedas. Que una cripto se describa como 'compatible con ISO 20022' no garantiza que un banco la use, ni que su precio suba. Esa relación es debatida y conviene tratarla con cautela."},
+      {h:"Qué se dice sobre cripto e ISO 20022",b:"Algunos proyectos se describen a sí mismos como pensados para integrarse con sistemas financieros. Es común ver mencionados XRP, XLM, HBAR, ALGO o IOTA en este contexto, casi siempre por los casos de uso que declaran sus propios equipos.\n\nDos cosas importantes:\n• Buena parte de estas descripciones provienen del marketing de cada proyecto, no de una certificación oficial.\n• 'Compatible con ISO 20022' no equivale a 'aprobada por los bancos' ni a 'va a subir de precio'.\n\nLa idea de un grupo de 'criptos ISO 20022 ganadoras' es una narrativa muy popular en internet, pero está en debate y no implica garantía alguna de adopción ni de rentabilidad. Tómala como un tema a investigar con criterio, no como un dato cerrado."},
     ],
     iso:true
   },
@@ -298,13 +308,13 @@ const MODULES = [
       {id:"4a",title:"DeFi: el sistema financiero sin bancos",xp:240,mins:16},
       {id:"4b",title:"Staking, yield farming y liquidez",xp:220,mins:15},
       {id:"4c",title:"Tokenización de activos reales",xp:260,mins:18},
-      {id:"4d",title:"Estrategia de portafolio cripto inteligente",xp:280,mins:20},
+      {id:"4d",title:"Cómo se piensa una cartera (ejemplo educativo)",xp:280,mins:20},
     ],
     content:[
       {h:"¿Qué es DeFi?",b:"DeFi (Finanzas Descentralizadas) es el ecosistema de servicios financieros que funciona sin bancos ni intermediarios. Puedes pedir prestado, prestar, ganar intereses, cambiar activos — todo desde tu wallet, sin abrir una cuenta en ningún banco, sin que nadie te pida documentos. Los protocolos DeFi están gobernados por código y sus usuarios, no por empresas."},
-      {h:"Staking: el interés del mundo cripto",b:"El staking es bloquear tus criptomonedas para ayudar a validar la red, a cambio de recompensas. Es el equivalente a poner dinero en un plazo fijo, pero con rendimientos que pueden ir del 3% al 20%+ anual dependiendo del activo. Los riesgos también existen: el valor del activo puede caer, y en algunos protocolos existe el 'slashing' (penalización por mal comportamiento del validador)."},
-      {h:"Tokenización: el puente entre lo real y lo digital",b:"La tokenización convierte activos del mundo real en tokens digitales en una blockchain. Un edificio puede dividirse en 1,000 tokens — cualquier persona puede comprar una fracción. Esto democratiza el acceso a inversiones antes reservadas para millonarios: inmuebles, arte, bonos corporativos, fondos de inversión. BlackRock, el mayor gestor de activos del mundo, ya lanzó su primer fondo tokenizado en blockchain."},
-      {h:"Construyendo un portafolio cripto inteligente",b:"La diversificación en cripto no es comprar muchas monedas al azar. Una estrategia sólida incluye: una base de reserva de valor (BTC, ETH), exposición a infraestructura ISO 20022 (XRP, XLM, HBAR), proyectos DeFi con utilidad probada, y una reserva en stablecoins para aprovechar oportunidades. La gestión de riesgo es igual de importante que en trading tradicional: nunca más del 5-10% de tu patrimonio neto total."},
+      {h:"Staking: bloquear cripto a cambio de recompensas",b:"El staking consiste en bloquear tus criptomonedas para ayudar a validar la red, a cambio de recompensas. A veces se compara con un plazo fijo, pero la diferencia es enorme: los rendimientos no están garantizados, cambian con el tiempo y pueden bajar. Además, el valor del activo puede caer, así que puedes terminar con menos de lo que pusiste aunque acumules recompensas. En algunos protocolos existe el 'slashing', una penalización que reduce lo que tenías. No es un ingreso seguro y no debe tratarse como tal."},
+      {h:"Tokenización: el puente entre lo real y lo digital",b:"La tokenización convierte activos del mundo real en tokens digitales sobre una blockchain. Un edificio, por ejemplo, podría dividirse en muchas fracciones representadas por tokens. En teoría, esto podría ampliar el acceso a ciertos activos que hoy son menos accesibles (inmuebles, arte, bonos), aunque en la práctica es un terreno nuevo, con riesgos y con regulación todavía en desarrollo. Algunos grandes gestores de activos han hecho experimentos con fondos tokenizados, pero se trata de pruebas en evolución, no de un resultado garantizado."},
+      {h:"Cómo se suele pensar la diversificación (educativo)",b:"Diversificar en cripto no es comprar muchas monedas al azar. En general se habla de combinar activos según su función (por ejemplo, posiciones más estables frente a proyectos más volátiles) y de cuidar el tamaño de cada posición. Pero no existe una fórmula única ni una distribución 'correcta' para todos. La exposición a cripto debe evaluarse según perfil de riesgo, horizonte y situación financiera. Este curso es educativo y no reemplaza la asesoría de un profesional."},
     ]
   },
 ];
@@ -315,28 +325,28 @@ const QUIZZES = {
     {q:"¿Qué hace prácticamente imposible alterar un bloque ya registrado?",opts:["La velocidad de la red","El consenso de los nodos y el encadenamiento criptográfico","Las leyes de cada país","La cantidad de usuarios"],ans:1},
   ],
   "2c":[
-    {q:"¿Cuánto tarda XRP en liquidar una transacción internacional?",opts:["1-2 horas","3-5 días como los bancos","3-5 segundos","24 horas"],ans:2},
-    {q:"¿Qué tienen en común XRP, XLM, HBAR y ALGO?",opts:["Todas fueron creadas por Bitcoin","Son las 4 criptos más antiguas","Están alineadas con el estándar ISO 20022","Son stablecoins"],ans:2},
+    {q:"Si un proyecto cripto dice estar 'pensado para pagos internacionales', eso significa que…",opts:["Los bancos ya lo usan de forma masiva","Es una afirmación del propio proyecto que conviene contrastar","Su precio va a subir seguro","Está aprobado por los reguladores"],ans:1},
+    {q:"Que XRP, XLM, HBAR y ALGO se mencionen juntas en internet implica que…",opts:["Son una inversión segura","Serán adoptadas por los bancos","Comparten una narrativa popular, pero sin garantía de adopción ni de rentabilidad","Son stablecoins"],ans:2},
   ],
   "3a":[
-    {q:"¿Qué problema principal resuelve ISO 20022 frente a los sistemas actuales?",opts:["Elimina a los bancos completamente","Proporciona mensajes de pago ricos, estructurados e interoperables globalmente","Crea una nueva criptomoneda bancaria","Reemplaza a Bitcoin"],ans:1},
+    {q:"¿Qué describe mejor a ISO 20022?",opts:["Una criptomoneda creada por los bancos","Un estándar de mensajería para pagos entre instituciones financieras","Una garantía de que ciertas criptos subirán","Un reemplazo de Bitcoin"],ans:1},
     {q:"¿Cuándo comenzó Swift su migración a ISO 20022?",opts:["2018","2020","2023","2026"],ans:2},
   ],
   "4a":[
     {q:"¿Qué caracteriza a DeFi frente a las finanzas tradicionales?",opts:["Requiere documentos y cuenta bancaria","Opera con intermediarios regulados","Funciona mediante código sin intermediarios ni bancos","Solo existe en países desarrollados"],ans:2},
-    {q:"¿Qué empresa global lanzó ya un fondo de inversión tokenizado en blockchain?",opts:["Apple","Google","BlackRock","Amazon"],ans:2},
+    {q:"¿Qué describe mejor a la tokenización de activos reales?",opts:["Una forma garantizada de ganar dinero","Representar activos del mundo real como tokens en una blockchain","Una criptomoneda estable sin riesgo","Un préstamo que dan los bancos"],ans:1},
   ],
 };
 
 const COINS = [
-  {sym:"BTC",name:"Bitcoin",color:"#f7931a",use:"Reserva de valor",iso:false,desc:"Oro digital. Alta volatilidad, baja velocidad."},
-  {sym:"ETH",name:"Ethereum",color:"#627eea",use:"Contratos inteligentes",iso:false,desc:"Plataforma DeFi líder. Mejorando escalabilidad."},
-  {sym:"XRP",name:"Ripple",color:"#00aae4",use:"Pagos bancarios internacionales",iso:true,desc:"300+ partnerships bancarios. 3-5 seg liquidación."},
-  {sym:"XLM",name:"Stellar",color:"#14b6e7",use:"Inclusión financiera",iso:true,desc:"Pagos transfronterizos de bajo costo."},
-  {sym:"HBAR",name:"Hedera",color:"#00e396",use:"Empresas / Gobierno",iso:true,desc:"Google, IBM, Boeing. Alta velocidad y eficiencia."},
-  {sym:"ALGO",name:"Algorand",color:"#00b4d8",use:"Bancos centrales",iso:true,desc:"Adoptada por ONU y bancos centrales."},
-  {sym:"IOTA",name:"IOTA",color:"#242424",use:"IoT / Machine payments",iso:true,desc:"Pagos entre máquinas. Sin comisiones."},
-  {sym:"USDC",name:"USD Coin",color:"#2775ca",use:"Stablecoin",iso:false,desc:"Dólar digital. Capital estable en cripto."},
+  {sym:"BTC",name:"Bitcoin",color:"#f7931a",use:"Reserva de valor",iso:false,desc:"A veces llamado oro digital. Alta volatilidad."},
+  {sym:"ETH",name:"Ethereum",color:"#627eea",use:"Contratos inteligentes",iso:false,desc:"Plataforma popular para DeFi y contratos inteligentes."},
+  {sym:"XRP",name:"Ripple",color:"#00aae4",use:"Pagos internacionales",iso:true,desc:"Se presenta para pagos internacionales."},
+  {sym:"XLM",name:"Stellar",color:"#14b6e7",use:"Inclusión financiera",iso:true,desc:"Se enfoca en pagos transfronterizos."},
+  {sym:"HBAR",name:"Hedera",color:"#00e396",use:"Uso empresarial",iso:true,desc:"Se orienta a usos empresariales de alta velocidad."},
+  {sym:"ALGO",name:"Algorand",color:"#00b4d8",use:"Alta velocidad",iso:true,desc:"Se promociona como blockchain de alta velocidad."},
+  {sym:"IOTA",name:"IOTA",color:"#242424",use:"IoT / Machine payments",iso:true,desc:"Se enfoca en pagos entre máquinas (IoT)."},
+  {sym:"USDC",name:"USD Coin",color:"#2775ca",use:"Stablecoin",iso:false,desc:"Stablecoin referenciada al dólar (no exenta de riesgos)."},
 ];
 
 // STATE
@@ -480,8 +490,8 @@ function renderVisual(){
     html+=`<div class="tip-box"><strong>💡 Clave:</strong> Cada bloque contiene el hash del anterior. Si alguien intenta modificar el bloque #002, cambia su hash, lo que invalida el #003, #004... y toda la red lo rechaza automáticamente.</div>`;
   } else if(id==='2c'||id==='3a'||id==='3b'||id==='3c'){
     // ISO coins table
-    html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">CRIPTOMONEDAS ALINEADAS CON ISO 20022</div>`;
-    html+=`<table class="iso-table"><thead><tr><th>Token</th><th>Nombre</th><th>Uso principal</th><th>ISO 20022</th></tr></thead><tbody>`;
+    html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">PROYECTOS QUE SE MENCIONAN JUNTO A ISO 20022</div>`;
+    html+=`<table class="iso-table"><thead><tr><th>Token</th><th>Nombre</th><th>Uso declarado</th><th>ISO 20022</th></tr></thead><tbody>`;
     COINS.forEach(c=>{
       html+=`<tr>
         <td><span class="coin-tag" style="background:${c.color}20;color:${c.color}">${c.sym}</span></td>
@@ -491,7 +501,7 @@ function renderVisual(){
       </tr>`;
     });
     html+=`</tbody></table>`;
-    html+=`<div class="tip-box" style="margin-top:12px"><strong>🏦 ISO 20022:</strong> Las monedas marcadas con ✓ están diseñadas para ser compatibles con el sistema bancario global. BTC y ETH no están en esta lista — son excelentes activos, pero no fueron diseñados para integrarse con Swift o bancos centrales.</div>`;
+    html+=`<div class="tip-box" style="margin-top:12px"><strong>🏦 Sobre esta tabla:</strong> El ✓ indica que el proyecto suele describirse como 'compatible con ISO 20022', generalmente según su propio equipo. Eso no significa que los bancos lo usen, ni que sea mejor inversión, ni que su precio vaya a subir. BTC y ETH no suelen aparecer en esa narrativa, lo que no los hace mejores ni peores.</div>`;
   } else if(id==='4a'||id==='4b'){
     // DeFi diagram
     html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">FINANZAS TRADICIONALES vs DeFi</div>`;
@@ -505,7 +515,7 @@ function renderVisual(){
     html+=`</div></div>`;
   } else {
     // Portafolio chart genérico
-    html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">DISTRIBUCIÓN DE PORTAFOLIO SUGERIDA</div>`;
+    html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">EJEMPLO ILUSTRATIVO DE CARTERA FICTICIA</div>`;
     const alloc=[{sym:'BTC',pct:30,color:'#f7931a'},{sym:'ETH',pct:20,color:'#627eea'},{sym:'XRP',pct:15,color:'#00aae4'},{sym:'XLM',pct:10,color:'#14b6e7'},{sym:'HBAR',pct:10,color:'#00e396'},{sym:'USDC',pct:15,color:'#2775ca'}];
     alloc.forEach(a=>{
       html+=`<div style="margin-bottom:8px">
@@ -518,7 +528,7 @@ function renderVisual(){
         </div>
       </div>`;
     });
-    html+=`<div class="tip-box"><strong>⚠️ Importante:</strong> Esto es educativo, no consejo financiero. Nunca inviertas más de lo que puedas perder. El mercado cripto es altamente volátil.</div>`;
+    html+=`<div class="tip-box"><strong>⚠️ Importante:</strong> Este es un ejemplo ficticio con fines educativos, no una recomendación ni un consejo financiero. No representa una distribución 'correcta'. El mercado cripto es muy volátil y puedes perder parte o todo tu capital. Nunca uses dinero que no puedas permitirte perder.</div>`;
   }
   html+='</div>';
   document.getElementById('lv-grafico').innerHTML=html;
