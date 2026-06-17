@@ -242,6 +242,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
 .med-modal-btn{width:100%;border:none;border-radius:16px;padding:18px;font-family:var(--sans);font-size:19px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px}
 .med-modal-btn .ic{width:24px;height:24px}
 .mm-yes{background:var(--verde);color:#FBF6EC}
+.mm-listen{background:var(--oro-light);color:var(--oro-d);border:1.5px solid var(--oro)}
 .mm-help{background:var(--ayuda);color:#FFF6F1}
 .mm-notify{background:var(--card);color:var(--verde);border:1.5px solid var(--verde);margin-bottom:0}
 .med-modal-btn:active{transform:scale(.99)}
@@ -483,6 +484,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
     <div class="med-modal-name" id="med-ov-name">—</div>
     <div class="med-modal-dosis" id="med-ov-dosis"></div>
     <div class="med-modal-q">¿Ya se lo tomó?</div>
+    <button class="med-modal-btn mm-listen" onclick="escucharAvisoActivo()"><svg class="ic" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 6a8 8 0 0 1 0 12"/></svg>Escuchar aviso</button>
     <button class="med-modal-btn mm-yes" onclick="confirmarMedActivo()"><svg class="ic" viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg>Sí, ya lo tomé</button>
     <button class="med-modal-btn mm-help" onclick="medNecesitoAyudaActivo()"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.4"/><line x1="5.6" y1="5.6" x2="9.6" y2="9.6"/><line x1="14.4" y1="14.4" x2="18.4" y2="18.4"/><line x1="18.4" y1="5.6" x2="14.4" y2="9.6"/><line x1="5.6" y1="18.4" x2="9.6" y2="14.4"/></svg>Necesito ayuda</button>
     <button class="med-modal-btn mm-notify" onclick="medAvisarCuidadorActivo()"><svg class="ic" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"/></svg>Avisar a mi cuidador</button>
@@ -995,12 +997,15 @@ function medAvisarCuidadorActivo(){
 }
 
 // --- Overlay y detección de la hora (solo con la app abierta) ---
+function fraseMed(m){ return 'Es hora de '+m.nombre+(m.dosis?(', '+m.dosis):'')+'. ¿Ya se lo tomó?'; }
+function escucharAvisoActivo(){ if(medActivo) speak(fraseMed(medActivo)); }
 function showMedOverlay(m){
   medActivo=m;
   document.getElementById('med-ov-name').textContent=m.nombre;
   document.getElementById('med-ov-dosis').textContent=m.dosis||'';
   document.getElementById('med-overlay').classList.add('show');
-  speak('Es hora de '+m.nombre+(m.dosis?(', '+m.dosis):'')+'. ¿Ya se lo tomó?');
+  if(navigator.vibrate){ try{ navigator.vibrate([600,250,600]); }catch(e){} }
+  speak(fraseMed(m)); // intento automático; si el navegador lo bloquea, queda el botón "Escuchar aviso"
 }
 function hideMedOverlay(){
   document.getElementById('med-overlay').classList.remove('show');
