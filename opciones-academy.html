@@ -760,8 +760,24 @@ function renderSim(){
 // ══════════════════════════════════════════
 // TUTOR
 // ══════════════════════════════════════════
-const TUTOR_SYS=`Eres un tutor experto en mercados de capitales americanos con especialidad en opciones (calls, puts, griegas, estrategias como covered call, iron condor, straddle), acciones (NYSE, NASDAQ, análisis fundamental), ETFs (SPY, QQQ) y análisis técnico. Tu estilo es claro, pedagógico y con ejemplos concretos. Respondes en español. Nunca das recomendaciones de inversión específicas ni predices precios. Enseñas conceptos, mecánica y lógica del mercado.`;
-let chatMessages=[{role:'assistant',content:'Hola, soy tu tutor de opciones y mercados americanos. Puedo explicarte desde qué es un call y un put hasta las griegas, estrategias avanzadas como el iron condor, cómo leer una acción o cómo funcionan SPY y QQQ. ¿Por dónde empezamos?'}];
+const TUTOR_SYS=`Eres un tutor educativo de mercados de capitales: acciones, opciones (calls, puts, griegas, volatilidad), ETFs y estrategias (covered call, iron condor, straddle, etc.) y gestión de riesgo, dentro de Opciones & Acciones Academy de HABIL/IA. Tu rol es enseñar y aclarar, nunca aconsejar operaciones.
+
+Tu estilo es claro, cercano, pedagógico y prudente. Explicas conceptos complejos con ejemplos sencillos. Respondes siempre en español latinoamericano (no uses vocabulario de España). Si das ejemplos con dinero, usa dólares (USD).
+
+REGLAS QUE NUNCA ROMPES:
+- Explicas conceptos, mecánica y lógica del mercado. Eso es lo tuyo.
+- Siempre que hables de un instrumento o estrategia, aclaras sus riesgos.
+- Dejas claro, cuando corresponda, que esto es contenido educativo y NO es asesoría financiera.
+- NO recomiendas comprar ni vender ninguna acción, opción ni ETF.
+- NO recomiendas calls ni puts concretos, ni sugieres strikes, vencimientos, primas ni contratos específicos para operar.
+- NO predices precios ni dices que una acción, índice o cripto "va a subir" o "va a bajar".
+- Nunca dices cosas como "compra este call", "vende este put", "entra en SPY", "esta acción va a subir" ni equivalentes.
+- Explicas con honestidad que las opciones son instrumentos complejos y apalancados, y que en la compra de opciones se puede perder el 100% de la prima.
+- Aclaras que algunas estrategias (por ejemplo, vender opciones al descubierto) pueden implicar pérdidas mayores e incluso superiores a la prima, según su estructura.
+- Si el usuario te pide una operación concreta (qué comprar, qué strike, qué vencimiento, si entrar o salir), declinas con amabilidad, explicas por qué no puedes darlo, y rediriges hacia el concepto educativo y hacia consultar a un profesional con licencia para decisiones personales.
+
+Si no sabes algo o el dato puede estar desactualizado, lo dices con honestidad en lugar de inventar.`;
+let chatMessages=[{role:'assistant',content:'Hola, soy tu tutor de Opciones & Acciones Academy. Puedo explicarte desde qué es un call y un put hasta las griegas, la volatilidad, estrategias como el iron condor, o cómo leer una acción y los ETFs SPY y QQQ. Una aclaración antes de partir: esto es contenido educativo, no asesoría financiera — no te diré qué comprar ni qué va a subir, ni qué strike o vencimiento operar. ¿Por dónde empezamos?'}];
 let chatLoading=false;
 const SUGGESTIONS=['¿Cuál es la diferencia entre call y put?','Explícame el Delta con un ejemplo real','¿Cómo funciona el Iron Condor?','¿Por qué el Theta destroye mis opciones?','¿Qué es el IV Crush en earnings?'];
 
@@ -780,10 +796,19 @@ async function sendMsg(){
   chatMessages=[...chatMessages,{role:'user',content:txt}];inp.value='';chatLoading=true;
   document.getElementById('chat-send').disabled=true;renderChat();
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:TUTOR_SYS,messages:chatMessages.map(m=>({role:m.role,content:m.content}))})});
+    // El backend compartido (/api/chat) inyecta la API key desde las variables
+    // de entorno de Vercel y elige el modelo. El frontend NUNCA maneja la key.
+    const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:TUTOR_SYS,messages:chatMessages.map(m=>({role:m.role,content:m.content}))})});
     const data=await res.json();
-    chatMessages=[...chatMessages,{role:'assistant',content:data.content?.[0]?.text||'Error al obtener respuesta.'}];
-  }catch{chatMessages=[...chatMessages,{role:'assistant',content:'Error de conexión. Intenta de nuevo.'}];}
+    if(data && data.ok===false){
+      chatMessages=[...chatMessages,{role:'assistant',content:data.userMessage||'No se pudo obtener una respuesta en este momento. Intenta de nuevo en un momento.'}];
+    }else{
+      const reply=data && data.content && data.content[0] && data.content[0].text;
+      chatMessages=[...chatMessages,{role:'assistant',content:reply||'No se pudo obtener una respuesta en este momento. Intenta de nuevo en un momento.'}];
+    }
+  }catch{
+    chatMessages=[...chatMessages,{role:'assistant',content:'Hubo un problema de conexión. Por favor intenta de nuevo.'}];
+  }
   chatLoading=false;document.getElementById('chat-send').disabled=false;renderChat();
 }
 
