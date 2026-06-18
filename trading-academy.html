@@ -129,6 +129,11 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
 </div>
 
 <div id="main">
+  <!-- DISCLAIMER GLOBAL -->
+  <div style="display:flex;align-items:flex-start;gap:10px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:10px;padding:11px 14px;margin-bottom:16px">
+    <span style="color:var(--gold);font-size:14px;line-height:1.4;flex-shrink:0">⚠</span>
+    <span style="font-size:11px;line-height:1.6;color:var(--muted)">Contenido educativo. No es asesoría financiera. El trading en forex, CFDs, índices, oro, criptomonedas u otros mercados implica alto riesgo. Puedes perder parte o todo tu capital, especialmente si usas apalancamiento. Ningún método, indicador o estrategia garantiza resultados.</span>
+  </div>
   <!-- ACADEMY -->
   <div id="tab-academy">
     <div id="prog-banner" style="display:none" class="prog-wrap">
@@ -171,6 +176,10 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
   <div id="tab-simulator" style="display:none">
     <div class="section-title">Simulador de Trading</div>
     <div class="section-sub">Practica position sizing y gestión de riesgo con capital ficticio</div>
+    <div style="display:flex;align-items:flex-start;gap:10px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:10px;padding:11px 14px;margin-bottom:12px">
+      <span style="color:var(--gold);font-size:14px;line-height:1.4;flex-shrink:0">⚠</span>
+      <span style="font-size:11px;line-height:1.6;color:var(--muted)">Este simulador usa capital ficticio y resultados aleatorios de ejemplo. No representa desempeño real, no predice resultados y no recomienda operar.</span>
+    </div>
     <div class="card-sm" style="margin-bottom:12px">
       <div style="font-size:11px;font-family:'JetBrains Mono';color:var(--muted);margin-bottom:8px">XAUUSD · M15 · SIMULADO</div>
       <div id="sim-chart" class="chart-wrap"></div>
@@ -223,23 +232,23 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
 const MODULES = [
   {id:1,tag:"FUNDAMENTOS",icon:"◈",color:"#00C9FF",title:"La Mente Institucional",subtitle:"Cómo piensan los que mueven el mercado",
     lessons:[{id:"1a",title:"Retail vs Institucional: La guerra invisible",xp:100,mins:8},{id:"1b",title:"Market Structure: HH, HL, LH, LL",xp:150,mins:12},{id:"1c",title:"Sesiones de mercado y su liquidez",xp:120,mins:10}],
-    content:[{h:"¿Por qué el retail siempre pierde?",b:"El 80% de los traders retail pierde dinero. No es falta de inteligencia — es que están operando con herramientas diseñadas para perder. Los indicadores populares (RSI, MACD, medias móviles) son reactivos y rezagados. Los institucionales los conocen y los usan como trampas."},{h:"El mercado es un iceberg",b:"Lo que ves en el gráfico es el 10% visible. El 90% son órdenes institucionales, flujos de capital, posiciones ocultas y manipulación deliberada. Los market makers necesitan liquidez para llenar sus posiciones masivas. Tus stops son su combustible."},{h:"Market Structure básica",b:"El mercado se mueve en impulsos y correcciones. Una tendencia alcista forma Higher Highs (HH) y Higher Lows (HL). Una bajista forma Lower Highs (LH) y Lower Lows (LL). Cuando esta estructura se rompe — ahí empieza la oportunidad institucional."}]},
+    content:[{h:"¿Por qué muchos traders minoristas pierden?",b:"Distintos estudios y reportes de brokers indican que una gran parte de los traders minoristas pierde dinero. Las causas más citadas no son misteriosas: falta de gestión de riesgo, exceso de apalancamiento, mala disciplina y operar sin un plan. Los indicadores populares (RSI, MACD, medias móviles) son reactivos y se basan en datos pasados; no son 'malos', pero usarlos sin contexto ni gestión de riesgo suele llevar a malas decisiones."},{h:"Lo visible y lo que no se ve",b:"El gráfico muestra solo el precio. Detrás hay órdenes, flujos de capital y posiciones que no ves. La teoría SMC sostiene que los grandes participantes necesitan liquidez (órdenes en el lado contrario) para entrar y salir de posiciones grandes, y que parte de esa liquidez se acumula donde el retail suele colocar sus stops. Es una interpretación útil para estudiar, no una certeza comprobada sobre cada movimiento."},{h:"Market Structure básica",b:"El mercado se mueve en impulsos y correcciones. Una tendencia alcista suele formar Higher Highs (HH) y Higher Lows (HL); una bajista, Lower Highs (LH) y Lower Lows (LL). Cuando esta estructura se rompe, algunos traders lo estudian como un posible cambio de contexto. Es una forma de leer el gráfico, no una garantía de lo que vendrá."}]},
   {id:2,tag:"SMC",icon:"⬡",color:"#FFAA00",title:"Smart Money Concepts",subtitle:"BOS, CHoCH, Order Blocks y FVG",
     lessons:[{id:"2a",title:"Break of Structure y Change of Character",xp:200,mins:15},{id:"2b",title:"Order Blocks: donde duermen los institucionales",xp:250,mins:20},{id:"2c",title:"Fair Value Gaps e Imbalances",xp:220,mins:18}],
-    content:[{h:"Break of Structure (BOS)",b:"Un BOS ocurre cuando el precio rompe un swing high o low previo en la dirección de la tendencia. Confirma que los institucionales siguen en control y el momentum continúa. Es tu señal para buscar entradas en la dirección del movimiento."},{h:"Change of Character (CHoCH)",b:"El CHoCH es la primera señal de que el mercado puede cambiar de dirección. El precio rompe en contra de la tendencia actual. Atención: un CHoCH no confirma reversión — es una alerta. Necesitas confluencia adicional para operar."},{h:"Order Blocks",b:"Un OB alcista es la última vela bajista (roja) antes de un impulso alcista fuerte. Los institucionales colocaron sus órdenes de compra ahí. El precio regresará a esa zona para recargar — ese es tu punto de entrada."},{h:"Fair Value Gaps (FVG)",b:"Un FVG es un desequilibrio en 3 velas consecutivas. La mecha inferior de la primera vela no toca la mecha superior de la tercera. Esa brecha es territorio desvisitado. El mercado tiende a regresar a llenarlos antes de continuar."}]},
-  {id:3,tag:"ICT / LIQUIDEZ",icon:"✦",color:"#00E8A0",title:"Liquidez e ICT Concepts",subtitle:"Cómo los institucionales cazan al retail",
+    content:[{h:"Break of Structure (BOS)",b:"Según la teoría SMC, un BOS ocurre cuando el precio rompe un swing high o low previo en la dirección de la tendencia. Desde este enfoque se interpreta como una señal de que el momentum podría continuar. Es una zona de interés que algunos traders observan para su análisis; no garantiza que el precio siga en esa dirección."},{h:"Change of Character (CHoCH)",b:"El CHoCH es, según SMC, la primera pista de que el mercado podría cambiar de dirección: el precio rompe en contra de la tendencia actual. Atención: un CHoCH no confirma una reversión, es apenas una alerta dentro del marco interpretativo. Quienes lo estudian buscan confluencia adicional antes de sacar conclusiones."},{h:"Order Blocks",b:"Desde el enfoque SMC, un OB alcista es la última vela bajista (roja) antes de un impulso alcista fuerte, y se interpreta como una zona donde podrían haberse colocado órdenes de compra grandes. La teoría sugiere que el precio podría regresar a esa zona, pero esto no garantiza que ocurra ni cuándo. Es un área de análisis, no un punto de entrada recomendado."},{h:"Fair Value Gaps (FVG)",b:"Un FVG es un desequilibrio en 3 velas consecutivas: la mecha inferior de la primera no toca la mecha superior de la tercera. Según SMC, esa brecha es territorio 'desvisitado' y el precio tiende a regresar a llenarla antes de continuar. Es una tendencia observada por algunos traders, no una regla garantizada."}]},
+  {id:3,tag:"ICT / LIQUIDEZ",icon:"✦",color:"#00E8A0",title:"Liquidez e ICT Concepts",subtitle:"Cómo la teoría SMC interpreta la búsqueda de liquidez",
     lessons:[{id:"3a",title:"Buy Side y Sell Side Liquidity",xp:300,mins:20},{id:"3b",title:"Inducement y caza de stops",xp:350,mins:25},{id:"3c",title:"Optimal Trade Entry (OTE) con Fibonacci",xp:320,mins:22}],
-    content:[{h:"¿Qué es la liquidez?",b:"Liquidez = órdenes. Donde hay stops acumulados, hay liquidez. Los institucionales necesitan contrapartida para llenar posiciones masivas. No pueden comprar millones sin que alguien les venda — esos vendedores son los stops del retail."},{h:"Buy Side Liquidity (BSL)",b:"Existe por encima de swing highs, líneas de resistencia obvias y máximos del día anterior. El precio sube para cazar esa liquidez, los institucionales venden ahí — luego el precio cae."},{h:"Sell Side Liquidity (SSL)",b:"Existe por debajo de swing lows, soportes obvios y mínimos del día. El precio baja a cazar SSL, los institucionales compran — luego el precio sube. Este ciclo se repite en todos los timeframes."},{h:"Optimal Trade Entry (OTE)",b:"Después de un BOS, el precio hace un retroceso. Usando Fibonacci del impulso completo, la zona 61.8%-79% es el OTE — donde los institucionales recargan en la dirección del movimiento."}]},
-  {id:4,tag:"RIESGO",icon:"⬟",color:"#A855F7",title:"Gestión de Riesgo Institucional",subtitle:"El secreto que separa ganadores de perdedores",
-    lessons:[{id:"4a",title:"Position sizing: la fórmula del profesional",xp:280,mins:15},{id:"4b",title:"Risk/Reward Ratio y probabilidad real",xp:300,mins:18},{id:"4c",title:"Psicología del trader ganador",xp:350,mins:20}],
-    content:[{h:"La regla del 1%",b:"Nunca arriesgues más del 1% de tu capital en una sola operación. Con $10,000, tu riesgo máximo por trade es $100. Necesitarías 100 trades perdedores consecutivos para perder todo — estadísticamente imposible si tu sistema tiene ventaja."},{h:"Position Sizing",b:"Tamaño = (Capital × % Riesgo) ÷ (Distancia al stop en pips × Valor por pip). Ejemplo: Capital $10,000, riesgo 1% = $100. Stop de 20 pips, valor $1/pip → tamaño = $100 ÷ 20 = 5 mini lotes."},{h:"Risk/Reward Ratio",b:"Con un RRR mínimo de 1:2, necesitas tener razón solo el 34% del tiempo para ser rentable. Con 1:3, el 25% es suficiente. Esto te libera de la presión de tener que acertar siempre."},{h:"Psicología ganadora",b:"Las pérdidas son el costo del negocio. Un trader profesional no abandona su sistema después de 5 stops seguidos. La consistencia en la ejecución supera a cualquier setup perfecto."}]},
+    content:[{h:"¿Qué es la liquidez?",b:"En términos simples, liquidez = órdenes disponibles. Según la teoría SMC, donde hay stops acumulados hay liquidez, y los grandes participantes necesitan contrapartida para entrar o salir de posiciones grandes. Es un marco interpretativo para leer el gráfico, no una descripción comprobada de lo que hace cada participante."},{h:"Buy Side Liquidity (BSL)",b:"Desde este enfoque, la BSL se ubica por encima de swing highs, resistencias obvias y máximos previos. La teoría SMC interpreta que el precio puede subir hacia esas zonas en busca de liquidez; algunos traders lo observan como contexto. Esto no garantiza que el precio luego caiga: es una interpretación, no una certeza."},{h:"Sell Side Liquidity (SSL)",b:"De forma simétrica, la SSL se ubica por debajo de swing lows, soportes obvios y mínimos previos. Según SMC, el precio puede bajar hacia esas zonas buscando liquidez. Que luego suba o no es incierto: la teoría describe un posible comportamiento, no una regla que se repita siempre ni en todos los timeframes."},{h:"Optimal Trade Entry (OTE)",b:"Tras un BOS, el precio suele hacer un retroceso. Usando Fibonacci del impulso, la zona 61.8%-79% es lo que SMC llama OTE. Desde este enfoque se interpreta como una posible área de análisis donde el movimiento podría retomarse, sin que eso garantice que ocurra."}]},
+  {id:4,tag:"RIESGO",icon:"⬟",color:"#A855F7",title:"Gestión de Riesgo",subtitle:"Por qué la gestión de riesgo es la base de cualquier enfoque",
+    lessons:[{id:"4a",title:"Position sizing: cómo dimensionar una posición",xp:280,mins:15},{id:"4b",title:"Risk/Reward Ratio: qué dice y qué no garantiza",xp:300,mins:18},{id:"4c",title:"Psicología y disciplina del trader",xp:350,mins:20}],
+    content:[{h:"La regla del 1-2%",b:"Una práctica común de gestión de riesgo es no arriesgar más del 1-2% del capital en una sola operación. Con $10,000 al 1%, tu riesgo por trade sería $100. Esto sirve para limitar el daño de cualquier operación individual y evitar que una mala racha destruya la cuenta rápido. Importante: es una forma de controlar pérdidas, no una protección infalible. Si operas un sistema sin ventaja real, o usas mucho apalancamiento, igual puedes perder de forma sostenida."},{h:"Position Sizing",b:"Tamaño = (Capital × % Riesgo) ÷ (Distancia al stop en pips × Valor por pip). Ejemplo: capital $10,000, riesgo 1% = $100; stop de 20 pips, valor $1/pip → tamaño = $100 ÷ 20 = 5 mini lotes. Es un cálculo para dimensionar la posición según el riesgo que defines, no una garantía de resultado."},{h:"Risk/Reward Ratio",b:"El RRR es una herramienta matemática: con un RRR de 1:2, en teoría necesitarías acertar alrededor del 34% de las veces para quedar a mano (1:3 → ~25%). Pero esto NO garantiza rentabilidad. En la práctica importan el spread, el slippage, las comisiones, y sobre todo si tu sistema tiene una ventaja real y comprobada. Un buen RRR sobre un sistema sin evidencia no produce ganancias; solo ordena la relación entre riesgo y objetivo."},{h:"Psicología y disciplina",b:"Las pérdidas son parte normal del trading: ninguna estrategia acierta siempre. La disciplina (seguir tu plan, no sobre-operar, no aumentar el riesgo para 'recuperar') suele importar más que cualquier setup. Nada de esto convierte el trading en una actividad segura ni en una fuente de ingresos garantizada."}]},
 ];
 
 const QUIZZES = {
-  "1a":[{q:"¿Por qué los traders retail pierden consistentemente?",opts:["Falta de capital","Usan herramientas reactivas y caen en trampas institucionales","No estudian suficiente","El mercado es impredecible"],ans:1},{q:"¿Para qué usan los institucionales los stop losses del retail?",opts:["Como señales de trading","Para predecir movimientos","Como liquidez para llenar sus posiciones masivas","Para manipular indicadores"],ans:2}],
-  "2b":[{q:"¿Qué es un Order Block alcista?",opts:["Zona de alta demanda visible en el DOM","La última vela bajista antes de un impulso alcista fuerte","Cualquier zona de soporte con alto volumen","Un nivel de precio con muchos FVG"],ans:1},{q:"¿Por qué regresa el precio a los Order Blocks?",opts:["Efecto de memoria del mercado","Los algoritmos lo programan así","Para llenar órdenes institucionales pendientes en esa zona","Es una profecía autocumplida del retail"],ans:2}],
-  "3a":[{q:"¿Qué es Buy Side Liquidity?",opts:["Órdenes de compra en el libro visible","Acumulación de stops e órdenes por encima de swing highs","El volumen de compradores activos en el mercado","Zonas de alta demanda en el gráfico"],ans:1},{q:"¿Qué patrón repiten los institucionales constantemente?",opts:["Cazar BSL → vender, luego cazar SSL → comprar","Acumular en soportes, distribuir en resistencias","Seguir tendencias con alto volumen","Operar solo en sesión de Londres"],ans:0}],
-  "4a":[{q:"¿Cuál es el riesgo máximo recomendado por trade para un profesional?",opts:["5% del capital","10% si hay confluencia","1-2% del capital total","Depende del setup"],ans:2},{q:"Con un RRR de 1:2, ¿qué efectividad mínima necesitas para ser rentable?",opts:["50%","40%","34%","60%"],ans:2}],
+  "1a":[{q:"¿Cuáles son causas frecuentes de que muchos traders minoristas pierdan?",opts:["Falta de capital únicamente","Mala gestión de riesgo, exceso de apalancamiento y operar sin plan","El mercado es totalmente impredecible","No mirar suficientes indicadores"],ans:1},{q:"Según la teoría SMC, ¿con qué se relacionan los stops acumulados del retail?",opts:["Con señales de trading confirmadas","Con predicciones exactas del precio","Con zonas de liquidez que los grandes participantes podrían buscar","Con errores de los indicadores"],ans:2}],
+  "2b":[{q:"Según el enfoque SMC, ¿qué es un Order Block alcista?",opts:["Una zona de alta demanda visible en el DOM","La última vela bajista antes de un impulso alcista fuerte","Cualquier zona de soporte con alto volumen","Un nivel con muchos FVG"],ans:1},{q:"¿Qué afirma la teoría SMC sobre el regreso del precio a un Order Block?",opts:["Que el precio siempre regresa, sin excepción","Que es una profecía autocumplida del retail","Que el precio podría regresar a esa zona, pero no está garantizado","Que los algoritmos lo programan así obligatoriamente"],ans:2}],
+  "3a":[{q:"Según SMC, ¿qué es Buy Side Liquidity?",opts:["Órdenes de compra en el libro visible","Stops y órdenes acumulados por encima de swing highs","El volumen de compradores activos","Zonas de alta demanda en el gráfico"],ans:1},{q:"¿Cómo describe la teoría SMC la relación entre precio y liquidez?",opts:["El precio busca liquidez de forma garantizada y siempre repite el patrón","El precio podría desplazarse hacia zonas de liquidez, pero el movimiento posterior no está garantizado","La liquidez no influye en el precio","El patrón solo ocurre en la sesión de Londres"],ans:1}],
+  "4a":[{q:"¿Cuál es un nivel de riesgo por trade frecuentemente recomendado para limitar el daño?",opts:["5% del capital","10% si hay confluencia","1-2% del capital total","Depende del setup"],ans:2},{q:"Con un RRR de 1:2, ¿qué efectividad necesitarías para quedar a mano, y qué garantiza?",opts:["~34%, y garantiza ser rentable","~34%, pero no garantiza rentabilidad por sí solo","50%, y elimina las pérdidas","60%, y asegura ganancias"],ans:1}],
 };
 
 // ═══ STATE ═══
@@ -261,7 +270,7 @@ let simDir = 'buy';
 let simTrades = [];
 
 // CHAT STATE
-let chatMessages = [{role:'assistant',content:'Hola, soy tu tutor de trading institucional. Puedo explicarte SMC, Order Blocks, liquidez, ICT, gestión de riesgo o cualquier concepto de la academia. ¿Qué quieres aprender hoy?'}];
+let chatMessages = [{role:'assistant',content:'Hola, soy tu tutor de Trading Academy. Puedo explicarte SMC, Order Blocks, liquidez, ICT, estructura de mercado, gestión de riesgo, RRR o psicología. Una aclaración antes de partir: esto es contenido educativo, no asesoría financiera — no te diré dónde entrar, qué SL/TP usar, ni si un activo va a subir o bajar. ¿Qué quieres aprender hoy?'}];
 let chatLoading = false;
 
 // ═══ CANDLE GEN ═══
@@ -547,7 +556,7 @@ function executeTrade(){
   renderSimParams();renderSimCalc();
   const fb=document.getElementById('sim-feedback');
   fb.style.display='block';
-  fb.innerHTML=`<div style="background:${win?'#00E8A015':'#FF3D5A15'};border:1px solid ${win?'#00E8A0':'#FF3D5A'};border-radius:10px;padding:12px 16px;text-align:center;font-weight:800;font-size:15px;color:${win?'#00E8A0':'#FF3D5A'};margin-bottom:10px">${win?'✓ TRADE GANADOR +$'+pnl.toFixed(2):'✗ STOP LOSS -$'+Math.abs(pnl).toFixed(2)}</div>`;
+  fb.innerHTML=`<div style="background:${win?'#00E8A015':'#FF3D5A15'};border:1px solid ${win?'#00E8A0':'#FF3D5A'};border-radius:10px;padding:12px 16px;text-align:center;font-weight:800;font-size:15px;color:${win?'#00E8A0':'#FF3D5A'};margin-bottom:10px">${win?'Resultado de ejemplo favorable +$'+pnl.toFixed(2):'Resultado de ejemplo desfavorable -$'+Math.abs(pnl).toFixed(2)}</div>`;
   setTimeout(()=>fb.style.display='none',2500);
   renderTradeHistory();
 }
@@ -570,7 +579,24 @@ function resetSim(){simCapital=10000;simTrades=[];renderSimParams();renderSimCal
 
 // ═══ TUTOR ═══
 const SUGGESTIONS=['¿Qué diferencia hay entre BOS y CHoCH?','Explícame los Order Blocks con un ejemplo','¿Cómo identifico liquidez en el gráfico?','¿Cuánto debo arriesgar por trade?'];
-const TUTOR_SYSTEM=`Eres un tutor experto en trading institucional con especialidad en Smart Money Concepts (SMC), ICT, Order Blocks, Fair Value Gaps, gestión de liquidez y risk management. Tu estilo es claro, directo y pedagógico. Respondes en español. Nunca das consejos de inversión específicos. Enseñas metodología, conceptos y lógica del mercado institucional.`;
+const TUTOR_SYSTEM=`Eres un tutor educativo de trading dentro de Trading Academy de HABIL/IA Markets. Enseñas Smart Money Concepts (SMC), ICT, Order Blocks, Fair Value Gaps, liquidez, estructura de mercado, sesiones, gestión de riesgo, position sizing, RRR, psicología y disciplina. Tu rol es enseñar y aclarar, nunca aconsejar operaciones.
+
+Tu estilo es claro, cercano, pedagógico y prudente. Respondes siempre en español latinoamericano (no uses vocabulario de España). Si das ejemplos con dinero, usa dólares (USD).
+
+REGLAS QUE NUNCA ROMPES:
+- Explicas conceptos, metodología y lógica del mercado. Eso es lo tuyo.
+- Siempre que hables de un concepto o estrategia, aclaras sus riesgos.
+- Dejas claro, cuando corresponda, que esto es contenido educativo y NO es asesoría financiera.
+- NO recomiendas comprar ni vender ningún activo.
+- NO das entradas concretas, ni stop loss, take profit, lotaje ni pares específicos para operar.
+- Nunca dices cosas como "entra aquí", "compra oro", "vende EURUSD", "usa este SL/TP" ni equivalentes.
+- NO predices precios. No dices que XAUUSD, EURUSD, NAS100, BTC ni ningún activo "va a subir" o "va a bajar".
+- Presentas SMC e ICT como una metodología de análisis estudiada y debatida, popular entre algunos traders, NO como una verdad garantizada ni como una mecánica segura del mercado. Usas expresiones como "según la teoría SMC", "desde este enfoque se interpreta", "esto no garantiza el movimiento".
+- Explicas con honestidad que el trading —y en particular forex, CFDs, oro, índices y criptomonedas— implica alto riesgo, y que se puede perder parte o todo el capital, especialmente al usar apalancamiento.
+- Dejas claro que ningún método, indicador o estrategia garantiza resultados.
+- Si el usuario pide una operación concreta (dónde entrar, qué SL/TP usar, qué par operar, si comprar o vender, si un activo va a subir), declinas con amabilidad, explicas por qué no puedes darlo, y rediriges hacia el concepto educativo y hacia consultar a un profesional con licencia para decisiones personales.
+
+Si no sabes algo o el dato puede estar desactualizado, lo dices con honestidad en lugar de inventar.`;
 
 function renderChat(){
   const box=document.getElementById('chat-messages');
@@ -607,14 +633,20 @@ async function sendMsg(){
   document.getElementById('chat-send').disabled=true;
   renderChat();
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    // El backend compartido (/api/chat) inyecta la API key desde las variables
+    // de entorno de Vercel y elige el modelo. El frontend NUNCA maneja la key.
+    const res=await fetch('/api/chat',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:TUTOR_SYSTEM,messages:chatMessages.map(m=>({role:m.role,content:m.content}))})
+      body:JSON.stringify({system:TUTOR_SYSTEM,messages:chatMessages.map(m=>({role:m.role,content:m.content}))})
     });
     const data=await res.json();
-    const reply=data.content?.[0]?.text||'No pude procesar tu pregunta.';
-    chatMessages=[...chatMessages,{role:'assistant',content:reply}];
-  }catch{chatMessages=[...chatMessages,{role:'assistant',content:'Error de conexión. Intenta de nuevo.'}];}
+    if(data && data.ok===false){
+      chatMessages=[...chatMessages,{role:'assistant',content:data.userMessage||'No se pudo obtener una respuesta en este momento. Intenta de nuevo en un momento.'}];
+    }else{
+      const reply=(data && data.content && data.content[0] && data.content[0].text)||'No se pudo obtener una respuesta en este momento. Intenta de nuevo en un momento.';
+      chatMessages=[...chatMessages,{role:'assistant',content:reply}];
+    }
+  }catch{chatMessages=[...chatMessages,{role:'assistant',content:'Hubo un problema de conexión. Por favor intenta de nuevo.'}];}
   chatLoading=false;
   document.getElementById('chat-send').disabled=false;
   renderChat();
