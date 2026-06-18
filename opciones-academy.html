@@ -153,7 +153,7 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
   <div class="logo-text"><div class="l1">OPCIONES & ACCIONES</div><div class="l2">HABIL/IA · ACADEMY</div></div>
   <div id="nav">
     <button class="nav-btn active" onclick="switchTab('academy')">◈ Academia</button>
-    <button class="nav-btn" onclick="switchTab('scanner')">⬡ Scanner</button>
+    <button class="nav-btn" onclick="switchTab('scanner')">⬡ Laboratorio</button>
     <button class="nav-btn" onclick="switchTab('simulator')">⬟ Simulador</button>
     <button class="nav-btn" onclick="switchTab('tutor')">✦ Tutor IA</button>
   </div>
@@ -165,18 +165,24 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
 
 <div id="main">
 
+  <!-- DISCLAIMER GLOBAL -->
+  <div style="display:flex;align-items:flex-start;gap:10px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:10px;padding:11px 14px;margin-bottom:16px">
+    <span style="color:var(--gold);font-size:14px;line-height:1.4;flex-shrink:0">⚠</span>
+    <span style="font-size:11px;line-height:1.6;color:var(--muted)">Contenido educativo. No es asesoría financiera. Operar acciones, opciones y ETFs implica alto riesgo. Las opciones son instrumentos complejos y puedes perder la prima completa o incluso más según la estrategia. No son adecuadas para todas las personas.</span>
+  </div>
+
   <!-- ACADEMY -->
   <div id="tab-academy">
     <div class="hero">
       <div class="hero-tag">MERCADOS DE CAPITALES</div>
       <h2>Acciones, Opciones y ETFs:<br>El mercado americano desde adentro.</h2>
-      <p>Desde leer una acción hasta operar calls y puts sobre AAPL, TSLA o SPY. Aprende las Griegas, las estrategias y el scanner de señales que los traders profesionales usan cada día.</p>
+      <p>Aprende a leer acciones, opciones, ETFs, griegas y escenarios de mercado con simuladores educativos y datos de práctica.</p>
       <div class="hero-chips">
         <div class="chip g">📈 Acciones NYSE/NASDAQ</div>
         <div class="chip r">⚡ Calls & Puts</div>
         <div class="chip b">🇺🇸 ETFs SPY/QQQ</div>
         <div class="chip g">Δ Las Griegas</div>
-        <div class="chip r">🔍 Scanner de señales</div>
+        <div class="chip r">🔍 Laboratorio de mercado</div>
       </div>
     </div>
     <div class="prog-card" id="prog-banner">
@@ -217,21 +223,21 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
 
   <!-- SCANNER -->
   <div id="tab-scanner" style="display:none">
-    <div class="sec-title">📡 Scanner de Señales</div>
-    <div class="sec-sub">Identifica setups de opciones en tiempo real — calls, puts, volatilidad implícita y momentum</div>
+    <div class="sec-title">📡 Laboratorio de lectura de mercado</div>
+    <div class="sec-sub">Practica cómo se leen escenarios de opciones — momentum, volatilidad implícita, volumen y tendencia — con datos de ejemplo</div>
     <div class="api-notice">
-      <strong>🔌 Modo demostración:</strong> Los datos son simulados con lógica real. Para datos en vivo conecta una API (Polygon.io, Alpaca, Tradier) — la estructura ya está lista para recibirlos.
+      <strong>🔌 Datos de ejemplo:</strong> Datos de ejemplo generados para practicar lectura de mercado. No son datos reales, no son señales de trading y no indican qué operar.
     </div>
     <div class="scan-refresh">
       <div class="live-dot"></div>
-      <span style="font-size:12px;color:var(--muted)">Simulado en tiempo real</span>
-      <button class="refresh-btn" onclick="refreshScanner()">↻ Actualizar señales</button>
+      <span style="font-size:12px;color:var(--muted)">Datos de ejemplo</span>
+      <button class="refresh-btn" onclick="refreshScanner()">↻ Actualizar escenarios</button>
       <span id="scan-time" style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted)"></span>
     </div>
     <div class="filter-tabs">
       <button class="filter-tab active" onclick="setFilter('all',this)">Todos</button>
-      <button class="filter-tab" onclick="setFilter('bullish',this)">🟢 Alcistas</button>
-      <button class="filter-tab" onclick="setFilter('bearish',this)">🔴 Bajistas</button>
+      <button class="filter-tab" onclick="setFilter('bullish',this)">🟢 Sesgo alcista</button>
+      <button class="filter-tab" onclick="setFilter('bearish',this)">🔴 Sesgo bajista</button>
       <button class="filter-tab" onclick="setFilter('iv',this)">⚡ IV Alto</button>
       <button class="filter-tab" onclick="setFilter('etf',this)">🇺🇸 ETFs</button>
     </div>
@@ -242,7 +248,7 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
   <!-- SIMULATOR -->
   <div id="tab-simulator" style="display:none">
     <div class="sec-title">Simulador de Opciones</div>
-    <div class="sec-sub">Calcula P&L, prima y griegas de tus contratos antes de operar</div>
+    <div class="sec-sub">Explora escenarios de P&L, prima y griegas con contratos ficticios — para entender cómo se comportan, no para operar</div>
     <div id="sim-content"></div>
   </div>
 
@@ -290,7 +296,7 @@ const MODULES = [
   {
     id:2, tag:"OPCIONES BÁSICO", icon:"⚡", color:"#ff7c00",
     title:"Calls y Puts: la mecánica de las opciones",
-    subtitle:"Qué son, cómo funcionan y por qué son poderosas",
+    subtitle:"Qué son, cómo funcionan y qué riesgos implican",
     lessons:[
       {id:"2a",title:"¿Qué es una opción y por qué existe?",xp:150,mins:12},
       {id:"2b",title:"Call Options: el derecho a comprar",xp:180,mins:14},
@@ -298,9 +304,9 @@ const MODULES = [
       {id:"2d",title:"Strike, expiración y prima: los 3 elementos clave",xp:200,mins:16},
     ],
     content:[
-      {h:"¿Qué es una opción?",b:"Una opción es un contrato que te da el DERECHO (no la obligación) de comprar o vender 100 acciones a un precio específico antes de una fecha determinada. Pagas una prima por ese derecho. Si el mercado va en tu dirección, el valor de tu opción puede multiplicarse varias veces. Si va en contra, pierdes solo la prima pagada — nunca más. Esta asimetría riesgo/recompensa es lo que hace a las opciones tan poderosas."},
-      {h:"Call Option: apostando al alza",b:"Un CALL te da el derecho de COMPRAR 100 acciones al precio de ejercicio (strike). Ejemplo: Compras un CALL de Apple con strike $200, expiración en 30 días, prima $3 (= $300 totales por el contrato de 100 acciones). Si Apple sube a $220, tu opción vale ~$20 = $2,000. Ganaste $1,700 sobre $300 invertidos (+566%). Si Apple baja, pierdes solo los $300."},
-      {h:"Put Option: apostando a la baja",b:"Un PUT te da el derecho de VENDER 100 acciones al precio de ejercicio. Ejemplo: Compras un PUT de Tesla con strike $250, prima $4 (=$400). Si Tesla cae a $220, tu PUT vale ~$30 = $3,000. Ganaste $2,600 sobre $400 (+650%). Los puts también sirven como seguro de cartera — si tienes acciones y temes una caída, un put te protege."},
+      {h:"¿Qué es una opción?",b:"Una opción es un contrato que te da el DERECHO (no la obligación) de comprar o vender 100 acciones a un precio específico antes de una fecha determinada. Pagas una prima por ese derecho. Si el mercado se mueve a tu favor, el valor de la opción puede subir bastante; si se mueve en contra o simplemente no se mueve a tiempo, la opción puede perder valor y, en muchos casos, llegar a $0 (pierdes el 100% de la prima). De hecho, una gran parte de las opciones compradas vence sin valor. Esta asimetría —pérdida limitada a la prima, pero alta probabilidad de perderla— es justo lo que hace que las opciones sean instrumentos complejos y arriesgados, no una vía de ganancia fácil."},
+      {h:"Call Option: el derecho a comprar",b:"Un CALL te da el derecho de COMPRAR 100 acciones al precio de ejercicio (strike). Ejemplo educativo: compras un CALL de Apple con strike $200, expiración en 30 días, prima $3 (= $300 totales por el contrato de 100 acciones). Si Apple sube a $220, esa opción podría valer alrededor de $20 = $2,000. Pero ese es el escenario favorable: si Apple se queda igual o baja, la opción puede perder todo su valor y pierdes los $300 completos. Lo más común no es el escenario ganador, sino que la opción venza sin valor. Por eso el tamaño de cada posición importa tanto."},
+      {h:"Put Option: el derecho a vender",b:"Un PUT te da el derecho de VENDER 100 acciones al precio de ejercicio. Ejemplo educativo: compras un PUT de Tesla con strike $250, prima $4 (=$400). Si Tesla cae a $220, ese PUT podría valer alrededor de $30 = $3,000. Pero igual que con el call, ese es el escenario favorable: si Tesla sube o se mantiene, el PUT puede vencer sin valor y pierdes los $400 completos. Los puts también pueden usarse como cobertura: si tienes acciones y temes una caída, un put puede limitar parte de esa pérdida, aunque la prima es un costo que asumes igual."},
       {h:"Strike, expiración y prima: el triángulo",b:"STRIKE: precio al que puedes ejercer el contrato. In-the-money (ITM): call con strike menor al precio actual. Out-of-the-money (OTM): call con strike mayor al precio actual. EXPIRACIÓN: fecha límite. Opciones semanales (más especulativas), mensuales (más balanceadas), LEAPS (hasta 2 años, más conservadoras). PRIMA: precio del contrato = Valor Intrínseco + Valor Extrínseco (tiempo + volatilidad)."},
     ]
   },
@@ -329,14 +335,14 @@ const MODULES = [
     lessons:[
       {id:"4a",title:"SPY y QQQ: operando los índices con opciones",xp:240,mins:16},
       {id:"4b",title:"Covered Call: generando ingresos con tus acciones",xp:260,mins:18},
-      {id:"4c",title:"Iron Condor y Straddle: jugando con la volatilidad",xp:280,mins:20},
-      {id:"4d",title:"Gestión de riesgo en opciones: las reglas del profesional",xp:300,mins:22},
+      {id:"4c",title:"Iron Condor y Straddle: estrategias de volatilidad",xp:280,mins:20},
+      {id:"4d",title:"Gestión de riesgo en opciones: principios clave",xp:300,mins:22},
     ],
     content:[
       {h:"SPY y QQQ: los ETFs más operados del mundo",b:"SPY es el ETF que replica el S&P 500 — las 500 empresas más grandes de EEUU. QQQ replica el NASDAQ-100 — las 100 mayores tecnológicas. ¿Por qué operar opciones sobre ETFs? Mayor liquidez, spreads más ajustados, menos riesgo de gap por evento individual (earnings de una empresa), y mayor previsibilidad. SPY es el activo con más volumen de opciones del mundo. Para aprender, muchos traders empiezan aquí."},
-      {h:"Covered Call: ingresos con tus acciones",b:"El Covered Call es la estrategia más conservadora con opciones. Si tienes 100 acciones de Apple ($200 c/u = $20,000), vendes un CALL con strike $210, prima $2 ($200). Si Apple NO supera $210 al vencimiento, te quedas la prima — es ingreso pasivo sobre acciones que ya posees. Si Apple supera $210, vendes tus acciones a $210 (ganancia de $10/acc + la prima). Riesgo: si Apple cae, tu pérdida es en la acción, compensada parcialmente por la prima."},
-      {h:"Straddle: cuando no sabes hacia dónde va el mercado",b:"Un Straddle compra simultáneamente un CALL y un PUT del mismo strike y expiración. Ganas si la acción se mueve MUCHO en cualquier dirección — perfecta antes de earnings inciertos. Costo: pagas dos primas. Para ser rentable, la acción debe moverse más que el costo total de las dos opciones. Un Strangle es similar pero con strikes diferentes — más barato pero necesita un movimiento mayor."},
-      {h:"Iron Condor: ganando con la calma del mercado",b:"El Iron Condor vende un call spread y un put spread simultáneamente. Ganas si la acción se mantiene dentro de un rango — exactamente lo opuesto al straddle. Es la estrategia favorita de traders que venden volatilidad. Tu ganancia máxima es la prima recibida. Tu pérdida máxima está limitada. La probabilidad de éxito puede ser del 70-80% si el iron condor está bien posicionado, pero la ganancia por trade es menor."},
+      {h:"Covered Call: generación de prima con riesgos",b:"El Covered Call es una de las estrategias de menor riesgo relativo con opciones, pero no es libre de riesgo. Si tienes 100 acciones de Apple ($200 c/u = $20,000), vendes un CALL con strike $210, prima $2 ($200). Si Apple NO supera $210 al vencimiento, te quedas la prima: generas algo de ingreso por una posición que ya tenías. Si Apple supera $210, vendes tus acciones a $210 (limitas tu ganancia al alza). Y el riesgo principal sigue presente: si Apple cae con fuerza, pierdes valor en la acción, y la prima solo compensa una parte pequeña. No es ingreso garantizado ni dinero gratis."},
+      {h:"Straddle: una estrategia de volatilidad",b:"Un Straddle compra a la vez un CALL y un PUT del mismo strike y expiración. Busca beneficiarse si la acción se mueve mucho en cualquier dirección — por eso suele estudiarse antes de eventos inciertos como earnings. El costo: pagas dos primas, así que el riesgo también es mayor. Para que resulte favorable, la acción debe moverse más que el costo total de ambas opciones; si se mueve poco, ambas primas pueden erosionarse y la pérdida puede ser considerable. Un Strangle es parecido pero con strikes distintos: más barato, pero exige un movimiento aún mayor. Es una estrategia compleja, no una apuesta direccional simple."},
+      {h:"Iron Condor: una estrategia compleja de rango",b:"El Iron Condor vende un call spread y un put spread a la vez. Busca beneficiarse si la acción se mantiene dentro de un rango — lo opuesto al straddle. Su ganancia máxima es la prima recibida y su pérdida máxima está limitada, pero esa pérdida es real y suele ser bastante mayor que la ganancia máxima: ganas poco muchas veces y puedes perder más en las veces que el precio se sale del rango. Por eso es una estrategia avanzada que exige entender bien el riesgo, no una fórmula con resultado asegurado. No existe una probabilidad de éxito garantizada."},
     ],
     advanced:true
   },
@@ -411,15 +417,15 @@ function renderScanner(){
       <div class="scan-ticker">${s.ticker}</div>
       <div class="scan-name">${s.name}</div>
       <div class="scan-price" style="color:${pos?'#00e8a0':'#ff3d5a'}">$${s.price} <span style="font-size:11px">${pos?'▲':'▼'} ${Math.abs(s.changePct)}%</span></div>
-      <div class="scan-signal ${s.signal}">${s.signal==='bullish'?'▲ ALCISTA':s.signal==='bearish'?'▼ BAJISTA':'◆ NEUTRAL'}</div>
+      <div class="scan-signal ${s.signal}">${s.signal==='bullish'?'▲ SESGO ALCISTA':s.signal==='bearish'?'▼ SESGO BAJISTA':'◆ NEUTRAL'}</div>
       <div class="scan-metrics">
         <span class="scan-metric">IV <span class="scan-iv" style="color:${s.iv>50?'#ff7c00':'#00e8a0'}">${s.iv}%</span></span>
         <span class="scan-metric">RSI ${s.rsi}</span>
         <span class="scan-metric">Vol ${s.volume}M</span>
         <span class="scan-metric" style="color:${s.type==='etf'?'#4da6ff':'var(--muted)'}">${s.type==='etf'?'🇺🇸 ETF':'📈 ACCIÓN'}</span>
       </div>
-      ${s.call_signal?'<div style="margin-top:6px;font-size:10px;color:#00e8a0;font-weight:800">⚡ SEÑAL CALL</div>':''}
-      ${s.put_signal?'<div style="margin-top:6px;font-size:10px;color:#ff3d5a;font-weight:800">⚡ SEÑAL PUT</div>':''}
+      ${s.call_signal?'<div style="margin-top:6px;font-size:10px;color:#00e8a0;font-weight:800">📘 Lectura de ejemplo: contexto alcista</div>':''}
+      ${s.put_signal?'<div style="margin-top:6px;font-size:10px;color:#ff3d5a;font-weight:800">📘 Lectura de ejemplo: contexto bajista</div>':''}
       <div class="scan-bar" style="width:${Math.min(Math.abs(parseFloat(s.changePct))*20,100)}%"></div>
     `;
     card.onclick=()=>showScanDetail(s);
@@ -446,18 +452,20 @@ function showScanDetail(s){
           {l:'IV',v:s.iv+'%',c:s.iv>50?'#ff7c00':'#00e8a0'},
           {l:'RSI',v:s.rsi,c:s.rsi>70?'#ff3d5a':s.rsi<30?'#00e8a0':'var(--text)'},
           {l:'Volumen',v:s.volume+'M',c:'var(--text)'},
-          {l:'Señal',v:s.signal.toUpperCase(),c:s.signal==='bullish'?'#00e8a0':s.signal==='bearish'?'#ff3d5a':'#ffaa00'},
+          {l:'Lectura',v:s.signal.toUpperCase(),c:s.signal==='bullish'?'#00e8a0':s.signal==='bearish'?'#ff3d5a':'#ffaa00'},
         ].map(r=>`<div style="background:var(--surface);border-radius:8px;padding:10px;text-align:center">
           <div style="font-size:10px;color:var(--muted);margin-bottom:3px">${r.l}</div>
           <div style="font-family:'JetBrains Mono';font-size:14px;font-weight:700;color:${r.c}">${r.v}</div>
         </div>`).join('')}
       </div>
       <div style="background:var(--golddim);border:1px solid rgba(255,170,0,.2);border-radius:8px;padding:12px;font-size:12px;color:var(--text)">
-        <strong style="color:var(--gold)">💡 Setup sugerido:</strong><br>
-        ${s.signal==='bullish'&&s.iv<40?`CALL con strike ${(parseFloat(s.price)*1.03).toFixed(0)} (~3% OTM), expiración 30-45 días. IV baja = prima relativamente barata.`:
-          s.signal==='bearish'&&s.iv<40?`PUT con strike ${(parseFloat(s.price)*.97).toFixed(0)} (~3% OTM), expiración 30-45 días. Confirma con ruptura de soporte.`:
-          s.iv>50?`IV alta (${s.iv}%) → considera vender opciones (Iron Condor o Covered Call) en lugar de comprar. El tiempo decay trabaja a tu favor.`:
-          `Sin setup claro actualmente. Espera confirmación de dirección antes de operar.`}
+        <strong style="color:var(--gold)">📘 Cómo se leería este caso (ejemplo educativo):</strong><br>
+        ${s.signal==='bullish'&&s.iv<40?`El cambio de precio es positivo y la volatilidad implícita es baja (${s.iv}%). En términos educativos, una IV baja suele asociarse a primas relativamente más baratas. Esto describe un contexto, no una recomendación.`:
+          s.signal==='bearish'&&s.iv<40?`El cambio de precio es negativo y la volatilidad implícita es baja (${s.iv}%). Educativamente, esto describe un contexto de sesgo bajista con primas relativamente más baratas. No indica qué operar.`:
+          s.iv>50?`La volatilidad implícita es alta (${s.iv}%). Educativamente, una IV elevada suele significar primas más caras y mayor incertidumbre. Es un dato de contexto, no una señal de operación.`:
+          `Sin un sesgo claro en este ejemplo. RSI ${s.rsi}, IV ${s.iv}% y el volumen relativo describen el contexto del momento; por sí solos no determinan ninguna decisión.`}
+        <br><br>
+        <span style="color:var(--muted)">Recordatorio: momentum, IV, volumen y RSI son herramientas de lectura. Ningún indicador predice el futuro ni reemplaza tu propio análisis y el de un profesional con licencia.</span>
       </div>
     </div>`;
 }
@@ -745,7 +753,7 @@ function renderSim(){
         <span style="font-family:'JetBrains Mono';font-size:12px;color:${parseFloat(sc.move)>0?'var(--green)':'var(--red)'}">${sc.move} → $${sc.price}</span>
         <span style="font-family:'JetBrains Mono';font-size:13px;font-weight:700;color:${parseFloat(sc.pnl)>=0?'var(--green)':'var(--red)'}">${parseFloat(sc.pnl)>=0?'+':''}$${sc.pnl}</span>
       </div>`).join('')}
-      <div class="tip-box" style="margin-top:12px"><strong>⚠️ Recuerda:</strong> Esto es educativo. Los datos son simulados. Nunca operes opciones reales sin entender completamente el riesgo.</div>
+      <div class="tip-box" style="margin-top:12px"><strong>⚠️ Recuerda:</strong> Este simulador usa contratos ficticios. Los valores de P&L son un cálculo teórico al vencimiento basado en los datos que tú ingresas: no predicen resultados reales, no representan el mercado en vivo y no son una recomendación de operar. Sirve para entender cómo se comportan los escenarios. Las opciones son instrumentos complejos y puedes perder la prima completa.</div>
     </div>`;
 }
 
