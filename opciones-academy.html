@@ -4,153 +4,202 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Opciones & Acciones Academy — HABIL/IA</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;scrollbar-width:thin;scrollbar-color:#2a1a0a #080500}
+*{box-sizing:border-box;margin:0;padding:0;scrollbar-width:thin;scrollbar-color:#26334A #0A0E15}
 :root{
-  --bg:#080500;--surface:#0f0a00;--card:#161000;--border:#2a1e00;--borderhi:#3d2d00;
-  --gold:#ffaa00;--golddim:#ffaa0015;--orange:#ff7c00;--orangedim:#ff7c0015;
-  --green:#00e8a0;--greendim:#00e8a010;--red:#ff3d5a;--reddim:#ff3d5a10;
-  --blue:#4da6ff;--bluedim:#4da6ff15;--purple:#a855f7;
-  --text:#f0e8d0;--muted:#7a6a3a;--dim:#1e1600;
+  --bg:#0A0E15;--surface:#0C111A;--card:#121826;--border:#26334A;--borderhi:#33425C;
+  --gold:#C9A24B;--golddim:rgba(201,162,75,.12);--orange:#C9A24B;--orangedim:rgba(201,162,75,.12);
+  --green:#1FBF8F;--greendim:rgba(31,191,143,.12);--red:#F2555A;--reddim:rgba(242,85,90,.10);
+  --blue:#3B82F6;--bluedim:rgba(59,130,246,.12);--purple:#8B7CF6;
+  --text:#E6EDF5;--muted:#8C9CB2;--faint:#5C6E86;--dim:#19212F;
+  --accent:#3B82F6;--accent2:#60A5FA;--accentdim:rgba(59,130,246,.12);--mktgreen:#1FBF8F;
+  --soft:rgba(255,255,255,.06);
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 }
-body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 15%,rgba(255,170,0,.05) 0%,transparent 55%),radial-gradient(ellipse at 85% 85%,rgba(255,124,0,.03) 0%,transparent 55%);pointer-events:none;z-index:0}
-*::-webkit-scrollbar{width:4px}*::-webkit-scrollbar-thumb{background:#2a1e00;border-radius:2px}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(1100px 480px at 80% -6%,rgba(59,130,246,.06),transparent 60%),radial-gradient(900px 520px at 12% 4%,rgba(96,165,250,.045),transparent 55%);pointer-events:none;z-index:0}
+*::-webkit-scrollbar{width:5px}*::-webkit-scrollbar-thumb{background:#26334A;border-radius:3px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
-@keyframes scanline{0%{transform:translateY(-100%)}100%{transform:translateY(400px)}}
-button{font-family:'Syne',sans-serif;cursor:pointer}
+button{font-family:var(--sans);cursor:pointer}
 
 /* HEADER */
-#header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;height:58px;position:sticky;top:0;z-index:100;gap:12px}
-.logo-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--orange));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;font-weight:800;color:#080500}
-.logo-text .l1{font-weight:800;font-size:13px;line-height:1.1;color:var(--text)}
-.logo-text .l2{font-size:9px;letter-spacing:2px;color:var(--muted)}
-#nav{flex:1;display:flex;justify-content:center;gap:3px;flex-wrap:wrap}
-.nav-btn{background:none;border:1px solid transparent;border-radius:6px;padding:5px 10px;color:var(--muted);font-size:11px;cursor:pointer;transition:all .2s;white-space:nowrap}
-.nav-btn.active{background:var(--golddim);border-color:rgba(255,170,0,.3);color:var(--gold);font-weight:700}
-.xp-box .xp-n{color:var(--gold);font-family:'JetBrains Mono';font-size:13px;font-weight:700}
-.xp-box .xp-s{color:var(--muted);font-size:10px}
-.xp-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,rgba(255,170,0,.3),rgba(255,170,0,.1));border:2px solid rgba(255,170,0,.4);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:13px;flex-shrink:0}
+#header{background:linear-gradient(180deg,rgba(10,14,21,.94),rgba(10,14,21,.82));backdrop-filter:blur(14px);border-bottom:1px solid var(--soft);padding:0 18px;display:flex;align-items:center;height:60px;position:sticky;top:0;z-index:100;gap:12px}
+.logo-icon{width:34px;height:34px;border-radius:9px;background:linear-gradient(150deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#04121A;box-shadow:0 2px 12px rgba(59,130,246,.22)}
+.logo-icon svg{width:18px;height:18px}
+.logo-text .l1{font-weight:800;font-size:15px;line-height:1.1;color:var(--text);letter-spacing:.2px}
+.logo-text .l1 i{color:var(--accent);font-style:normal}
+.logo-text .l2{font-size:10px;letter-spacing:1.5px;color:var(--faint);font-family:'JetBrains Mono';text-transform:uppercase;margin-top:2px}
+#nav{flex:1;display:flex;justify-content:center;gap:4px;flex-wrap:wrap}
+.nav-btn{background:none;border:1px solid transparent;border-radius:9px;padding:8px 13px;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap}
+.nav-btn:hover{color:var(--text)}
+.nav-btn.active{background:var(--accentdim);border-color:rgba(59,130,246,.28);color:var(--accent);font-weight:700}
+.xp-box{display:flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--border);border-radius:11px;background:var(--surface)}
+.xp-box .xp-n{color:var(--accent);font-family:'JetBrains Mono';font-size:14px;font-weight:700}
+.xp-box .xp-s{color:var(--faint);font-size:10px}
+.xp-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(150deg,rgba(59,130,246,.25),rgba(96,165,250,.1));border:1px solid rgba(59,130,246,.35);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:13px;flex-shrink:0}
 
 /* MAIN */
 #main{max-width:860px;margin:0 auto;padding:20px 16px 40px;position:relative;z-index:1;animation:fadeIn .4s ease}
 
 /* HERO */
-.hero{background:linear-gradient(135deg,var(--card),var(--surface));border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden}
-.hero::after{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(255,170,0,.06),transparent);pointer-events:none}
-.hero-tag{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--gold);background:var(--golddim);padding:3px 10px;border-radius:3px;display:inline-block;margin-bottom:10px}
-.hero h2{font-size:23px;font-weight:800;color:var(--text);margin-bottom:6px;line-height:1.25}
-.hero p{font-size:13px;color:var(--muted);line-height:1.7;max-width:540px}
-.hero-chips{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
-.chip{background:var(--dim);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--muted)}
-.chip.g{color:var(--gold);border-color:rgba(255,170,0,.2)}
-.chip.b{color:var(--blue);border-color:rgba(77,166,255,.2)}
-.chip.r{color:var(--red);border-color:rgba(255,61,90,.2)}
+.hero{background:var(--surface);border:1px solid var(--soft);border-radius:16px;padding:26px 24px;margin-bottom:20px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;inset:0;opacity:.5;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:34px 34px;-webkit-mask-image:radial-gradient(420px 170px at 82% 0%,#000,transparent 70%);mask-image:radial-gradient(420px 170px at 82% 0%,#000,transparent 70%)}
+.hero-tag{font-family:'JetBrains Mono';font-size:11px;font-weight:600;letter-spacing:2px;color:var(--accent);text-transform:uppercase;display:inline-block;margin-bottom:9px;position:relative}
+.hero h2{font-size:24px;font-weight:800;color:var(--text);margin-bottom:8px;line-height:1.18;letter-spacing:-.4px;position:relative}
+.hero p{font-size:13.5px;color:var(--muted);line-height:1.7;max-width:540px;position:relative}
+.hero-chips{display:flex;gap:7px;margin-top:15px;flex-wrap:wrap;position:relative}
+.chip{background:var(--dim);border:1px solid var(--soft);border-radius:8px;padding:5px 10px;font-size:11px;font-weight:500;color:var(--muted);font-family:'JetBrains Mono'}
+.chip.g{color:var(--accent);border-color:rgba(59,130,246,.2)}
+.chip.b{color:var(--accent);border-color:rgba(59,130,246,.2)}
+.chip.r{color:var(--muted);border-color:var(--soft)}
 
 /* PROGRESS */
-.prog-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:16px;display:none}
-.prog-bar-bg{flex:1;background:var(--border);border-radius:4px;height:6px}
-.prog-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold),var(--orange));box-shadow:0 0 8px rgba(255,170,0,.4);transition:width .5s}
+.prog-card{background:var(--surface);border:1px solid var(--soft);border-radius:14px;padding:16px 18px;margin-bottom:16px;align-items:center;gap:18px;display:none}
+.prog-bar-bg{flex:1;background:var(--dim);border-radius:99px;height:7px;overflow:hidden}
+.prog-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s ease}
 
 /* MODULE */
-.module{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:14px}
-.mod-hdr{padding:15px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border)}
-.mod-tag{font-size:10px;font-weight:800;letter-spacing:1.5px;padding:2px 8px;border-radius:3px}
+.module{background:var(--surface);border:1px solid var(--soft);border-radius:14px;overflow:hidden;margin-bottom:13px;position:relative}
+.module::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);opacity:.85}
+.mod-hdr{padding:16px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--soft)}
+.mod-tag{font-family:'JetBrains Mono';font-size:10px;font-weight:700;letter-spacing:1.5px;padding:2px 8px;border-radius:5px;text-transform:uppercase}
 .lessons{padding:10px 14px;display:flex;flex-direction:column;gap:7px}
-.lesson-btn{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:8px;border:1px solid var(--border);background:var(--surface);text-align:left;width:100%;cursor:pointer;transition:all .2s}
-.lesson-btn:hover:not(:disabled){filter:brightness(1.2);transform:translateX(2px)}
+.lesson-btn{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:9px;border:1px solid var(--soft);background:var(--card);text-align:left;width:100%;cursor:pointer;transition:all .18s}
+.lesson-btn:hover:not(:disabled){border-color:rgba(59,130,246,.35);transform:translateX(2px)}
 .lesson-btn:disabled{opacity:.4;cursor:not-allowed}
 .ln{width:26px;height:26px;border-radius:50%;background:var(--dim);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);flex-shrink:0;font-family:'JetBrains Mono'}
 
 /* LESSON */
 #lesson-view{display:none;animation:fadeIn .3s ease}
-.back-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer}
-.lv-tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:16px}
-.lv-tab{background:none;border:none;padding:8px 16px;font-size:12px;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s}
-.lv-tab.active{font-weight:700}
-.cb{background:var(--card);border-radius:10px;padding:16px;margin-bottom:10px;border:1px solid var(--border);border-left-width:3px}
-.cb-h{font-weight:700;font-size:13px;margin-bottom:8px}
+.back-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:7px 13px;font-size:12px;cursor:pointer;transition:.18s}
+.back-btn:hover{color:var(--text);border-color:var(--borderhi)}
+.lv-tabs{display:flex;gap:2px;border-bottom:1px solid var(--soft);margin-bottom:16px}
+.lv-tab{background:none;border:none;padding:9px 16px;font-size:12px;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;transition:all .18s}
+.lv-tab.active{font-weight:700;border-bottom-color:currentColor}
+.cb{background:var(--surface);border-radius:12px;padding:16px 17px;margin-bottom:10px;border:1px solid var(--soft);border-left-width:3px}
+.cb-h{font-weight:700;font-size:13.5px;margin-bottom:8px}
 .cb-b{font-size:13px;line-height:1.85;color:var(--text)}
+.cb-b strong{color:#fff}
 
 /* GREEKS TABLE */
 .greek-table{width:100%;border-collapse:collapse;font-size:12px}
-.greek-table th{background:var(--dim);color:var(--muted);padding:8px 10px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.05em}
-.greek-table td{padding:9px 10px;border-bottom:1px solid var(--border);font-size:12px}
+.greek-table th{background:var(--dim);color:var(--faint);padding:9px 10px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.05em;font-family:'JetBrains Mono';text-transform:uppercase}
+.greek-table td{padding:9px 10px;border-bottom:1px solid var(--soft);font-size:12px}
 .greek-table tr:last-child td{border-bottom:none}
-.greek-sym{font-family:'JetBrains Mono';font-size:18px;font-weight:700}
+.greek-sym{font-family:'JetBrains Mono';font-size:18px;font-weight:700;color:var(--accent)}
 
 /* QUIZ */
-.quiz-q{background:var(--card);border-radius:10px;padding:16px;margin-bottom:10px;border:1px solid var(--border)}
-.quiz-opt{width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:13px;text-align:left;margin-bottom:7px;cursor:pointer;transition:all .2s;font-family:'Syne',sans-serif}
-.quiz-submit{width:100%;padding:12px;border-radius:8px;border:none;color:#080500;font-weight:800;font-size:14px;cursor:pointer;font-family:'Syne',sans-serif;margin-top:4px}
+.quiz-q{background:var(--surface);border-radius:12px;padding:16px;margin-bottom:10px;border:1px solid var(--soft)}
+.quiz-opt{width:100%;padding:11px 14px;border-radius:9px;border:1px solid var(--soft);background:var(--card);color:var(--muted);font-size:13px;text-align:left;margin-bottom:7px;cursor:pointer;transition:all .18s;font-family:var(--sans)}
+.quiz-opt:hover{border-color:rgba(59,130,246,.3);color:var(--text)}
+.quiz-submit{width:100%;padding:12px;border-radius:9px;border:none;color:#04121A;font-weight:700;font-size:14px;cursor:pointer;font-family:var(--sans);margin-top:4px}
 .quiz-result{border-radius:12px;padding:20px;text-align:center;margin-top:10px}
 
 /* SIMULATOR */
-.sim-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.sim-card{background:var(--surface);border:1px solid var(--soft);border-radius:14px;padding:16px;margin-bottom:12px}
 .sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .sim-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .sim-label{font-size:12px;color:var(--muted)}
-.sim-val{font-family:'JetBrains Mono';font-size:13px;font-weight:700;color:var(--gold)}
-.type-btn{flex:1;padding:9px 0;border-radius:6px;border:none;font-weight:700;font-size:12px;font-family:'JetBrains Mono';cursor:pointer;transition:all .2s}
-.exec-btn{width:100%;padding:11px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--gold),var(--orange));color:#080500;font-weight:800;font-size:13px;cursor:pointer;margin-top:8px;letter-spacing:.5px;font-family:'Syne',sans-serif}
+.sim-val{font-family:'JetBrains Mono';font-size:13px;font-weight:700;color:var(--accent)}
+.type-btn{flex:1;padding:9px 0;border-radius:8px;border:none;font-weight:700;font-size:12px;font-family:'JetBrains Mono';cursor:pointer;transition:all .18s}
+.exec-btn{width:100%;padding:12px;border-radius:9px;border:none;background:linear-gradient(150deg,var(--accent),var(--accent2));color:#04121A;font-weight:800;font-size:13px;cursor:pointer;margin-top:8px;letter-spacing:.3px;font-family:var(--sans)}
 .trade-row{display:flex;justify-content:space-between;padding:7px 10px;border-radius:6px;margin-bottom:4px;font-family:'JetBrains Mono';font-size:11px}
 
-/* SCANNER */
+/* LABORATORIO (chrome) */
 .scanner-wrap{position:relative;overflow:hidden}
 .scan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:14px}
-.scan-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;overflow:hidden;cursor:pointer;transition:all .25s}
-.scan-card:hover{transform:translateY(-2px);border-color:var(--gold)}
+.scan-card{background:var(--surface);border:1px solid var(--soft);border-radius:12px;padding:14px;position:relative;overflow:hidden;cursor:pointer;transition:all .2s}
+.scan-card:hover{transform:translateY(-2px);border-color:rgba(59,130,246,.4)}
 .scan-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
 .scan-card.bullish::before{background:linear-gradient(90deg,var(--green),transparent)}
 .scan-card.bearish::before{background:linear-gradient(90deg,var(--red),transparent)}
-.scan-card.neutral::before{background:linear-gradient(90deg,var(--gold),transparent)}
+.scan-card.neutral::before{background:linear-gradient(90deg,var(--accent),transparent)}
 .scan-ticker{font-family:'JetBrains Mono';font-size:18px;font-weight:700;color:var(--text);margin-bottom:2px}
 .scan-name{font-size:10px;color:var(--muted);margin-bottom:8px}
 .scan-price{font-family:'JetBrains Mono';font-size:14px;font-weight:700;margin-bottom:6px}
-.scan-signal{font-size:10px;font-weight:800;letter-spacing:1px;padding:3px 8px;border-radius:3px;display:inline-block;margin-bottom:6px}
+.scan-signal{font-size:10px;font-weight:800;letter-spacing:1px;padding:3px 8px;border-radius:5px;display:inline-block;margin-bottom:6px;font-family:'JetBrains Mono'}
 .scan-signal.bullish{color:var(--green);background:var(--greendim)}
 .scan-signal.bearish{color:var(--red);background:var(--reddim)}
-.scan-signal.neutral{color:var(--gold);background:var(--golddim)}
+.scan-signal.neutral{color:var(--accent);background:var(--accentdim)}
 .scan-metrics{display:flex;gap:6px;flex-wrap:wrap}
-.scan-metric{font-size:10px;background:var(--dim);border-radius:3px;padding:2px 6px;color:var(--muted)}
+.scan-metric{font-size:10px;background:var(--dim);border-radius:5px;padding:2px 7px;color:var(--muted);font-family:'JetBrains Mono'}
 .scan-iv{font-family:'JetBrains Mono';font-weight:700}
-.scan-bar{position:absolute;bottom:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);transition:width .5s}
+.scan-bar{position:absolute;bottom:0;left:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent);transition:width .5s}
 .scan-refresh{display:flex;align-items:center;gap:8px;margin-bottom:14px}
-.refresh-btn{padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--gold);font-size:12px;cursor:pointer;font-weight:700;transition:all .2s}
-.refresh-btn:hover{border-color:var(--gold);background:var(--golddim)}
-.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.refresh-btn{padding:7px 15px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--accent);font-size:12px;cursor:pointer;font-weight:700;transition:all .18s}
+.refresh-btn:hover{border-color:var(--accent);background:var(--accentdim)}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
 .filter-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
-.filter-tab{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s}
-.filter-tab.active{background:var(--golddim);border-color:rgba(255,170,0,.3);color:var(--gold)}
+.filter-tab{padding:6px 13px;border-radius:9px;border:1px solid var(--soft);background:var(--surface);font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .18s}
+.filter-tab.active{background:var(--accentdim);border-color:rgba(59,130,246,.28);color:var(--accent)}
 
 /* TUTOR */
-#chat-box{height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px;margin-bottom:12px}
-.msg{max-width:86%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.75;white-space:pre-wrap}
-.msg-ai{background:var(--card);border:1px solid var(--border);align-self:flex-start;border-radius:12px 12px 12px 4px}
-.msg-user{background:var(--golddim);border:1px solid rgba(255,170,0,.2);align-self:flex-end;border-radius:12px 12px 4px 12px}
-.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);display:inline-block;animation:bounce 1s infinite}
-.sugg-chip{background:var(--golddim);border:1px solid rgba(255,170,0,.2);border-radius:20px;color:var(--gold);font-size:11px;padding:5px 12px;cursor:pointer;margin:0 4px 4px 0}
-#chat-input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13px;outline:none;font-family:'Syne',sans-serif}
-#chat-input:focus{border-color:var(--gold)}
-#chat-send{padding:10px 18px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--gold),var(--orange));color:#080500;font-weight:700;font-size:13px;cursor:pointer}
+#chat-box{height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding-right:4px;margin-bottom:12px}
+.msg{max-width:86%;font-size:13.5px;line-height:1.7}
+.msg-user{max-width:86%;padding:11px 15px;border-radius:13px 13px 4px 13px;background:var(--accentdim);border:1px solid rgba(59,130,246,.25);align-self:flex-end;white-space:pre-wrap}
+.msg-ai{width:100%;max-width:100%;background:var(--surface);border:1px solid var(--soft);align-self:flex-start;border-radius:13px 13px 13px 4px;white-space:normal;padding:0}
+.ai-inner{padding:15px 17px 8px}
+.ai-plain{padding:13px 16px;font-size:13.5px;line-height:1.7;color:var(--text);white-space:pre-wrap}
+.ablock{margin-bottom:13px}
+.ablock:last-child{margin-bottom:4px}
+.ablock .lab{font-family:'JetBrains Mono';font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--faint);margin-bottom:6px;display:flex;align-items:center;gap:7px}
+.ablock .lab::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.ablock.risk{border-left:2px solid var(--red);background:rgba(242,85,90,.05);border-radius:0 8px 8px 0;padding:10px 12px}
+.ablock.risk .lab{color:var(--red)}
+.ablock.risk .lab::before{background:var(--red)}
+.ablock p{font-size:13px;color:var(--text);line-height:1.62}
+.ablock b{font-weight:700;color:#fff}
+.ablock code{font-family:'JetBrains Mono';font-size:12px;background:var(--dim);padding:1px 6px;border-radius:5px;color:var(--accent)}
+.ai-actions{display:flex;gap:8px;border-top:1px solid var(--soft);padding:9px 16px;margin-top:4px;align-items:center}
+.ai-actions button{display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono';font-size:11px;color:var(--muted);background:var(--dim);border:1px solid var(--soft);border-radius:8px;padding:6px 11px;cursor:not-allowed;opacity:.7}
+.ai-actions .soon{margin-left:auto;font-family:'JetBrains Mono';font-size:10px;color:var(--faint)}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;animation:bounce 1s infinite}
+.sugg-chip{background:var(--surface);border:1px solid var(--soft);border-radius:9px;color:var(--muted);font-size:12px;padding:8px 12px;cursor:pointer;margin:0 6px 6px 0;transition:.18s}
+.sugg-chip:hover{border-color:rgba(59,130,246,.4);color:var(--text)}
+#chat-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:11px 15px;color:var(--text);font-size:13.5px;outline:none;font-family:var(--sans)}
+#chat-input:focus{border-color:var(--accent)}
+#chat-send{padding:0 18px;border-radius:9px;border:none;background:linear-gradient(150deg,var(--accent),var(--accent2));color:#04121A;font-weight:800;font-size:16px;cursor:pointer}
 #chat-send:disabled{background:var(--dim);color:var(--muted)}
 
 /* MISC */
-.sec-title{font-weight:800;font-size:20px;margin-bottom:4px}
+.sec-title{font-weight:800;font-size:20px;margin-bottom:4px;letter-spacing:-.3px}
 .sec-sub{font-size:13px;color:var(--muted);margin-bottom:16px}
-.tip-box{background:var(--golddim);border:1px solid rgba(255,170,0,.2);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text);line-height:1.7;margin:10px 0}
-.tip-box strong{color:var(--gold)}
-.api-notice{background:rgba(77,166,255,.06);border:1px solid rgba(77,166,255,.2);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text);margin-bottom:14px}
-.api-notice strong{color:var(--blue)}
+.tip-box{background:var(--accentdim);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text);line-height:1.7;margin:10px 0}
+.tip-box strong{color:var(--accent)}
+.api-notice{background:var(--golddim);border:1px solid rgba(201,162,75,.25);border-left:2px solid var(--gold);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6}
+.api-notice strong{color:var(--gold)}
+
+/* BADGES (honestidad) */
+.hbadges{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.hbadge{font-family:'JetBrains Mono';font-size:10px;letter-spacing:.8px;text-transform:uppercase;padding:5px 9px;border-radius:7px;border:1px solid var(--soft);background:var(--surface);color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.hbadge .d{width:5px;height:5px;border-radius:50%}
+.hbadge.edu .d{background:var(--accent)}
+.hbadge.demo .d{background:var(--gold)}
+.hbadge.noad .d{background:var(--red)}
+
+/* RESPONSIVE */
+@media (max-width:640px){
+  #header{flex-wrap:wrap;height:auto;padding:10px 14px;gap:10px}
+  #nav{order:3;width:100%;justify-content:space-between;gap:4px}
+  .nav-btn{flex:1;padding:9px 4px;text-align:center;font-size:12px}
+  .hero h2{font-size:21px}
+  .sim-grid{grid-template-columns:1fr}
+  .scan-grid{grid-template-columns:1fr 1fr}
+  .msg-user{max-width:90%}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
 </style>
 </head>
 <body>
 <div id="header">
-  <div class="logo-icon">◎</div>
-  <div class="logo-text"><div class="l1">OPCIONES & ACCIONES</div><div class="l2">HABIL/IA · ACADEMY</div></div>
+  <div class="logo-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2 4 6.5v9L12 22l8-6.5v-9L12 2Z" stroke="#04121A" stroke-width="2" stroke-linejoin="round"/><path d="M7 14l3-3 2.5 2.5L17 9" stroke="#04121A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="logo-text"><div class="l1">HABIL<i>/</i>IA Markets</div><div class="l2">Opciones &amp; Acciones Academy</div></div>
   <div id="nav">
     <button class="nav-btn active" onclick="switchTab('academy')">◈ Academia</button>
     <button class="nav-btn" onclick="switchTab('scanner')">⬡ Laboratorio</button>
@@ -178,11 +227,11 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
       <h2>Acciones, Opciones y ETFs:<br>El mercado americano desde adentro.</h2>
       <p>Aprende a leer acciones, opciones, ETFs, griegas y escenarios de mercado con simuladores educativos y datos de práctica.</p>
       <div class="hero-chips">
-        <div class="chip g">📈 Acciones NYSE/NASDAQ</div>
-        <div class="chip r">⚡ Calls & Puts</div>
-        <div class="chip b">🇺🇸 ETFs SPY/QQQ</div>
+        <div class="chip g">⌁ Acciones NYSE/NASDAQ</div>
+        <div class="chip r">⌁ Calls &amp; Puts</div>
+        <div class="chip b">⌁ ETFs SPY/QQQ</div>
         <div class="chip g">Δ Las Griegas</div>
-        <div class="chip r">🔍 Laboratorio de mercado</div>
+        <div class="chip r">⌁ Laboratorio de mercado</div>
       </div>
     </div>
     <div class="prog-card" id="prog-banner">
@@ -212,9 +261,9 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
       <span id="lv-xp" style="border-radius:4px;padding:3px 8px;font-size:11px;font-weight:700"></span>
     </div>
     <div class="lv-tabs">
-      <button class="lv-tab active" id="ltb-teoria" onclick="lessonTab('teoria')">📖 Teoría</button>
-      <button class="lv-tab" id="ltb-visual" onclick="lessonTab('visual')">📊 Visual</button>
-      <button class="lv-tab" id="ltb-quiz" onclick="lessonTab('quiz')" style="display:none">✏️ Quiz</button>
+      <button class="lv-tab active" id="ltb-teoria" onclick="lessonTab('teoria')">Teoría</button>
+      <button class="lv-tab" id="ltb-visual" onclick="lessonTab('visual')">Visual</button>
+      <button class="lv-tab" id="ltb-quiz" onclick="lessonTab('quiz')" style="display:none">Quiz</button>
     </div>
     <div id="lv-teoria"></div>
     <div id="lv-visual" style="display:none"></div>
@@ -223,10 +272,15 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
 
   <!-- SCANNER -->
   <div id="tab-scanner" style="display:none">
-    <div class="sec-title">📡 Laboratorio de lectura de mercado</div>
+    <div class="sec-title">Laboratorio de lectura de mercado</div>
     <div class="sec-sub">Practica cómo se leen escenarios de opciones — momentum, volatilidad implícita, volumen y tendencia — con datos de ejemplo</div>
+    <div class="hbadges">
+      <span class="hbadge demo"><span class="d"></span>Datos de ejemplo</span>
+      <span class="hbadge edu"><span class="d"></span>Educativo</span>
+      <span class="hbadge noad"><span class="d"></span>No señal real</span>
+    </div>
     <div class="api-notice">
-      <strong>🔌 Datos de ejemplo:</strong> Datos de ejemplo generados para practicar lectura de mercado. No son datos reales, no son señales de trading y no indican qué operar.
+      <strong>Datos de ejemplo:</strong> Datos de ejemplo generados para practicar lectura de mercado. No son datos reales, no son señales de trading y no indican qué operar.
     </div>
     <div class="scan-refresh">
       <div class="live-dot"></div>
@@ -236,10 +290,10 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
     </div>
     <div class="filter-tabs">
       <button class="filter-tab active" onclick="setFilter('all',this)">Todos</button>
-      <button class="filter-tab" onclick="setFilter('bullish',this)">🟢 Sesgo alcista</button>
-      <button class="filter-tab" onclick="setFilter('bearish',this)">🔴 Sesgo bajista</button>
-      <button class="filter-tab" onclick="setFilter('iv',this)">⚡ IV Alto</button>
-      <button class="filter-tab" onclick="setFilter('etf',this)">🇺🇸 ETFs</button>
+      <button class="filter-tab" onclick="setFilter('bullish',this)">Sesgo alcista</button>
+      <button class="filter-tab" onclick="setFilter('bearish',this)">Sesgo bajista</button>
+      <button class="filter-tab" onclick="setFilter('iv',this)">IV alto</button>
+      <button class="filter-tab" onclick="setFilter('etf',this)">ETFs</button>
     </div>
     <div id="scan-grid" class="scan-grid"></div>
     <div id="scan-detail" style="display:none"></div>
@@ -249,6 +303,11 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
   <div id="tab-simulator" style="display:none">
     <div class="sec-title">Simulador de Opciones</div>
     <div class="sec-sub">Explora escenarios de P&L, prima y griegas con contratos ficticios — para entender cómo se comportan, no para operar</div>
+    <div class="hbadges">
+      <span class="hbadge edu"><span class="d"></span>Capital ficticio</span>
+      <span class="hbadge demo"><span class="d"></span>Cálculo teórico</span>
+      <span class="hbadge noad"><span class="d"></span>No asesoría</span>
+    </div>
     <div id="sim-content"></div>
   </div>
 
@@ -256,7 +315,16 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
   <div id="tab-tutor" style="display:none">
     <div class="sec-title">Tutor IA — Opciones & Acciones</div>
     <div class="sec-sub">Resuelve dudas sobre calls, puts, griegas, estrategias y análisis de mercado</div>
-    <div style="background:var(--golddim);border:1px solid rgba(255,170,0,.2);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:14px">
+    <div class="hbadges">
+      <span class="hbadge edu"><span class="d"></span>Tutor educativo</span>
+      <span class="hbadge noad"><span class="d"></span>No asesoría</span>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--soft);border-radius:14px;padding:13px 16px;display:flex;align-items:center;gap:12px;margin-bottom:14px">
+      <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(150deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2 4 6.5v9L12 22l8-6.5v-9L12 2Z" stroke="#04121A" stroke-width="2" stroke-linejoin="round"/></svg></div>
+      <div><div style="font-weight:700;font-size:14px">Tutor educativo — Opciones & Acciones</div><div style="color:var(--muted);font-size:11px;font-family:'JetBrains Mono'">Calls · Puts · Griegas · ETFs</div></div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--mktgreen);font-family:'JetBrains Mono'"><span style="width:7px;height:7px;border-radius:50%;background:var(--mktgreen)"></span>en línea</div>
+    </div>
+    <div style="background:var(--golddim);border:1px solid rgba(201,162,75,.25);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:14px">
       <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--orange));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">◎</div>
       <div><div style="font-weight:700;font-size:14px">Tutor especializado en opciones americanas</div><div style="color:var(--muted);font-size:11px">Calls · Puts · Griegas · ETFs · Estrategias avanzadas</div></div>
       <div style="margin-left:auto;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite"></div>
@@ -277,7 +345,7 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
 // ══════════════════════════════════════════
 const MODULES = [
   {
-    id:1, tag:"ACCIONES", icon:"📈", color:"#ffaa00",
+    id:1, tag:"ACCIONES", icon:"▦", color:"#ffaa00",
     title:"Acciones: el mercado americano",
     subtitle:"NYSE, NASDAQ, cómo leer una empresa y sus resultados",
     lessons:[
@@ -294,7 +362,7 @@ const MODULES = [
     ]
   },
   {
-    id:2, tag:"OPCIONES BÁSICO", icon:"⚡", color:"#ff7c00",
+    id:2, tag:"OPCIONES BÁSICO", icon:"◇", color:"#ff7c00",
     title:"Calls y Puts: la mecánica de las opciones",
     subtitle:"Qué son, cómo funcionan y qué riesgos implican",
     lessons:[
@@ -329,7 +397,7 @@ const MODULES = [
     greeks:true
   },
   {
-    id:4, tag:"ETFs & ESTRATEGIAS", icon:"🇺🇸", color:"#4da6ff",
+    id:4, tag:"ETFs & ESTRATEGIAS", icon:"▣", color:"#4da6ff",
     title:"ETFs, SPY/QQQ y Estrategias Avanzadas",
     subtitle:"Iron Condor, Straddle, Covered Call y más",
     lessons:[
@@ -422,10 +490,10 @@ function renderScanner(){
         <span class="scan-metric">IV <span class="scan-iv" style="color:${s.iv>50?'#ff7c00':'#00e8a0'}">${s.iv}%</span></span>
         <span class="scan-metric">RSI ${s.rsi}</span>
         <span class="scan-metric">Vol ${s.volume}M</span>
-        <span class="scan-metric" style="color:${s.type==='etf'?'#4da6ff':'var(--muted)'}">${s.type==='etf'?'🇺🇸 ETF':'📈 ACCIÓN'}</span>
+        <span class="scan-metric" style="color:${s.type==='etf'?'#4da6ff':'var(--muted)'}">${s.type==='etf'?'ETF':'ACCIÓN'}</span>
       </div>
-      ${s.call_signal?'<div style="margin-top:6px;font-size:10px;color:#00e8a0;font-weight:800">📘 Lectura de ejemplo: contexto alcista</div>':''}
-      ${s.put_signal?'<div style="margin-top:6px;font-size:10px;color:#ff3d5a;font-weight:800">📘 Lectura de ejemplo: contexto bajista</div>':''}
+      ${s.call_signal?'<div style="margin-top:6px;font-size:10px;color:#00e8a0;font-weight:800">Lectura educativa: contexto alcista</div>':''}
+      ${s.put_signal?'<div style="margin-top:6px;font-size:10px;color:#ff3d5a;font-weight:800">Lectura educativa: contexto bajista</div>':''}
       <div class="scan-bar" style="width:${Math.min(Math.abs(parseFloat(s.changePct))*20,100)}%"></div>
     `;
     card.onclick=()=>showScanDetail(s);
@@ -458,8 +526,8 @@ function showScanDetail(s){
           <div style="font-family:'JetBrains Mono';font-size:14px;font-weight:700;color:${r.c}">${r.v}</div>
         </div>`).join('')}
       </div>
-      <div style="background:var(--golddim);border:1px solid rgba(255,170,0,.2);border-radius:8px;padding:12px;font-size:12px;color:var(--text)">
-        <strong style="color:var(--gold)">📘 Cómo se leería este caso (ejemplo educativo):</strong><br>
+      <div style="background:var(--golddim);border:1px solid rgba(201,162,75,.25);border-radius:8px;padding:12px;font-size:12px;color:var(--text)">
+        <strong style="color:var(--gold)">Cómo se leería este caso (ejemplo educativo):</strong><br>
         ${s.signal==='bullish'&&s.iv<40?`El cambio de precio es positivo y la volatilidad implícita es baja (${s.iv}%). En términos educativos, una IV baja suele asociarse a primas relativamente más baratas. Esto describe un contexto, no una recomendación.`:
           s.signal==='bearish'&&s.iv<40?`El cambio de precio es negativo y la volatilidad implícita es baja (${s.iv}%). Educativamente, esto describe un contexto de sesgo bajista con primas relativamente más baratas. No indica qué operar.`:
           s.iv>50?`La volatilidad implícita es alta (${s.iv}%). Educativamente, una IV elevada suele significar primas más caras y mayor incertidumbre. Es un dato de contexto, no una señal de operación.`:
@@ -502,7 +570,7 @@ function renderModules(){
             <span class="mod-tag" style="color:${mod.color};background:${mod.color}15">${mod.tag}</span>
             ${mod.greeks?'<span class="mod-tag" style="color:#a855f7;background:#a855f715">Δ GRIEGAS</span>':''}
             ${mod.advanced?'<span class="mod-tag" style="color:#4da6ff;background:#4da6ff15">AVANZADO</span>':''}
-            ${locked?'<span style="color:var(--muted);font-size:10px">🔒 Completa el módulo anterior</span>':''}
+            ${locked?'<span style="color:var(--muted);font-size:10px">Completa el módulo anterior</span>':''}
           </div>
           <div style="font-weight:700;font-size:15px;color:var(--text)">${mod.title}</div>
           <div style="font-size:11px;color:var(--muted);margin-top:2px">${mod.subtitle}</div>
@@ -604,7 +672,7 @@ function renderVisual(){
          <text x="50" y="60" fill="#00e8a0" font-size="9">Ganancia acción → 0</text>`
       }
     </svg>`;
-    html+=`<div class="tip-box" style="margin-top:12px"><strong>💡 Clave:</strong> ${isCall?'El comprador de un CALL tiene pérdida LIMITADA (prima pagada) y ganancia ILIMITADA hacia arriba.':'El comprador de un PUT gana cuando la acción cae. La ganancia máxima es si la acción llega a $0.'}</div>`;
+    html+=`<div class="tip-box" style="margin-top:12px"><strong>Clave:</strong> ${isCall?'El comprador de un CALL tiene pérdida LIMITADA (prima pagada) y ganancia ILIMITADA hacia arriba.':'El comprador de un PUT gana cuando la acción cae. La ganancia máxima es si la acción llega a $0.'}</div>`;
   } else if(id==='3a'||id==='3b'||id==='3c'||id==='3d'){
     // Greeks table
     html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">LAS 4 GRIEGAS — RESUMEN VISUAL</div>`;
@@ -613,7 +681,7 @@ function renderVisual(){
       html+=`<tr><td><span class="greek-sym" style="color:${g.color}">${g.sym}</span> <span style="font-size:11px;color:var(--muted)">${g.name}</span></td><td style="color:var(--text);font-size:12px">${g.mide}</td><td style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted)">${g.rango}</td><td style="font-size:11px;color:var(--green)">${g.sube}</td></tr>`;
     });
     html+=`</tbody></table>`;
-    html+=`<div class="tip-box" style="margin-top:12px"><strong>💡 Regla de oro:</strong> Como comprador de opciones, quieres Delta alto (se mueve contigo), Gamma alto (acelerás), Theta bajo (no pierdas tiempo) y Vega alto (antes de noticias). Como vendedor, exactamente lo contrario.</div>`;
+    html+=`<div class="tip-box" style="margin-top:12px"><strong>Regla de oro:</strong> Como comprador de opciones, quieres Delta alto (se mueve contigo), Gamma alto (acelerás), Theta bajo (no pierdas tiempo) y Vega alto (antes de noticias). Como vendedor, exactamente lo contrario.</div>`;
   } else if(id==='4b'||id==='4c'||id==='4d'){
     // Strategies
     html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">COMPARATIVA DE ESTRATEGIAS</div>`;
@@ -649,7 +717,7 @@ function renderQuiz(){
     const pass=qData.filter((q,i)=>quizAnswers[i]===q.ans).length;
     const ok=pass>=Math.ceil(qData.length*.5);
     document.getElementById('lv-quiz').innerHTML=`<div class="quiz-result" style="background:${ok?'var(--greendim)':'var(--reddim)'};border:1px solid ${ok?'var(--green)':'var(--red)'}">
-      <div style="font-size:32px;margin-bottom:8px">${ok?'🏆':'📚'}</div>
+      <div style="font-size:32px;margin-bottom:8px">${ok?'✓':'↻'}</div>
       <div style="font-weight:700;font-size:16px">${pass}/${qData.length} correctas</div>
       <div style="color:var(--muted);font-size:13px;margin-top:6px">${ok?'+'+activeLesson.xp+' XP ganados':'Revisa la teoría e intenta de nuevo'}</div>
       ${!ok?`<button onclick="retryQuiz()" style="margin-top:12px;padding:8px 20px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px">Reintentar</button>`:''}
@@ -720,7 +788,7 @@ function renderSim(){
         </div>
         <div>
           <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Activo</div>
-          <select onchange="simStock=this.value;renderSim()" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:13px;font-family:'Syne',sans-serif">
+          <select onchange="simStock=this.value;renderSim()" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif">
             ${['AAPL','TSLA','NVDA','MSFT','SPY','QQQ'].map(s=>`<option ${s===simStock?'selected':''} value="${s}">${s}</option>`).join('')}
           </select>
         </div>
@@ -753,7 +821,7 @@ function renderSim(){
         <span style="font-family:'JetBrains Mono';font-size:12px;color:${parseFloat(sc.move)>0?'var(--green)':'var(--red)'}">${sc.move} → $${sc.price}</span>
         <span style="font-family:'JetBrains Mono';font-size:13px;font-weight:700;color:${parseFloat(sc.pnl)>=0?'var(--green)':'var(--red)'}">${parseFloat(sc.pnl)>=0?'+':''}$${sc.pnl}</span>
       </div>`).join('')}
-      <div class="tip-box" style="margin-top:12px"><strong>⚠️ Recuerda:</strong> Este simulador usa contratos ficticios. Los valores de P&L son un cálculo teórico al vencimiento basado en los datos que tú ingresas: no predicen resultados reales, no representan el mercado en vivo y no son una recomendación de operar. Sirve para entender cómo se comportan los escenarios. Las opciones son instrumentos complejos y puedes perder la prima completa.</div>
+      <div class="tip-box" style="margin-top:12px"><strong>Recuerda:</strong> Este simulador usa contratos ficticios. Los valores de P&L son un cálculo teórico al vencimiento basado en los datos que tú ingresas: no predicen resultados reales, no representan el mercado en vivo y no son una recomendación de operar. Sirve para entender cómo se comportan los escenarios. Las opciones son instrumentos complejos y puedes perder la prima completa.</div>
     </div>`;
 }
 
@@ -781,9 +849,44 @@ let chatMessages=[{role:'assistant',content:'Hola, soy tu tutor de Opciones & Ac
 let chatLoading=false;
 const SUGGESTIONS=['¿Cuál es la diferencia entre call y put?','Explícame el Delta con un ejemplo real','¿Cómo funciona el Iron Condor?','¿Por qué el Theta destroye mis opciones?','¿Qué es el IV Crush en earnings?'];
 
+// Render visual de la respuesta del Tutor: limpia Markdown crudo (## ** --- `code`)
+// y la muestra en bloques cuando trae secciones. NO altera lo que se envía a /api/chat.
+function escapeHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function inlineMd(t){return escapeHtml(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`(.+?)`/g,'<code>$1</code>');}
+function renderTutorMarkdown(raw){
+  const text=(raw||'').trim();
+  if(/(^|\n)\s*##\s+/.test(text)){
+    const parts=text.split(/\n?---\n?/).map(s=>s.trim()).filter(Boolean);
+    let out='';
+    parts.forEach(b=>{
+      const m=b.match(/^##\s*(.+?)\n([\s\S]*)$/);
+      if(m){
+        const lab=m[1].trim();const risk=/riesgo/i.test(lab)?' risk':'';
+        out+=`<div class="ablock${risk}"><div class="lab">${escapeHtml(lab)}</div><p>${inlineMd(m[2].trim()).replace(/\n+/g,'<br>')}</p></div>`;
+      }else{out+=`<div class="ablock"><p>${inlineMd(b).replace(/\n+/g,'<br>')}</p></div>`;}
+    });
+    return out;
+  }
+  const clean=text.replace(/^\s*##\s*/gm,'').replace(/\n?---\n?/g,'\n');
+  return `<p style="font-size:13px;line-height:1.62;color:var(--text)">${inlineMd(clean).replace(/\n+/g,'<br>')}</p>`;
+}
+
 function renderChat(){
   const box=document.getElementById('chat-box');box.innerHTML='';
-  chatMessages.forEach(m=>{const d=document.createElement('div');d.className='msg '+(m.role==='user'?'msg-user':'msg-ai');d.textContent=m.content;box.appendChild(d);});
+  chatMessages.forEach((m,idx)=>{
+    if(m.role==='user'){
+      const d=document.createElement('div');d.className='msg msg-user';d.textContent=m.content;box.appendChild(d);
+    }else{
+      const d=document.createElement('div');d.className='msg msg-ai';
+      d.innerHTML=`<div class="ai-inner">${renderTutorMarkdown(m.content)}</div>`+
+        (idx===0?'':`<div class="ai-actions">`+
+          `<button title="Disponible próximamente" disabled><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 9a4 4 0 0 1 0 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Leer respuesta</button>`+
+          `<button title="Disponible próximamente" disabled><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/></svg>Detener</button>`+
+          `<span class="soon">voz · próximamente</span>`+
+        `</div>`);
+      box.appendChild(d);
+    }
+  });
   if(chatLoading){const d=document.createElement('div');d.style.cssText='display:flex;gap:4px;padding:10px 14px;width:fit-content';d.innerHTML=[0,1,2].map(i=>`<div class="typing-dot" style="animation-delay:${i*.15}s"></div>`).join('');box.appendChild(d);}
   box.scrollTop=box.scrollHeight;
   document.getElementById('sugg-wrap').style.display=chatMessages.length<=1?'flex':'none';
