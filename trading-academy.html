@@ -234,7 +234,12 @@ button{font-family:var(--sans);cursor:pointer}
       <span style="font-size:11px;line-height:1.6;color:var(--muted)">Este simulador usa capital ficticio y resultados aleatorios de ejemplo. No representa desempeño real, no predice resultados y no recomienda operar.</span>
     </div>
     <div class="card-sm" style="margin-bottom:12px">
-      <div style="font-size:11px;font-family:'JetBrains Mono';color:var(--muted);margin-bottom:8px">XAUUSD · M15 · SIMULADO</div>
+      <div style="font-size:12px;font-weight:700;letter-spacing:.4px;color:var(--accent);margin-bottom:4px">Activo de práctica</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:11px;line-height:1.5">Elige un activo simulado para practicar gestión de riesgo. Esto no es una recomendación de operación.</div>
+      <div id="sym-picker" style="display:flex;flex-wrap:wrap;gap:7px"></div>
+    </div>
+    <div class="card-sm" style="margin-bottom:12px">
+      <div style="font-size:11px;font-family:'JetBrains Mono';color:var(--muted);margin-bottom:8px"><span id="sim-symbol-label">XAUUSD · M15 · SIMULADO</span></div>
       <div id="sim-chart" class="chart-wrap"></div>
     </div>
     <div class="sim-grid">
@@ -325,6 +330,8 @@ let simPip = 1;
 let simRRR = 2;
 let simDir = 'buy';
 let simTrades = [];
+let simSymbol = 'XAUUSD';
+const SIM_SYMBOLS = ['XAUUSD','EURUSD','GBPUSD','USDJPY','NAS100','SPX500','BTCUSD'];
 
 // CHAT STATE
 let chatMessages = [{role:'assistant',content:'Hola, soy tu tutor de Trading Academy. Puedo explicarte SMC, Order Blocks, liquidez, ICT, estructura de mercado, gestión de riesgo, RRR o psicología. Una aclaración antes de partir: esto es contenido educativo, no asesoría financiera — no te diré dónde entrar, qué SL/TP usar, ni si un activo va a subir o bajar. ¿Qué quieres aprender hoy?'}];
@@ -339,6 +346,27 @@ function genCandles(n=70,seed=1){
     const hi=Math.max(open,close)+s(i+100)*6,lo=Math.min(open,close)-s(i+200)*6;
     price=close;return{open,close,high:hi,low:lo};
   });
+}
+
+// Selector de activo de práctica (solo simulado/educativo — no usa datos reales ni recomienda).
+function seedFor(sym){let h=0;for(let i=0;i<sym.length;i++)h=(h*31+sym.charCodeAt(i))%997;return h+7;}
+function renderSimChart(){
+  const el=document.getElementById('sim-chart');if(!el)return;
+  el.innerHTML=buildChart(genCandles(60,seedFor(simSymbol)),{showOB:true,showFVG:true});
+}
+function renderSymPicker(){
+  const el=document.getElementById('sym-picker');if(!el)return;
+  el.innerHTML=SIM_SYMBOLS.map(sym=>{
+    const on=sym===simSymbol;
+    return `<button onclick="setSymbol('${sym}')" style="font-family:'JetBrains Mono';font-size:12px;font-weight:700;padding:7px 13px;border-radius:9px;cursor:pointer;transition:all .18s;border:1px solid ${on?'rgba(139,124,246,.4)':'var(--soft)'};background:${on?'var(--accentdim)':'var(--card)'};color:${on?'var(--accent)':'var(--muted)'}">${sym}</button>`;
+  }).join('');
+}
+function setSymbol(sym){
+  simSymbol=sym;
+  const lbl=document.getElementById('sim-symbol-label');
+  if(lbl)lbl.textContent=`${sym} · M15 · SIMULADO`;
+  renderSymPicker();
+  renderSimChart();
 }
 
 function buildChart(candles,{showFVG,showOB,showLiq}={}){
@@ -608,7 +636,7 @@ function executeTrade(){
   const win=Math.random()>0.45;
   const pnl=win?parseFloat(profit):-riskAmt;
   const newCap=simCapital+pnl;
-  simTrades=[...simTrades.slice(-9),{dir:simDir,size:posSize,pnl,win,capital:newCap}];
+  simTrades=[...simTrades.slice(-9),{dir:simDir,size:posSize,pnl,win,capital:newCap,symbol:simSymbol}];
   simCapital=parseFloat(newCap.toFixed(2));
   renderSimParams();renderSimCalc();
   const fb=document.getElementById('sim-feedback');
@@ -624,7 +652,7 @@ function renderTradeHistory(){
   let html='';
   [...simTrades].reverse().forEach(t=>{
     html+=`<div class="trade-row" style="background:${t.win?'#00E8A010':'#FF3D5A10'};border:1px solid ${t.win?'#00E8A022':'#FF3D5A22'}">
-      <span style="color:${t.dir==='buy'?'#00E8A0':'#FF3D5A'}">${t.dir==='buy'?'▲':'▼'} ${t.dir.toUpperCase()} · ${t.size} lotes</span>
+      <span style="color:${t.dir==='buy'?'#1FBF8F':'#F2555A'}">${t.symbol||'XAUUSD'} · ${t.dir==='buy'?'▲':'▼'} ${t.dir.toUpperCase()} · ${t.size} lotes</span>
       <span style="color:${t.win?'#00E8A0':'#FF3D5A'};font-weight:700">${t.win?'+':''}${t.pnl.toFixed(2)}$</span>
       <span style="color:var(--muted)">Cap: $${t.capital.toLocaleString()}</span>
     </div>`;
@@ -753,7 +781,8 @@ function switchTab(tab){
 renderModules();
 updateProgress();
 // Sim chart
-document.getElementById('sim-chart').innerHTML=buildChart(genCandles(60,77),{showOB:true,showFVG:true});
+renderSymPicker();
+renderSimChart();
 renderSimParams();
 renderSimCalc();
 renderChat();
