@@ -4,78 +4,89 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Institutional Trading Academy</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0;scrollbar-width:thin;scrollbar-color:#26334A #0A0E15}
 :root{
-  --bg:#04080F;--surface:#080F1A;--card:#0C1624;--border:#152236;
-  --accent:#00C9FF;--gold:#FFAA00;--green:#00E8A0;--red:#FF3D5A;--purple:#A855F7;
-  --text:#D8EEF8;--muted:#4A6A85;--dim:#243040;
+  --bg:#0A0E15;--surface:#0C111A;--card:#121826;--elevated:#19212F;--border:#26334A;--borderhi:#33425C;
+  --accent:#8B7CF6;--accent2:#A78BFA;--accentdim:rgba(139,124,246,.12);
+  --gold:#C9A24B;--golddim:rgba(201,162,75,.12);--green:#1FBF8F;--greendim:rgba(31,191,143,.12);
+  --red:#F2555A;--reddim:rgba(242,85,90,.10);--purple:#8B7CF6;--mktgreen:#1FBF8F;
+  --text:#E6EDF5;--muted:#8C9CB2;--faint:#5C6E86;--dim:#19212F;--soft:rgba(255,255,255,.06);
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 }
-body{background:var(--bg);font-family:'Syne',sans-serif;color:var(--text);min-height:100vh}
-*::-webkit-scrollbar{width:4px}*::-webkit-scrollbar-thumb{background:#1E3350;border-radius:2px}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(1100px 480px at 80% -6%,rgba(139,124,246,.06),transparent 60%),radial-gradient(900px 520px at 12% 4%,rgba(167,139,250,.045),transparent 55%);pointer-events:none;z-index:0}
+*::-webkit-scrollbar{width:5px}*::-webkit-scrollbar-thumb{background:#26334A;border-radius:3px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 input[type=range]{accent-color:var(--accent);height:4px;width:100%}
-button{font-family:'Syne',sans-serif;cursor:pointer}
+button{font-family:var(--sans);cursor:pointer}
 
 /* HEADER */
-#header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;height:56px;position:sticky;top:0;z-index:100;gap:12px}
-.logo-box{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.logo-text .t1{color:var(--text);font-weight:800;font-size:14px;line-height:1.1}
-.logo-text .t2{color:var(--muted);font-size:9px;letter-spacing:2px}
+#header{background:linear-gradient(180deg,rgba(10,14,21,.94),rgba(10,14,21,.82));backdrop-filter:blur(14px);border-bottom:1px solid var(--soft);padding:0 18px;display:flex;align-items:center;height:60px;position:sticky;top:0;z-index:100;gap:12px}
+.logo-box{width:34px;height:34px;border-radius:9px;background:linear-gradient(150deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#0B0716;box-shadow:0 2px 12px rgba(139,124,246,.22)}
+.logo-box svg{width:18px;height:18px}
+.logo-text .t1{color:var(--text);font-weight:800;font-size:15px;line-height:1.1;letter-spacing:.2px}
+.logo-text .t1 i{color:var(--accent);font-style:normal}
+.logo-text .t2{color:var(--faint);font-size:10px;letter-spacing:1.5px;font-family:'JetBrains Mono';text-transform:uppercase;margin-top:2px}
 #nav-tabs{flex:1;display:flex;justify-content:center;gap:4px}
-.nav-tab{background:none;border:1px solid transparent;border-radius:6px;padding:5px 14px;color:var(--muted);font-size:12px;font-weight:400;transition:all .2s}
-.nav-tab.active{background:rgba(0,201,255,.08);border-color:rgba(0,201,255,.27);color:var(--accent);font-weight:700}
-#xp-display{text-align:right}
-#xp-display .xp-num{color:var(--gold);font-family:'JetBrains Mono';font-size:13px;font-weight:700}
-#xp-display .xp-sub{color:var(--muted);font-size:10px}
-#xp-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,rgba(255,170,0,.27),rgba(255,170,0,.13));border:2px solid rgba(255,170,0,.4);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:14px;flex-shrink:0}
+.nav-tab{background:none;border:1px solid transparent;border-radius:9px;padding:8px 13px;color:var(--muted);font-size:13px;font-weight:600;transition:all .18s;white-space:nowrap}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{background:var(--accentdim);border-color:rgba(139,124,246,.28);color:var(--accent);font-weight:700}
+#xp-display{display:flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--border);border-radius:11px;background:var(--surface);text-align:right}
+#xp-display .xp-num{color:var(--accent);font-family:'JetBrains Mono';font-size:14px;font-weight:700}
+#xp-display .xp-sub{color:var(--faint);font-size:10px}
+#xp-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(150deg,rgba(139,124,246,.25),rgba(167,139,250,.1));border:1px solid rgba(139,124,246,.35);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:13px;flex-shrink:0}
 
 /* MAIN */
-#main{max-width:820px;margin:0 auto;padding:20px 16px;animation:fadeIn .4s ease}
+#main{max-width:820px;margin:0 auto;padding:20px 16px 40px;position:relative;z-index:1;animation:fadeIn .4s ease}
 
 /* CARDS */
-.card{background:var(--card);border-radius:12px;border:1px solid var(--border);padding:16px;margin-bottom:12px}
-.card-sm{background:var(--card);border-radius:10px;border:1px solid var(--border);padding:14px;margin-bottom:10px}
+.card{background:var(--surface);border-radius:14px;border:1px solid var(--soft);padding:16px;margin-bottom:12px}
+.card-sm{background:var(--surface);border-radius:12px;border:1px solid var(--soft);padding:14px;margin-bottom:10px}
 
 /* MODULE */
-.module-wrap{border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:16px;background:var(--card)}
-.module-header{padding:16px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border)}
-.mod-icon{font-size:22px}
-.mod-tag{font-size:10px;font-weight:800;letter-spacing:1.5px;padding:2px 8px;border-radius:3px}
-.mod-title{font-weight:700;font-size:16px;margin-top:4px}
+.module-wrap{border-radius:14px;border:1px solid var(--soft);overflow:hidden;margin-bottom:14px;background:var(--surface);position:relative}
+.module-wrap::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);opacity:.85}
+.module-header{padding:16px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--soft)}
+.mod-icon{width:42px;height:42px;border-radius:11px;background:var(--accentdim);border:1px solid rgba(139,124,246,.2);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:20px;flex-shrink:0}
+.mod-tag{font-family:'JetBrains Mono';font-size:10px;font-weight:700;letter-spacing:1.5px;padding:2px 8px;border-radius:5px;text-transform:uppercase}
+.mod-title{font-weight:700;font-size:16px;margin-top:4px;letter-spacing:-.2px}
 .mod-sub{color:var(--muted);font-size:12px;margin-top:2px}
-.mod-count{text-align:right;font-family:'JetBrains Mono';font-weight:700}
+.mod-count{text-align:right;font-family:'JetBrains Mono';font-weight:700;color:var(--muted)}
 .lessons-wrap{padding:12px 16px;display:flex;flex-direction:column;gap:8px}
-.lesson-btn{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);text-align:left;width:100%;transition:all .2s}
-.lesson-btn:hover:not(:disabled){filter:brightness(1.15)}
+.lesson-btn{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:9px;border:1px solid var(--soft);background:var(--card);text-align:left;width:100%;transition:all .18s}
+.lesson-btn:hover:not(:disabled){border-color:rgba(139,124,246,.35);transform:translateX(2px)}
 .lesson-btn:disabled{opacity:.45;cursor:not-allowed}
 .lesson-num{width:28px;height:28px;border-radius:50%;background:var(--dim);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);flex-shrink:0;font-family:'JetBrains Mono'}
 .lesson-title{flex:1;font-size:13px}
-.lesson-mins{font-size:11px;color:var(--muted);margin-top:2px}
+.lesson-mins{font-size:11px;color:var(--faint);margin-top:2px;font-family:'JetBrains Mono'}
 .lesson-xp{font-family:'JetBrains Mono';font-size:12px;font-weight:700;color:var(--muted)}
-.lesson-arr{color:var(--muted);font-size:14px}
+.lesson-arr{color:var(--faint);font-size:14px}
 
-/* PROGRESS BAR */
-.prog-wrap{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border);margin-bottom:16px;display:flex;align-items:center;gap:16px}
-.prog-bar-bg{flex:1;background:var(--border);border-radius:4px;height:6px}
-.prog-bar{height:100%;border-radius:4px;transition:width .5s ease}
+/* PROGRESS */
+.prog-wrap{background:var(--surface);border-radius:14px;padding:16px 18px;border:1px solid var(--soft);margin-bottom:16px;display:flex;align-items:center;gap:18px}
+.prog-bar-bg{flex:1;background:var(--dim);border-radius:99px;height:7px;overflow:hidden}
+.prog-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s ease}
 
 /* LESSON VIEW */
 #lesson-view{display:none;animation:fadeIn .3s ease}
-.lesson-tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:16px}
-.lesson-tab{background:none;border:none;padding:8px 16px;font-size:13px;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s}
-.lesson-tab.active{font-weight:700;border-bottom-color:currentColor}
-.content-block{background:var(--card);border-radius:10px;padding:16px;margin-bottom:10px;border:1px solid var(--border);border-left-width:3px}
-.content-heading{font-weight:700;font-size:13px;margin-bottom:8px}
-.content-body{font-size:13px;line-height:1.8;color:var(--text)}
+.lesson-tabs{display:flex;gap:2px;border-bottom:1px solid var(--soft);margin-bottom:16px}
+.lesson-tab{background:none;border:none;padding:9px 16px;font-size:13px;color:var(--muted);border-bottom:2px solid transparent;transition:all .18s}
+.lesson-tab.active{font-weight:700;border-bottom-color:currentColor;color:var(--accent)}
+.content-block{background:var(--surface);border-radius:12px;padding:16px 17px;margin-bottom:10px;border:1px solid var(--soft);border-left-width:3px}
+.content-heading{font-weight:700;font-size:13.5px;margin-bottom:8px}
+.content-body{font-size:13px;line-height:1.85;color:var(--text)}
+.content-body strong{color:#fff}
 
 /* QUIZ */
-.quiz-opt{width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:13px;text-align:left;margin-bottom:8px;transition:all .2s}
-.quiz-opt:hover{filter:brightness(1.2)}
-.quiz-submit{width:100%;padding:12px;border-radius:8px;border:none;color:#fff;font-weight:700;font-size:14px;margin-top:8px}
+.quiz-opt{width:100%;padding:11px 14px;border-radius:9px;border:1px solid var(--soft);background:var(--card);color:var(--muted);font-size:13px;text-align:left;margin-bottom:8px;transition:all .18s;font-family:var(--sans)}
+.quiz-opt:hover{border-color:rgba(139,124,246,.3);color:var(--text)}
+.quiz-submit{width:100%;padding:12px;border-radius:9px;border:none;color:#0B0716;font-weight:700;font-size:14px;margin-top:8px;font-family:var(--sans)}
 .quiz-result{border-radius:12px;padding:20px;text-align:center}
 
 /* SIMULATOR */
@@ -83,42 +94,79 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
 .sim-label{color:var(--muted);font-size:12px}
 .sim-val{font-family:'JetBrains Mono';font-size:12px;font-weight:700;color:var(--accent)}
 .sim-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.sim-btn{width:100%;padding:10px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff;font-weight:800;font-size:13px;margin-top:8px;letter-spacing:.5px}
-.dir-btn{flex:1;padding:8px 0;border-radius:6px;border:none;font-weight:700;font-size:12px;font-family:'JetBrains Mono';transition:all .2s}
-.trade-row{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;margin-bottom:4px;font-family:'JetBrains Mono';font-size:11px}
+.sim-btn{width:100%;padding:11px;border-radius:9px;border:none;background:linear-gradient(150deg,var(--accent),var(--accent2));color:#0B0716;font-weight:800;font-size:13px;margin-top:8px;letter-spacing:.3px;font-family:var(--sans)}
+.dir-btn{flex:1;padding:9px 0;border-radius:8px;border:none;font-weight:700;font-size:12px;font-family:'JetBrains Mono';transition:all .18s}
+.trade-row{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-radius:6px;margin-bottom:4px;font-family:'JetBrains Mono';font-size:11px}
 .feedback-bar{border-radius:10px;padding:12px 16px;text-align:center;font-weight:800;font-size:15px;margin-bottom:10px}
 
 /* TUTOR */
-#chat-messages{height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px;margin-bottom:12px}
-.msg{max-width:85%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.7;white-space:pre-wrap}
-.msg-ai{background:var(--card);border:1px solid var(--border);align-self:flex-start;border-radius:12px 12px 12px 4px}
-.msg-user{background:rgba(0,201,255,.08);border:1px solid rgba(0,201,255,.2);align-self:flex-end;border-radius:12px 12px 4px 12px}
+#chat-messages{height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding-right:4px;margin-bottom:12px}
+.msg{max-width:86%;font-size:13.5px;line-height:1.7}
+.msg-user{max-width:86%;padding:11px 15px;border-radius:13px 13px 4px 13px;background:var(--accentdim);border:1px solid rgba(139,124,246,.25);align-self:flex-end;white-space:pre-wrap}
+.msg-ai{width:100%;max-width:100%;background:var(--surface);border:1px solid var(--soft);align-self:flex-start;border-radius:13px 13px 13px 4px;white-space:normal;padding:0}
+.ai-inner{padding:15px 17px 8px}
+.ablock{margin-bottom:13px}
+.ablock:last-child{margin-bottom:4px}
+.ablock .lab{font-family:'JetBrains Mono';font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--faint);margin-bottom:6px;display:flex;align-items:center;gap:7px}
+.ablock .lab::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.ablock.risk{border-left:2px solid var(--red);background:rgba(242,85,90,.05);border-radius:0 8px 8px 0;padding:10px 12px}
+.ablock.risk .lab{color:var(--red)}
+.ablock.risk .lab::before{background:var(--red)}
+.ablock p{font-size:13px;color:var(--text);line-height:1.62}
+.ablock b{font-weight:700;color:#fff}
+.ablock code{font-family:'JetBrains Mono';font-size:12px;background:var(--dim);padding:1px 6px;border-radius:5px;color:var(--accent)}
+.ai-actions{display:flex;gap:8px;border-top:1px solid var(--soft);padding:9px 16px;margin-top:4px;align-items:center}
+.ai-actions button{display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono';font-size:11px;color:var(--muted);background:var(--dim);border:1px solid var(--soft);border-radius:8px;padding:6px 11px;cursor:not-allowed;opacity:.7}
+.ai-actions .soon{margin-left:auto;font-family:'JetBrains Mono';font-size:10px;color:var(--faint)}
 .typing-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;animation:bounce 1s infinite}
-.suggestion-chip{background:rgba(0,201,255,.08);border:1px solid rgba(0,201,255,.2);border-radius:20px;color:var(--accent);font-size:11px;padding:5px 12px;cursor:pointer;margin:0 4px 4px 0}
-#chat-input-wrap{display:flex;gap:8px}
-#chat-input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13px;outline:none;font-family:'Syne',sans-serif}
-#chat-send{padding:10px 18px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff;font-weight:700;font-size:13px}
-#chat-send:disabled{background:var(--dim)}
+.suggestion-chip{background:var(--surface);border:1px solid var(--soft);border-radius:9px;color:var(--muted);font-size:12px;padding:8px 12px;cursor:pointer;margin:0 6px 6px 0;transition:.18s}
+.suggestion-chip:hover{border-color:rgba(139,124,246,.4);color:var(--text)}
+#chat-input-wrap{display:flex;gap:9px}
+#chat-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:11px 15px;color:var(--text);font-size:13.5px;outline:none;font-family:var(--sans)}
+#chat-input:focus{border-color:var(--accent)}
+#chat-send{padding:0 18px;border-radius:9px;border:none;background:linear-gradient(150deg,var(--accent),var(--accent2));color:#0B0716;font-weight:800;font-size:16px}
+#chat-send:disabled{background:var(--dim);color:var(--muted)}
 
 /* LOCKED */
 .locked-wrap{opacity:.45;pointer-events:none}
 
 /* SVG CHART */
-.chart-wrap{background:var(--bg);border-radius:8px;overflow:hidden;width:100%}
+.chart-wrap{background:var(--bg);border-radius:10px;overflow:hidden;width:100%;border:1px solid var(--soft)}
 
 /* SECTION TITLE */
-.section-title{font-weight:800;font-size:20px;color:var(--text);margin-bottom:4px}
+.section-title{font-weight:800;font-size:20px;color:var(--text);margin-bottom:4px;letter-spacing:-.3px}
 .section-sub{color:var(--muted);font-size:13px;margin-bottom:16px}
 
 /* BACK BTN */
-.back-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 12px;font-size:12px}
+.back-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:7px 13px;font-size:12px;transition:.18s}
+.back-btn:hover{color:var(--text);border-color:var(--borderhi)}
+
+/* BADGES */
+.hbadges{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.hbadge{font-family:'JetBrains Mono';font-size:10px;letter-spacing:.8px;text-transform:uppercase;padding:5px 9px;border-radius:7px;border:1px solid var(--soft);background:var(--surface);color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.hbadge .d{width:5px;height:5px;border-radius:50%}
+.hbadge.edu .d{background:var(--accent)}
+.hbadge.demo .d{background:var(--gold)}
+.hbadge.noad .d{background:var(--red)}
+
+/* RESPONSIVE */
+@media (max-width:640px){
+  #header{flex-wrap:wrap;height:auto;padding:10px 14px;gap:10px}
+  #nav-tabs{order:3;width:100%;justify-content:space-between;gap:4px}
+  .nav-tab{flex:1;padding:9px 4px;text-align:center;font-size:12px}
+  #xp-display{margin-left:auto}
+  .sim-grid{grid-template-columns:1fr}
+  .msg-user{max-width:90%}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
 </style>
 </head>
 <body>
 
 <div id="header">
-  <div class="logo-box">⬟</div>
-  <div class="logo-text"><div class="t1">INSTITUTIONAL</div><div class="t2">TRADING ACADEMY</div></div>
+  <div class="logo-box"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2 4 6.5v9L12 22l8-6.5v-9L12 2Z" stroke="#0B0716" stroke-width="2" stroke-linejoin="round"/><path d="M7 15l3-4 2.5 2.5L17 8" stroke="#0B0716" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="logo-text"><div class="t1">HABIL<i>/</i>IA Markets</div><div class="t2">Trading Academy</div></div>
   <div id="nav-tabs">
     <button class="nav-tab active" onclick="switchTab('academy')">◈ Academia</button>
     <button class="nav-tab" onclick="switchTab('simulator')">⬡ Simulador</button>
@@ -162,9 +210,9 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
         </div>
       </div>
       <div class="lesson-tabs">
-        <button class="lesson-tab active" id="tab-btn-teoria" onclick="lessonTab('teoria')" style="color:inherit">📖 Teoría</button>
-        <button class="lesson-tab" id="tab-btn-grafico" onclick="lessonTab('grafico')" style="color:inherit">📊 Gráfico</button>
-        <button class="lesson-tab" id="tab-btn-quiz" onclick="lessonTab('quiz')" style="color:inherit;display:none">✏️ Quiz</button>
+        <button class="lesson-tab active" id="tab-btn-teoria" onclick="lessonTab('teoria')" style="color:inherit">Teoría</button>
+        <button class="lesson-tab" id="tab-btn-grafico" onclick="lessonTab('grafico')" style="color:inherit">Gráfico</button>
+        <button class="lesson-tab" id="tab-btn-quiz" onclick="lessonTab('quiz')" style="color:inherit;display:none">Quiz</button>
       </div>
       <div id="lv-teoria"></div>
       <div id="lv-grafico" style="display:none"></div>
@@ -176,6 +224,11 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
   <div id="tab-simulator" style="display:none">
     <div class="section-title">Simulador de Trading</div>
     <div class="section-sub">Practica position sizing y gestión de riesgo con capital ficticio</div>
+    <div class="hbadges">
+      <span class="hbadge edu"><span class="d"></span>Capital ficticio</span>
+      <span class="hbadge demo"><span class="d"></span>Educativo</span>
+      <span class="hbadge noad"><span class="d"></span>No señal real</span>
+    </div>
     <div style="display:flex;align-items:flex-start;gap:10px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:10px;padding:11px 14px;margin-bottom:12px">
       <span style="color:var(--gold);font-size:14px;line-height:1.4;flex-shrink:0">⚠</span>
       <span style="font-size:11px;line-height:1.6;color:var(--muted)">Este simulador usa capital ficticio y resultados aleatorios de ejemplo. No representa desempeño real, no predice resultados y no recomienda operar.</span>
@@ -211,12 +264,16 @@ button{font-family:'Syne',sans-serif;cursor:pointer}
 
   <!-- TUTOR -->
   <div id="tab-tutor" style="display:none">
-    <div class="section-title">Tutor IA</div>
-    <div class="section-sub">Resuelve dudas sobre trading institucional en tiempo real</div>
-    <div class="card-sm" style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">⬡</div>
-      <div><div style="font-weight:700;font-size:14px">Tutor IA — Trading Institucional</div><div style="color:var(--muted);font-size:11px">SMC · ICT · Order Blocks · Risk Management</div></div>
-      <div style="margin-left:auto;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)"></div>
+    <div class="section-title">Tutor IA — Trading</div>
+    <div class="section-sub">Resuelve dudas sobre SMC, ICT, liquidez, gestión de riesgo y psicología</div>
+    <div class="hbadges">
+      <span class="hbadge edu"><span class="d"></span>Tutor educativo</span>
+      <span class="hbadge noad"><span class="d"></span>No asesoría</span>
+    </div>
+    <div class="card-sm" style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+      <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(150deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2 4 6.5v9L12 22l8-6.5v-9L12 2Z" stroke="#0B0716" stroke-width="2" stroke-linejoin="round"/></svg></div>
+      <div><div style="font-weight:700;font-size:14px">Tutor educativo — Trading</div><div style="color:var(--muted);font-size:11px;font-family:\'JetBrains Mono\'">SMC · ICT · Liquidez · Riesgo</div></div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--mktgreen);font-family:\'JetBrains Mono\'"><span style="width:7px;height:7px;border-radius:50%;background:var(--mktgreen)"></span>en línea</div>
     </div>
     <div id="chat-messages"></div>
     <div id="suggestions-wrap" style="margin-bottom:10px;flex-wrap:wrap;display:flex"></div>
@@ -345,7 +402,7 @@ function renderModules(){
         <div style="flex:1">
           <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">
             <span class="mod-tag" style="color:${mod.color};background:${mod.color}15">${mod.tag}</span>
-            ${locked?'<span style="color:var(--muted);font-size:10px">🔒 Completa el módulo anterior</span>':''}
+            ${locked?'<span style="color:var(--muted);font-size:10px">Completa el módulo anterior</span>':''}
           </div>
           <div class="mod-title">${mod.title}</div>
           <div class="mod-sub">${mod.subtitle}</div>
@@ -459,7 +516,7 @@ function renderQuiz(){
     const pass=Object.values(quizAnswers).filter((a,i)=>a===qData[i].ans).length;
     const ok=pass>=Math.ceil(qData.length*0.5);
     document.getElementById('lv-quiz').innerHTML=`<div class="quiz-result" style="background:${ok?'#00E8A010':'#FF3D5A10'};border:1px solid ${ok?'#00E8A0':'#FF3D5A'}">
-      <div style="font-size:28px;margin-bottom:8px">${ok?'🏆':'📚'}</div>
+      <div style="font-size:28px;margin-bottom:8px">${ok?'✓':'↻'}</div>
       <div style="font-weight:700;font-size:16px">${pass}/${qData.length} correctas</div>
       <div style="color:var(--muted);font-size:13px;margin-top:6px">${ok?'+'+activeLesson.xp+' XP ganados':'Revisa la teoría e intenta de nuevo'}</div>
       ${!ok?`<button onclick="retryQuiz()" style="margin-top:12px;padding:8px 20px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text);font-size:13px">Reintentar</button>`:''}
@@ -598,14 +655,44 @@ REGLAS QUE NUNCA ROMPES:
 
 Si no sabes algo o el dato puede estar desactualizado, lo dices con honestidad en lugar de inventar.`;
 
+// Render visual de la respuesta del Tutor: limpia Markdown crudo (## ** --- `code`)
+// y la muestra en bloques cuando trae secciones. NO altera lo que se envía a /api/chat.
+function escapeHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function inlineMd(t){return escapeHtml(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`(.+?)`/g,'<code>$1</code>');}
+function renderTutorMarkdown(raw){
+  const text=(raw||'').trim();
+  if(/(^|\n)\s*##\s+/.test(text)){
+    const parts=text.split(/\n?---\n?/).map(s=>s.trim()).filter(Boolean);
+    let out='';
+    parts.forEach(b=>{
+      const m=b.match(/^##\s*(.+?)\n([\s\S]*)$/);
+      if(m){
+        const lab=m[1].trim();const risk=/riesgo/i.test(lab)?' risk':'';
+        out+=`<div class="ablock${risk}"><div class="lab">${escapeHtml(lab)}</div><p>${inlineMd(m[2].trim()).replace(/\n+/g,'<br>')}</p></div>`;
+      }else{out+=`<div class="ablock"><p>${inlineMd(b).replace(/\n+/g,'<br>')}</p></div>`;}
+    });
+    return out;
+  }
+  const clean=text.replace(/^\s*##\s*/gm,'').replace(/\n?---\n?/g,'\n');
+  return `<p style="font-size:13px;line-height:1.62;color:var(--text)">${inlineMd(clean).replace(/\n+/g,'<br>')}</p>`;
+}
+
 function renderChat(){
   const box=document.getElementById('chat-messages');
   box.innerHTML='';
-  chatMessages.forEach(m=>{
-    const d=document.createElement('div');
-    d.className='msg '+(m.role==='user'?'msg-user':'msg-ai');
-    d.textContent=m.content;
-    box.appendChild(d);
+  chatMessages.forEach((m,idx)=>{
+    if(m.role==='user'){
+      const d=document.createElement('div');d.className='msg msg-user';d.textContent=m.content;box.appendChild(d);
+    }else{
+      const d=document.createElement('div');d.className='msg msg-ai';
+      d.innerHTML=`<div class="ai-inner">${renderTutorMarkdown(m.content)}</div>`+
+        (idx===0?'':`<div class="ai-actions">`+
+          `<button title="Disponible próximamente" disabled><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 9a4 4 0 0 1 0 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Leer respuesta</button>`+
+          `<button title="Disponible próximamente" disabled><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/></svg>Detener</button>`+
+          `<span class="soon">voz · próximamente</span>`+
+        `</div>`);
+      box.appendChild(d);
+    }
   });
   if(chatLoading){
     const d=document.createElement('div');
