@@ -1,21 +1,24 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Terapeutas Famosos</title>
+<title>Terapeutas Famosos — HABIL/IA</title>
+<meta name="description" content="Conversaciones de reflexión inspiradas en Jung, Frankl y el Dr. Bach. Un espacio educativo de HABIL/IA para decir en voz alta lo que cargamos en silencio. No reemplaza terapia ni atención profesional.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%231a1410'/%3E%3Crect x='32' y='32' width='36' height='36' fill='%23c9a84c' transform='rotate(45 50 50)'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root{--cream:#f5f0e8;--ink:#1a1410;--gold:#c9a84c;--gold-light:#e8c97a;}
   *{margin:0;padding:0;box-sizing:border-box;}
   body{background:var(--ink);font-family:'Cormorant Garamond',Georgia,serif;min-height:100vh;overflow-x:hidden;}
-  #welcome-screen{position:fixed;inset:0;background:rgba(15,10,8,0.97);z-index:100;display:flex;align-items:center;justify-content:center;padding:1.5rem;}
-  .welcome-box{background:linear-gradient(160deg,#2a2018,#1e1812);border:1px solid rgba(201,168,76,0.25);border-top:2px solid var(--gold);border-radius:2px;max-width:560px;width:100%;padding:2.5rem 2rem;text-align:center;}
+  #welcome-screen{position:fixed;inset:0;background:rgba(15,10,8,0.97);z-index:100;display:flex;align-items:center;justify-content:center;padding:1.5rem;overflow-y:auto;}
+  .welcome-box{background:linear-gradient(160deg,#2a2018,#1e1812);border:1px solid rgba(201,168,76,0.25);border-top:2px solid var(--gold);border-radius:2px;max-width:560px;width:100%;padding:2.5rem 2rem;text-align:center;margin:auto;}
   .welcome-symbol{font-size:2.5rem;margin-bottom:1rem;}
   .welcome-title{font-family:'Cinzel',serif;color:var(--gold-light);font-size:1.3rem;letter-spacing:0.08em;margin-bottom:1rem;}
   .welcome-text{font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.65);font-size:0.98rem;line-height:1.75;margin-bottom:1.8rem;}
   .welcome-text strong{color:rgba(245,240,232,0.85);font-style:normal;}
-  .crisis-section{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.12);border-radius:2px;padding:1rem 1.2rem;margin-bottom:1.8rem;text-align:left;}
+  .crisis-section{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.12);border-radius:2px;padding:1rem 1.2rem;margin-bottom:1.2rem;text-align:left;}
   .crisis-title{font-family:'Cinzel',serif;color:var(--gold);font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.8rem;}
   .crisis-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem;}
   .crisis-list li{font-family:'Cormorant Garamond',serif;color:rgba(245,240,232,0.6);font-size:0.9rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
@@ -23,6 +26,7 @@
   .crisis-list a{color:var(--gold-light);text-decoration:none;font-weight:600;}
   .crisis-note{margin-top:0.8rem;font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.35);font-size:0.82rem;text-align:center;line-height:1.6;}
   .crisis-note span{color:rgba(201,168,76,0.6);font-style:normal;}
+  .privacy-note{font-family:'Cormorant Garamond',serif;color:rgba(245,240,232,0.4);font-size:0.85rem;line-height:1.6;margin-bottom:1.8rem;text-align:left;border-left:1px solid rgba(201,168,76,0.25);padding-left:0.9rem;}
   .welcome-btn{background:linear-gradient(135deg,#c9a84c,#a8862e);border:none;color:var(--ink);font-family:'Cinzel',serif;font-size:0.78rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;padding:0.9rem 2.5rem;cursor:pointer;transition:all 0.3s;border-radius:1px;width:100%;}
   .welcome-btn:hover{background:linear-gradient(135deg,#e8c97a,#c9a84c);}
   #selection-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;background:radial-gradient(ellipse at 20% 50%,rgba(201,168,76,0.06) 0%,transparent 60%),#1a1410;position:relative;}
@@ -47,12 +51,21 @@
   .card-years{font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.35);font-size:0.85rem;margin-bottom:1rem;}
   .card-school{color:var(--gold);font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.2rem;opacity:0.8;}
   .card-desc{font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.6);font-size:0.95rem;line-height:1.6;margin-bottom:1.5rem;}
+  .card-quote-note{font-family:'Cormorant Garamond',serif;font-style:normal;color:rgba(245,240,232,0.3);font-size:0.75rem;display:block;margin-top:0.4rem;}
   .card-btn{padding:0.6rem 1.8rem;border:1px solid rgba(201,168,76,0.4);color:var(--gold-light);font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;background:transparent;cursor:pointer;transition:all 0.3s;border-radius:1px;}
   .card-btn:hover{background:rgba(201,168,76,0.1);border-color:var(--gold);}
+  .sel-footer{position:relative;z-index:1;margin-top:3.5rem;text-align:center;max-width:560px;padding:1.5rem 1rem 0;border-top:1px solid rgba(201,168,76,0.15);}
+  .sel-footer .f-brand{font-family:'Cinzel',serif;color:rgba(245,240,232,0.7);font-size:0.85rem;letter-spacing:0.15em;}
+  .sel-footer .f-brand em{font-style:normal;color:var(--gold);}
+  .sel-footer .f-motto{font-family:'IM Fell English',serif;font-style:italic;color:rgba(245,240,232,0.4);font-size:0.85rem;margin-top:0.3rem;}
+  .sel-footer .f-legal{font-family:'Cormorant Garamond',serif;color:rgba(245,240,232,0.32);font-size:0.8rem;line-height:1.7;margin-top:0.8rem;}
+  .sel-footer .f-made{font-family:'Cinzel',serif;color:rgba(245,240,232,0.3);font-size:0.68rem;letter-spacing:0.15em;margin-top:0.8rem;text-transform:uppercase;}
   #chat-screen{display:none;height:100vh;flex-direction:column;background:#1a1410;}
   .chat-header{background:linear-gradient(90deg,#221a10,#2a2018,#221a10);border-bottom:1px solid rgba(201,168,76,0.2);padding:0.8rem 1.2rem;display:flex;align-items:center;gap:1rem;flex-shrink:0;}
   .back-btn{background:none;border:1px solid rgba(201,168,76,0.3);color:var(--gold);font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.15em;padding:0.4rem 0.9rem;cursor:pointer;transition:all 0.3s;border-radius:1px;white-space:nowrap;}
   .back-btn:hover{background:rgba(201,168,76,0.1);}
+  .help-btn{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.35);color:var(--gold-light);font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.12em;padding:0.4rem 0.8rem;cursor:pointer;transition:all 0.3s;border-radius:1px;white-space:nowrap;flex-shrink:0;}
+  .help-btn:hover{background:rgba(201,168,76,0.18);border-color:var(--gold);}
   .chat-header-info{flex:1;min-width:0;}
   .chat-therapist-name{font-family:'Cinzel',serif;color:var(--gold-light);font-size:1rem;letter-spacing:0.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .chat-therapist-school{color:rgba(245,240,232,0.4);font-size:0.75rem;font-family:'IM Fell English',serif;font-style:italic;}
@@ -90,7 +103,7 @@
   .error-bubble{background:rgba(180,60,60,0.08);border:1px solid rgba(180,60,60,0.2);border-left:2px solid rgba(180,60,60,0.4);padding:0.8rem 1.2rem;border-radius:2px;color:rgba(245,200,200,0.65);font-family:'IM Fell English',serif;font-style:italic;font-size:0.9rem;align-self:flex-start;max-width:82%;animation:fadeIn 0.4s ease;}
   .messages-wrapper::-webkit-scrollbar{width:3px;}
   .messages-wrapper::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.2);border-radius:2px;}
-  @media(max-width:480px){.therapists-grid{grid-template-columns:1fr;gap:1.2rem;}.therapist-card{padding:1.8rem 1.5rem;}.message{max-width:92%;}}
+  @media(max-width:480px){.therapists-grid{grid-template-columns:1fr;gap:1.2rem;}.therapist-card{padding:1.8rem 1.5rem;}.message{max-width:92%;}.help-btn{font-size:0.6rem;padding:0.4rem 0.6rem;}}
 </style>
 </head>
 <body>
@@ -107,13 +120,14 @@
         <li><span>🇦🇷 Argentina</span><a href="tel:135">135</a></li>
         <li><span>🇲🇽 México</span><a href="tel:8002900024">800 290 0024</a></li>
         <li><span>🇪🇸 España</span><a href="tel:024">024</a></li>
-        <li><span>🇨🇴 Colombia</span><a href="tel:106">106</a></li>
+        <li><span>🇨🇴 Colombia (Bogotá)</span><a href="tel:106">106</a></li>
         <li><span>🇺🇾 Uruguay</span><a href="tel:08008884">0800 8884</a></li>
         <li><span>🇵🇪 Perú</span><a href="tel:113">113</a></li>
       </ul>
       <div class="crisis-note">¿Tu país no aparece? Busca en Google:<br><span>"línea de crisis salud mental + tu país"</span></div>
     </div>
-    <button class="welcome-btn" onclick="closeWelcome()">Entrar al espacio ✦</button>
+    <div class="privacy-note">Las conversaciones se envían al backend de HABIL/IA para generar respuesta. No compartas datos personales sensibles, claves, direcciones, RUT, información médica detallada ni datos de terceros. La app no guarda tus conversaciones: al salir de una conversación, se borra.</div>
+    <button class="welcome-btn" id="welcome-btn" onclick="closeWelcome()">Entrar al espacio ✦</button>
   </div>
 </div>
 
@@ -121,7 +135,7 @@
   <div class="header">
     <div class="header-ornament">✦ ✦ ✦</div>
     <h1>Terapeutas<br><span>Famosos</span></h1>
-    <div class="header-sub">Elige a tu guía y comienza tu sesión</div>
+    <div class="header-sub">Elige a tu guía y comienza la conversación</div>
     <div class="divider">✦</div>
   </div>
   <div class="therapists-grid">
@@ -131,7 +145,7 @@
       <div class="card-years">1875 – 1961</div>
       <div class="card-school">Psicología Analítica</div>
       <div class="card-desc">"Quien mira hacia afuera, sueña. Quien mira hacia adentro, despierta."</div>
-      <button class="card-btn">Iniciar sesión</button>
+      <button class="card-btn">Comenzar conversación</button>
     </div>
     <div class="therapist-card" onclick="startSession('frankl')">
       <div class="card-symbol">🕯️</div>
@@ -139,16 +153,22 @@
       <div class="card-years">1905 – 1997</div>
       <div class="card-school">Logoterapia</div>
       <div class="card-desc">"Al hombre se le puede arrebatar todo, salvo la última de las libertades: elegir su actitud ante cualquier circunstancia."</div>
-      <button class="card-btn">Iniciar sesión</button>
+      <button class="card-btn">Comenzar conversación</button>
     </div>
     <div class="therapist-card" onclick="startSession('bach')">
       <div class="card-symbol">🌿</div>
       <div class="card-name">Dr. Edward Bach</div>
       <div class="card-years">1886 – 1936</div>
-      <div class="card-school">Medicina Floral</div>
-      <div class="card-desc">"La enfermedad del cuerpo es resultado de la desarmonía entre el alma y la mente."</div>
-      <button class="card-btn">Iniciar sesión</button>
+      <div class="card-school">Terapia Floral</div>
+      <div class="card-desc">"La enfermedad del cuerpo es resultado de la desarmonía entre el alma y la mente."<span class="card-quote-note">— su visión histórica, hoy parte de su legado</span></div>
+      <button class="card-btn">Comenzar conversación</button>
     </div>
+  </div>
+  <div class="sel-footer">
+    <div class="f-brand">HABIL<em>/</em>IA</div>
+    <div class="f-motto">Humanos primero. Inteligencia después.</div>
+    <div class="f-legal">Espacio educativo y de reflexión. No es terapia ni reemplaza la atención de profesionales de salud mental.<br>Las conversaciones se envían al backend de HABIL/IA para generar respuesta y no se guardan en la app. No compartas datos personales sensibles.</div>
+    <div class="f-made">Hecho en Chile · HABIL/IA</div>
   </div>
 </div>
 
@@ -159,6 +179,7 @@
       <div class="chat-therapist-name" id="chat-name"></div>
       <div class="chat-therapist-school" id="chat-school"></div>
     </div>
+    <button class="help-btn" onclick="showCrisis()">✦ Ayuda urgente</button>
     <div class="chat-symbol-header" id="chat-symbol"></div>
   </div>
   <div class="messages-wrapper">
@@ -178,30 +199,45 @@
 </div>
 
 <script>
+// ═══════════════════════════════════════════
+// BLOQUE COMÚN DE SEGURIDAD (parche v1.0)
+// Se agrega al final del prompt de los tres guías.
+// ═══════════════════════════════════════════
+const SAFETY_BLOCK=`
+
+LÍMITES DE SEGURIDAD (obligatorios, nunca los rompes):
+- Este es un espacio educativo y de reflexión, no una terapia real. Lo recuerdas con naturalidad cuando la conversación lo amerite, sin repetirlo en cada mensaje ni volverte frío.
+- NO diagnosticas condiciones de salud mental ni física, ni siquiera de forma tentativa.
+- NO indicas tratamientos ni intervenciones de ningún tipo.
+- NO opinas sobre medicación: ni recomendarla, ni ajustarla, ni suspenderla. Eso corresponde únicamente a profesionales de la salud.
+- Si la persona expresa ideación suicida, deseos de hacerse daño, autolesiones, riesgo de dañar a otros, crisis intensa o peligro inmediato: respondes con calidez y sin alarmismo, le dices que lo que siente importa y que merece apoyo humano real ahora, y la invitas a usar el botón "Ayuda urgente" de esta app o la línea de crisis de su país. No haces evaluaciones de riesgo tipo cuestionario y no continúas la exploración como si nada hubiera pasado.
+- Si la persona indica ser menor de edad, mantienes un tono apropiado y sugieres con cariño hablar con un adulto de confianza y buscar apoyo profesional.
+- En trauma, duelo intenso o ansiedad severa: acompañas con presencia y suavidad, sin aplicar técnicas ni profundizar de forma invasiva, y sugieres apoyo profesional real como parte natural de la conversación.`;
+
 const THERAPISTS={
   jung:{name:"Carl Gustav Jung",school:"Psicología Analítica",symbol:"🌙",
     greeting:"Qué bueno que estás aquí. A veces el alma nos lleva a lugares que la mente no entiende todavía... y eso está bien. Antes de comenzar, me gustaría conocerte un poco. ¿Cómo te llamas?",
     suggestions:["No sé bien qué me pasa, pero algo no está bien","Estoy pasando por un momento muy difícil","Me siento perdido/a y sin rumbo","Tengo miedos o angustias que no puedo explicar"],
-    systemPrompt:`Eres Carl Gustav Jung, psicólogo suizo fundador de la Psicología Analítica. Estás conduciendo una PRIMERA SESIÓN terapéutica. Hablas en primera persona. FILOSOFÍA: No ofreces esperanza vacía sino PRESENCIA REAL. Eres contención, amor y luz. TÚ conduces la sesión con preguntas graduales. ESTRUCTURA: 1.Pregunta el nombre 2.Usa el nombre con calidez 3.Pregunta edad y origen 4.Pregunta qué área siente más pesada 5.Valida primero, luego profundiza 6.Conecta con sueños, sombra, inconsciente. LENGUAJE: Si usas términos técnicos explícalos. Respuestas de 3-5 oraciones. Una sola pregunta al final. TONO: Misterioso pero cálido, poético pero comprensible. Responde SIEMPRE en español.`},
+    systemPrompt:`Eres Carl Gustav Jung, psicólogo suizo fundador de la Psicología Analítica. Estás conduciendo una PRIMERA CONVERSACIÓN de reflexión. Hablas en primera persona. FILOSOFÍA: No ofreces esperanza vacía sino PRESENCIA REAL. Eres contención, amor y luz. TÚ conduces la conversación con preguntas graduales. ESTRUCTURA: 1.Pregunta el nombre 2.Usa el nombre con calidez 3.Pregunta edad y origen 4.Pregunta qué área siente más pesada 5.Valida primero, luego profundiza 6.Conecta con sueños, sombra, inconsciente. LENGUAJE: Si usas términos técnicos explícalos. Respuestas de 3-5 oraciones. Una sola pregunta al final. TONO: Misterioso pero cálido, poético pero comprensible. Responde SIEMPRE en español.`+SAFETY_BLOCK},
   frankl:{name:"Viktor Frankl",school:"Logoterapia",symbol:"🕯️",
     greeting:"Gracias por estar aquí. Sé que a veces llegar a un lugar como este cuesta mucho. Quiero que sepas que aquí puedes hablar con total libertad. Para comenzar... ¿cómo te llamas?",
     suggestions:["No sé bien qué me pasa, pero algo no está bien","Siento que nada tiene sentido en mi vida","Estoy pasando por algo muy difícil y no veo salida","Me cuesta encontrar fuerzas para seguir"],
-    systemPrompt:`Eres Viktor Frankl, psiquiatra austríaco, sobreviviente del Holocausto y fundador de la Logoterapia. PRIMERA SESIÓN. FILOSOFÍA: No ofreces esperanza vacía — la esperanza sin sustancia mantiene a la gente en el dolor. Ofreces PRESENCIA REAL y VERDAD AMOROSA. Ves a cada persona como un ser capaz. ESTRUCTURA: 1.Pregunta el nombre 2.Crea vínculo real 3.Pregunta edad y ocupación 4.Pregunta qué área afectada 5.Acoge primero, luego profundiza 6.Guía hacia el sentido: qué puedo hacer YO con esto. LENGUAJE: Directo, cálido, humano. Explica términos técnicos. 3-5 oraciones. Una pregunta al final. TONO: Sereno, firme, profundamente humano. Responde SIEMPRE en español.`},
-  bach:{name:"Dr. Edward Bach",school:"Medicina Floral",symbol:"🌿",
+    systemPrompt:`Eres Viktor Frankl, psiquiatra austríaco, sobreviviente del Holocausto y fundador de la Logoterapia. PRIMERA CONVERSACIÓN de reflexión. FILOSOFÍA: No ofreces esperanza vacía — la esperanza sin sustancia mantiene a la gente en el dolor. Ofreces PRESENCIA REAL y VERDAD AMOROSA. Ves a cada persona como un ser capaz. ESTRUCTURA: 1.Pregunta el nombre 2.Crea vínculo real 3.Pregunta edad y ocupación 4.Pregunta qué área afectada 5.Acoge primero, luego profundiza 6.Guía hacia el sentido: qué puedo hacer YO con esto. LENGUAJE: Directo, cálido, humano. Explica términos técnicos. 3-5 oraciones. Una pregunta al final. TONO: Sereno, firme, profundamente humano. Responde SIEMPRE en español.`+SAFETY_BLOCK},
+  bach:{name:"Dr. Edward Bach",school:"Terapia Floral",symbol:"🌿",
     greeting:"Qué alegría que hayas llegado hasta aquí. A veces el cuerpo y el alma nos hablan de maneras que no entendemos bien... y está bien no entenderlo todavía. Estoy aquí contigo. ¿Cómo te llamas?",
     suggestions:["No sé bien qué me pasa, pero algo no está bien","Me siento muy agotado/a por dentro","Tengo mucha angustia o miedo y no sé por qué","Estoy triste y sin energía hace tiempo"],
-    systemPrompt:`Eres el Dr. Edward Bach, médico, bacteriólogo y creador de los 38 Remedios Florales. Conduces una PRIMERA SESIÓN terapéutica floral. Hablas en primera persona, con ternura y presencia real.
+    systemPrompt:`Eres el Dr. Edward Bach, médico, bacteriólogo y creador de los 38 Remedios Florales. Conduces una PRIMERA CONVERSACIÓN de exploración floral. Hablas en primera persona, con ternura y presencia real.
 
-FILOSOFÍA ESENCIAL: Para mí, la enfermedad no es un enemigo sino un maestro — la manifestación física de un desequilibrio emocional más profundo. Sanar el estado emocional permite al cuerpo recuperar su equilibrio natural. No preguntes qué enfermedad tiene la persona, sino qué persona tiene la enfermedad.
+FILOSOFÍA ESENCIAL: Para mí, la enfermedad no es un enemigo sino un maestro — la manifestación física de un desequilibrio emocional más profundo. Esta es mi visión histórica, la que sostuve en vida, y así la presentas siempre: como mi mirada y mi filosofía, nunca como un hecho médico comprobado ni como una promesa de sanación, equilibrio o resultados. No preguntes qué enfermedad tiene la persona, sino qué persona tiene la enfermedad.
 
-CONDUCCIÓN DE LA SESIÓN:
+CONDUCCIÓN DE LA CONVERSACIÓN:
 1. Saluda con calidez genuina y pregunta el nombre
 2. Usa el nombre con ternura en cada respuesta
 3. Pregunta la edad y qué la trajo aquí hoy
 4. Explora sensaciones físicas: tensión, cansancio, peso en el pecho, dificultad para respirar
 5. Identifica el área más pesada: miedos, incertidumbre, soledad, relaciones, trabajo, duelo, agotamiento
 6. Usa PREGUNTAS DISPARADORAS según lo que emerge (ver conocimiento clínico abajo)
-7. Cuando tengas suficiente información, sugiere 2 a 3 remedios con descripción completa y su don transformador
+7. Cuando tengas suficiente información, comparte 2 a 3 remedios como exploración educativa — nunca como prescripción — con descripción completa y su don transformador
 
 CONOCIMIENTO CLÍNICO — LOS 7 GRUPOS:
 
@@ -257,21 +293,28 @@ GRUPO 7 — EXCESIVA PREOCUPACIÓN POR EL BIENESTAR AJENO:
 - BEECH: Crítica intensa hacia los demás. Pregunta: "¿Hay comportamientos en otros que te generan una irritación o crítica muy intensa?" Don: tolerancia y aceptación genuina.
 - ROCK WATER: Autoexigencia extrema, rigidez. Pregunta: "¿Hay una voz interna muy exigente que te hace sentir culpable cuando te permites descansar o disfrutar?" Don: disciplina compasiva y fluida.
 
-CUANDO SUGIERAS REMEDIOS:
+CUANDO COMPARTAS REMEDIOS:
 - Nombra cada remedio con claridad
 - Describe el estado emocional que trabaja
 - Menciona cómo se siente quien lo necesita
 - Describe el don transformador que trae
 - Si corresponde, menciona remedios que trabajan en sinergia
-- Siempre aclara que los remedios acompañan pero no reemplazan atención profesional cuando el estado lo requiere
-- Si detectas señales de crisis real (pensamientos de hacerse daño, desesperanza extrema), deriva con amor pero con firmeza a líneas de ayuda profesional
+- Presenta los remedios siempre como exploración educativa para conocerse mejor, nunca como prescripción, tratamiento ni promesa de resultado
+- NUNCA indiques dosis, número de gotas, preparaciones, diluciones, frecuencias ni fórmulas. Si la persona pregunta "qué tomar", cuánto o cómo prepararlo, declina con calidez y explica que eso corresponde a un proceso personalizado con un terapeuta floral certificado
+- Explica, cuando compartas remedios, que la terapia floral seria es un proceso acompañado: requiere lectura emocional en el tiempo, seguimiento, criterio terapéutico, compromiso del consultante y la responsabilidad de un terapeuta. Invita a vivir ese proceso con un terapeuta floral certificado
+- Aclara siempre, sin condiciones: las flores no reemplazan atención médica, psicológica ni psiquiátrica
+- Si detectas señales de crisis real (pensamientos de hacerse daño, desesperanza extrema), deriva con amor pero con firmeza a las líneas de ayuda profesional visibles en esta app
 
-LENGUAJE: Dulce, pausado, cercano. 3-5 oraciones por respuesta. Una sola pregunta al final. TONO: Gentil, amoroso, calmo, profundamente humano. Responde SIEMPRE en español.`}
+LENGUAJE: Dulce, pausado, cercano. 3-5 oraciones por respuesta. Una sola pregunta al final. TONO: Gentil, amoroso, calmo, profundamente humano. Responde SIEMPRE en español.`+SAFETY_BLOCK}
 };
 
 function closeWelcome(){const s=document.getElementById('welcome-screen');s.style.opacity='0';s.style.transition='opacity 0.5s ease';setTimeout(()=>s.style.display='none',500);}
+function showCrisis(){const s=document.getElementById('welcome-screen');document.getElementById('welcome-btn').textContent='Volver a la conversación ✦';s.style.display='flex';requestAnimationFrame(()=>{s.style.opacity='1';});}
 
 let currentTherapist=null,conversationHistory=[],isLoading=false;
+
+// Escape de HTML: todo texto (del usuario o de la IA) se sanea antes de insertarse.
+function escapeHtml(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 function startSession(key){
   currentTherapist=THERAPISTS[key];conversationHistory=[];
@@ -288,18 +331,21 @@ function startSession(key){
 function showSuggestions(){
   const msgs=document.getElementById('messages'),typing=document.getElementById('typing');
   const wrap=document.createElement('div');wrap.className='suggestions-wrap';wrap.id='suggestions';
-  wrap.innerHTML=`<div class="suggestions-label">¿No sabes por dónde empezar?</div>${currentTherapist.suggestions.map(s=>`<button class="suggestion-btn" onclick="useSuggestion('${s.replace(/'/g,"&#39;")}')">${s}</button>`).join('')}`;
+  wrap.innerHTML=`<div class="suggestions-label">¿No sabes por dónde empezar?</div>${currentTherapist.suggestions.map((s,i)=>`<button class="suggestion-btn" onclick="useSuggestion(${i})">${escapeHtml(s)}</button>`).join('')}`;
   msgs.insertBefore(wrap,typing);scrollToBottom();
 }
 
-function useSuggestion(text){const s=document.getElementById('suggestions');if(s)s.remove();document.getElementById('message-input').value=text;sendMessage();}
-function goBack(){document.getElementById('chat-screen').style.display='none';document.getElementById('selection-screen').style.display='flex';currentTherapist=null;conversationHistory=[];}
+function useSuggestion(i){const s=document.getElementById('suggestions');if(s)s.remove();document.getElementById('message-input').value=currentTherapist.suggestions[i];sendMessage();}
+function goBack(){
+  if(conversationHistory.length>1&&!confirm('¿Quieres salir? Esta conversación se borrará y no se puede recuperar.'))return;
+  document.getElementById('chat-screen').style.display='none';document.getElementById('selection-screen').style.display='flex';currentTherapist=null;conversationHistory=[];
+}
 
 function addMessage(role,text,isError=false){
   const msgs=document.getElementById('messages'),typing=document.getElementById('typing');
   const div=document.createElement('div');
   if(isError){div.className='error-bubble';div.textContent=text;}
-  else{div.className=`message ${role}`;div.innerHTML=`<div class="message-sender">${role==='therapist'?currentTherapist.name:'Tú'}</div><div class="message-bubble">${text.replace(/\n/g,'<br>')}</div>`;}
+  else{div.className=`message ${role}`;div.innerHTML=`<div class="message-sender">${escapeHtml(role==='therapist'?currentTherapist.name:'Tú')}</div><div class="message-bubble">${escapeHtml(text).replace(/\n/g,'<br>')}</div>`;}
   msgs.insertBefore(div,typing);scrollToBottom();
 }
 
@@ -320,13 +366,18 @@ async function sendMessage(){
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({system:currentTherapist.systemPrompt,messages:conversationHistory})
     });
-    if(!res.ok)throw new Error(res.status);
-    const data=await res.json();
-    const reply=data.content?.[0]?.text||'Lo siento, no pude responder.';
-    const words=reply.split(' ').length;
-    await new Promise(r=>setTimeout(r,Math.min(Math.max(words*40,1200),3500)));
-    hideTyping();addMessage('therapist',reply);
-    conversationHistory.push({role:'assistant',content:reply});
+    const data=await res.json().catch(()=>null);
+    if(data&&data.ok===false){
+      // El backend devolvió un error categorizado con mensaje claro para la persona.
+      hideTyping();addMessage('therapist',data.userMessage||'No pude responder en este momento. Por favor intenta de nuevo.',true);
+    }else{
+      const reply=data&&data.content&&data.content[0]&&data.content[0].text;
+      if(!reply)throw new Error('sin-respuesta');
+      const words=reply.split(' ').length;
+      await new Promise(r=>setTimeout(r,Math.min(Math.max(words*40,1200),3500)));
+      hideTyping();addMessage('therapist',reply);
+      conversationHistory.push({role:'assistant',content:reply});
+    }
   }catch(err){
     hideTyping();addMessage('therapist','Hubo un problema de conexión. Por favor intenta de nuevo.',true);
   }
