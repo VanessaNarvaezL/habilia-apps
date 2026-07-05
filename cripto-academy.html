@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -101,7 +102,8 @@ button{font-family:var(--sans)}
 .iso-badge{display:inline-block;background:var(--greendim);border:1px solid rgba(34,211,238,.3);border-radius:6px;padding:2px 9px;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono'}
 
 /* ISO COINS TABLE */
-.iso-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+.iso-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.iso-table{width:100%;min-width:420px;border-collapse:collapse;font-size:12px;margin-top:10px}
 .iso-table th{background:var(--dim);color:var(--faint);padding:9px 10px;text-align:left;font-weight:700;letter-spacing:.05em;font-size:10px;font-family:'JetBrains Mono';text-transform:uppercase}
 .iso-table td{padding:9px 10px;border-bottom:1px solid var(--border-soft,rgba(255,255,255,.06));vertical-align:middle}
 .iso-table tr:last-child td{border-bottom:none}
@@ -126,6 +128,8 @@ button{font-family:var(--sans)}
 .sim-btn-main{width:100%;padding:12px;border-radius:9px;border:none;background:linear-gradient(150deg,var(--accent),var(--accent2));color:#04121A;font-weight:800;font-size:13px;cursor:pointer;font-family:var(--sans);letter-spacing:.3px;margin-top:8px}
 .pnl-pos{color:var(--mktgreen);font-weight:700;font-family:'JetBrains Mono'}
 .pnl-neg{color:var(--red);font-weight:700;font-family:'JetBrains Mono'}
+.sim-notice{display:flex;align-items:flex-start;gap:8px;background:var(--golddim);border:1px solid rgba(201,162,75,.3);border-radius:9px;padding:10px 12px;font-size:11px;line-height:1.6;color:var(--muted);margin-top:12px}
+.sim-error{display:flex;align-items:flex-start;gap:8px;background:var(--reddim);border:1px solid rgba(242,85,90,.3);border-radius:9px;padding:10px 12px;font-size:12px;line-height:1.6;color:var(--text);margin-top:10px}
 
 /* TUTOR */
 #chat-box{height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding-right:4px;margin-bottom:12px}
@@ -145,7 +149,6 @@ button{font-family:var(--sans)}
 .ablock b{font-weight:700;color:#fff}
 .ablock code{font-family:'JetBrains Mono';font-size:12px;background:var(--dim);padding:1px 6px;border-radius:5px;color:var(--accent)}
 .ai-actions{display:flex;gap:8px;border-top:1px solid var(--border-soft,rgba(255,255,255,.06));padding:9px 16px;margin-top:4px;align-items:center}
-.ai-actions button{display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono';font-size:11px;color:var(--muted);background:var(--dim);border:1px solid var(--border-soft,rgba(255,255,255,.06));border-radius:8px;padding:6px 11px;cursor:not-allowed;opacity:.7}
 .ai-actions .soon{margin-left:auto;font-family:'JetBrains Mono';font-size:10px;color:var(--faint)}
 .typing-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;animation:bounce 1s infinite}
 .sugg-chip{background:var(--surface);border:1px solid var(--border-soft,rgba(255,255,255,.06));border-radius:9px;color:var(--muted);font-size:12px;padding:8px 12px;cursor:pointer;margin:0 6px 6px 0;transition:.18s}
@@ -163,6 +166,19 @@ button{font-family:var(--sans)}
 .xp-badge{border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700}
 .tip-box{background:var(--greendim);border:1px solid rgba(34,211,238,.2);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text);line-height:1.7;margin:10px 0}
 .tip-box strong{color:var(--accent)}
+.risk-box{background:var(--golddim);border:1px solid rgba(201,162,75,.3);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text);line-height:1.7;margin:10px 0}
+.risk-box strong{color:var(--gold)}
+.mark-done-btn{width:100%;padding:13px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);font-weight:700;font-size:13.5px;cursor:pointer;font-family:var(--sans);margin-top:6px;transition:all .18s}
+.mark-done-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* FOOTER */
+#footer{max-width:860px;margin:0 auto;padding:24px 16px 42px;position:relative;z-index:1}
+#footer .f-inner{border-top:1px solid var(--border);padding-top:20px}
+#footer .f-brand{font-weight:800;font-size:13px;color:var(--text)}
+#footer .f-brand i{color:var(--accent);font-style:normal}
+#footer .f-motto{font-size:11.5px;color:var(--muted);margin-top:3px}
+#footer .f-legal{font-size:11px;color:var(--faint);line-height:1.7;margin-top:12px;max-width:660px}
+#footer .f-made{font-size:10.5px;color:var(--faint);margin-top:12px;font-family:'JetBrains Mono';letter-spacing:.5px}
 
 /* RESPONSIVE */
 @media (max-width:640px){
@@ -271,10 +287,14 @@ button{font-family:var(--sans)}
       <span style="font-family:'JetBrains Mono';font-size:10px;letter-spacing:.8px;text-transform:uppercase;padding:5px 9px;border-radius:7px;border:1px solid var(--border-soft,rgba(255,255,255,.06));background:var(--surface);color:var(--muted);display:inline-flex;align-items:center;gap:6px"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent)"></span>Tutor educativo</span>
       <span style="font-family:'JetBrains Mono';font-size:10px;letter-spacing:.8px;text-transform:uppercase;padding:5px 9px;border-radius:7px;border:1px solid var(--border-soft,rgba(255,255,255,.06));background:var(--surface);color:var(--muted);display:inline-flex;align-items:center;gap:6px"><span style="width:5px;height:5px;border-radius:50%;background:var(--red)"></span>No asesoría</span>
     </div>
-    <div style="background:var(--surface);border:1px solid var(--border-soft,rgba(255,255,255,.06));border-radius:14px;padding:13px 16px;display:flex;align-items:center;gap:12px;margin-bottom:14px">
+    <div style="background:var(--surface);border:1px solid var(--border-soft,rgba(255,255,255,.06));border-radius:14px;padding:13px 16px;display:flex;align-items:center;gap:12px;margin-bottom:10px">
       <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(150deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2 4 6.5v9L12 22l8-6.5v-9L12 2Z" stroke="#04121A" stroke-width="2" stroke-linejoin="round"/></svg></div>
       <div><div style="font-weight:700;font-size:14px">Tutor educativo — Cripto</div><div style="color:var(--muted);font-size:11px;font-family:'JetBrains Mono'">Blockchain · DeFi · ISO 20022</div></div>
       <div style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--mktgreen);font-family:'JetBrains Mono'"><span style="width:7px;height:7px;border-radius:50%;background:var(--mktgreen)"></span>en línea</div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--faint);line-height:1.6;margin-bottom:12px;padding:0 2px">
+      <span style="color:var(--gold);flex-shrink:0">⚠</span>
+      <span>Tus preguntas se envían al backend de HABIL/IA para generar respuesta. No escribas claves, contraseñas ni datos personales sensibles.</span>
     </div>
     <div id="chat-box"></div>
     <div id="sugg-wrap" style="display:flex;flex-wrap:wrap;margin-bottom:10px"></div>
@@ -286,9 +306,19 @@ button{font-family:var(--sans)}
 
 </div>
 
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="f-inner">
+    <div class="f-brand">HABIL<i>/</i>IA Markets</div>
+    <div class="f-motto">Humanos primero. Inteligencia después.</div>
+    <div class="f-legal">Cripto Academy es un producto educativo. No es asesoría financiera ni recomendación de inversión. Las criptomonedas son activos de alto riesgo: puedes perder parte o todo tu capital. Para decisiones financieras personales, consulta a un profesional con licencia.<br>Privacidad: tu progreso se guarda solo en este dispositivo. Las conversaciones con el Tutor IA se envían al backend de HABIL/IA para generar la respuesta y no se almacenan en esta app.</div>
+    <div class="f-made">Hecho en Chile · HABIL/IA</div>
+  </div>
+</footer>
+
 <script>
 // ═══════════════════════════════════════════
-// DATA
+// DATA — contenido propio por lección (parche v1.0)
 // ═══════════════════════════════════════════
 const MODULES = [
   {
@@ -296,16 +326,40 @@ const MODULES = [
     title:"Blockchain: La tecnología que lo cambió todo",
     subtitle:"Cómo funciona el motor detrás de las criptomonedas",
     lessons:[
-      {id:"1a",title:"¿Qué es blockchain y por qué importa?",xp:100,mins:8},
-      {id:"1b",title:"Cómo funciona una transacción cripto",xp:120,mins:10},
-      {id:"1c",title:"Wallets, claves y seguridad",xp:110,mins:9},
-      {id:"1d",title:"Tipos de blockchain: pública, privada e híbrida",xp:130,mins:11},
-    ],
-    content:[
-      {h:"¿Qué es un blockchain?",b:"Un blockchain es una base de datos distribuida que guarda información en bloques encadenados y sellados criptográficamente. Nadie puede alterar un bloque sin alterar todos los siguientes — lo que hace al sistema prácticamente inalterable. Imagínalo como un libro contable que miles de computadoras tienen en simultáneo, y que nadie puede borrar ni falsificar."},
-      {h:"¿Por qué es revolucionario?",b:"Antes de blockchain, necesitabas un intermediario de confianza para cualquier transacción: un banco, un notario, una empresa. Blockchain elimina ese intermediario. Dos personas pueden intercambiar valor directamente, sin que ninguna empresa controle la transacción. Esto no es solo sobre dinero — es sobre contratos, identidades, votos, títulos de propiedad."},
-      {h:"Descentralización: el concepto clave",b:"Una red centralizada tiene un punto de fallo: si el servidor cae, todo cae. Una red descentralizada tiene miles de nodos — si 100 caen, la red sigue funcionando. Bitcoin lleva funcionando más de 15 años de forma continua, y esa resiliencia es una de las propiedades más estudiadas de este tipo de redes."},
-      {h:"Consenso: cómo se ponen de acuerdo sin conocerse",b:"En blockchain, computadoras de todo el mundo validan transacciones sin conocerse entre sí. Los mecanismos de consenso (Proof of Work, Proof of Stake) son las reglas del juego que evitan el fraude. Si quieres gastar la misma moneda dos veces, la red lo detecta y rechaza la segunda transacción automáticamente."},
+      {id:"1a",title:"¿Qué es blockchain y por qué importa?",xp:100,mins:8,
+        content:[
+          {h:"¿Qué es un blockchain?",b:"Un blockchain es una base de datos distribuida que guarda información en bloques encadenados y sellados criptográficamente. Nadie puede alterar un bloque sin alterar todos los siguientes — lo que hace al sistema prácticamente inalterable. Imagínalo como un libro contable que miles de computadoras tienen en simultáneo, y que nadie puede borrar ni falsificar."},
+          {h:"¿Por qué es revolucionario?",b:"Antes de blockchain, necesitabas un intermediario de confianza para cualquier transacción: un banco, un notario, una empresa. Blockchain puede reducir la dependencia de esos intermediarios: dos personas pueden intercambiar valor directamente, sin que una empresa controle la transacción. Y esto no aplica solo al dinero — también a contratos, identidades, registros y títulos de propiedad."},
+        ],
+        key:"Blockchain es un registro distribuido y verificable. Entender la tecnología es una cosa; decidir si invertir en activos construidos sobre ella es otra distinta.",
+        risk:"Que una tecnología sea innovadora no convierte a los activos que la usan en inversiones seguras. Son dos evaluaciones separadas."
+      },
+      {id:"1b",title:"Cómo funciona una transacción cripto",xp:120,mins:10,
+        content:[
+          {h:"El recorrido de una transacción",b:"Cuando envías cripto ocurren cuatro pasos: (1) tu wallet firma la transacción con tu clave privada, (2) la transacción se propaga a los nodos de la red, (3) los validadores o mineros la incluyen en un bloque, y (4) cada bloque nuevo que se encadena encima suma 'confirmaciones' que la hacen cada vez más difícil de revertir."},
+          {h:"Consenso: cómo se ponen de acuerdo sin conocerse",b:"En blockchain, computadoras de todo el mundo validan transacciones sin conocerse entre sí. Los mecanismos de consenso (Proof of Work, Proof of Stake) son las reglas del juego que dificultan el fraude. Si alguien intenta gastar la misma moneda dos veces, los mecanismos de consenso están diseñados para detectar y rechazar la segunda transacción."},
+          {h:"Comisiones de red",b:"Cada transacción paga una comisión (fee) a quienes validan la red. No es fija: sube cuando la red está congestionada y baja cuando hay poca demanda. Antes de mover fondos, conviene revisar la comisión estimada del momento."},
+        ],
+        key:"Una transacción confirmada en blockchain es, en la práctica, irreversible.",
+        risk:"No existe un 'botón de deshacer' ni un servicio al cliente central: si envías fondos a una dirección equivocada, normalmente no hay forma de recuperarlos."
+      },
+      {id:"1c",title:"Wallets, claves y seguridad",xp:110,mins:9,
+        content:[
+          {h:"¿Qué es una wallet?",b:"Una wallet no 'guarda' tus monedas: guarda tus claves. Las monedas viven en la blockchain; la wallet custodia la clave privada que permite moverlas. Quien tiene la clave privada controla los fondos — sin excepciones."},
+          {h:"Clave privada y frase semilla",b:"La frase semilla (12 o 24 palabras) es la copia de respaldo de tus claves. Se anota en papel, se guarda fuera de internet y no se comparte con nadie. Ningún soporte técnico legítimo, exchange ni 'asesor' te la pedirá jamás: quien te la pide, intenta robarte."},
+          {h:"Wallets calientes, frías y custodiales",b:"Una wallet caliente (app o extensión) está conectada a internet: cómoda para montos pequeños, más expuesta. Una wallet fría (dispositivo físico) permanece fuera de línea: menos cómoda, más segura para montos mayores. También existen wallets custodiales, donde un exchange guarda las claves por ti: ahí la seguridad depende de un tercero."},
+        ],
+        key:"En cripto la seguridad es responsabilidad del usuario: tus claves, tus fondos. Las claves de otro, fondos de otro.",
+        risk:"Las estafas más comunes no atacan la blockchain: atacan a las personas. Phishing, falsos soportes técnicos y 'regalos' que piden tu frase semilla. Perder la frase semilla implica perder el acceso de forma definitiva."
+      },
+      {id:"1d",title:"Tipos de blockchain: pública, privada e híbrida",xp:130,mins:11,
+        content:[
+          {h:"Descentralización: el concepto clave",b:"Una red centralizada tiene un punto de fallo: si el servidor cae, todo cae. Una red descentralizada tiene miles de nodos — si 100 caen, la red sigue funcionando. Bitcoin lleva funcionando más de 15 años de forma continua, y esa resiliencia es una de las propiedades más estudiadas de este tipo de redes."},
+          {h:"Pública, privada e híbrida",b:"Una blockchain pública (Bitcoin, Ethereum) permite que cualquiera participe y verifique. Una privada restringe el acceso a una organización o consorcio — se usa en logística, banca interna o registros corporativos. Una híbrida combina ambas: parte de la información es pública y parte queda bajo control. Ninguna es 'mejor' en abstracto: resuelven problemas distintos."},
+        ],
+        key:"La descentralización es un espectro, no un interruptor: cada diseño intercambia apertura, control y eficiencia.",
+        risk:""
+      },
     ]
   },
   {
@@ -313,51 +367,118 @@ const MODULES = [
     title:"El ecosistema cripto: más allá del Bitcoin",
     subtitle:"Altcoins, tokens, casos de uso declarados y diferencias técnicas",
     lessons:[
-      {id:"2a",title:"Bitcoin: el oro digital y sus límites",xp:150,mins:12},
-      {id:"2b",title:"Ethereum y los contratos inteligentes",xp:170,mins:14},
-      {id:"2c",title:"Proyectos cripto con casos de uso declarados: XRP, XLM, HBAR, ALGO",xp:200,mins:16},
-      {id:"2d",title:"Tokens vs Monedas: la diferencia crucial",xp:140,mins:11},
-    ],
-    content:[
-      {h:"Bitcoin: el pionero y sus límites",b:"Bitcoin fue la primera criptomoneda (2009) y sigue siendo la más conocida. Suele describirse como reserva de valor o 'oro digital'. Pero tiene limitaciones importantes: procesa solo 7 transacciones por segundo (Visa procesa decenas de miles), sus comisiones pueden subir bastante, y su consumo energético es alto. Bitcoin abrió la puerta, pero no fue diseñado para resolver por sí solo las necesidades del sistema financiero global."},
-      {h:"Ethereum: la computadora mundial",b:"Ethereum (2015) introdujo los contratos inteligentes — código que se ejecuta automáticamente cuando se cumplen condiciones, sin intermediarios. Esto hizo posible DeFi, NFTs, DAOs, y miles de aplicaciones descentralizadas. Si Bitcoin es el oro, Ethereum es el petróleo que hace funcionar la máquina. Aun así, sigue teniendo problemas de escalabilidad y comisiones variables."},
-      {h:"Proyectos que suelen mencionarse en pagos e interoperabilidad",b:"Algunos proyectos aparecen seguido en conversaciones sobre pagos internacionales, interoperabilidad e infraestructura financiera, casi siempre por los casos de uso que declaran sus propios equipos:\nXRP (Ripple): se presenta para pagos internacionales.\nXLM (Stellar): se enfoca en inclusión financiera y pagos entre países.\nHBAR (Hedera): se orienta a usos empresariales de alta velocidad.\nALGO (Algorand): se promociona como blockchain de alta velocidad.\nImportante: que un proyecto declare estos usos no significa que vaya a ser adoptado por bancos, ni que sea una buena inversión, ni que su precio vaya a subir. Son afirmaciones que conviene mirar con criterio y contrastar con fuentes independientes."},
-      {h:"La diferencia entre moneda y token",b:"Una moneda (BTC, ETH, XRP) opera en su propia blockchain. Un token vive sobre otra blockchain — como USDC que vive sobre Ethereum. Los tokens pueden representar acciones, deuda, derechos de voto o activos del mundo real. La tokenización de activos reales (inmuebles, acciones, bonos) es uno de los temas más discutidos hoy, aunque en la práctica está en etapas tempranas y con regulación todavía en desarrollo."},
+      {id:"2a",title:"Bitcoin: el oro digital y sus límites",xp:150,mins:12,
+        content:[
+          {h:"Bitcoin: el pionero y sus límites",b:"Bitcoin fue la primera criptomoneda (2009) y sigue siendo la más conocida. Suele describirse como reserva de valor o 'oro digital'. Pero tiene limitaciones importantes: procesa solo 7 transacciones por segundo (Visa procesa decenas de miles), sus comisiones pueden subir bastante, y su consumo energético es alto. Bitcoin abrió la puerta, pero no fue diseñado para resolver por sí solo las necesidades del sistema financiero global."},
+          {h:"Volatilidad: la constante histórica",b:"El precio de Bitcoin ha tenido subidas y caídas muy pronunciadas a lo largo de su historia, con retrocesos de más de la mitad de su valor en varios ciclos. Ese comportamiento pasado no permite predecir el futuro: solo muestra que la volatilidad es parte estructural de este tipo de activo."},
+        ],
+        key:"Bitcoin abrió la categoría y sigue siendo la referencia, pero tiene límites técnicos reales y una volatilidad estructural.",
+        risk:"Ser 'la cripto más conocida' no la hace segura: su precio puede caer de forma abrupta y sostenida."
+      },
+      {id:"2b",title:"Ethereum y los contratos inteligentes",xp:170,mins:14,
+        content:[
+          {h:"Ethereum: la computadora mundial",b:"Ethereum (2015) introdujo los contratos inteligentes — código que se ejecuta automáticamente cuando se cumplen condiciones, sin intermediarios. Esto hizo posible DeFi, NFTs, DAOs, y miles de aplicaciones descentralizadas. Si Bitcoin es el oro, Ethereum es el petróleo que hace funcionar la máquina. Aun así, sigue teniendo problemas de escalabilidad y comisiones variables."},
+          {h:"Qué es un contrato inteligente",b:"Es un programa que vive en la blockchain y se ejecuta solo cuando se cumplen las condiciones escritas en su código. No requiere que las partes confíen entre sí: confían en el código. Eso es potente, pero tiene un reverso: si el código contiene un error, el error también se ejecuta automáticamente."},
+        ],
+        key:"Ethereum convirtió la blockchain en una plataforma programable; de ahí nacen DeFi, los NFTs y la tokenización.",
+        risk:"Contratos inteligentes han sido hackeados por errores de código, con pérdidas millonarias. 'Automático' no significa 'infalible'."
+      },
+      {id:"2c",title:"Proyectos cripto con casos de uso declarados: XRP, XLM, HBAR, ALGO",xp:200,mins:16,
+        content:[
+          {h:"Proyectos que suelen mencionarse en pagos e interoperabilidad",b:"Algunos proyectos aparecen seguido en conversaciones sobre pagos internacionales, interoperabilidad e infraestructura financiera, casi siempre por los casos de uso que declaran sus propios equipos:\nXRP (Ripple): se presenta para pagos internacionales.\nXLM (Stellar): se enfoca en inclusión financiera y pagos entre países.\nHBAR (Hedera): se orienta a usos empresariales de alta velocidad.\nALGO (Algorand): se promociona como blockchain de alta velocidad.\nImportante: que un proyecto declare estos usos no significa que vaya a ser adoptado por bancos, ni que sea una buena inversión, ni que su precio vaya a subir. Son afirmaciones que conviene mirar con criterio y contrastar con fuentes independientes."},
+          {h:"Cómo investigar un proyecto por tu cuenta",b:"Antes de formarte una opinión sobre cualquier proyecto, conviene revisar: quién lo desarrolla, si el problema que dice resolver existe realmente, quién usa la red hoy (no quién 'podría' usarla), cómo se distribuyeron los tokens, y qué dicen fuentes independientes — no solo el sitio del proyecto ni sus comunidades más entusiastas."},
+        ],
+        key:"Los casos de uso declarados por un proyecto son un punto de partida para investigar, no una garantía de adopción ni de valor.",
+        risk:"Ninguna mención de proyectos en este curso es una recomendación de compra. Contrasta siempre con fuentes independientes."
+      },
+      {id:"2d",title:"Tokens vs Monedas: la diferencia crucial",xp:140,mins:11,
+        content:[
+          {h:"La diferencia entre moneda y token",b:"Una moneda (BTC, ETH, XRP) opera en su propia blockchain. Un token vive sobre otra blockchain — como USDC que vive sobre Ethereum. Los tokens pueden representar acciones, deuda, derechos de voto o activos del mundo real. La tokenización de activos reales (inmuebles, acciones, bonos) es uno de los temas más discutidos hoy, aunque en la práctica está en etapas tempranas y con regulación todavía en desarrollo."},
+          {h:"Stablecoins: estabilidad con matices",b:"Una stablecoin es un token diseñado para mantener un valor cercano a una moneda tradicional, como USDC frente al dólar. Es útil para operar dentro del ecosistema cripto, pero no está exenta de riesgos: depende de las reservas y de la gestión de su emisor, y algunas stablecoins han perdido su paridad en el pasado."},
+        ],
+        key:"Moneda = blockchain propia; token = vive sobre otra blockchain. Esa diferencia define de qué depende cada activo.",
+        risk:"'Estable' no significa libre de riesgo: una stablecoin vale lo que valga la solidez de su emisor y de sus reservas."
+      },
     ]
   },
   {
     id:3, tag:"ISO 20022", icon:"🏦", color:"#ffaa00",
     title:"ISO 20022: el nuevo estándar de mensajería financiera",
     subtitle:"Qué es, qué problema resuelve y por qué su relación con las criptos es debatida",
+    iso:true,
     lessons:[
-      {id:"3a",title:"¿Qué es ISO 20022 y por qué existe?",xp:220,mins:15},
-      {id:"3b",title:"Swift y la migración global al nuevo estándar",xp:250,mins:18},
-      {id:"3c",title:"Cripto e ISO 20022: qué se afirma y qué está en debate",xp:280,mins:20},
-      {id:"3d",title:"CBDCs y posibles cambios en la arquitectura financiera",xp:260,mins:18},
-    ],
-    content:[
-      {h:"¿Qué es ISO 20022?",b:"ISO 20022 es un estándar internacional para los mensajes de pago entre instituciones financieras. Reemplaza a formatos antiguos como SWIFT MT, que llevan décadas en uso. La diferencia clave: los mensajes antiguos son como telegramas — pocos datos, formato rígido. ISO 20022 es como un formulario estructurado con datos ricos: quién envía, quién recibe, propósito del pago, referencias, todo detallado y legible por máquinas. En el fondo, es una forma estandarizada de que los sistemas financieros 'hablen el mismo idioma'."},
-      {h:"¿Por qué importa?",b:"Hoy, enviar dinero internacionalmente puede tomar varios días, costar comisiones altas, y los bancos no siempre ven la información completa de la transacción. ISO 20022 apunta a permitir liquidación más rápida, trazabilidad, cumplimiento de regulaciones e interoperabilidad entre sistemas. Es importante entender qué es y qué no es: es un cambio de infraestructura técnica en la mensajería bancaria, no una promesa sobre ninguna criptomoneda ni sobre ningún precio."},
-      {h:"Swift y la migración global",b:"Swift (la red que conecta a más de 11.000 bancos en 200 países) inició su migración a ISO 20022. Esto significa que gran parte del sistema bancario está actualizando la forma en que envía sus mensajes de pago.\n\nPunto clave para no confundirse: ISO 20022 es un estándar de mensajería entre instituciones financieras. No es un sello que apruebe ni respalde criptomonedas. Que una cripto se describa como 'compatible con ISO 20022' no garantiza que un banco la use, ni que su precio suba. Esa relación es debatida y conviene tratarla con cautela."},
-      {h:"Qué se dice sobre cripto e ISO 20022",b:"Algunos proyectos se describen a sí mismos como pensados para integrarse con sistemas financieros. Es común ver mencionados XRP, XLM, HBAR, ALGO o IOTA en este contexto, casi siempre por los casos de uso que declaran sus propios equipos.\n\nDos cosas importantes:\n• Buena parte de estas descripciones provienen del marketing de cada proyecto, no de una certificación oficial.\n• 'Compatible con ISO 20022' no equivale a 'aprobada por los bancos' ni a 'va a subir de precio'.\n\nLa idea de un grupo de 'criptos ISO 20022 ganadoras' es una narrativa muy popular en internet, pero está en debate y no implica garantía alguna de adopción ni de rentabilidad. Tómala como un tema a investigar con criterio, no como un dato cerrado."},
-    ],
-    iso:true
+      {id:"3a",title:"¿Qué es ISO 20022 y por qué existe?",xp:220,mins:15,
+        content:[
+          {h:"¿Qué es ISO 20022?",b:"ISO 20022 es un estándar internacional para los mensajes de pago entre instituciones financieras. Reemplaza a formatos antiguos como SWIFT MT, que llevan décadas en uso. La diferencia clave: los mensajes antiguos son como telegramas — pocos datos, formato rígido. ISO 20022 es como un formulario estructurado con datos ricos: quién envía, quién recibe, propósito del pago, referencias, todo detallado y legible por máquinas. En el fondo, es una forma estandarizada de que los sistemas financieros 'hablen el mismo idioma'."},
+          {h:"¿Por qué importa?",b:"Hoy, enviar dinero internacionalmente puede tomar varios días, costar comisiones altas, y los bancos no siempre ven la información completa de la transacción. ISO 20022 apunta a permitir liquidación más rápida, trazabilidad, cumplimiento de regulaciones e interoperabilidad entre sistemas. Es importante entender qué es y qué no es: es un cambio de infraestructura técnica en la mensajería bancaria, no una promesa sobre ninguna criptomoneda ni sobre ningún precio."},
+        ],
+        key:"ISO 20022 es un idioma común para los mensajes de pago entre instituciones financieras: infraestructura técnica, no una promesa sobre criptomonedas.",
+        risk:"Cualquier contenido que presente ISO 20022 como 'señal de inversión' está mezclando un estándar técnico con una narrativa de mercado."
+      },
+      {id:"3b",title:"Swift y la migración global al nuevo estándar",xp:250,mins:18,
+        content:[
+          {h:"Swift y la migración global",b:"Swift (la red que conecta a más de 11.000 bancos en 200 países) inició su migración a ISO 20022. Esto significa que gran parte del sistema bancario está actualizando la forma en que envía sus mensajes de pago."},
+          {h:"Punto clave para no confundirse",b:"ISO 20022 es un estándar de mensajería entre instituciones financieras. No es un sello que apruebe ni respalde criptomonedas. Que una cripto se describa como 'compatible con ISO 20022' no garantiza que un banco la use, ni que su precio suba. Esa relación es debatida y conviene tratarla con cautela."},
+        ],
+        key:"Gran parte de la banca está actualizando su mensajería a ISO 20022; eso habla de infraestructura bancaria, no de precios de criptomonedas.",
+        risk:""
+      },
+      {id:"3c",title:"Cripto e ISO 20022: qué se afirma y qué está en debate",xp:280,mins:20,
+        content:[
+          {h:"Qué se dice sobre cripto e ISO 20022",b:"Algunos proyectos se describen a sí mismos como pensados para integrarse con sistemas financieros. Es común ver mencionados XRP, XLM, HBAR, ALGO o IOTA en este contexto, casi siempre por los casos de uso que declaran sus propios equipos.\n\nDos cosas importantes:\n• Buena parte de estas descripciones provienen del marketing de cada proyecto, no de una certificación oficial.\n• 'Compatible con ISO 20022' no equivale a 'aprobada por los bancos' ni a 'va a subir de precio'.\n\nLa idea de un grupo de 'criptos ISO 20022 ganadoras' es una narrativa muy popular en internet, pero está en debate y no implica garantía alguna de adopción ni de rentabilidad. Tómala como un tema a investigar con criterio, no como un dato cerrado."},
+          {h:"Cómo leer estas afirmaciones",b:"Frente a cualquier lista de 'criptos ISO 20022', tres preguntas útiles: ¿quién hace la afirmación — el propio proyecto o un tercero independiente? ¿Existe un uso bancario verificable hoy? ¿Qué pasa con el argumento si la adopción no ocurre? Si una narrativa solo se sostiene asumiendo una adopción futura garantizada, es marketing, no análisis."},
+        ],
+        key:"'Compatible con ISO 20022' no equivale a 'aprobada por los bancos' ni a 'va a subir de precio'.",
+        risk:"La narrativa de las 'criptos ISO 20022 ganadoras' es popular y debatida: trátala como un tema a investigar, nunca como un dato cerrado."
+      },
+      {id:"3d",title:"CBDCs y posibles cambios en la arquitectura financiera",xp:260,mins:18,
+        content:[
+          {h:"¿Qué es una CBDC?",b:"Una CBDC (moneda digital de banco central) es dinero digital emitido directamente por un banco central. A diferencia de las criptomonedas, no es descentralizada: la emite y la controla la misma autoridad que emite los billetes. Y a diferencia de las stablecoins, no depende de una empresa privada."},
+          {h:"En qué etapa están",b:"La mayoría de los bancos centrales del mundo ha estudiado o piloteado alguna forma de CBDC, con avances muy distintos según el país: algunos tienen versiones lanzadas, otros solo investigan, y varios han pausado sus planes. No existe un calendario global ni un resultado garantizado."},
+          {h:"Los debates abiertos",b:"Las CBDCs generan discusión legítima: pueden hacer los pagos más eficientes e inclusivos, pero también plantean preguntas sobre privacidad y sobre el rol de los bancos comerciales. Son preguntas en debate entre especialistas, reguladores y ciudadanía — no temas resueltos."},
+        ],
+        key:"Una CBDC es dinero estatal en formato digital: comparte tecnología con las criptos, pero su lógica es la opuesta a la descentralización.",
+        risk:"Desconfía de contenidos que presenten las CBDCs como una conspiración inminente o como el 'fin del efectivo' confirmado: ambos extremos exceden lo que hoy se sabe."
+      },
+    ]
   },
   {
     id:4, tag:"DEFI & FUTURO", icon:"🔐", color:"#a855f7",
     title:"DeFi, NFTs y la economía tokenizada",
-    subtitle:"Finanzas descentralizadas y el nuevo paradigma económico",
+    subtitle:"Casos de uso y riesgos de la economía tokenizada",
     lessons:[
-      {id:"4a",title:"DeFi: el sistema financiero sin bancos",xp:240,mins:16},
-      {id:"4b",title:"Staking, yield farming y liquidez",xp:220,mins:15},
-      {id:"4c",title:"Tokenización de activos reales",xp:260,mins:18},
-      {id:"4d",title:"Cómo se piensa una cartera (ejemplo educativo)",xp:280,mins:20},
-    ],
-    content:[
-      {h:"¿Qué es DeFi?",b:"DeFi (Finanzas Descentralizadas) es el ecosistema de servicios financieros que funciona sin bancos ni intermediarios. Puedes pedir prestado, prestar, ganar intereses, cambiar activos — todo desde tu wallet, sin abrir una cuenta en ningún banco, sin que nadie te pida documentos. Los protocolos DeFi están gobernados por código y sus usuarios, no por empresas."},
-      {h:"Staking: bloquear cripto a cambio de recompensas",b:"El staking consiste en bloquear tus criptomonedas para ayudar a validar la red, a cambio de recompensas. A veces se compara con un plazo fijo, pero la diferencia es enorme: los rendimientos no están garantizados, cambian con el tiempo y pueden bajar. Además, el valor del activo puede caer, así que puedes terminar con menos de lo que pusiste aunque acumules recompensas. En algunos protocolos existe el 'slashing', una penalización que reduce lo que tenías. No es un ingreso seguro y no debe tratarse como tal."},
-      {h:"Tokenización: el puente entre lo real y lo digital",b:"La tokenización convierte activos del mundo real en tokens digitales sobre una blockchain. Un edificio, por ejemplo, podría dividirse en muchas fracciones representadas por tokens. En teoría, esto podría ampliar el acceso a ciertos activos que hoy son menos accesibles (inmuebles, arte, bonos), aunque en la práctica es un terreno nuevo, con riesgos y con regulación todavía en desarrollo. Algunos grandes gestores de activos han hecho experimentos con fondos tokenizados, pero se trata de pruebas en evolución, no de un resultado garantizado."},
-      {h:"Cómo se suele pensar la diversificación (educativo)",b:"Diversificar en cripto no es comprar muchas monedas al azar. En general se habla de combinar activos según su función (por ejemplo, posiciones más estables frente a proyectos más volátiles) y de cuidar el tamaño de cada posición. Pero no existe una fórmula única ni una distribución 'correcta' para todos. La exposición a cripto debe evaluarse según perfil de riesgo, horizonte y situación financiera. Este curso es educativo y no reemplaza la asesoría de un profesional."},
+      {id:"4a",title:"DeFi: el sistema financiero sin bancos",xp:240,mins:16,
+        content:[
+          {h:"¿Qué es DeFi?",b:"DeFi (Finanzas Descentralizadas) es el ecosistema de servicios financieros que funciona sin bancos ni intermediarios. Puedes pedir prestado, prestar, ganar intereses, cambiar activos — todo desde tu wallet, sin abrir una cuenta en un banco. Los protocolos DeFi están gobernados por código y sus usuarios, no por empresas. Pero el reverso importa: sin intermediario también hay menos protección al consumidor y menos instancias de reclamo — si un protocolo falla o te equivocas, normalmente no hay a quién recurrir."},
+          {h:"Riesgos propios de DeFi",b:"Además de la volatilidad de los activos, DeFi suma riesgos específicos: errores en contratos inteligentes, hackeos de protocolos, proyectos que desaparecen con los fondos ('rug pulls') y una regulación aún en desarrollo en la mayoría de los países."},
+        ],
+        key:"DeFi reproduce servicios financieros sin bancos: más acceso y menos fricción, a cambio de más responsabilidad individual y menos protección.",
+        risk:"En DeFi no existe garantía estatal ni seguro de depósitos: la pérdida por error, hackeo o fraude suele ser definitiva."
+      },
+      {id:"4b",title:"Staking, yield farming y liquidez",xp:220,mins:15,
+        content:[
+          {h:"Staking: bloquear cripto a cambio de recompensas",b:"El staking consiste en bloquear tus criptomonedas para ayudar a validar la red, a cambio de recompensas. A veces se compara con un plazo fijo, pero la diferencia es enorme: los rendimientos no están garantizados, cambian con el tiempo y pueden bajar. Además, el valor del activo puede caer, así que puedes terminar con menos de lo que pusiste aunque acumules recompensas. En algunos protocolos existe el 'slashing', una penalización que reduce lo que tenías. No es un ingreso seguro y no debe tratarse como tal."},
+          {h:"Yield farming y liquidez",b:"El yield farming consiste en aportar activos a protocolos DeFi a cambio de recompensas, moviéndolos entre plataformas según el rendimiento ofrecido. Los porcentajes llamativos suelen venir acompañados de riesgos proporcionales: pérdida impermanente, tokens de recompensa que se devalúan y protocolos poco auditados."},
+        ],
+        key:"En DeFi, a mayor rendimiento ofrecido, mayor riesgo asociado — sin excepciones conocidas.",
+        risk:"Ningún rendimiento en cripto está garantizado. Desconfía por principio de cualquier 'interés fijo' alto."
+      },
+      {id:"4c",title:"Tokenización de activos reales",xp:260,mins:18,
+        content:[
+          {h:"Tokenización: el puente entre lo real y lo digital",b:"La tokenización convierte activos del mundo real en tokens digitales sobre una blockchain. Un edificio, por ejemplo, podría dividirse en muchas fracciones representadas por tokens. En teoría, esto podría ampliar el acceso a ciertos activos que hoy son menos accesibles (inmuebles, arte, bonos), aunque en la práctica es un terreno nuevo, con riesgos y con regulación todavía en desarrollo. Algunos grandes gestores de activos han hecho experimentos con fondos tokenizados, pero se trata de pruebas en evolución, no de un resultado garantizado."},
+          {h:"Qué se está tokenizando hoy",b:"Los experimentos más visibles incluyen fondos de inversión, bonos y bienes raíces fraccionados. Grandes gestores de activos han lanzado pruebas piloto, y algunos gobiernos exploran marcos regulatorios. Es un avance real pero acotado: la mayor parte del sistema financiero sigue operando de forma tradicional."},
+        ],
+        key:"La tokenización es una promesa en construcción: la tecnología existe, pero la adopción y la regulación siguen en desarrollo.",
+        risk:"Un token que representa un activo real vale lo que valga el marco legal que lo respalda: sin regulación clara, ese vínculo puede ser frágil."
+      },
+      {id:"4d",title:"Cómo se piensa una cartera (ejemplo educativo)",xp:280,mins:20,
+        content:[
+          {h:"Cómo se suele pensar la diversificación (educativo)",b:"Diversificar en cripto no es comprar muchas monedas al azar. En general se habla de combinar activos según su función (por ejemplo, posiciones más estables frente a proyectos más volátiles) y de cuidar el tamaño de cada posición. Pero no existe una fórmula única ni una distribución 'correcta' para todos. La exposición a cripto debe evaluarse según perfil de riesgo, horizonte y situación financiera. Este curso es educativo y no reemplaza la asesoría de un profesional."},
+          {h:"El tamaño de la posición importa más que la elección",b:"En la práctica, la pregunta más relevante no suele ser 'qué cripto elegir' sino 'cuánto de mi patrimonio exponer a un activo que puede caer 50% o más'. Una regla prudente que suele mencionarse en educación financiera: no destinar a activos de alto riesgo dinero que se necesite en el corto plazo o cuya pérdida comprometa tus finanzas."},
+        ],
+        key:"No existe una distribución 'correcta' universal: la exposición a cripto depende del perfil, horizonte y situación de cada persona.",
+        risk:"Este módulo es educativo y no reemplaza la asesoría de un profesional con licencia. Ninguna cartera de ejemplo es una recomendación."
+      },
     ]
   },
 ];
@@ -392,14 +513,41 @@ const COINS = [
   {sym:"USDC",name:"USD Coin",color:"#2775ca",use:"Stablecoin",iso:false,desc:"Stablecoin referenciada al dólar (no exenta de riesgos)."},
 ];
 
-// STATE
+// ═══════════════════════════════════════════
+// STATE + PERSISTENCIA (parche v1.0)
+// El progreso se guarda SOLO en este dispositivo (localStorage).
+// El chat del Tutor IA NO se guarda, por privacidad.
+// ═══════════════════════════════════════════
+const LS_KEY='habilia_cripto_academy_v1';
 let completed=new Set(), totalXP=0;
 let activeModule=null, activeLesson=null;
 let curLessonTab='teoria';
 let quizAnswers={}, quizDone=false;
 let chatMessages=[{role:'assistant',content:'Hola, soy tu tutor de Cripto Academy. Puedo explicarte blockchain, DeFi, en qué se diferencian proyectos como XRP o XLM, o cómo funciona el estándar ISO 20022. Una aclaración antes de partir: esto es contenido educativo, no asesoría financiera — no te diré qué comprar ni qué va a subir. ¿Por dónde empezamos?'}];
 let chatLoading=false;
-let simCapital=10000, simPortfolio={}, simHistory=[];
+let simCapital=10000, simPortfolio={}, simHistory=[], simMsg='';
+
+function saveState(){
+  try{
+    localStorage.setItem(LS_KEY,JSON.stringify({
+      completed:[...completed],
+      totalXP:totalXP,
+      simPortfolio:simPortfolio,
+      simCapital:simCapital
+    }));
+  }catch(e){/* almacenamiento no disponible: la app sigue funcionando sin persistencia */}
+}
+function loadState(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(!raw)return;
+    const d=JSON.parse(raw);
+    if(Array.isArray(d.completed))completed=new Set(d.completed);
+    if(typeof d.totalXP==='number')totalXP=d.totalXP;
+    if(d.simPortfolio&&typeof d.simPortfolio==='object')simPortfolio=d.simPortfolio;
+    if(typeof d.simCapital==='number')simCapital=d.simCapital;
+  }catch(e){/* datos corruptos: se parte de cero sin romper la app */}
+}
 
 const SUGGESTIONS=['¿Por qué XRP es diferente al Bitcoin?','Explícame ISO 20022 como si tuviera 10 años','¿Por qué se relaciona ISO 20022 con algunas criptos?','¿Qué es DeFi y cómo funciona?','¿Es seguro invertir en cripto?'];
 
@@ -434,7 +582,7 @@ function renderModules(){
           <div style="display:flex;gap:8px;align-items:center;margin-bottom:3px">
             <span class="mod-tag" style="color:${mod.color};background:${mod.color}15">${mod.tag}</span>
             ${mod.iso?'<span class="mod-tag" style="color:#ffaa00;background:#ffaa0015">ISO 20022</span>':''}
-            ${locked?'<span style="color:var(--muted);font-size:10px">🔒 Completa el módulo anterior</span>':''}
+            ${locked?'<span style="color:var(--muted);font-size:10px">🔒 Completa al menos una lección del módulo anterior</span>':''}
           </div>
           <div class="mod-title">${mod.title}</div>
           <div class="mod-sub">${mod.subtitle}</div>
@@ -508,13 +656,35 @@ function lessonTab(t){
 function renderTheory(){
   let html='';
   if(activeModule.iso)html+='<div class="iso-badge">🏦 MÓDULO ISO 20022</div>';
-  activeModule.content.forEach(b=>{
+  activeLesson.content.forEach(b=>{
     html+=`<div class="content-block" style="border-left-color:${activeModule.color}">
       <div class="cb-head" style="color:${activeModule.color}">${b.h}</div>
       <div class="cb-body">${b.b.replace(/\n/g,'<br>')}</div>
     </div>`;
   });
+  html+=`<div class="tip-box"><strong>Idea clave:</strong> ${activeLesson.key}</div>`;
+  if(activeLesson.risk){
+    html+=`<div class="risk-box"><strong>⚠ Nota de riesgo:</strong> ${activeLesson.risk}</div>`;
+  }
+  const hasQ=!!QUIZZES[activeLesson.id];
+  if(completed.has(activeLesson.id)){
+    html+=`<div style="text-align:center;padding:12px;color:${activeModule.color};font-size:13px;font-weight:600">✓ Lección completada · +${activeLesson.xp} XP</div>`;
+  }else if(hasQ){
+    html+=`<div style="text-align:center;padding:10px;color:var(--faint);font-size:12px">Para completar esta lección y sumar XP, aprueba el quiz en la pestaña ✏️ Quiz.</div>`;
+  }else{
+    html+=`<button class="mark-done-btn" onclick="markLessonComplete()">✓ Marcar lección como completada · +${activeLesson.xp} XP</button>`;
+  }
   document.getElementById('lv-teoria').innerHTML=html;
+}
+
+function markLessonComplete(){
+  if(!activeLesson||completed.has(activeLesson.id))return;
+  completed.add(activeLesson.id);
+  totalXP+=activeLesson.xp;
+  saveState();
+  document.getElementById('lv-done').style.display='inline';
+  updateProgress();
+  renderTheory();
 }
 
 function renderVisual(){
@@ -530,11 +700,11 @@ function renderVisual(){
       if(i<3)html+=`<div style="color:var(--green);font-size:18px;font-weight:700">→</div>`;
     });
     html+=`</div>`;
-    html+=`<div class="tip-box"><strong>💡 Clave:</strong> Cada bloque contiene el hash del anterior. Si alguien intenta modificar el bloque #002, cambia su hash, lo que invalida el #003, #004... y toda la red lo rechaza automáticamente.</div>`;
+    html+=`<div class="tip-box"><strong>💡 Clave:</strong> Cada bloque contiene el hash del anterior. Si alguien intenta modificar el bloque #002, cambia su hash, lo que invalida el #003, #004... y la red está diseñada para rechazar esa alteración.</div>`;
   } else if(id==='2c'||id==='3a'||id==='3b'||id==='3c'){
     // ISO coins table
     html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">PROYECTOS QUE SE MENCIONAN JUNTO A ISO 20022</div>`;
-    html+=`<table class="iso-table"><thead><tr><th>Token</th><th>Nombre</th><th>Uso declarado</th><th>ISO 20022</th></tr></thead><tbody>`;
+    html+=`<div class="iso-scroll"><table class="iso-table"><thead><tr><th>Token</th><th>Nombre</th><th>Uso declarado</th><th>ISO 20022</th></tr></thead><tbody>`;
     COINS.forEach(c=>{
       html+=`<tr>
         <td><span class="coin-tag" style="background:${c.color}20;color:${c.color}">${c.sym}</span></td>
@@ -543,21 +713,22 @@ function renderVisual(){
         <td style="text-align:center">${c.iso?'<span style="color:#00e8a0;font-size:16px">✓</span>':'<span style="color:var(--muted)">—</span>'}</td>
       </tr>`;
     });
-    html+=`</tbody></table>`;
+    html+=`</tbody></table></div>`;
     html+=`<div class="tip-box" style="margin-top:12px"><strong>🏦 Sobre esta tabla:</strong> El ✓ indica que el proyecto suele describirse como 'compatible con ISO 20022', generalmente según su propio equipo. Eso no significa que los bancos lo usen, ni que sea mejor inversión, ni que su precio vaya a subir. BTC y ETH no suelen aparecer en esa narrativa, lo que no los hace mejores ni peores.</div>`;
   } else if(id==='4a'||id==='4b'){
     // DeFi diagram
     html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">FINANZAS TRADICIONALES vs DeFi</div>`;
     html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">`;
-    const trad=[{i:'🏦',t:'Banco central'},{i:'🏢',t:'Banco comercial'},{i:'📋',t:'KYC / Documentos'},{i:'⏳',t:'3-5 días'},{i:'💸',t:'Comisiones altas'}];
-    const defi=[{i:'🔐',t:'Smart contract'},{i:'💻',t:'Tu wallet'},{i:'🌐',t:'Solo internet'},{i:'⚡',t:'Segundos'},{i:'✅',t:'Comisiones mínimas'}];
-    html+=`<div style="background:var(--reddim,#ff3d5a10);border:1px solid rgba(255,61,90,.2);border-radius:8px;padding:12px"><div style="color:#ff3d5a;font-size:11px;font-weight:800;margin-bottom:8px">TRADICIONAL</div>`;
+    const trad=[{i:'🏦',t:'Banco central'},{i:'🏢',t:'Banco comercial'},{i:'📋',t:'KYC / Documentos'},{i:'⏳',t:'Días hábiles'},{i:'🛡',t:'Protección al consumidor e instancias de reclamo'}];
+    const defi=[{i:'🔐',t:'Smart contract'},{i:'💻',t:'Tu wallet'},{i:'🌐',t:'Solo internet'},{i:'⚡',t:'Minutos o segundos, según la red'},{i:'⚠',t:'Menos protección; los errores suelen ser irreversibles'}];
+    html+=`<div style="background:var(--reddim);border:1px solid rgba(242,85,90,.2);border-radius:8px;padding:12px"><div style="color:var(--red);font-size:11px;font-weight:800;margin-bottom:8px">TRADICIONAL</div>`;
     trad.forEach(i=>html+=`<div style="font-size:12px;color:var(--text);margin-bottom:5px">${i.i} ${i.t}</div>`);
     html+=`</div><div style="background:var(--greendim);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:12px"><div style="color:var(--green);font-size:11px;font-weight:800;margin-bottom:8px">DeFi</div>`;
     defi.forEach(i=>html+=`<div style="font-size:12px;color:var(--text);margin-bottom:5px">${i.i} ${i.t}</div>`);
     html+=`</div></div>`;
-  } else {
-    // Portafolio chart genérico
+    html+=`<div class="tip-box" style="margin-top:12px"><strong>💡 Matiz:</strong> Las comisiones en DeFi son variables: a veces bajas, a veces altas según la congestión de la red. Y operar sin intermediarios también significa menos protección al consumidor y menos instancias de reclamo.</div>`;
+  } else if(id==='4d'){
+    // Cartera ficticia — SOLO en la lección de cartera
     html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:12px">EJEMPLO ILUSTRATIVO DE CARTERA FICTICIA</div>`;
     const alloc=[{sym:'BTC',pct:30,color:'#f7931a'},{sym:'ETH',pct:20,color:'#627eea'},{sym:'XRP',pct:15,color:'#00aae4'},{sym:'XLM',pct:10,color:'#14b6e7'},{sym:'HBAR',pct:10,color:'#00e396'},{sym:'USDC',pct:15,color:'#2775ca'}];
     alloc.forEach(a=>{
@@ -572,6 +743,20 @@ function renderVisual(){
       </div>`;
     });
     html+=`<div class="tip-box"><strong>⚠️ Importante:</strong> Este es un ejemplo ficticio con fines educativos, no una recomendación ni un consejo financiero. No representa una distribución 'correcta'. El mercado cripto es muy volátil y puedes perder parte o todo tu capital. Nunca uses dinero que no puedas permitirte perder.</div>`;
+  } else {
+    // Visual neutro: resumen de conceptos de la lección
+    html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:14px">RESUMEN VISUAL DE CONCEPTOS</div>`;
+    activeLesson.content.forEach((b,i)=>{
+      const first=b.b.split('.')[0]+'.';
+      html+=`<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px">
+        <div style="width:26px;height:26px;border-radius:8px;background:${activeModule.color}18;color:${activeModule.color};font-family:'JetBrains Mono';font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${i+1}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;color:var(--text)">${b.h}</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-top:2px">${first}</div>
+        </div>
+      </div>`;
+    });
+    html+=`<div class="tip-box"><strong>💡 Idea clave:</strong> ${activeLesson.key}</div>`;
   }
   html+='</div>';
   document.getElementById('lv-grafico').innerHTML=html;
@@ -614,13 +799,16 @@ function submitQuiz(){
   quizDone=true;
   if(pass>=Math.ceil(qData.length*.5)&&!completed.has(activeLesson.id)){
     completed.add(activeLesson.id);totalXP+=activeLesson.xp;
+    saveState();
     document.getElementById('lv-done').style.display='inline';
   }
-  renderQuiz();
+  renderQuiz();updateProgress();
 }
 
 // ═══════════════════════════════════════════
 // SIMULATOR
+// El resultado se genera UNA sola vez al presionar "Simular portafolio"
+// y queda guardado en simHistory. No cambia al re-renderizar.
 // ═══════════════════════════════════════════
 function renderSim(){
   const alloc=simPortfolio;
@@ -664,25 +852,25 @@ function renderSim(){
       <span style="font-size:13px;color:var(--muted)">Capital inicial ($)</span>
       <span style="font-family:'JetBrains Mono';font-size:14px;font-weight:700;color:var(--green)">$${simCapital.toLocaleString()}</span>
     </div>
-    <input type="range" min="1000" max="100000" step="1000" value="${simCapital}" oninput="simCapital=parseInt(this.value);renderSim()" style="accent-color:var(--green);width:100%">
+    <input type="range" min="1000" max="100000" step="1000" value="${simCapital}" oninput="simCapital=parseInt(this.value);saveState();renderSim()" style="accent-color:var(--green);width:100%">
     <button class="sim-btn-main" onclick="runSimulation()">⚡ SIMULAR PORTAFOLIO</button>
+    ${simMsg?`<div class="sim-error"><span style="color:var(--red);flex-shrink:0">⚠</span><span>${simMsg}</span></div>`:''}
   </div>`;
 
-  // History
+  // Resultados (valores fijos, guardados al momento de simular)
   if(simHistory.length>0){
     html+=`<div class="port-card">
       <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:10px">RESULTADOS</div>`;
     simHistory.slice(-1)[0].breakdown.forEach(b=>{
       const coin=COINS.find(c=>c.sym===b.sym);
-      const change=(Math.random()-.4)*30;
-      const pnl=b.amount*(change/100);
       html+=`<div class="port-row">
         <span style="font-family:'JetBrains Mono';font-size:12px;font-weight:700;color:${coin.color}">${b.sym}</span>
         <span style="font-size:12px;color:var(--text)">$${b.amount.toLocaleString()}</span>
-        <span class="${pnl>=0?'pnl-pos':'pnl-neg'}">${pnl>=0?'+':''}$${pnl.toFixed(0)}</span>
-        <span style="font-size:11px;color:${pnl>=0?'var(--green)':'var(--red)'}">(${change>=0?'+':''}${change.toFixed(1)}%)</span>
+        <span class="${b.pnl>=0?'pnl-pos':'pnl-neg'}">${b.pnl>=0?'+':''}$${b.pnl.toLocaleString()}</span>
+        <span style="font-size:11px;color:${b.change>=0?'var(--mktgreen)':'var(--red)'}">(${b.change>=0?'+':''}${b.change}%)</span>
       </div>`;
     });
+    html+=`<div class="sim-notice"><span style="color:var(--gold);flex-shrink:0">⚠</span><span><strong style="color:var(--gold)">Resultado ficticio.</strong> No representa mercado real, no predice precios y no debe usarse para tomar decisiones financieras.</span></div>`;
     html+=`</div>`;
   }
 
@@ -692,15 +880,25 @@ function renderSim(){
 function toggleCoin(sym){
   if(simPortfolio[sym]!==undefined)delete simPortfolio[sym];
   else simPortfolio[sym]=Math.floor(100/Math.max(Object.keys(simPortfolio).length+1,1));
+  simMsg='';
+  saveState();
   renderSim();
 }
-function updateAlloc(sym,val){simPortfolio[sym]=parseInt(val);renderSim();}
+function updateAlloc(sym,val){simPortfolio[sym]=parseInt(val);simMsg='';saveState();renderSim();}
 function runSimulation(){
   const alloc=simPortfolio;
   const total=Object.values(alloc).reduce((s,v)=>s+v,0);
-  if(total>100){alert('La distribución supera el 100%. Ajústala primero.');return;}
-  if(Object.keys(alloc).length===0){alert('Selecciona al menos una criptomoneda.');return;}
-  const breakdown=Object.keys(alloc).map(sym=>({sym,pct:alloc[sym],amount:Math.round(simCapital*alloc[sym]/100)}));
+  if(Object.keys(alloc).length===0){simMsg='Selecciona al menos una criptomoneda para simular.';renderSim();return;}
+  if(total>100){simMsg='La distribución supera el 100%. Ajústala antes de simular.';renderSim();return;}
+  simMsg='';
+  // Variación aleatoria simétrica (aprox. -12% a +12%), sin sesgo positivo.
+  // Se calcula UNA vez por simulación y queda guardada.
+  const breakdown=Object.keys(alloc).map(sym=>{
+    const amount=Math.round(simCapital*alloc[sym]/100);
+    const change=Math.round((Math.random()-.5)*240)/10;
+    const pnl=Math.round(amount*change/100);
+    return {sym,pct:alloc[sym],amount,change,pnl};
+  });
   simHistory=[...simHistory,{capital:simCapital,breakdown}];
   renderSim();
 }
@@ -765,11 +963,7 @@ function renderChat(){
       const d=document.createElement('div');
       d.className='msg msg-ai';
       d.innerHTML=`<div class="ai-inner">${renderTutorMarkdown(m.content)}</div>`+
-        (idx===0?'':`<div class="ai-actions">`+
-          `<button title="Disponible próximamente" disabled><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 9a4 4 0 0 1 0 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Leer respuesta</button>`+
-          `<button title="Disponible próximamente" disabled><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/></svg>Detener</button>`+
-          `<span class="soon">voz · próximamente</span>`+
-        `</div>`);
+        (idx===0?'':`<div class="ai-actions"><span class="soon">voz · próximamente</span></div>`);
       box.appendChild(d);
     }
   });
@@ -821,6 +1015,7 @@ function switchTab(tab){
 }
 
 // INIT
+loadState();
 renderModules();
 updateProgress();
 renderChat();
