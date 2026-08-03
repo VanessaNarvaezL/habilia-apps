@@ -721,8 +721,18 @@ function pickMime(lista){
   for (const m of lista) if (MediaRecorder.isTypeSupported(m)) return m;
   return '';
 }
-const MIME_VIDEO = pickMime(['video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm']);
-const MIME_AUDIO = pickMime(['audio/mp4','audio/webm;codecs=opus','audio/webm']);
+const MIME_VIDEO = pickMime([
+  'video/mp4;codecs=avc1,mp4a.40.2',
+  'video/mp4;codecs="avc1.42E01E,mp4a.40.2"',
+  'video/webm;codecs=vp9,opus',
+  'video/webm;codecs=vp8,opus',
+  'video/webm'
+]);
+const MIME_AUDIO = pickMime([
+  'audio/mp4;codecs=mp4a.40.2',
+  'audio/webm;codecs=opus',
+  'audio/webm'
+]);
 
 function ext(mime){
   if (!mime) return 'webm';
@@ -1291,11 +1301,11 @@ const Rec = {
     this.guardaT = null;
 
     if (this.vChunks.length){
-      S.videoMime = this.vChunks[0].type || MIME_VIDEO || 'video/webm';
+      S.videoMime = this.vRec?.mimeType || this.vChunks[0]?.type || MIME_VIDEO || 'video/webm';
       S.videoBlob = new Blob(this.vChunks, { type:S.videoMime });
     }
     if (this.aChunks.length){
-      S.audioMime = this.aChunks[0].type || MIME_AUDIO || 'audio/webm';
+      S.audioMime = this.aRec?.mimeType || this.aChunks[0]?.type || MIME_AUDIO || 'audio/webm';
       S.audioBlob = new Blob(this.aChunks, { type:S.audioMime });
     }
 
@@ -1688,12 +1698,15 @@ const App = {
     // Información honesta del formato obtenido
     const f = $('rev-formato');
     if (S.videoBlob){
-      const e = ext(S.videoMime);
-      f.innerHTML = e === 'mp4'
-        ? '<div class="aviso ok">Tu navegador grabó en <b>MP4</b> — compatible con CapCut y todas las plataformas.</div>'
-        : '<div class="aviso">Tu navegador grabó en <b>WebM</b>. CapCut en computador lo acepta sin problema. Si CapCut en tu celular no lo importa, grábate desde Safari en iPhone (sale MP4) — la conversión automática llega en la próxima versión.</div>';
+      const esMp4Aac = S.videoMime.startsWith('video/mp4') && S.videoMime.includes('mp4a.40.2');
+      f.innerHTML = esMp4Aac
+        ? '<div class="aviso ok">Tu navegador grabó en MP4 con audio AAC. Es un formato de amplia compatibilidad, aunque conviene probar el archivo en el editor o dispositivo donde lo usarás.</div>'
+        : '<div class="aviso">Tu navegador grabó en WebM con audio Opus. Chrome y varios editores lo reproducen, pero algunas aplicaciones o dispositivos pueden requerir conversión.</div>';
     } else if (S.audioBlob){
-      f.innerHTML = `<div class="aviso ok">Audio grabado en formato .${ext(S.audioMime)}, listo para usar sobre láminas o video.</div>`;
+      const esM4aAac = S.audioMime.startsWith('audio/mp4') && S.audioMime.includes('mp4a.40.2');
+      f.innerHTML = esM4aAac
+        ? '<div class="aviso ok">Audio grabado en M4A con AAC. Es un formato de amplia compatibilidad, aunque conviene comprobarlo en la aplicación donde lo usarás.</div>'
+        : '<div class="aviso">Audio grabado en WebM con Opus. Es válido y reproducible en navegadores modernos, pero algunos reproductores pueden no reconocerlo como audio.</div>';
     } else {
       f.innerHTML = '<div class="aviso error">No se generó ninguna grabación. Vuelve a intentarlo — si persiste, prueba en Chrome actualizado.</div>';
     }
