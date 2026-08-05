@@ -586,6 +586,8 @@ audio.revisar-media{background:var(--arena-suave)}
 
       <div id="rev-formato"></div>
 
+      <div class="aviso" id="rev-aviso-descarga" style="display:none">Studio no guarda tus grabaciones. Descarga los archivos que necesites antes de terminar o salir.</div>
+
       <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
         <button class="btn btn-oro" id="btn-desc-video" onclick="App.descargarVideo()">
           <svg class="ic" width="17" height="17" viewBox="0 0 24 24"><use href="#i-desc"/></svg>
@@ -1667,6 +1669,7 @@ const App = {
 
     const esBloque = (S.modo === 'bloques' && S.bloqueActivo !== null);
     if (esBloque && !soloVer) Bloques.asignarResultado();
+    $('rev-aviso-descarga').style.display = esBloque ? 'none' : 'block';
 
     if (S.videoBlob){
       v.src = URL.createObjectURL(S.videoBlob);
@@ -1740,6 +1743,16 @@ const App = {
   revisarFin(){
     if (S.modo === 'bloques'){ this.mostrar('s-blocks'); }
     else {
+      const pendientes = [];
+      if (S.videoBlob && !S.vDesc) pendientes.push('video');
+      if (S.audioBlob && !S.aDesc) pendientes.push('audio');
+      if (pendientes.length){
+        const plural = pendientes.length > 1;
+        const mensaje = `Studio no guarda las grabaciones. Aún no descargaste: ${pendientes.join(' y ')}. `
+          + `Si terminas ahora, ${plural ? 'se perderán' : 'se perderá'}. `
+          + `¿Terminar y ${plural ? 'descartarlos' : 'descartarlo'}?`;
+        if (!confirm(mensaje)) return;
+      }
       Cam.cerrar(); Rec.cerrarAudio();
       this.irHome();
     }
