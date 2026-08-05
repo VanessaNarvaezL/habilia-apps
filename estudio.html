@@ -692,6 +692,7 @@ const S = {
   videoBlob: null, videoMime: '',
   audioBlob: null, audioMime: '',
   vDesc: false, aDesc: false,
+  avisoFin: '',
 };
 
 const $ = id => document.getElementById(id);
@@ -720,8 +721,18 @@ function pickMime(lista){
   for (const m of lista) if (MediaRecorder.isTypeSupported(m)) return m;
   return '';
 }
-const MIME_VIDEO = pickMime(['video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm']);
-const MIME_AUDIO = pickMime(['audio/mp4','audio/webm;codecs=opus','audio/webm']);
+const MIME_VIDEO = pickMime([
+  'video/mp4;codecs=avc1,mp4a.40.2',
+  'video/mp4;codecs="avc1.42E01E,mp4a.40.2"',
+  'video/webm;codecs=vp9,opus',
+  'video/webm;codecs=vp8,opus',
+  'video/webm'
+]);
+const MIME_AUDIO = pickMime([
+  'audio/mp4;codecs=mp4a.40.2',
+  'audio/webm;codecs=opus',
+  'audio/webm'
+]);
 
 function ext(mime){
   if (!mime) return 'webm';
@@ -1072,7 +1083,11 @@ const Rec = {
   vChunks: [], aChunks: [],
   grabando: false, enPausa: false,
   t0: 0, acumulado: 0, timerInt: null,
-  pendientes: 0,
+  gen: 0,
+  iniciando: false,
+  fin: { video:'n/a', audio:'n/a' },
+  finalizado: true,
+  guardaT: null,
   wakeLock: null,
   audioStream: null,
   analyser: null, nivelData: null,
@@ -1101,20 +1116,42 @@ const Rec = {
       this.flash('Este navegador no puede grabar. Prueba con Chrome o Safari actualizados.', true);
       return;
     }
+    if (this.iniciando || this.grabando) return;
+
     const ui = this.ui();
+    const gen = ++this.gen;
+    this.iniciando = true;
+    this.finalizado = false;
+    clearTimeout(this.guardaT);
+    this.guardaT = null;
+
     // Cuenta regresiva 3·2·1
     ui.rec.disabled = true;
     for (const n of [3,2,1]){
+      if (gen !== this.gen || !this.iniciando){
+        ui.cr.classList.remove('ver');
+        ui.rec.disabled = false;
+        return;
+      }
       ui.cr.querySelector('b').textContent = n;
       ui.cr.classList.add('ver');
       await new Promise(r => setTimeout(r, 850));
     }
+    if (gen !== this.gen || !this.iniciando){
+      ui.cr.classList.remove('ver');
+      ui.rec.disabled = false;
+      return;
+    }
     ui.cr.classList.remove('ver');
     ui.rec.disabled = false;
+    this.iniciando = false;
 
+    this.vRec = null; this.aRec = null;
     this.vChunks = []; this.aChunks = [];
+    this.fin = { video:'n/a', audio:'n/a' };
     S.videoBlob = null; S.audioBlob = null;
-    this.pendientes = 0;
+    S.videoMime = ''; S.audioMime = '';
+    S.avisoFin = '';
 
     try {
       if (this.tipo === 'video'){
@@ -1125,28 +1162,45 @@ const Rec = {
           ...audioTracks
         ]);
         this.vRec = new MediaRecorder(vStream, MIME_VIDEO ? { mimeType:MIME_VIDEO, videoBitsPerSecond:6_000_000 } : { videoBitsPerSecond:6_000_000 });
-        this.vRec.ondataavailable = e => { if (e.data.size) this.vChunks.push(e.data); };
-        this.vRec.onstop = () => this.unoListo();
-        this.pendientes++;
+        this.fin.video = 'pendiente';
+        this.vRec.ondataavailable = e => { if (gen === this.gen && e.data.size) this.vChunks.push(e.data); };
+        this.vRec.onstop = () => this.marcarFin('video', gen);
+
         // Audio en paralelo (pista clonada para no interferir)
         if (audioTracks[0]){
           const aStream = new MediaStream([audioTracks[0].clone()]);
           this.aRec = new MediaRecorder(aStream, MIME_AUDIO ? { mimeType:MIME_AUDIO } : {});
-          this.aRec.ondataavailable = e => { if (e.data.size) this.aChunks.push(e.data); };
-          this.aRec.onstop = () => { aStream.getTracks().forEach(t=>t.stop()); this.unoListo(); };
-          this.pendientes++;
+          this.fin.audio = 'pendiente';
+          this.aRec.ondataavailable = e => { if (gen === this.gen && e.data.size) this.aChunks.push(e.data); };
+          this.aRec.onstop = () => {
+            aStream.getTracks().forEach(t => t.stop());
+            this.marcarFin('audio', gen);
+          };
         }
+
         this.vRec.start(250);
         if (this.aRec) this.aRec.start(250);
       } else {
         // Solo audio
         this.aRec = new MediaRecorder(this.audioStream, MIME_AUDIO ? { mimeType:MIME_AUDIO } : {});
-        this.aRec.ondataavailable = e => { if (e.data.size) this.aChunks.push(e.data); };
-        this.aRec.onstop = () => this.unoListo();
-        this.pendientes = 1;
+        this.fin.audio = 'pendiente';
+        this.aRec.ondataavailable = e => { if (gen === this.gen && e.data.size) this.aChunks.push(e.data); };
+        this.aRec.onstop = () => this.marcarFin('audio', gen);
         this.aRec.start(250);
       }
     } catch(err){
+      this.gen++;
+      this.iniciando = false;
+      this.finalizado = true;
+      this.fin = { video:'n/a', audio:'n/a' };
+      clearTimeout(this.guardaT);
+      this.guardaT = null;
+      [this.vRec, this.aRec].forEach(r => {
+        try { if (r && r.state !== 'inactive') r.stop(); } catch(e){}
+      });
+      this.vRec = null; this.aRec = null;
+      this.vChunks = []; this.aChunks = [];
+      this.resetUI();
       this.flash('No se pudo iniciar la grabación: ' + err.message, true);
       return;
     }
@@ -1201,24 +1255,78 @@ const Rec = {
     this.grabando = false;
     clearInterval(this.timerInt);
     if (this.wakeLock){ try { this.wakeLock.release(); } catch(e){} this.wakeLock = null; }
-    try { if (this.vRec && this.vRec.state !== 'inactive') this.vRec.stop(); } catch(e){ this.unoListo(); }
-    try { if (this.aRec && this.aRec.state !== 'inactive') this.aRec.stop(); } catch(e){ this.unoListo(); }
+
+    const gen = this.gen;
+    const ui = this.ui();
+    ui.rec.disabled = true;
+    ui.pausa.style.display = 'none';
+    this.flash('Procesando grabación…', true);
+
+    const detenerUno = (tipo, rec) => {
+      if (this.fin[tipo] !== 'pendiente') return;
+      if (!rec || rec.state === 'inactive'){
+        // Da una vuelta al event loop por si queda un último dataavailable en cola.
+        setTimeout(() => this.marcarFin(tipo, gen), 0);
+        return;
+      }
+      try { rec.stop(); }
+      catch(e){ this.marcarFin(tipo, gen); }
+    };
+
+    detenerUno('video', this.vRec);
+    detenerUno('audio', this.aRec);
+
+    if (this.finalizado || gen !== this.gen) return;
+    clearTimeout(this.guardaT);
+    this.guardaT = setTimeout(() => {
+      if (gen !== this.gen || this.finalizado) return;
+      ['video','audio'].forEach(tipo => {
+        if (this.fin[tipo] === 'pendiente') this.fin[tipo] = 'timeout';
+      });
+      this.finalizar(gen, true);
+    }, 4000);
   },
 
-  unoListo(){
-    this.pendientes--;
-    if (this.pendientes > 0) return;
+  marcarFin(tipo, gen){
+    if (gen !== this.gen || this.finalizado) return;
+    if (this.fin[tipo] !== 'pendiente') return;
+    this.fin[tipo] = 'listo';
+    if (!Object.values(this.fin).includes('pendiente')) this.finalizar(gen, false);
+  },
+
+  finalizar(gen, forzada){
+    if (gen !== this.gen || this.finalizado) return;
+    this.finalizado = true;
+    clearTimeout(this.guardaT);
+    this.guardaT = null;
+
     if (this.vChunks.length){
-      S.videoMime = this.vChunks[0].type || MIME_VIDEO || 'video/webm';
+      S.videoMime = this.vRec?.mimeType || this.vChunks[0]?.type || MIME_VIDEO || 'video/webm';
       S.videoBlob = new Blob(this.vChunks, { type:S.videoMime });
     }
     if (this.aChunks.length){
-      S.audioMime = this.aChunks[0].type || MIME_AUDIO || 'audio/webm';
+      S.audioMime = this.aRec?.mimeType || this.aChunks[0]?.type || MIME_AUDIO || 'audio/webm';
       S.audioBlob = new Blob(this.aChunks, { type:S.audioMime });
     }
+
     S.vDesc = false; S.aDesc = false;
     this._aviso8 = false;
     this.resetUI();
+
+    if (!S.videoBlob && !S.audioBlob){
+      S.avisoFin = '';
+      this.flash('No se generó ninguna grabación. Intenta nuevamente; si persiste, prueba Chrome actualizado.', true);
+      return;
+    }
+
+    if (this.tipo === 'video' && !S.videoBlob && S.audioBlob){
+      S.avisoFin = 'No se pudo generar el video, pero recuperamos el audio de la toma. Descárgalo antes de salir.';
+    } else if (this.tipo === 'video' && S.videoBlob && this.fin.audio !== 'n/a' && !S.audioBlob){
+      S.avisoFin = 'El video se recuperó correctamente, pero no se generó el archivo de audio separado.';
+    } else if (forzada){
+      S.avisoFin = 'El navegador no confirmó el cierre normalmente. Recuperamos los datos disponibles; revisa el archivo antes de salir.';
+    }
+
     App.irRevisar();
   },
 
@@ -1227,6 +1335,7 @@ const Rec = {
       const badge = $('badge-'+c), rec = $('btn-rec-'+c), pausa = $('btn-pausa-'+c);
       badge.classList.remove('on','pausada');
       rec.textContent = 'Grabar';
+      rec.disabled = false;
       rec.classList.add('rbtn-grabar'); rec.classList.remove('rbtn-stop');
       pausa.style.display = 'none'; pausa.textContent = 'Pausa';
       $('timer-'+c).textContent = '00:00';
@@ -1237,14 +1346,30 @@ const Rec = {
   },
 
   salir(){
-    if (this.grabando){
-      if (!confirm('Estás grabando. ¿Salir y descartar esta toma?')) return;
+    const procesando = !this.finalizado && Object.values(this.fin).includes('pendiente');
+    if (this.iniciando || this.grabando || procesando){
+      const msg = this.iniciando
+        ? 'La grabación está por comenzar. ¿Salir y cancelar?'
+        : this.grabando
+          ? 'Estás grabando. ¿Salir y descartar esta toma?'
+          : 'La toma todavía se está procesando. ¿Salir y descartarla?';
+      if (!confirm(msg)) return;
+
+      this.iniciando = false;
       this.grabando = false;
       clearInterval(this.timerInt);
-      this.pendientes = -999;
+      this.gen++;
+      this.finalizado = true;
+      clearTimeout(this.guardaT);
+      this.guardaT = null;
+      this.ui().cr.classList.remove('ver');
       try { if (this.vRec && this.vRec.state!=='inactive') this.vRec.stop(); } catch(e){}
       try { if (this.aRec && this.aRec.state!=='inactive') this.aRec.stop(); } catch(e){}
       if (this.wakeLock){ try { this.wakeLock.release(); } catch(e){} this.wakeLock = null; }
+      this.vRec = null; this.aRec = null;
+      this.vChunks = []; this.aChunks = [];
+      this.fin = { video:'n/a', audio:'n/a' };
+      S.videoBlob = null; S.audioBlob = null; S.avisoFin = '';
     }
     this.resetUI();
     if (this.tipo === 'video'){
@@ -1535,7 +1660,10 @@ const App = {
     v.style.display = 'none'; a.style.display = 'none';
     if (v.src){ URL.revokeObjectURL(v.src); v.removeAttribute('src'); }
     if (a.src){ URL.revokeObjectURL(a.src); a.removeAttribute('src'); }
-    $('rev-ok').innerHTML = '';
+    $('rev-ok').innerHTML = S.avisoFin
+      ? `<div class="aviso">${S.avisoFin}</div>`
+      : '';
+    S.avisoFin = '';
 
     const esBloque = (S.modo === 'bloques' && S.bloqueActivo !== null);
     if (esBloque && !soloVer) Bloques.asignarResultado();
@@ -1570,15 +1698,19 @@ const App = {
     // Información honesta del formato obtenido
     const f = $('rev-formato');
     if (S.videoBlob){
-      const e = ext(S.videoMime);
-      f.innerHTML = e === 'mp4'
-        ? '<div class="aviso ok">Tu navegador grabó en <b>MP4</b> — compatible con CapCut y todas las plataformas.</div>'
-        : '<div class="aviso">Tu navegador grabó en <b>WebM</b>. CapCut en computador lo acepta sin problema. Si CapCut en tu celular no lo importa, grábate desde Safari en iPhone (sale MP4) — la conversión automática llega en la próxima versión.</div>';
+      const esMp4Aac = S.videoMime.startsWith('video/mp4') && S.videoMime.includes('mp4a.40.2');
+      f.innerHTML = esMp4Aac
+        ? '<div class="aviso ok">Tu navegador grabó en MP4 con audio AAC. Es un formato de amplia compatibilidad, aunque conviene probar el archivo en el editor o dispositivo donde lo usarás.</div>'
+        : '<div class="aviso">Tu navegador grabó en WebM con audio Opus. Chrome y varios editores lo reproducen, pero algunas aplicaciones o dispositivos pueden requerir conversión.</div>';
     } else if (S.audioBlob){
-      f.innerHTML = `<div class="aviso ok">Audio grabado en formato .${ext(S.audioMime)}, listo para usar sobre láminas o video.</div>`;
+      const esM4aAac = S.audioMime.startsWith('audio/mp4') && S.audioMime.includes('mp4a.40.2');
+      f.innerHTML = esM4aAac
+        ? '<div class="aviso ok">Audio grabado en M4A con AAC. Es un formato de amplia compatibilidad, aunque conviene comprobarlo en la aplicación donde lo usarás.</div>'
+        : '<div class="aviso">Audio grabado en WebM con Opus. Es válido y reproducible en navegadores modernos, pero algunos reproductores pueden no reconocerlo como audio.</div>';
     } else {
       f.innerHTML = '<div class="aviso error">No se generó ninguna grabación. Vuelve a intentarlo — si persiste, prueba en Chrome actualizado.</div>';
     }
+    this.mostrar('s-review');
   },
 
   descargarVideo(){
