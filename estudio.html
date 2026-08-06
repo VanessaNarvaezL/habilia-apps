@@ -161,6 +161,19 @@ label.lab{display:block;font-size:0.7rem;letter-spacing:0.14em;text-transform:up
 .aviso.ok{border-left-color:var(--ok);color:var(--ok)}
 .aviso.error{border-left-color:var(--error);color:var(--error)}
 
+.confirmacion-fondo{
+  position:fixed;inset:0;z-index:1000;background:rgba(20,34,25,0.58);
+  display:flex;align-items:center;justify-content:center;padding:22px;
+}
+.confirmacion-fondo[hidden]{display:none}
+.confirmacion-panel{
+  width:min(100%,460px);background:var(--panel);border:1px solid var(--arena);
+  border-radius:var(--radius);padding:24px;box-shadow:0 18px 50px rgba(20,34,25,0.22);
+}
+.confirmacion-panel .titulo{margin-top:0}
+.confirmacion-panel .bajada{margin-bottom:20px}
+@media(max-width:480px){.confirmacion-panel .fila{flex-direction:column}}
+
 /* ── Guiones guardados ── */
 .guardados{display:flex;gap:8px;align-items:center;margin-bottom:10px}
 .guardados select{flex:1}
@@ -586,6 +599,8 @@ audio.revisar-media{background:var(--arena-suave)}
 
       <div id="rev-formato"></div>
 
+      <div class="aviso" id="rev-aviso-descarga" style="display:none">Studio no guarda tus grabaciones. Descarga los archivos que necesites antes de terminar o salir.</div>
+
       <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
         <button class="btn btn-oro" id="btn-desc-video" onclick="App.descargarVideo()">
           <svg class="ic" width="17" height="17" viewBox="0 0 24 24"><use href="#i-desc"/></svg>
@@ -607,6 +622,17 @@ audio.revisar-media{background:var(--arena-suave)}
     </div>
   </div>
 </section>
+
+<div class="confirmacion-fondo" id="modal-descartar" role="dialog" aria-modal="true" aria-labelledby="modal-descartar-titulo" aria-describedby="modal-descartar-texto" hidden onclick="if (event.target === this) App.cerrarConfirmacionDescartar()">
+  <div class="confirmacion-panel">
+    <h2 class="titulo" id="modal-descartar-titulo">¿Terminar sin descargar?</h2>
+    <p class="bajada" id="modal-descartar-texto"></p>
+    <div class="fila">
+      <button class="btn btn-suave" id="btn-modal-seguir" type="button" onclick="App.cerrarConfirmacionDescartar()">Seguir revisando</button>
+      <button class="btn btn-oro" type="button" onclick="App.confirmarDescartar()">Terminar y descartar</button>
+    </div>
+  </div>
+</div>
 
 <!-- ════════ BLOQUES: LISTA ════════ -->
 <section class="screen" id="s-blocks">
@@ -1571,6 +1597,7 @@ const App = {
   configHecha: false,
 
   mostrar(id){
+    if (id !== 's-review') this.cerrarConfirmacionDescartar(false);
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     $(id).classList.add('active');
     window.scrollTo(0,0);
@@ -1667,6 +1694,7 @@ const App = {
 
     const esBloque = (S.modo === 'bloques' && S.bloqueActivo !== null);
     if (esBloque && !soloVer) Bloques.asignarResultado();
+    $('rev-aviso-descarga').style.display = esBloque ? 'none' : 'block';
 
     if (S.videoBlob){
       v.src = URL.createObjectURL(S.videoBlob);
@@ -1740,9 +1768,46 @@ const App = {
   revisarFin(){
     if (S.modo === 'bloques'){ this.mostrar('s-blocks'); }
     else {
-      Cam.cerrar(); Rec.cerrarAudio();
-      this.irHome();
+      const pendientes = [];
+      if (S.videoBlob && !S.vDesc) pendientes.push('video');
+      if (S.audioBlob && !S.aDesc) pendientes.push('audio');
+      if (pendientes.length){
+        this.abrirConfirmacionDescartar(pendientes);
+        return;
+      }
+      this.completarFinRevision();
     }
+  },
+
+  abrirConfirmacionDescartar(pendientes){
+    const plural = pendientes.length > 1;
+    $('modal-descartar-texto').textContent = `Studio no guarda las grabaciones. Aún no descargaste: ${pendientes.join(' y ')}. `
+      + `Si terminas ahora, ${plural ? 'se perderán' : 'se perderá'}.`;
+    $('modal-descartar').hidden = false;
+    $('btn-modal-seguir').focus();
+  },
+  cerrarConfirmacionDescartar(restaurarFoco = true){
+    const modal = $('modal-descartar');
+    if (modal.hidden) return;
+    modal.hidden = true;
+    if (restaurarFoco) $('btn-rev-fin').focus();
+  },
+  confirmarDescartar(){
+    this.cerrarConfirmacionDescartar(false);
+    this.completarFinRevision();
+  },
+  completarFinRevision(){
+    this.cerrarConfirmacionDescartar(false);
+    [$('rev-video'), $('rev-audio')].forEach(media => {
+      media.pause();
+      if (media.src) URL.revokeObjectURL(media.src);
+      media.removeAttribute('src');
+      media.load();
+    });
+    S.videoBlob = null; S.audioBlob = null;
+    S.vDesc = false; S.aDesc = false; S.avisoFin = '';
+    Cam.cerrar(); Rec.cerrarAudio();
+    this.irHome();
   },
 
   /* ── Permisos ── */
@@ -1977,6 +2042,13 @@ Bloques.init();
 window.addEventListener('beforeunload', (e) => {
   const hayAlgo = (S.videoBlob && !S.vDesc) || (S.audioBlob && !S.aDesc) || Bloques.hayPendientesDeDescarga();
   if (hayAlgo){ e.preventDefault(); e.returnValue = ''; }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !$('modal-descartar').hidden){
+    e.preventDefault();
+    App.cerrarConfirmacionDescartar();
+  }
 });
 
 // Si el navegador directamente no puede grabar, decirlo de frente en el inicio
