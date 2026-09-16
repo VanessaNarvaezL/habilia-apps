@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Institutional Trading Academy</title>
+<title>HABIL/IA Markets — Academia Trading & Forex</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -166,13 +166,13 @@ button{font-family:var(--sans);cursor:pointer}
 
 <div id="header">
   <div class="logo-box"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2 4 6.5v9L12 22l8-6.5v-9L12 2Z" stroke="#0B0716" stroke-width="2" stroke-linejoin="round"/><path d="M7 15l3-4 2.5 2.5L17 8" stroke="#0B0716" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  <div class="logo-text"><div class="t1">HABIL<i>/</i>IA Markets</div><div class="t2">Trading Academy</div></div>
+  <div class="logo-text"><div class="t1">HABIL<i>/</i>IA Markets</div><div class="t2">Academia Trading & Forex</div></div>
   <div id="nav-tabs">
     <button class="nav-tab active" onclick="switchTab('academy')">◈ Academia</button>
     <button class="nav-tab" onclick="switchTab('simulator')">⬡ Simulador</button>
     <button class="nav-tab" onclick="switchTab('tutor')">✦ Tutor IA</button>
   </div>
-  <div id="xp-display"><div class="xp-num" id="xp-num">0 XP</div><div class="xp-sub" id="xp-sub">0/12 lecciones</div></div>
+  <div id="xp-display"><div class="xp-num" id="xp-num">0 XP</div><div class="xp-sub" id="xp-sub">0 lecciones</div></div>
   <div id="xp-avatar" id="xp-av">◎</div>
 </div>
 
@@ -292,20 +292,65 @@ button{font-family:var(--sans);cursor:pointer}
 <script>
 // ═══ DATA ═══
 const MODULES = [
-  {id:1,tag:"FUNDAMENTOS",icon:"◈",color:"#00C9FF",title:"La Mente Institucional",subtitle:"Cómo piensan los que mueven el mercado",
-    lessons:[{id:"1a",title:"Retail vs Institucional: La guerra invisible",xp:100,mins:8},{id:"1b",title:"Market Structure: HH, HL, LH, LL",xp:150,mins:12},{id:"1c",title:"Sesiones de mercado y su liquidez",xp:120,mins:10}],
-    content:[{h:"¿Por qué muchos traders minoristas pierden?",b:"Distintos estudios y reportes de brokers indican que una gran parte de los traders minoristas pierde dinero. Las causas más citadas no son misteriosas: falta de gestión de riesgo, exceso de apalancamiento, mala disciplina y operar sin un plan. Los indicadores populares (RSI, MACD, medias móviles) son reactivos y se basan en datos pasados; no son 'malos', pero usarlos sin contexto ni gestión de riesgo suele llevar a malas decisiones."},{h:"Lo visible y lo que no se ve",b:"El gráfico muestra solo el precio. Detrás hay órdenes, flujos de capital y posiciones que no ves. La teoría SMC sostiene que los grandes participantes necesitan liquidez (órdenes en el lado contrario) para entrar y salir de posiciones grandes, y que parte de esa liquidez se acumula donde el retail suele colocar sus stops. Es una interpretación útil para estudiar, no una certeza comprobada sobre cada movimiento."},{h:"Market Structure básica",b:"El mercado se mueve en impulsos y correcciones. Una tendencia alcista suele formar Higher Highs (HH) y Higher Lows (HL); una bajista, Lower Highs (LH) y Lower Lows (LL). Cuando esta estructura se rompe, algunos traders lo estudian como un posible cambio de contexto. Es una forma de leer el gráfico, no una garantía de lo que vendrá."}]},
-  {id:2,tag:"SMC",icon:"⬡",color:"#FFAA00",title:"Smart Money Concepts",subtitle:"BOS, CHoCH, Order Blocks y FVG",
-    lessons:[{id:"2a",title:"Break of Structure y Change of Character",xp:200,mins:15},{id:"2b",title:"Order Blocks: donde duermen los institucionales",xp:250,mins:20},{id:"2c",title:"Fair Value Gaps e Imbalances",xp:220,mins:18}],
-    content:[{h:"Break of Structure (BOS)",b:"Según la teoría SMC, un BOS ocurre cuando el precio rompe un swing high o low previo en la dirección de la tendencia. Desde este enfoque se interpreta como una señal de que el momentum podría continuar. Es una zona de interés que algunos traders observan para su análisis; no garantiza que el precio siga en esa dirección."},{h:"Change of Character (CHoCH)",b:"El CHoCH es, según SMC, la primera pista de que el mercado podría cambiar de dirección: el precio rompe en contra de la tendencia actual. Atención: un CHoCH no confirma una reversión, es apenas una alerta dentro del marco interpretativo. Quienes lo estudian buscan confluencia adicional antes de sacar conclusiones."},{h:"Order Blocks",b:"Desde el enfoque SMC, un OB alcista es la última vela bajista (roja) antes de un impulso alcista fuerte, y se interpreta como una zona donde podrían haberse colocado órdenes de compra grandes. La teoría sugiere que el precio podría regresar a esa zona, pero esto no garantiza que ocurra ni cuándo. Es un área de análisis, no un punto de entrada recomendado."},{h:"Fair Value Gaps (FVG)",b:"Un FVG es un desequilibrio en 3 velas consecutivas: la mecha inferior de la primera no toca la mecha superior de la tercera. Según SMC, esa brecha es territorio 'desvisitado' y el precio tiende a regresar a llenarla antes de continuar. Es una tendencia observada por algunos traders, no una regla garantizada."}]},
-  {id:3,tag:"ICT / LIQUIDEZ",icon:"✦",color:"#00E8A0",title:"Liquidez e ICT Concepts",subtitle:"Cómo la teoría SMC interpreta la búsqueda de liquidez",
-    lessons:[{id:"3a",title:"Buy Side y Sell Side Liquidity",xp:300,mins:20},{id:"3b",title:"Inducement y caza de stops",xp:350,mins:25},{id:"3c",title:"Optimal Trade Entry (OTE) con Fibonacci",xp:320,mins:22}],
-    content:[{h:"¿Qué es la liquidez?",b:"En términos simples, liquidez = órdenes disponibles. Según la teoría SMC, donde hay stops acumulados hay liquidez, y los grandes participantes necesitan contrapartida para entrar o salir de posiciones grandes. Es un marco interpretativo para leer el gráfico, no una descripción comprobada de lo que hace cada participante."},{h:"Buy Side Liquidity (BSL)",b:"Desde este enfoque, la BSL se ubica por encima de swing highs, resistencias obvias y máximos previos. La teoría SMC interpreta que el precio puede subir hacia esas zonas en busca de liquidez; algunos traders lo observan como contexto. Esto no garantiza que el precio luego caiga: es una interpretación, no una certeza."},{h:"Sell Side Liquidity (SSL)",b:"De forma simétrica, la SSL se ubica por debajo de swing lows, soportes obvios y mínimos previos. Según SMC, el precio puede bajar hacia esas zonas buscando liquidez. Que luego suba o no es incierto: la teoría describe un posible comportamiento, no una regla que se repita siempre ni en todos los timeframes."},{h:"Optimal Trade Entry (OTE)",b:"Tras un BOS, el precio suele hacer un retroceso. Usando Fibonacci del impulso, la zona 61.8%-79% es lo que SMC llama OTE. Desde este enfoque se interpreta como una posible área de análisis donde el movimiento podría retomarse, sin que eso garantice que ocurra."}]},
-  {id:4,tag:"RIESGO",icon:"⬟",color:"#A855F7",title:"Gestión de Riesgo",subtitle:"Por qué la gestión de riesgo es la base de cualquier enfoque",
-    lessons:[{id:"4a",title:"Position sizing: cómo dimensionar una posición",xp:280,mins:15},{id:"4b",title:"Risk/Reward Ratio: qué dice y qué no garantiza",xp:300,mins:18},{id:"4c",title:"Psicología y disciplina del trader",xp:350,mins:20}],
-    content:[{h:"La regla del 1-2%",b:"Una práctica común de gestión de riesgo es no arriesgar más del 1-2% del capital en una sola operación. Con $10,000 al 1%, tu riesgo por trade sería $100. Esto sirve para limitar el daño de cualquier operación individual y evitar que una mala racha destruya la cuenta rápido. Importante: es una forma de controlar pérdidas, no una protección infalible. Si operas un sistema sin ventaja real, o usas mucho apalancamiento, igual puedes perder de forma sostenida."},{h:"Position Sizing",b:"Tamaño = (Capital × % Riesgo) ÷ (Distancia al stop en pips × Valor por pip). Ejemplo: capital $10,000, riesgo 1% = $100; stop de 20 pips, valor $1/pip → tamaño = $100 ÷ 20 = 5 mini lotes. Es un cálculo para dimensionar la posición según el riesgo que defines, no una garantía de resultado."},{h:"Risk/Reward Ratio",b:"El RRR es una herramienta matemática: con un RRR de 1:2, en teoría necesitarías acertar alrededor del 34% de las veces para quedar a mano (1:3 → ~25%). Pero esto NO garantiza rentabilidad. En la práctica importan el spread, el slippage, las comisiones, y sobre todo si tu sistema tiene una ventaja real y comprobada. Un buen RRR sobre un sistema sin evidencia no produce ganancias; solo ordena la relación entre riesgo y objetivo."},{h:"Psicología y disciplina",b:"Las pérdidas son parte normal del trading: ninguna estrategia acierta siempre. La disciplina (seguir tu plan, no sobre-operar, no aumentar el riesgo para 'recuperar') suele importar más que cualquier setup. Nada de esto convierte el trading en una actividad segura ni en una fuente de ingresos garantizada."}]},
+{id:0,tag:"MÓDULO 00",icon:"◎",color:"#8B7CF6",title:"La mente del trader principiante",subtitle:"Expectativas, incertidumbre, sesgos y proceso",
+ lessons:[
+ {id:"00a",title:"Trading sin humo: qué estás aprendiendo realmente",xp:100,mins:10,content:[{h:"Trading no es adivinación",b:"Operar consiste en tomar decisiones bajo incertidumbre. Un gráfico permite observar precio y comportamiento pasado; no revela con certeza qué ocurrirá después. El objetivo inicial no es acertar cada movimiento, sino aprender a formular reglas, limitar riesgo y revisar decisiones."},{h:"Hecho, observación e interpretación",b:"Separa cuatro capas: <strong>lo que sabemos</strong>, <strong>lo que observamos</strong>, <strong>lo que interpretamos</strong> y <strong>lo que no sabemos</strong>. Esta distinción evita transformar una lectura del gráfico en una certeza que el mercado nunca prometió."},{h:"La primera habilidad",b:"Antes de buscar setups, aprende a decir «no sé». Una metodología seria trabaja con hipótesis comprobables, pérdidas posibles y criterios de invalidación."}]},
+ {id:"00b",title:"Expectativas, probabilidad y pérdidas",xp:120,mins:12,content:[{h:"Una operación no valida un método",b:"Una ganancia aislada puede ser suerte y una pérdida aislada no invalida necesariamente una estrategia. La evaluación necesita una muestra suficiente de operaciones ejecutadas bajo las mismas reglas."},{h:"Pensar en distribuciones",b:"Importan la tasa de acierto, la ganancia media, la pérdida media, los costos y la dispersión de resultados. El trading se estudia como un proceso probabilístico, no como una sucesión de predicciones individuales."}]},
+ {id:"00c",title:"Sesgos, FOMO y disciplina",xp:130,mins:12,content:[{h:"El cerebro busca certeza",b:"FOMO, revenge trading, sobreconfianza y sesgo de confirmación pueden alterar una regla después de ver el resultado. El antídoto no es «tener más fuerza de voluntad»: es definir antes qué harás y registrar después qué hiciste."},{h:"Disciplina observable",b:"Disciplina significa ejecutar reglas previamente definidas, respetar límites y aceptar no operar cuando las condiciones no existen. Debe poder comprobarse en un journal."}]},
+ {id:"00d",title:"Proceso antes que resultado",xp:140,mins:12,content:[{h:"Buena decisión, resultado negativo",b:"Una operación puede perder y haber sido correctamente ejecutada. También puede ganar después de romper todas las reglas. Evalúa primero la calidad del proceso y después el resultado."},{h:"Tu primer protocolo",b:"Antes: contexto, setup, invalidación y riesgo. Durante: ejecutar sin improvisar. Después: registrar evidencia, resultado y desviaciones. Esa secuencia será transversal a toda la Academia."}]}
+]},
+{id:1,tag:"MÓDULO 01",icon:"◈",color:"#00C9FF",title:"Cómo funciona un mercado",subtitle:"Precio, órdenes, spread, sesiones y participantes",
+ lessons:[
+ {id:"01a",title:"Qué es un mercado y cómo se forma el precio",xp:150,mins:14,content:[{h:"Mercado = interacción",b:"El precio emerge de compradores y vendedores que aceptan transar a distintos niveles. El gráfico es el registro de esas transacciones; no muestra por sí solo la intención privada de cada participante."},{h:"Bid y Ask",b:"El <strong>bid</strong> es el precio disponible para vender y el <strong>ask</strong> el disponible para comprar. La diferencia es el spread, uno de los costos que una estrategia debe superar."}]},
+ {id:"01b",title:"Órdenes, spread, slippage y ejecución",xp:170,mins:16,content:[{h:"Tipos de órdenes",b:"Market prioriza ejecución; limit condiciona el precio máximo o mínimo aceptado; stop se activa al alcanzar un nivel. Ninguna orden elimina por sí sola el riesgo de ejecución."},{h:"Costos invisibles en un gráfico limpio",b:"Spread, comisión, swap y slippage pueden cambiar el resultado real. Un backtest que los ignora puede sobreestimar la ventaja de una estrategia."}]},
+ {id:"01c",title:"Sesiones, horarios y liquidez",xp:160,mins:14,content:[{h:"El mercado cambia durante el día",b:"Asia, Londres y Nueva York presentan participaciones y niveles de actividad distintos. Más actividad no significa automáticamente mejor oportunidad: una estrategia debe especificar cuándo opera y probar ese horario."},{h:"Solapamientos",b:"Cuando sesiones relevantes coinciden puede aumentar la actividad. Trátalo como contexto medible, no como señal automática."}]},
+ {id:"01d",title:"Participantes, temporalidades y contexto",xp:180,mins:16,content:[{h:"No todos operan por la misma razón",b:"Bancos, fondos, empresas, proveedores de liquidez y traders minoristas tienen horizontes y necesidades diferentes. Evita atribuir cada vela a una entidad concreta sin evidencia."},{h:"Temporalidades",b:"Un mismo tramo puede ser tendencia en M15 y corrección en H4. Define qué temporalidad entrega contexto y cuál se usa para ejecutar; cambiarla después de entrar introduce sesgo."}]}
+]},
+{id:2,tag:"MÓDULO 02",icon:"⬟",color:"#C9A24B",title:"Tu cuenta, tu broker y el riesgo real",subtitle:"Apalancamiento, margen, costos y supervivencia",
+ lessons:[
+ {id:"02a",title:"Broker, cuenta y condiciones de operación",xp:180,mins:15,content:[{h:"El broker importa",b:"Regulación, ejecución, instrumentos, spreads, comisiones, swaps y políticas de margen afectan la experiencia real. Compara condiciones documentadas y entiende el producto que estás operando."},{h:"Demo y real no son idénticos",b:"Una cuenta demo sirve para aprender plataforma y probar reglas, pero no reproduce completamente ejecución, presión emocional ni todas las condiciones de una cuenta real."}]},
+ {id:"02b",title:"Lotes, pips y valor monetario",xp:200,mins:18,content:[{h:"Pip no es dinero",b:"Un pip describe un movimiento de precio. Su valor monetario depende del par, tamaño de posición, divisa de la cuenta y especificaciones del contrato. No uses una cifra universal para todos los instrumentos."},{h:"Tamaño antes de entrar",b:"El tamaño debe derivarse del riesgo monetario permitido y de la distancia de invalidación, usando las especificaciones reales del instrumento."}]},
+ {id:"02c",title:"Apalancamiento y margen",xp:210,mins:18,content:[{h:"Amplifica exposición, no habilidad",b:"El apalancamiento permite controlar una exposición mayor que el capital depositado. Amplifica tanto ganancias como pérdidas y puede acelerar la pérdida del capital."},{h:"Margen",b:"El margen es capital reservado para sostener posiciones. Conocer margen libre, nivel de margen y reglas de cierre del broker es parte de la gestión, no un detalle administrativo."}]},
+ {id:"02d",title:"Riesgo por operación y riesgo de ruina",xp:230,mins:20,content:[{h:"Riesgo monetario",b:"Define cuánto puedes perder si la invalidación se ejecuta. Un porcentaje pequeño limita el daño por operación, pero no convierte una estrategia sin ventaja en rentable."},{h:"Rachas y supervivencia",b:"Las pérdidas pueden agruparse. Cuanto mayor es el riesgo por operación, menos errores consecutivos necesita una cuenta para sufrir un drawdown difícil de recuperar."}]}
+]},
+{id:3,tag:"MÓDULO 03",icon:"⌁",color:"#1FBF8F",title:"Cómo leer la estructura del precio",subtitle:"Swings, tendencia, rango, BOS y CHoCH",
+ lessons:[
+ {id:"03a",title:"Swings: HH, HL, LH y LL",xp:220,mins:18,chart:"structure",content:[{h:"Puntos de giro",b:"Los swings organizan visualmente máximos y mínimos relevantes. En una secuencia alcista suelen aparecer HH y HL; en una bajista, LH y LL."},{h:"Relevancia",b:"No todo máximo o mínimo tiene el mismo peso. Define reglas consistentes para seleccionar swings y evita cambiarlas para que el gráfico confirme una idea previa."}]},
+ {id:"03b",title:"Tendencia, rango y transición",xp:230,mins:18,chart:"structure",content:[{h:"Tres contextos útiles",b:"Tendencia, rango y transición requieren expectativas distintas. Forzar una lectura tendencial dentro de un rango produce señales contradictorias."},{h:"Contexto antes del setup",b:"Clasifica primero el entorno. Si no puedes hacerlo con reglas razonablemente consistentes, la incertidumbre es información y puede justificar no operar."}]},
+ {id:"03c",title:"BOS y continuidad estructural",xp:250,mins:20,chart:"structure",content:[{h:"Break of Structure",b:"BOS es una etiqueta usada para describir la ruptura de un swing relevante, habitualmente en dirección de la estructura observada. Es evidencia de ruptura, no garantía de continuación."},{h:"Cierre, mecha y criterio",b:"Una estrategia debe definir qué cuenta como ruptura: toque, mecha, cierre o desplazamiento mínimo. Sin definición, dos personas pueden etiquetar el mismo gráfico de forma distinta."}]},
+ {id:"03d",title:"CHoCH, cambio de carácter y falsas rupturas",xp:270,mins:22,chart:"structure",content:[{h:"CHoCH",b:"En metodologías SMC/ICT, CHoCH describe una ruptura contraria a la estructura previa y puede usarse como alerta de transición. No confirma por sí solo una reversión."},{h:"Falsa ruptura",b:"El precio puede atravesar un nivel y regresar. Por eso una metodología necesita invalidaciones y confirmaciones definidas antes de conocer el resultado."}]}
+]},
+{id:4,tag:"MÓDULO 04",icon:"✦",color:"#00E8A0",title:"Liquidez y comportamiento del precio",subtitle:"Órdenes, máximos/mínimos y barridos",
+ lessons:[
+ {id:"04a",title:"Qué significa liquidez",xp:260,mins:20,chart:"liquidity",content:[{h:"Definición operativa",b:"Liquidez describe la facilidad y profundidad con que pueden ejecutarse órdenes. En lectura de gráficos, algunas metodologías señalan máximos y mínimos visibles como lugares donde podrían concentrarse órdenes."},{h:"Límite de la inferencia",b:"Un gráfico minorista no demuestra quién colocó cada orden ni por qué. Hablar de «liquidez» como lectura de niveles debe distinguirse de afirmar intenciones institucionales no observables."}]},
+ {id:"04b",title:"BSL, SSL y pools de liquidez",xp:280,mins:22,chart:"liquidity",content:[{h:"BSL y SSL",b:"En SMC/ICT se denomina buy-side liquidity a zonas por encima de máximos relevantes y sell-side liquidity a zonas por debajo de mínimos. Son etiquetas analíticas para estudiar posibles concentraciones de órdenes."},{h:"Equal highs / equal lows",b:"Máximos o mínimos cercanos pueden atraer atención porque son niveles visibles. Úsalos como contexto; no como predicción automática del siguiente movimiento."}]},
+ {id:"04c",title:"Barridos, stop hunts e inducement",xp:300,mins:24,chart:"liquidity",content:[{h:"Barrido",b:"Un barrido describe el paso del precio por un nivel de liquidez seguido de rechazo o retorno. El hecho observable es el recorrido del precio; atribuirlo a una «caza» deliberada de stops es una interpretación que requiere cautela."},{h:"Inducement",b:"Algunas metodologías usan este término para describir estructuras que aparentemente atraen participación antes de un movimiento contrario. Puede estudiarse como hipótesis y someterse a backtesting; no debe presentarse como mecanismo demostrado."}]},
+ {id:"04d",title:"Liquidez como contexto, no como entrada",xp:310,mins:22,chart:"liquidity",content:[{h:"Una pieza del proceso",b:"Que exista un máximo, mínimo o barrido no define por sí solo entrada, stop ni objetivo. La estrategia necesita contexto, confirmación, invalidación y riesgo."},{h:"Pregunta correcta",b:"En lugar de «¿dónde va el precio?», pregunta «¿qué tendría que observar para mantener o descartar mi hipótesis?»."}]}
+]},
+{id:5,tag:"MÓDULO 05",icon:"⬡",color:"#FFAA00",title:"Order Blocks, Imbalances y zonas de interés",subtitle:"Desplazamiento, FVG, OB y retrocesos",
+ lessons:[
+ {id:"05a",title:"Desplazamiento e imbalance",xp:300,mins:22,chart:"fvg",content:[{h:"Desplazamiento",b:"Un movimiento amplio y relativamente decidido puede estudiarse como desplazamiento. Antes de automatizarlo o usarlo en una estrategia, define qué significa «amplio» respecto del instrumento y temporalidad."},{h:"Imbalance",b:"Imbalance es una forma de describir desequilibrio en la acción del precio. No implica que el mercado esté obligado a regresar a esa zona."}]},
+ {id:"05b",title:"Fair Value Gap (FVG)",xp:320,mins:24,chart:"fvg",content:[{h:"Patrón de tres velas",b:"En SMC/ICT, un FVG suele identificarse con tres velas cuando queda un espacio entre extremos de la primera y la tercera alrededor de un desplazamiento. Es una definición gráfica, no una promesa de «relleno»."},{h:"Mitigación",b:"El retorno parcial o total a una zona puede registrarse y medirse. La frecuencia debe estudiarse en una muestra definida, no asumirse por ejemplos seleccionados."}]},
+ {id:"05c",title:"Order Blocks: definición y límites",xp:340,mins:25,chart:"ob",content:[{h:"Order Block",b:"SMC suele etiquetar como Order Block una vela o zona previa a un desplazamiento significativo que rompe estructura. Existen definiciones distintas; una estrategia debe fijar la suya."},{h:"Lo que no sabemos",b:"La vela no demuestra por sí sola que «ahí compraron los bancos». Podemos observar precio y reacción; la atribución de intención institucional es una hipótesis."}]},
+ {id:"05d",title:"Retrocesos, Fibonacci y OTE",xp:350,mins:25,chart:"ob",content:[{h:"Fibonacci como herramienta de medición",b:"Los retrocesos permiten expresar qué proporción de un impulso ha corregido el precio. 61.8%, 70.5% y 79% aparecen en metodologías como ICT/OTE, pero no son niveles mágicos."},{h:"OTE",b:"Optimal Trade Entry es un concepto popularizado dentro de ICT para una zona de retroceso. Puede explicarse y probarse, pero no sustituye una estrategia completa ni garantiza una reacción."}]}
+]},
+{id:6,tag:"MÓDULO 06",icon:"⚙",color:"#A78BFA",title:"Construye una estrategia que pueda probarse",subtitle:"Hipótesis, reglas, confluencias y backtesting",
+ lessons:[
+ {id:"06a",title:"De concepto a hipótesis comprobable",xp:340,mins:24,content:[{h:"Una idea no es todavía una estrategia",b:"«Operar Order Blocks» o «seguir liquidez» no especifica contexto, entrada, invalidación, salida ni riesgo. Convierte la idea en condiciones observables."},{h:"Hipótesis",b:"Ejemplo educativo: «cuando A, B y C ocurren bajo el contexto D, mediré el resultado con la regla E». La formulación debe permitir que los datos también la contradigan."}]},
+ {id:"06b",title:"Confluencias y secuencia de lectura",xp:360,mins:26,chart:"all",content:[{h:"Confluencia no significa acumulación infinita",b:"Añadir filtros puede hacer que una estrategia parezca más selectiva sin mejorarla. Cada condición debe tener una función y poder probarse."},{h:"Metodología de estudio HABIL/IA",b:"Una secuencia útil para estudiar es: contexto y estructura → evidencia complementaria cuando corresponda → cambio estructural → desplazamiento/imbalance → zona de interés → retroceso/confirmación → invalidación → riesgo → ejecución → revisión. Es una metodología de estudio, no una señal ni una garantía."}]},
+ {id:"06c",title:"Divergencias como evidencia complementaria",xp:370,mins:24,content:[{h:"Qué es una divergencia",b:"Una divergencia compara el comportamiento del precio con otra serie o indicador. Puede sugerir pérdida de sincronía, pero no prueba por sí sola una reversión."},{h:"Regla antes del gráfico",b:"Define qué indicador, pivotes, separación temporal y criterio de confirmación usarás. Si eliges los puntos después de ver el resultado, introduces sesgo retrospectivo."}]},
+ {id:"06d",title:"Backtesting, muestra y sobreajuste",xp:400,mins:28,content:[{h:"Prueba histórica",b:"El backtesting pregunta cómo habrían funcionado reglas definidas sobre datos pasados. Debe incluir costos razonables, suficientes casos y registro de excepciones."},{h:"Sobreajuste",b:"Modificar reglas repetidamente hasta que encajen con el pasado puede producir un sistema excelente en muestra y frágil fuera de ella. Conserva versiones y valida cambios por separado."}]},
+ {id:"06e",title:"Versionado y protocolo de estrategia",xp:420,mins:25,content:[{h:"Una regla cambia = una versión cambia",b:"Registra versión, fecha, instrumento, temporalidad, horario, criterios de entrada/salida y riesgo. No mezcles estadísticas de reglas distintas como si fueran el mismo sistema."},{h:"Checklist",b:"Antes de probar: contexto, setup, confirmación, invalidación, riesgo y salida. Después: resultado, captura, desviación y observación. Esa documentación convierte intuición en proceso auditable."}]}
+]},
+{id:7,tag:"MÓDULO 07",icon:"▦",color:"#F2555A",title:"Riesgo, métricas y plan de trading",subtitle:"Expectativa, drawdown, journal y ejecución",
+ lessons:[
+ {id:"07a",title:"R, tasa de acierto y expectativa",xp:380,mins:24,content:[{h:"Unidad R",b:"R expresa resultados en relación con el riesgo inicial. Una pérdida completa puede registrarse como -1R y una ganancia de dos veces ese riesgo como +2R, independientemente del tamaño monetario de la cuenta."},{h:"Expectativa",b:"La expectativa combina frecuencia y magnitud de ganancias y pérdidas. Un R:R atractivo no basta: necesitas datos de ejecución realistas y costos."}]},
+ {id:"07b",title:"Drawdown y límites de pérdida",xp:400,mins:24,content:[{h:"Drawdown",b:"Mide la caída desde un máximo de capital/equity hasta un mínimo posterior. Importan tanto su profundidad como el tiempo de recuperación."},{h:"Límites",b:"Los límites diarios, semanales o por racha son mecanismos de control. Deben definirse antes de operar y no ampliarse para «recuperar» pérdidas."}]},
+ {id:"07c",title:"Journal y métricas que sí enseñan",xp:420,mins:26,content:[{h:"Registrar para aprender",b:"Un journal útil conserva setup, contexto, riesgo, resultado en R, captura, cumplimiento de reglas y observaciones. Sin datos consistentes es difícil distinguir problema de estrategia de problema de ejecución."},{h:"Métricas",b:"Además del win rate, observa payoff, expectativa, drawdown, rachas, costos y cumplimiento. Una métrica aislada puede ocultar fragilidad."}]},
+ {id:"07d",title:"Plan de trading: del gráfico al proceso",xp:450,mins:28,chart:"all",content:[{h:"Plan operativo",b:"Tu plan debe responder: qué mercado estudias, cuándo, bajo qué contexto, qué setup es válido, qué lo invalida, cuánto arriesgas, cómo gestionas y cuándo dejas de operar."},{h:"Flujo de decisión",b:"Contexto → setup → confirmaciones → riesgo permitido → ejecución. Si una condición obligatoria falla, la salida correcta puede ser <strong>NO OPERAR</strong>."}]},
+ {id:"07e",title:"Integración práctica y revisión final",xp:500,mins:30,chart:"all",content:[{h:"De gráfico a proceso",b:"Integra la lectura sin saltos: describe hechos observables, formula una hipótesis, busca condiciones de tu estrategia, calcula el riesgo y documenta la decisión. Evita comenzar por la conclusión y luego buscar argumentos."},{h:"Ciclo de mejora",b:"Observar → registrar → revisar → ajustar → versionar → volver a probar. El objetivo de la Academia no es darte certeza, sino enseñarte a construir decisiones trazables y comprobables."}]}
+]}
 ];
-
 const QUIZZES = {
   "1a":[{q:"¿Cuáles son causas frecuentes de que muchos traders minoristas pierdan?",opts:["Falta de capital únicamente","Mala gestión de riesgo, exceso de apalancamiento y operar sin plan","El mercado es totalmente impredecible","No mirar suficientes indicadores"],ans:1},{q:"Según la teoría SMC, ¿con qué se relacionan los stops acumulados del retail?",opts:["Con señales de trading confirmadas","Con predicciones exactas del precio","Con zonas de liquidez que los grandes participantes podrían buscar","Con errores de los indicadores"],ans:2}],
   "2b":[{q:"Según el enfoque SMC, ¿qué es un Order Block alcista?",opts:["Una zona de alta demanda visible en el DOM","La última vela bajista antes de un impulso alcista fuerte","Cualquier zona de soporte con alto volumen","Un nivel con muchos FVG"],ans:1},{q:"¿Qué afirma la teoría SMC sobre el regreso del precio a un Order Block?",opts:["Que el precio siempre regresa, sin excepción","Que es una profecía autocumplida del retail","Que el precio podría regresar a esa zona, pero no está garantizado","Que los algoritmos lo programan así obligatoriamente"],ans:2}],
@@ -408,7 +453,7 @@ function renderModules(){
   const totalL=MODULES.reduce((s,m)=>s+m.lessons.length,0);
   MODULES.forEach((mod,mi)=>{
     const mc=mod.lessons.filter(l=>completed.has(l.id)).length;
-    const locked=mi>0&&MODULES[mi-1].lessons.filter(l=>completed.has(l.id)).length<1;
+    const locked=mi>0&&!MODULES[mi-1].lessons.every(l=>completed.has(l.id));
     let lessons='';
     mod.lessons.forEach((l,li)=>{
       const done=completed.has(l.id);
@@ -443,7 +488,7 @@ function renderModules(){
 }
 
 function updateProgress(){
-  const total=12,done=completed.size,pct=Math.round(done/total*100);
+  const total=MODULES.reduce((s,m)=>s+m.lessons.length,0),done=completed.size,pct=Math.round(done/total*100);
   document.getElementById('xp-num').textContent=totalXP.toLocaleString()+' XP';
   document.getElementById('xp-sub').textContent=done+'/'+total+' lecciones';
   const av=document.getElementById('xp-avatar');
@@ -510,7 +555,7 @@ function lessonTab(t){
 }
 
 function renderTheory(){
-  const c=activeModule.content;
+  const c=activeLesson.content||[];
   let html='';
   c.forEach(block=>{
     html+=`<div class="content-block" style="border-left-color:${activeModule.color}">
@@ -523,7 +568,7 @@ function renderTheory(){
 
 function renderChart(){
   const id=activeLesson.id;
-  const showFVG=id==='2c',showOB=id==='2b',showLiq=id==='3a'||id==='3b';
+  const mode=activeLesson.chart||'';const showFVG=mode==='fvg'||mode==='all',showOB=mode==='ob'||mode==='all',showLiq=mode==='liquidity'||mode==='all';
   const candles=genCandles(55,id.charCodeAt(0)*7+id.charCodeAt(1));
   let legend='';
   if(showFVG)legend+=`<span style="color:#FFAA00;font-size:11px;background:#FFAA0015;padding:3px 8px;border-radius:4px;margin-right:8px">■ Fair Value Gap</span>`;
@@ -572,7 +617,7 @@ function submitQuiz(){
   let score=0;qData.forEach((q,i)=>{if(quizAnswers[i]===q.ans)score++;});
   quizDone=true;
   if(score>=Math.ceil(qData.length*0.5)&&!completed.has(activeLesson.id)){
-    completed.add(activeLesson.id);totalXP+=activeLesson.xp;
+    completed.add(activeLesson.id);totalXP+=activeLesson.xp;saveProgress();
     document.getElementById('lv-done-badge').style.display='inline';
   }
   renderQuiz();
@@ -663,25 +708,30 @@ function renderTradeHistory(){
 function resetSim(){simCapital=10000;simTrades=[];renderSimParams();renderSimCalc();document.getElementById('sim-history').style.display='none';}
 
 // ═══ TUTOR ═══
-const SUGGESTIONS=['¿Qué diferencia hay entre BOS y CHoCH?','Explícame los Order Blocks con un ejemplo','¿Cómo identifico liquidez en el gráfico?','¿Cuánto debo arriesgar por trade?'];
-const TUTOR_SYSTEM=`Eres un tutor educativo de trading dentro de Trading Academy de HABIL/IA Markets. Enseñas Smart Money Concepts (SMC), ICT, Order Blocks, Fair Value Gaps, liquidez, estructura de mercado, sesiones, gestión de riesgo, position sizing, RRR, psicología y disciplina. Tu rol es enseñar y aclarar, nunca aconsejar operaciones.
+const SUGGESTIONS=['¿Qué diferencia hay entre BOS y CHoCH?','Explícame un Order Block sin venderlo como certeza','¿Cómo convierto una idea en estrategia comprobable?','¿Qué es OTE y cómo se estudia?'];
+const TUTOR_SYSTEM=`Eres el Tutor IA educativo de HABIL/IA Markets — Academia Trading & Forex.
 
-Tu estilo es claro, cercano, pedagógico y prudente. Respondes siempre en español latinoamericano (no uses vocabulario de España). Si das ejemplos con dinero, usa dólares (USD).
+MARCO PEDAGÓGICO OFICIAL:
+La Academia se organiza en Módulos 00–07: mente del trader; funcionamiento del mercado; cuenta/broker/riesgo real; estructura; liquidez; Order Blocks/Imbalances/zonas; construcción y prueba de estrategias; riesgo/métricas/plan. El marco transversal distingue siempre: lo que sabemos, lo que observamos, lo que interpretamos y lo que no sabemos.
 
-REGLAS QUE NUNCA ROMPES:
-- Explicas conceptos, metodología y lógica del mercado. Eso es lo tuyo.
-- Siempre que hables de un concepto o estrategia, aclaras sus riesgos.
-- Dejas claro, cuando corresponda, que esto es contenido educativo y NO es asesoría financiera.
-- NO recomiendas comprar ni vender ningún activo.
-- NO das entradas concretas, ni stop loss, take profit, lotaje ni pares específicos para operar.
-- Nunca dices cosas como "entra aquí", "compra oro", "vende EURUSD", "usa este SL/TP" ni equivalentes.
-- NO predices precios. No dices que XAUUSD, EURUSD, NAS100, BTC ni ningún activo "va a subir" o "va a bajar".
-- Presentas SMC e ICT como una metodología de análisis estudiada y debatida, popular entre algunos traders, NO como una verdad garantizada ni como una mecánica segura del mercado. Usas expresiones como "según la teoría SMC", "desde este enfoque se interpreta", "esto no garantiza el movimiento".
-- Explicas con honestidad que el trading —y en particular forex, CFDs, oro, índices y criptomonedas— implica alto riesgo, y que se puede perder parte o todo el capital, especialmente al usar apalancamiento.
-- Dejas claro que ningún método, indicador o estrategia garantiza resultados.
-- Si el usuario pide una operación concreta (dónde entrar, qué SL/TP usar, qué par operar, si comprar o vender, si un activo va a subir), declinas con amabilidad, explicas por qué no puedes darlo, y rediriges hacia el concepto educativo y hacia consultar a un profesional con licencia para decisiones personales.
+ALCANCE AMPLIADO:
+Puedes profundizar más allá de las lecciones y explicar conocimiento complementario de trading: análisis técnico, Dow, Wyckoff, SMC, ICT, BOS, CHoCH, MSS, liquidez, Order Blocks, FVG/imbalances, Fibonacci y OTE, divergencias, indicadores, sesiones, tipos de órdenes, gestión monetaria, psicología, backtesting, métricas y otras metodologías relevantes. Cuando algo NO forma parte del programa troncal 00–07, identifícalo como conocimiento complementario. No mezcles metodologías como si fueran equivalentes.
 
-Si no sabes algo o el dato puede estar desactualizado, lo dices con honestidad en lugar de inventar.`;
+METODOLOGÍA DE ESTUDIO:
+Puedes enseñar una secuencia de análisis como contexto/estructura → evidencia complementaria cuando corresponda → cambio estructural → desplazamiento/imbalance → zona de interés/OB → retroceso/confirmación → invalidación → riesgo → ejecución → revisión. Preséntala como metodología educativa que debe definirse, probarse y versionarse, nunca como una estrategia garantizada ni bajo el nombre BLACK.
+
+ESTILO:
+Responde en español latinoamericano, claro y pedagógico. Distingue hechos de interpretaciones. Si existen definiciones distintas entre escuelas, dilo. Si un dato puede estar desactualizado o no lo sabes, dilo en vez de inventar.
+
+SEGURIDAD EDUCATIVA:
+- Puedes explicar estrategias completas, reglas, supuestos, invalidaciones, ventajas, limitaciones, ejemplos hipotéticos y cómo backtestearlas.
+- No recomiendes comprar o vender un activo concreto ni presentes predicciones como certezas.
+- No conviertas una explicación educativa en una señal personalizada de operación.
+- No prometas rentabilidad. Trading, forex, CFDs, índices, metales y cripto implican riesgo y el apalancamiento puede amplificar pérdidas.
+- SMC/ICT y atribuciones sobre intención institucional deben presentarse como marcos interpretativos, no como hechos demostrados para cada movimiento.
+- Cuando el alumno pida una definición o estrategia fuera del temario, ayúdalo: explica qué es, de qué escuela proviene si corresponde, cómo se usa, qué supuestos tiene, qué riesgos/limitaciones presenta y cómo podría estudiarse o probarse.
+
+Tu objetivo es formar criterio y autonomía, no dependencia del tutor.`;
 
 // Render visual de la respuesta del Tutor: limpia Markdown crudo (## ** --- `code`)
 // y la muestra en bloques cuando trae secciones. NO altera lo que se envía a /api/chat.
@@ -778,6 +828,7 @@ function switchTab(tab){
 }
 
 // ═══ INIT ═══
+loadProgress();
 renderModules();
 updateProgress();
 // Sim chart
