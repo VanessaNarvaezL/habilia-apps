@@ -367,6 +367,11 @@ let currentLessonTab = 'teoria';
 let quizAnswers = {};
 let quizDone = false;
 
+
+// Persistencia local del progreso. No envía datos fuera del navegador.
+function saveProgress(){try{localStorage.setItem('habilia_forex_progress_v2',JSON.stringify({completed:[...completed],totalXP}));}catch{}}
+function loadProgress(){try{const s=JSON.parse(localStorage.getItem('habilia_forex_progress_v2')||'null');if(s){completed=new Set(s.completed||[]);totalXP=Number(s.totalXP)||0;}}catch{}}
+
 // SIM STATE
 let simCapital = 10000;
 let simRisk = 1;
@@ -617,7 +622,7 @@ function submitQuiz(){
   let score=0;qData.forEach((q,i)=>{if(quizAnswers[i]===q.ans)score++;});
   quizDone=true;
   if(score>=Math.ceil(qData.length*0.5)&&!completed.has(activeLesson.id)){
-    completed.add(activeLesson.id);totalXP+=activeLesson.xp;saveProgress();
+    completed.add(activeLesson.id);totalXP+=activeLesson.xp;saveProgress();saveProgress();
     document.getElementById('lv-done-badge').style.display='inline';
   }
   renderQuiz();
