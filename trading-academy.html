@@ -397,6 +397,17 @@ const LESSON_GUIDES={
 };
 
 function guideFor(id){return LESSON_GUIDES[id]||null;}
+function quizFor(lesson){
+  if(QUIZZES[lesson.id])return QUIZZES[lesson.id];
+  const g=guideFor(lesson.id);if(!g)return [];
+  const qa=g[2].split("?");const question=(qa[0]||"Comprueba el concepto")+"?";
+  const answer=(qa.slice(1).join("?").trim()||"Debe evaluarse con reglas y evidencia.");
+  return [
+    {q:question,opts:["Sí, siempre y sin excepciones",answer,"Solo cuando el último resultado fue favorable","No hace falta definirlo antes"],ans:1},
+    {q:"¿Qué práctica corresponde mejor a esta lección?",opts:["Buscar solo ejemplos que confirmen la idea",g[3],"Cambiar la regla después de ver cada resultado","Sustituir el registro por intuición"],ans:1},
+    {q:"¿Qué principio transversal de HABIL/IA debe mantenerse al aplicar este concepto?",opts:["Convertir una lectura en certeza","Atribuir intención a participantes sin evidencia","Separar hechos observables, interpretación e incertidumbre","Aumentar el riesgo cuando hay más confluencias"],ans:2}
+  ];
+}
 
 const QUIZZES = {
   "00a":[
@@ -576,7 +587,7 @@ function openLesson(modId, lessonId){
   xpBadge.style.color=activeModule.color;
   xpBadge.style.border=`1px solid ${activeModule.color}44`;
   document.getElementById('lv-done-badge').style.display=completed.has(lessonId)?'inline':'none';
-  const hasQuiz=!!QUIZZES[lessonId];
+  const hasQuiz=quizFor(activeLesson).length>0;
   document.getElementById('tab-btn-quiz').style.display=hasQuiz?'inline-block':'none';document.getElementById('tab-btn-quiz').textContent='Evaluación';
   quizAnswers={};quizDone=false;
   // Style tabs with module color
@@ -662,7 +673,7 @@ function renderChart(){
 }
 
 function renderQuiz(){
-  const qData=QUIZZES[activeLesson.id]||[];
+  const qData=quizFor(activeLesson);
   if(!qData.length){document.getElementById('lv-quiz').innerHTML='<div style="color:var(--muted);padding:20px;text-align:center">No hay quiz para esta lección.</div>';return;}
   if(quizDone){
     const pass=Object.values(quizAnswers).filter((a,i)=>a===qData[i].ans).length;
@@ -692,7 +703,7 @@ function renderQuiz(){
 function selectOpt(qi,oi){quizAnswers[qi]=oi;renderQuiz();}
 function retryQuiz(){quizAnswers={};quizDone=false;renderQuiz();}
 function submitQuiz(){
-  const qData=QUIZZES[activeLesson.id]||[];
+  const qData=quizFor(activeLesson);
   let score=0;qData.forEach((q,i)=>{if(quizAnswers[i]===q.ans)score++;});
   quizDone=true;
   if(score>=Math.ceil(qData.length*0.75)&&!completed.has(activeLesson.id)){
