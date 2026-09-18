@@ -211,7 +211,7 @@ button{font-family:var(--sans);cursor:pointer}
       </div>
       <div class="lesson-tabs">
         <button class="lesson-tab active" id="tab-btn-teoria" onclick="lessonTab('teoria')" style="color:inherit">Teoría</button>
-        <button class="lesson-tab" id="tab-btn-grafico" onclick="lessonTab('grafico')" style="color:inherit">Gráfico</button>
+        <button class="lesson-tab" id="tab-btn-grafico" onclick="lessonTab('grafico')" style="color:inherit">Ejemplo visual</button>
         <button class="lesson-tab" id="tab-btn-quiz" onclick="lessonTab('quiz')" style="color:inherit;display:none">Quiz</button>
       </div>
       <div id="lv-teoria"></div>
@@ -294,7 +294,16 @@ button{font-family:var(--sans);cursor:pointer}
 const MODULES = [
 {id:0,tag:"MÓDULO 00",icon:"◎",color:"#8B7CF6",title:"La mente del trader principiante",subtitle:"Expectativas, incertidumbre, sesgos y proceso",
  lessons:[
- {id:"00a",title:"Trading sin humo: qué estás aprendiendo realmente",xp:100,mins:10,content:[{h:"Trading no es adivinación",b:"Operar consiste en tomar decisiones bajo incertidumbre. Un gráfico permite observar precio y comportamiento pasado; no revela con certeza qué ocurrirá después. El objetivo inicial no es acertar cada movimiento, sino aprender a formular reglas, limitar riesgo y revisar decisiones."},{h:"Hecho, observación e interpretación",b:"Separa cuatro capas: <strong>lo que sabemos</strong>, <strong>lo que observamos</strong>, <strong>lo que interpretamos</strong> y <strong>lo que no sabemos</strong>. Esta distinción evita transformar una lectura del gráfico en una certeza que el mercado nunca prometió."},{h:"La primera habilidad",b:"Antes de buscar setups, aprende a decir «no sé». Una metodología seria trabaja con hipótesis comprobables, pérdidas posibles y criterios de invalidación."}]},
+ {id:"00a",title:"Trading sin humo: qué estás aprendiendo realmente",xp:100,mins:20,chart:"foundations",content:[
+ {h:"1 · Qué estás aprendiendo realmente",b:"Trading no es aprender a adivinar la próxima vela. Es aprender a <strong>tomar decisiones bajo incertidumbre</strong> usando información incompleta. El gráfico registra lo que el precio ya hizo; permite estudiar comportamiento, contexto y patrones, pero no convierte el futuro en un dato conocido.<br><br>Tu objetivo como estudiante no será «tener razón» en cada operación. Será construir un proceso que puedas describir, ejecutar, medir y revisar."},
+ {h:"2 · Cuatro capas que nunca debes mezclar",b:"Ante un gráfico separa: <strong>HECHO</strong> — dato verificable; <strong>OBSERVACIÓN</strong> — descripción organizada; <strong>INTERPRETACIÓN</strong> — hipótesis; y <strong>LO QUE NO SABEMOS</strong> — el próximo movimiento y las intenciones privadas de todos los participantes.<br><br>Esta separación evita transformar una lectura razonable en una certeza falsa."},
+ {h:"3 · Ejemplo: dos traders, el mismo gráfico",b:"Imagina que EURUSD lleva varias velas ascendiendo. Trader A dice: «va a seguir subiendo». Trader B dice: «observo máximos y mínimos crecientes; si mi estrategia define este contexto como alcista, buscaré sus condiciones y aceptaré que puede invalidarse». Ambos ven el mismo precio. Solo el segundo separó observación, hipótesis y decisión."},
+ {h:"4 · Una pérdida no demuestra que estabas equivocado",b:"Una decisión correcta puede terminar en pérdida porque el resultado individual contiene incertidumbre. También puedes romper todas tus reglas y ganar por azar. Por eso <strong>resultado y calidad de decisión no son sinónimos</strong>. La calidad se evalúa preguntando si cumpliste reglas definidas antes de conocer el desenlace."},
+ {h:"5 · La primera habilidad: poder decir «no sé»",b:"Antes de buscar setups, indicadores o entradas, aprende a reconocer cuándo la evidencia no alcanza. Una metodología seria necesita hipótesis comprobables, condiciones de entrada, invalidación, riesgo y registro. <strong>No operar también puede ser una decisión válida.</strong>"},
+ {h:"Preguntas y respuestas",b:"<strong>¿Entonces un trader nunca predice?</strong><br>Formula escenarios y probabilidades; no conoce el resultado futuro con certeza.<br><br><strong>¿Más confluencias significan certeza?</strong><br>No. Pueden formar parte de una hipótesis, pero ninguna elimina la incertidumbre.<br><br><strong>¿Una operación ganadora demuestra que mi análisis era bueno?</strong><br>No por sí sola. Hay que revisar proceso, reglas y una muestra de operaciones.<br><br><strong>¿Decir «no sé» es falta de conocimiento?</strong><br>No. Delimitar lo que la evidencia permite afirmar es una habilidad analítica."},
+ {h:"Práctica guiada · cambia la forma de describir el gráfico",b:"❌ «El precio va a subir.» → ✅ «Observo una estructura que mi regla clasifica como alcista; todavía no conozco el siguiente movimiento.»<br><br>❌ «Los bancos están cazando stops.» → ✅ «El precio atravesó un máximo previo y regresó; puedo registrar ese comportamiento sin afirmar quién lo provocó.»<br><br>❌ «Este setup funciona.» → ✅ «Esta es una hipótesis; necesito reglas, muestra, costos y resultados para evaluarla.»<br><br><strong>Tu turno:</strong> mira el ejemplo visual y formula un hecho, una observación, una interpretación y algo que no puedes saber."},
+ {h:"Cierre · qué debes llevarte",b:"Si recuerdas una sola idea, que sea ésta: <strong>el gráfico es evidencia para estudiar, no una bola de cristal.</strong> Durante toda la Academia volveremos a esta separación entre hechos, hipótesis, reglas y resultados."}
+]},
  {id:"00b",title:"Expectativas, probabilidad y pérdidas",xp:120,mins:12,content:[{h:"Una operación no valida un método",b:"Una ganancia aislada puede ser suerte y una pérdida aislada no invalida necesariamente una estrategia. La evaluación necesita una muestra suficiente de operaciones ejecutadas bajo las mismas reglas."},{h:"Pensar en distribuciones",b:"Importan la tasa de acierto, la ganancia media, la pérdida media, los costos y la dispersión de resultados. El trading se estudia como un proceso probabilístico, no como una sucesión de predicciones individuales."}]},
  {id:"00c",title:"Sesgos, FOMO y disciplina",xp:130,mins:12,content:[{h:"El cerebro busca certeza",b:"FOMO, revenge trading, sobreconfianza y sesgo de confirmación pueden alterar una regla después de ver el resultado. El antídoto no es «tener más fuerza de voluntad»: es definir antes qué harás y registrar después qué hiciste."},{h:"Disciplina observable",b:"Disciplina significa ejecutar reglas previamente definidas, respetar límites y aceptar no operar cuando las condiciones no existen. Debe poder comprobarse en un journal."}]},
  {id:"00d",title:"Proceso antes que resultado",xp:140,mins:12,content:[{h:"Buena decisión, resultado negativo",b:"Una operación puede perder y haber sido correctamente ejecutada. También puede ganar después de romper todas las reglas. Evalúa primero la calidad del proceso y después el resultado."},{h:"Tu primer protocolo",b:"Antes: contexto, setup, invalidación y riesgo. Durante: ejecutar sin improvisar. Después: registrar evidencia, resultado y desviaciones. Esa secuencia será transversal a toda la Academia."}]}
@@ -352,6 +361,12 @@ const MODULES = [
 ]}
 ];
 const QUIZZES = {
+  "00a":[
+    {q:"Un gráfico muestra máximos y mínimos crecientes. ¿Cuál frase mantiene separada la observación de la certeza?",opts:["El precio seguirá subiendo","Los compradores controlan el mercado y no puede caer","Observo una secuencia creciente; mi estrategia puede clasificarla como contexto alcista, pero el siguiente movimiento es incierto","Debo comprar antes de que suba más"],ans:2},
+    {q:"Una operación cumplió todas las reglas y terminó en pérdida. ¿Qué conclusión es más rigurosa?",opts:["La estrategia quedó invalidada","La decisión puede haber sido correcta aunque el resultado individual fuera negativo","Hay que ampliar el stop la próxima vez","El mercado manipuló la operación"],ans:1},
+    {q:"El precio atraviesa un máximo previo y vuelve debajo. ¿Qué puedes afirmar directamente del gráfico?",opts:["Los bancos cazaron los stops","Fue manipulación institucional","El precio atravesó ese máximo y regresó","Ahora necesariamente caerá"],ans:2},
+    {q:"¿Qué convierte una idea de trading en algo que puede estudiarse seriamente?",opts:["Que haya funcionado una vez","Que un trader conocido la recomiende","Reglas observables, invalidación, riesgo, registro y una muestra para evaluarla","Agregar muchos indicadores"],ans:2}
+  ],
   "1a":[{q:"¿Cuáles son causas frecuentes de que muchos traders minoristas pierdan?",opts:["Falta de capital únicamente","Mala gestión de riesgo, exceso de apalancamiento y operar sin plan","El mercado es totalmente impredecible","No mirar suficientes indicadores"],ans:1},{q:"Según la teoría SMC, ¿con qué se relacionan los stops acumulados del retail?",opts:["Con señales de trading confirmadas","Con predicciones exactas del precio","Con zonas de liquidez que los grandes participantes podrían buscar","Con errores de los indicadores"],ans:2}],
   "2b":[{q:"Según el enfoque SMC, ¿qué es un Order Block alcista?",opts:["Una zona de alta demanda visible en el DOM","La última vela bajista antes de un impulso alcista fuerte","Cualquier zona de soporte con alto volumen","Un nivel con muchos FVG"],ans:1},{q:"¿Qué afirma la teoría SMC sobre el regreso del precio a un Order Block?",opts:["Que el precio siempre regresa, sin excepción","Que es una profecía autocumplida del retail","Que el precio podría regresar a esa zona, pero no está garantizado","Que los algoritmos lo programan así obligatoriamente"],ans:2}],
   "3a":[{q:"Según SMC, ¿qué es Buy Side Liquidity?",opts:["Órdenes de compra en el libro visible","Stops y órdenes acumulados por encima de swing highs","El volumen de compradores activos","Zonas de alta demanda en el gráfico"],ans:1},{q:"¿Cómo describe la teoría SMC la relación entre precio y liquidez?",opts:["El precio busca liquidez de forma garantizada y siempre repite el patrón","El precio podría desplazarse hacia zonas de liquidez, pero el movimiento posterior no está garantizado","La liquidez no influye en el precio","El patrón solo ocurre en la sesión de Londres"],ans:1}],
@@ -524,7 +539,7 @@ function openLesson(modId, lessonId){
   xpBadge.style.border=`1px solid ${activeModule.color}44`;
   document.getElementById('lv-done-badge').style.display=completed.has(lessonId)?'inline':'none';
   const hasQuiz=!!QUIZZES[lessonId];
-  document.getElementById('tab-btn-quiz').style.display=hasQuiz?'inline-block':'none';
+  document.getElementById('tab-btn-quiz').style.display=hasQuiz?'inline-block':'none';document.getElementById('tab-btn-quiz').textContent='Evaluación';
   quizAnswers={};quizDone=false;
   // Style tabs with module color
   ['teoria','grafico','quiz'].forEach(t=>{
@@ -573,6 +588,23 @@ function renderTheory(){
 
 function renderChart(){
   const id=activeLesson.id;
+  if(activeLesson.chart==='foundations'){
+    document.getElementById('lv-grafico').innerHTML=`
+      <div class="card-sm"><div style="font-weight:800;font-size:14px;margin-bottom:4px">Del dato a la decisión</div>
+      <div style="color:var(--muted);font-size:12px;line-height:1.6;margin-bottom:14px">Ejemplo pedagógico: el mismo movimiento puede describirse con distintos niveles de certeza.</div>
+      <svg viewBox="0 0 760 300" role="img" aria-label="Secuencia ascendente con hechos, observación e incertidumbre" style="width:100%;height:auto;background:#0A0E15;border:1px solid var(--soft);border-radius:10px">
+      <g stroke="#26334A" stroke-width="1"><path d="M45 50H715M45 105H715M45 160H715M45 215H715M45 270H715"/></g>
+      <polyline points="65,238 130,198 185,218 250,164 305,188 370,128 425,153 490,96 545,120 610,70 680,88" fill="none" stroke="#8B7CF6" stroke-width="4"/>
+      <g fill="#E6EDF5" font-size="13"><text x="112" y="190">HL</text><text x="235" y="151">HH</text><text x="292" y="210">HL</text><text x="355" y="116">HH</text><text x="414" y="176">HL</text><text x="478" y="84">HH</text></g>
+      <text x="515" y="35" fill="#F2555A" font-size="12">Próximo movimiento: desconocido</text></svg>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin-top:12px">
+      <div class="content-block" style="margin:0;border-left-color:#1FBF8F"><div class="content-heading" style="color:#1FBF8F">HECHO</div><div class="content-body">Hay máximos y mínimos medibles.</div></div>
+      <div class="content-block" style="margin:0;border-left-color:#00C9FF"><div class="content-heading" style="color:#00C9FF">OBSERVACIÓN</div><div class="content-body">La secuencia mostrada es ascendente.</div></div>
+      <div class="content-block" style="margin:0;border-left-color:#C9A24B"><div class="content-heading" style="color:#C9A24B">INTERPRETACIÓN</div><div class="content-body">Una metodología podría clasificarla como contexto alcista.</div></div>
+      <div class="content-block" style="margin:0;border-left-color:#F2555A"><div class="content-heading" style="color:#F2555A">NO SABEMOS</div><div class="content-body">La próxima vela ni el resultado de una operación.</div></div></div>
+      <div style="margin-top:12px;padding:12px;border-radius:9px;background:var(--accentdim);font-size:12px;line-height:1.65"><strong>Práctica:</strong> describe el gráfico sin usar «seguro», «va a» o «siempre». Luego pasa a Evaluación.</div></div>`;
+    return;
+  }
   const mode=activeLesson.chart||'';const showFVG=mode==='fvg'||mode==='all',showOB=mode==='ob'||mode==='all',showLiq=mode==='liquidity'||mode==='all';
   const candles=genCandles(55,id.charCodeAt(0)*7+id.charCodeAt(1));
   let legend='';
@@ -592,7 +624,7 @@ function renderQuiz(){
   if(!qData.length){document.getElementById('lv-quiz').innerHTML='<div style="color:var(--muted);padding:20px;text-align:center">No hay quiz para esta lección.</div>';return;}
   if(quizDone){
     const pass=Object.values(quizAnswers).filter((a,i)=>a===qData[i].ans).length;
-    const ok=pass>=Math.ceil(qData.length*0.5);
+    const ok=pass>=Math.ceil(qData.length*0.75);
     document.getElementById('lv-quiz').innerHTML=`<div class="quiz-result" style="background:${ok?'#00E8A010':'#FF3D5A10'};border:1px solid ${ok?'#00E8A0':'#FF3D5A'}">
       <div style="font-size:28px;margin-bottom:8px">${ok?'✓':'↻'}</div>
       <div style="font-weight:700;font-size:16px">${pass}/${qData.length} correctas</div>
@@ -621,8 +653,8 @@ function submitQuiz(){
   const qData=QUIZZES[activeLesson.id]||[];
   let score=0;qData.forEach((q,i)=>{if(quizAnswers[i]===q.ans)score++;});
   quizDone=true;
-  if(score>=Math.ceil(qData.length*0.5)&&!completed.has(activeLesson.id)){
-    completed.add(activeLesson.id);totalXP+=activeLesson.xp;saveProgress();saveProgress();
+  if(score>=Math.ceil(qData.length*0.75)&&!completed.has(activeLesson.id)){
+    completed.add(activeLesson.id);totalXP+=activeLesson.xp;saveProgress();
     document.getElementById('lv-done-badge').style.display='inline';
   }
   renderQuiz();
